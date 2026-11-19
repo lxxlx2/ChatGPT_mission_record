@@ -1,0 +1,81 @@
+{
+  "schema": "BSC_P4B_V2_FIRST10_RPC_TRUNCATION_FALLBACK_PRECOMMIT",
+  "scope": "8 of 19 fixed first-ten-block V2 WBNB full-window scans where Alchemy connector truncated response, never interpret as no Swap. One query each for first-liquidity block only. Do not extrapolate result to full 10-block window, and do not chase one pool infinitely.",
+  "source_part_blob_sha": [
+    {
+      "part": 1,
+      "sha": "65c15652731e36d8ff7786643ef21cdc7e449ed6"
+    },
+    {
+      "part": 2,
+      "sha": "692d0b5eb8ae4e5944c1cf313f37bc34b00593cc"
+    },
+    {
+      "part": 3,
+      "sha": "84ae3dbad84cbe379a4b564590432f301ba771df"
+    },
+    {
+      "part": 4,
+      "sha": "3de1f0069609a71c3c9dffefc920f611a70d55ca"
+    }
+  ],
+  "targets": [
+    {
+      "index": 0,
+      "token": "TST",
+      "pool": "0xb36c81707e5ca2bd6f68cd6b71b3178d29c48a4b",
+      "block": 46421401,
+      "scope": "ONE_BLOCK_ONLY"
+    },
+    {
+      "index": 4,
+      "token": "BROCCOLI714",
+      "pool": "0x9eb0bc7a207f77811ee365729d00152622a745b7",
+      "block": 46627714,
+      "scope": "ONE_BLOCK_ONLY"
+    },
+    {
+      "index": 5,
+      "token": "BROCCOLIF3B",
+      "pool": "0xd32041a219835ed79c1ffd7f43df68d06b9b13d5",
+      "block": 46628416,
+      "scope": "ONE_BLOCK_ONLY"
+    },
+    {
+      "index": 10,
+      "token": "4",
+      "pool": "0xf0a949d3d93b833c183a27ee067165b6f2c9625e",
+      "block": 63056879,
+      "scope": "ONE_BLOCK_ONLY"
+    },
+    {
+      "index": 12,
+      "token": "币安人生",
+      "pool": "0x66f289de31eef70d52186729d2637ac978cfc56b",
+      "block": 63454407,
+      "scope": "ONE_BLOCK_ONLY"
+    },
+    {
+      "index": 13,
+      "token": "我踏马来了",
+      "pool": "0xa651c8deb3ff9f8d56a26e72042b7a8a1f433480",
+      "block": 73658906,
+      "scope": "ONE_BLOCK_ONLY"
+    },
+    {
+      "index": 14,
+      "token": "龙虾",
+      "pool": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+      "block": 83636128,
+      "scope": "ONE_BLOCK_ONLY"
+    },
+    {
+      "index": 17,
+      "token": "哈基米 / HAJIMI",
+      "pool": "0xc33bacff9141da689875e6381c1932348ab4c5cb",
+      "block": 63838943,
+      "scope": "ONE_BLOCK_ONLY"
+    }
+  ],
+  "production": "NO_GO"
+}

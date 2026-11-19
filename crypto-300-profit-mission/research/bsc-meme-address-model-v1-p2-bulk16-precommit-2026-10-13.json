@@ -1,0 +1,453 @@
+{
+  "schema": "BSC_MEME_V1_P2_BULK16_PRECOMMITTED_RAW_INVENTORY_SELECTION",
+  "status": "FROZEN_BEFORE_ANY_BULK_RPC",
+  "as_of": "2026-10-13",
+  "branch": "research/bsc-address-model-v1-20261013",
+  "origin": "PRECOMMIT 7 preselected 2026 priority wallet×CA pairs, excludes all previously admitted episodes",
+  "selection_rule": "Choose first up to 3 NOT-YET-ADMITTED exact raw-zero-to-zero inventory cycles with <=4 distinct original tx hash per wallet×CA pair. Use only original chronological (block, log index) ERC20 raw amounts. Apply fixed roster without knowing economic outcomes, do not substitute high-return cycles after failure.",
+  "source_manifest": [
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_A83B_NIULAI_INBOUND_CURSOR_A_2026-10-12.json",
+      "sha": "9c4d37ea37e4d9d06acfe756a4ab684d0605d8d3"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_A83B_NIULAI_OUTBOUND_CURSOR_A_2026-10-12.json",
+      "sha": "e3153d031ecf2a6f23a35a2789c6a068b75c48eb"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_877AF_MARS_FULL_ERC20_RECONCILED_CENSUS_2026-10-12.json",
+      "sha": "8ccb13babfefb726a3a6a44ea5b766ce3628dd28"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_877AF_NIULAI_FULL_ERC20_RECONCILED_CENSUS_2026-10-12.json",
+      "sha": "9e08209bc777e72f3601883ef41c5e13893dda83"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_ADFF_WOTAMALA_FULL_CURSOR_BALANCE_QA_2026-10-12.json",
+      "sha": "0aa7b926a74735af86d2e870f37d1e8b1beddc40"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_ADFF_LOBSTER_FULL_CURSOR_BALANCE_QA_2026-10-12.json",
+      "sha": "b5a4d76d5239d9ee204aac7e20cb00e3df1694b0"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_2ADF_NIULAI_FULL_CURSOR_BALANCE_QA_2026-10-12.json",
+      "sha": "c6098dd06a723cdb609abd0b832b739f99e40c67"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_A83B_LOBSTER_INBOUND_CURSOR_A_2026-10-12.json",
+      "sha": "d83519115f544242663a3873b416ee6084a6d8b2"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_A83B_LOBSTER_OUTBOUND_CURSOR_A_2026-10-12.json",
+      "sha": "47462dd4aa011869419da19b8177e7145bee0418"
+    }
+  ],
+  "per_CA_census": [
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "token": "牛来",
+      "exact_ca": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "source_raw_logs": 158,
+      "source_zero_inventory_cycles": 12,
+      "source_final_inventory_raw": "0",
+      "already_model_admitted_episodes": [
+        2
+      ],
+      "small_remaining_eligible_count": 2,
+      "preselected_cycle_count": 2
+    },
+    {
+      "wallet": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "token": "MARSCOIN",
+      "exact_ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "source_raw_logs": 170,
+      "source_zero_inventory_cycles": 21,
+      "source_final_inventory_raw": "68700271596483656647",
+      "already_model_admitted_episodes": [
+        4
+      ],
+      "small_remaining_eligible_count": 10,
+      "preselected_cycle_count": 3
+    },
+    {
+      "wallet": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "token": "牛来",
+      "exact_ca": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "source_raw_logs": 239,
+      "source_zero_inventory_cycles": 11,
+      "source_final_inventory_raw": "138878417262324072549",
+      "already_model_admitted_episodes": [],
+      "small_remaining_eligible_count": 0,
+      "preselected_cycle_count": 0
+    },
+    {
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "token": "我踏马来了",
+      "exact_ca": "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
+      "source_raw_logs": 35,
+      "source_zero_inventory_cycles": 12,
+      "source_final_inventory_raw": "0",
+      "already_model_admitted_episodes": [
+        1
+      ],
+      "small_remaining_eligible_count": 10,
+      "preselected_cycle_count": 3
+    },
+    {
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "token": "龙虾",
+      "exact_ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "source_raw_logs": 30,
+      "source_zero_inventory_cycles": 6,
+      "source_final_inventory_raw": "0",
+      "already_model_admitted_episodes": [
+        4
+      ],
+      "small_remaining_eligible_count": 2,
+      "preselected_cycle_count": 2
+    },
+    {
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "token": "牛来",
+      "exact_ca": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "source_raw_logs": 49,
+      "source_zero_inventory_cycles": 10,
+      "source_final_inventory_raw": "0",
+      "already_model_admitted_episodes": [
+        1
+      ],
+      "small_remaining_eligible_count": 7,
+      "preselected_cycle_count": 3
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "token": "龙虾",
+      "exact_ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "source_raw_logs": 70,
+      "source_zero_inventory_cycles": 5,
+      "source_final_inventory_raw": "14090770612977922471",
+      "already_model_admitted_episodes": [],
+      "small_remaining_eligible_count": 3,
+      "preselected_cycle_count": 3
+    }
+  ],
+  "samples": [
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "token": "牛来",
+      "exact_ca": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "episode_index": 8,
+      "first_block": 120038802,
+      "last_block": 120039005,
+      "raw_transfer_log_count": 3,
+      "transaction_hashes": [
+        "0x3acba5a060c21198390044f2b19642aaf6cfe02c1d4ef41d97597373943e2eb1",
+        "0x7ebdc19aedd605c5f5b6ca80c80e162aeb46161a750e31c48f6684576967a967"
+      ],
+      "original_signed_state": "UNVERIFIED",
+      "economics_state": "UNVERIFIED",
+      "source_paths": [
+        "crypto-300-profit-mission/research/BSC_MEME_A83B_NIULAI_INBOUND_CURSOR_A_2026-10-12.json",
+        "crypto-300-profit-mission/research/BSC_MEME_A83B_NIULAI_OUTBOUND_CURSOR_A_2026-10-12.json"
+      ]
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "token": "牛来",
+      "exact_ca": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "episode_index": 12,
+      "first_block": 122380364,
+      "last_block": 126467931,
+      "raw_transfer_log_count": 4,
+      "transaction_hashes": [
+        "0x1690c38ce30ca5007e2aaa5d726901b1f891c701905d42bf2112bb9a96061017",
+        "0x411a0d6ba1b211133e2a549b71bfdc286dd115d34cc146c6d9c5adcf4de2bf94",
+        "0xaa57afb7da6d5bb86ce2eacedec42abf6e99749972321d85adc0f352ef1c4065"
+      ],
+      "original_signed_state": "UNVERIFIED",
+      "economics_state": "UNVERIFIED",
+      "source_paths": [
+        "crypto-300-profit-mission/research/BSC_MEME_A83B_NIULAI_INBOUND_CURSOR_A_2026-10-12.json",
+        "crypto-300-profit-mission/research/BSC_MEME_A83B_NIULAI_OUTBOUND_CURSOR_A_2026-10-12.json"
+      ]
+    },
+    {
+      "wallet": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "token": "MARSCOIN",
+      "exact_ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "episode_index": 5,
+      "first_block": 112633681,
+      "last_block": 112633805,
+      "raw_transfer_log_count": 5,
+      "transaction_hashes": [
+        "0xb24f907d3d49d22cab32c024fb56481a5897891ebfa4dda0abe59432696e9695",
+        "0x6034212914ca925ebb875121f1e7a5c8a4a15a2c63a6bc870ce28634db15423e",
+        "0x971a9ab0217b0bef829991cf12d9eb848e83cfd2fa3e9e11cb82bbc2e752a125"
+      ],
+      "original_signed_state": "UNVERIFIED",
+      "economics_state": "UNVERIFIED",
+      "source_paths": [
+        "crypto-300-profit-mission/research/BSC_MEME_877AF_MARS_FULL_ERC20_RECONCILED_CENSUS_2026-10-12.json"
+      ]
+    },
+    {
+      "wallet": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "token": "MARSCOIN",
+      "exact_ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "episode_index": 6,
+      "first_block": 112634149,
+      "last_block": 112634184,
+      "raw_transfer_log_count": 5,
+      "transaction_hashes": [
+        "0xb3215e0bf0884fa79f7c061f94730e72ed822b4c32df5879d9e218a33c6b05a9",
+        "0xcfdf1cce9e7d4b17fb86e31cd4eeb93ec54a00ca7e6e6908fc0db0f42fed4f89",
+        "0xeb77015b8189b7dde56ed6cd98d313c5a8e17cf13b254fb9378abe5e9e091d31"
+      ],
+      "original_signed_state": "UNVERIFIED",
+      "economics_state": "UNVERIFIED",
+      "source_paths": [
+        "crypto-300-profit-mission/research/BSC_MEME_877AF_MARS_FULL_ERC20_RECONCILED_CENSUS_2026-10-12.json"
+      ]
+    },
+    {
+      "wallet": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "token": "MARSCOIN",
+      "exact_ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "episode_index": 10,
+      "first_block": 112642167,
+      "last_block": 112642708,
+      "raw_transfer_log_count": 5,
+      "transaction_hashes": [
+        "0xf0296ad811bf38270ee4e14a3cecc150843c3000f34be58c1523f19f25f990d9",
+        "0x138a2f11c4d9a9cc008348342a75a7c367c635661df12e2f6ce6465dddc23bb8",
+        "0x5c9d8a363e66769fb8157b025b44d9934804a942367245b24c7701a4265684a6"
+      ],
+      "original_signed_state": "UNVERIFIED",
+      "economics_state": "UNVERIFIED",
+      "source_paths": [
+        "crypto-300-profit-mission/research/BSC_MEME_877AF_MARS_FULL_ERC20_RECONCILED_CENSUS_2026-10-12.json"
+      ]
+    },
+    {
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "token": "我踏马来了",
+      "exact_ca": "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
+      "episode_index": 2,
+      "first_block": 73336433,
+      "last_block": 73336473,
+      "raw_transfer_log_count": 2,
+      "transaction_hashes": [
+        "0x8ebe4e38363050f4b850773a708b86043616fcc11d67e75ca02f00b314bfee2d",
+        "0xaa666274666044e636bc616b78730dbd6a268b87f45b90d0eddbd506bbeaadbe"
+      ],
+      "original_signed_state": "UNVERIFIED",
+      "economics_state": "UNVERIFIED",
+      "source_paths": [
+        "crypto-300-profit-mission/research/BSC_MEME_ADFF_WOTAMALA_FULL_CURSOR_BALANCE_QA_2026-10-12.json"
+      ]
+    },
+    {
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "token": "我踏马来了",
+      "exact_ca": "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
+      "episode_index": 3,
+      "first_block": 73338331,
+      "last_block": 73338341,
+      "raw_transfer_log_count": 2,
+      "transaction_hashes": [
+        "0x369314228253f7c538a4ad5218f1c323f25be9657bde6f3745dfb839257ea725",
+        "0x99e09da5149aa7219073c58cab404feb1ceb34e747d68999e5b1f567560cfca9"
+      ],
+      "original_signed_state": "UNVERIFIED",
+      "economics_state": "UNVERIFIED",
+      "source_paths": [
+        "crypto-300-profit-mission/research/BSC_MEME_ADFF_WOTAMALA_FULL_CURSOR_BALANCE_QA_2026-10-12.json"
+      ]
+    },
+    {
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "token": "我踏马来了",
+      "exact_ca": "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
+      "episode_index": 4,
+      "first_block": 73339965,
+      "last_block": 73339992,
+      "raw_transfer_log_count": 2,
+      "transaction_hashes": [
+        "0x2d81f2b316c8b54d232ca03c04269cb4a6ce031b24760a10815b83d5fb5b1622",
+        "0x35224cc19da5549ab4e2e3a6bda712f2c137127375be85c1e5578804674fe15c"
+      ],
+      "original_signed_state": "UNVERIFIED",
+      "economics_state": "UNVERIFIED",
+      "source_paths": [
+        "crypto-300-profit-mission/research/BSC_MEME_ADFF_WOTAMALA_FULL_CURSOR_BALANCE_QA_2026-10-12.json"
+      ]
+    },
+    {
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "token": "龙虾",
+      "exact_ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "episode_index": 5,
+      "first_block": 84962371,
+      "last_block": 84963046,
+      "raw_transfer_log_count": 2,
+      "transaction_hashes": [
+        "0x7d2a5ae4c18d56b9ed8dec99d15ba307b99d8cbd54fb900b7f833dd11b2258b1",
+        "0x650b9e4e945ff0cecc22b2f57c2c3339913d48bc1c1042f43b384335afa9b7aa"
+      ],
+      "original_signed_state": "UNVERIFIED",
+      "economics_state": "UNVERIFIED",
+      "source_paths": [
+        "crypto-300-profit-mission/research/BSC_MEME_ADFF_LOBSTER_FULL_CURSOR_BALANCE_QA_2026-10-12.json"
+      ]
+    },
+    {
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "token": "龙虾",
+      "exact_ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "episode_index": 6,
+      "first_block": 121783426,
+      "last_block": 121786352,
+      "raw_transfer_log_count": 3,
+      "transaction_hashes": [
+        "0x13f5678b90e1bd0e2b703e23934a7777ba639f75ec1c8c70200f350ff43c4952",
+        "0xc0098aafadbf7a3789d7beb64717b4f5f7c0c1698f1e5d5386419f7b57cc9fbd"
+      ],
+      "original_signed_state": "UNVERIFIED",
+      "economics_state": "UNVERIFIED",
+      "source_paths": [
+        "crypto-300-profit-mission/research/BSC_MEME_ADFF_LOBSTER_FULL_CURSOR_BALANCE_QA_2026-10-12.json"
+      ]
+    },
+    {
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "token": "牛来",
+      "exact_ca": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "episode_index": 3,
+      "first_block": 116038180,
+      "last_block": 116087810,
+      "raw_transfer_log_count": 3,
+      "transaction_hashes": [
+        "0x5b9f98b8feff8b9589b9a229bd64485689d11f7aa08d7973d7553fd18ba35e1e",
+        "0xc4a493cc5fba197f70e225de4927937b2532cfd18de4efefeb4ebbe3a350d40f"
+      ],
+      "original_signed_state": "UNVERIFIED",
+      "economics_state": "UNVERIFIED",
+      "source_paths": [
+        "crypto-300-profit-mission/research/BSC_MEME_2ADF_NIULAI_FULL_CURSOR_BALANCE_QA_2026-10-12.json"
+      ]
+    },
+    {
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "token": "牛来",
+      "exact_ca": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "episode_index": 4,
+      "first_block": 116099537,
+      "last_block": 116211969,
+      "raw_transfer_log_count": 4,
+      "transaction_hashes": [
+        "0xf83f69d2d411b237bc10c7be7f16bfc57ae0567bdd00bf245e576688be3b4549",
+        "0xff6b642aa397450042ddbbb3010cd622dbb617b0479f5a2769aa93a8c1b03dc4",
+        "0x1e5aea53c25c41c0a9c84472f89774d0c93ff19be721ae8333fb0aafd264e366"
+      ],
+      "original_signed_state": "UNVERIFIED",
+      "economics_state": "UNVERIFIED",
+      "source_paths": [
+        "crypto-300-profit-mission/research/BSC_MEME_2ADF_NIULAI_FULL_CURSOR_BALANCE_QA_2026-10-12.json"
+      ]
+    },
+    {
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "token": "牛来",
+      "exact_ca": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "episode_index": 5,
+      "first_block": 116236103,
+      "last_block": 116380025,
+      "raw_transfer_log_count": 4,
+      "transaction_hashes": [
+        "0x6bb26cbd29a006b1b9a1697099eef20e8fe3581e767d7321aa03a47c7d5f0429",
+        "0x39633b6564e9641f1163b14e7294c576627433a6c35d8437c49016980322094d",
+        "0x72a5a6f915c657612aa42b6193a1bf05d85bb176aecfa17eb04643c5a5ea2c84"
+      ],
+      "original_signed_state": "UNVERIFIED",
+      "economics_state": "UNVERIFIED",
+      "source_paths": [
+        "crypto-300-profit-mission/research/BSC_MEME_2ADF_NIULAI_FULL_CURSOR_BALANCE_QA_2026-10-12.json"
+      ]
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "token": "龙虾",
+      "exact_ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "episode_index": 1,
+      "first_block": 83720393,
+      "last_block": 83720398,
+      "raw_transfer_log_count": 2,
+      "transaction_hashes": [
+        "0x45ebe939bb00ca5660ffde899a6096076cb75ed01d5db89537f91380f2424bf4",
+        "0x9a0cc58d9b3a32d79af78b4d543b98c1ab2bb1c13c742866e7f2b7c28b552a36"
+      ],
+      "original_signed_state": "UNVERIFIED",
+      "economics_state": "UNVERIFIED",
+      "source_paths": [
+        "crypto-300-profit-mission/research/BSC_MEME_A83B_LOBSTER_INBOUND_CURSOR_A_2026-10-12.json",
+        "crypto-300-profit-mission/research/BSC_MEME_A83B_LOBSTER_OUTBOUND_CURSOR_A_2026-10-12.json"
+      ]
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "token": "龙虾",
+      "exact_ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "episode_index": 4,
+      "first_block": 93584296,
+      "last_block": 93584365,
+      "raw_transfer_log_count": 2,
+      "transaction_hashes": [
+        "0x4bf17ed78e9c142bd6c7b30540dd8ab91dc6be47c74cb8130023d87623c65899",
+        "0xd4aa1ada868308f84b521d4ea6753a30fad58c6eaf47e2a266b5c7823cf20f79"
+      ],
+      "original_signed_state": "UNVERIFIED",
+      "economics_state": "UNVERIFIED",
+      "source_paths": [
+        "crypto-300-profit-mission/research/BSC_MEME_A83B_LOBSTER_INBOUND_CURSOR_A_2026-10-12.json",
+        "crypto-300-profit-mission/research/BSC_MEME_A83B_LOBSTER_OUTBOUND_CURSOR_A_2026-10-12.json"
+      ]
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "token": "龙虾",
+      "exact_ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "episode_index": 5,
+      "first_block": 121452789,
+      "last_block": 121454565,
+      "raw_transfer_log_count": 3,
+      "transaction_hashes": [
+        "0x5cd118aaf6d2de13c1173a1dc104d531500e1c96eae3dbd5068402259dd08cfc",
+        "0x7fdf121750f702991b344b709e8d7dfa1e92fc4f40daeb37372e4207fe7e0893",
+        "0x53efc59c9b439e0fae82aaf495caa725b18a59296a3f9ce818168eb9a01fa51c"
+      ],
+      "original_signed_state": "UNVERIFIED",
+      "economics_state": "UNVERIFIED",
+      "source_paths": [
+        "crypto-300-profit-mission/research/BSC_MEME_A83B_LOBSTER_INBOUND_CURSOR_A_2026-10-12.json",
+        "crypto-300-profit-mission/research/BSC_MEME_A83B_LOBSTER_OUTBOUND_CURSOR_A_2026-10-12.json"
+      ]
+    }
+  ],
+  "expected": {
+    "exact_CA_roster": 7,
+    "source_EOA_wallets": 4,
+    "nonselected_pair_with_no_small_cycles": 1,
+    "selected_rounds": 16,
+    "original_unique_transactions": 39,
+    "profit_outcome_known": 0,
+    "production": "NO_GO"
+  },
+  "caveats": [
+    "Selection is deterministic but restricted to short source-history cycles, not unbiased lifetime/major opportunity denominator.",
+    "ERC20 quantity return zero is not sufficient to call profitable, original EOA signed or economically attributable.",
+    "For same-block multiple transactions count N-1/N wallet balance once, not per transaction.",
+    "Allow failures/third party/non-owner/receipt truncated to remain disqualified, do not cherry-pick replacements.",
+    "Sources and new model changes PR only; prior P2 evidence remains immutable by Git history."
+  ]
+}

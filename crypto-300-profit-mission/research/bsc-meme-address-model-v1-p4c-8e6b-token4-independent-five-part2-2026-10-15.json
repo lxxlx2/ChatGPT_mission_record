@@ -1,0 +1,173 @@
+{
+  "schema": "BSC_P4C_8E6B_TOKEN4_INDEPENDENT_FROZEN_FIVE_TX_RECEIPT_NATIVE",
+  "part": 2,
+  "precommit_sha": "738da1a4a3dfc9304ee188b326b7d307da50145c",
+  "rows": [
+    {
+      "selected": {
+        "hash": "0x8bee775423389c622a648bc22a2e771d0270bef8024764ed604ee527b755ca89",
+        "block": 63057889,
+        "case": 2,
+        "direction": "in"
+      },
+      "original_eoa_signed_status": "OWNER_SIGNED_CHAIN56",
+      "original_transaction": {
+        "hash": "0x8bee775423389c622a648bc22a2e771d0270bef8024764ed604ee527b755ca89",
+        "from": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+        "to": "0x1de460f363af910f51726def188f9004276bf4bc",
+        "chainId": "0x38",
+        "blockNumber": "0x3c22fe1",
+        "value": "0x429d069189e0000"
+      },
+      "receipt_status": "SUCCESS_FULL",
+      "receipt_meta": {
+        "status": "0x1",
+        "gasUsed": "0x24566",
+        "effectiveGasPrice": "0x7aef40a00",
+        "selected_wbnb_logs": [
+          {
+            "address": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+            "topics": [
+              "0xe1fffcc4923d04b559f4d29a8bfc6cda04eb5b0d3c460751c2402c5c5cc9109c",
+              "0x0000000000000000000000001de460f363af910f51726def188f9004276bf4bc"
+            ],
+            "data": "0x000000000000000000000000000000000000000000000000041f27ed2a4a8000",
+            "transactionHash": "0x8bee775423389c622a648bc22a2e771d0270bef8024764ed604ee527b755ca89",
+            "logIndex": "0x177"
+          },
+          {
+            "address": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+            "topics": [
+              "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+              "0x0000000000000000000000001de460f363af910f51726def188f9004276bf4bc",
+              "0x000000000000000000000000f0a949d3d93b833c183a27ee067165b6f2c9625e"
+            ],
+            "data": "0x000000000000000000000000000000000000000000000000041f27ed2a4a8000",
+            "transactionHash": "0x8bee775423389c622a648bc22a2e771d0270bef8024764ed604ee527b755ca89",
+            "logIndex": "0x178"
+          }
+        ]
+      },
+      "native_before": "5277554994926140840",
+      "native_after": "4972643340926140840",
+      "native_delta_wei": "-304911654000000000",
+      "provider_errors": {
+        "tx": null,
+        "receipt": null,
+        "before": null,
+        "after": null
+      }
+    },
+    {
+      "selected": {
+        "hash": "0x79cf3a597877e0bd7e04339590763c31bb599411873f9281e24915f6ef1b6772",
+        "block": 63058886,
+        "case": 2,
+        "direction": "out"
+      },
+      "original_eoa_signed_status": "OWNER_SIGNED_CHAIN56",
+      "original_transaction": {
+        "hash": "0x79cf3a597877e0bd7e04339590763c31bb599411873f9281e24915f6ef1b6772",
+        "from": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+        "to": "0x1de460f363af910f51726def188f9004276bf4bc",
+        "chainId": "0x38",
+        "blockNumber": "0x3c233c6",
+        "value": "0x0"
+      },
+      "receipt_status": "SUCCESS_FULL",
+      "receipt_meta": {
+        "status": "0x1",
+        "gasUsed": "0x22ca2",
+        "effectiveGasPrice": "0x28fa6ae00",
+        "selected_wbnb_logs": [
+          {
+            "address": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+            "topics": [
+              "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+              "0x000000000000000000000000f0a949d3d93b833c183a27ee067165b6f2c9625e",
+              "0x0000000000000000000000001de460f363af910f51726def188f9004276bf4bc"
+            ],
+            "data": "0x000000000000000000000000000000000000000000000000071a84054932bdc1",
+            "transactionHash": "0x79cf3a597877e0bd7e04339590763c31bb599411873f9281e24915f6ef1b6772",
+            "logIndex": "0x81"
+          },
+          {
+            "address": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+            "topics": [
+              "0x7fcf532c15f0a6db0bd6d0e038bea71d30d808c7d98cb3bf7268a95bf5081b65",
+              "0x0000000000000000000000001de460f363af910f51726def188f9004276bf4bc"
+            ],
+            "data": "0x000000000000000000000000000000000000000000000000071a84054932bdc1",
+            "transactionHash": "0x79cf3a597877e0bd7e04339590763c31bb599411873f9281e24915f6ef1b6772",
+            "logIndex": "0x84"
+          }
+        ]
+      },
+      "native_before": "4972643340926140840",
+      "native_after": "5477823862164901129",
+      "native_delta_wei": "505180521238760289",
+      "provider_errors": {
+        "tx": null,
+        "receipt": null,
+        "before": null,
+        "after": null
+      }
+    },
+    {
+      "selected": {
+        "hash": "0x0e51e0e953ed22e8635665a05fb93bd28202d6e7cfd92b5de3b29c9d382d4462",
+        "block": 64458294,
+        "case": 2,
+        "direction": "out"
+      },
+      "original_eoa_signed_status": "OWNER_SIGNED_CHAIN56",
+      "original_transaction": {
+        "hash": "0x0e51e0e953ed22e8635665a05fb93bd28202d6e7cfd92b5de3b29c9d382d4462",
+        "from": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+        "to": "0xd9c500dff816a1da21a48a732d3498bf09dc9aeb",
+        "chainId": "0x38",
+        "blockNumber": "0x3d78e36",
+        "value": "0x0"
+      },
+      "receipt_status": "SUCCESS_FULL",
+      "receipt_meta": {
+        "status": "0x1",
+        "gasUsed": "0x1d564",
+        "effectiveGasPrice": "0x3c51e51",
+        "selected_wbnb_logs": [
+          {
+            "address": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+            "topics": [
+              "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+              "0x000000000000000000000000f0a949d3d93b833c183a27ee067165b6f2c9625e",
+              "0x000000000000000000000000d9c500dff816a1da21a48a732d3498bf09dc9aeb"
+            ],
+            "data": "0x00000000000000000000000000000000000000000000000012f24a300e7a50b2",
+            "transactionHash": "0x0e51e0e953ed22e8635665a05fb93bd28202d6e7cfd92b5de3b29c9d382d4462",
+            "logIndex": "0x587"
+          },
+          {
+            "address": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+            "topics": [
+              "0x7fcf532c15f0a6db0bd6d0e038bea71d30d808c7d98cb3bf7268a95bf5081b65",
+              "0x000000000000000000000000d9c500dff816a1da21a48a732d3498bf09dc9aeb"
+            ],
+            "data": "0x00000000000000000000000000000000000000000000000012f24a300e7a50b2",
+            "transactionHash": "0x0e51e0e953ed22e8635665a05fb93bd28202d6e7cfd92b5de3b29c9d382d4462",
+            "logIndex": "0x58a"
+          }
+        ]
+      },
+      "native_before": "8823626842132044157",
+      "native_after": "10188854449067388299",
+      "native_delta_wei": "1365227606935344142",
+      "provider_errors": {
+        "tx": null,
+        "receipt": null,
+        "before": null,
+        "after": null
+      }
+    }
+  ],
+  "production": "NO_GO"
+}

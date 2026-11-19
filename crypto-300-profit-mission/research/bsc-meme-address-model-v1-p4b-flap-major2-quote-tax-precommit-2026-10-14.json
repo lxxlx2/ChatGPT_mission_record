@@ -1,0 +1,38 @@
+{
+  "schema": "BSC_P4B_FLAP_2026_MAJOR2_CREATION_QUOTE_TAX_EVENT_PRECOMMIT",
+  "source_origin_precommit_blob_sha": "83c7f4eb0b081974fd1b2d2e9de0526d282ab22a",
+  "portal": "0xe2ce6ab80874fa9fa2aae65d277dd6b8e65c9de0",
+  "scope": "Only three exact configured ABI topic0 event types on each of two original creation blocks. Empty COMPLETE result means optional event missing in specified creation tx; only official default applies if ABI applies at this historical version. Do not claim tax-free from missing V3 event without token version analysis.",
+  "events": [
+    {
+      "name": "TokenQuoteSet",
+      "signature": "TokenQuoteSet(address,address)",
+      "topic0": "0x3ceb902d3c555c21c3415b6aa839104b18e4825b2f8324011ff979089a507a8c"
+    },
+    {
+      "name": "FlapTokenTaxSet",
+      "signature": "FlapTokenTaxSet(address,uint256)",
+      "topic0": "0x1546924f4680b1b2e093fd251c437c8781d81a21ed8ad1895e1f2c9b78db0cd0"
+    },
+    {
+      "name": "FlapTokenAsymmetricTaxSet",
+      "signature": "FlapTokenAsymmetricTaxSet(address,uint256,uint256)",
+      "topic0": "0x46cc246a238d1ca0951a15200994903e2d56cbb0389e63f09d66412a787aa3c0"
+    }
+  ],
+  "targets": [
+    {
+      "token": "牛来",
+      "tx": "0x907beed290b7daeb45cd2f05085c7ca67f997c06749f716c40ed431b2b2eb62d",
+      "block": 115628768,
+      "CA": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777"
+    },
+    {
+      "token": "MARSCOIN",
+      "tx": "0xb499cc66534db949c6040dbc914ba0e3e50423a408717f69a193a8e29eeeb7a2",
+      "block": 112441387,
+      "CA": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777"
+    }
+  ],
+  "production": "NO_GO"
+}

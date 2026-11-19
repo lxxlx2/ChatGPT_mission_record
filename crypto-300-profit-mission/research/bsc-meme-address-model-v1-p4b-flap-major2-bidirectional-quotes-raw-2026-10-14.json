@@ -1,0 +1,41 @@
+{
+  "schema": "BSC_P4B_FLAP_MAJOR2_FIXED_SOURCE_QUOTE_READS",
+  "source_precommit_git_blob_sha": "0463b0358d3ba908773127ca72194769a365596a",
+  "rows": [
+    {
+      "token": "牛来",
+      "CA": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "first_observed_buy_block": 115628774,
+      "quote_CA": "0x205812cdbed920aff76c6580abd681a46d11efc7",
+      "quote_block": 115628773,
+      "fixed_quote_in_raw": "10000000000000000",
+      "fixed_token_sell_in_raw": "1000000000000000000",
+      "buy_read": {
+        "status": "COMPLETE_QUOTE_ONLY",
+        "raw": "0x000000000000000000000000000000000000000000019358f4269e5a8d43c2c8"
+      },
+      "sell_read": {
+        "status": "RPC_REVERT_OR_ERROR",
+        "error": "INVALID_ARGUMENT: Error code: INVALID_ARGUMENT; Error: RuntimeException: Error calling MCP tool: [TextContent(type='text', text='RPC error (3): execution reverted: panic: arithmetic underflow or overflow (0x11)', annotations=None, meta=None)]"
+      }
+    },
+    {
+      "token": "MARSCOIN",
+      "CA": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "first_observed_buy_block": 112441394,
+      "quote_CA": "0xbe9d156892e55e7154bcd3cb0fea677f9d3103e1",
+      "quote_block": 112441393,
+      "fixed_quote_in_raw": "10000000000000000",
+      "fixed_token_sell_in_raw": "1000000000000000000",
+      "buy_read": {
+        "status": "COMPLETE_QUOTE_ONLY",
+        "raw": "0x0000000000000000000000000000000000000000000041a7bfad152d6d52d144"
+      },
+      "sell_read": {
+        "status": "RPC_REVERT_OR_ERROR",
+        "error": "INVALID_ARGUMENT: Error code: INVALID_ARGUMENT; Error: RuntimeException: Error calling MCP tool: [TextContent(type='text', text='RPC error (3): execution reverted: panic: arithmetic underflow or overflow (0x11)', annotations=None, meta=None)]"
+      }
+    }
+  ],
+  "production": "NO_GO"
+}

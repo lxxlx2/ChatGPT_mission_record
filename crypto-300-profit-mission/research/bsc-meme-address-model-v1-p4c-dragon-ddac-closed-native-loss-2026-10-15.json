@@ -1,0 +1,92 @@
+{
+  "schema": "BSC_P4C_DDAC_DRAGON_SIGNED_CLOSED_NATIVE_LOSS_ROUND",
+  "scope": "One frozen original 23-wallet DDAC early Dragon owner-signed Four.meme buy and fully closed original token inventory through one successful owner-signed Four.meme TokenSale, account exact in both raw events and on-chain transfer; original BNB wallet before/after exact blocks and two successful signed sale-block gas receipts. Native net wallet change includes both sale-block tx gas; purchase-block buy fee not separately decomposed. P5 followability and profit ranking remain unresolved.",
+  "source_manifest": [
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4b-dragon-ddac-real-pre-dex-buy-2026-10-14.json",
+      "git_blob_sha": "f89362368ad47f1cde2d8475f9e7b8a688093f83"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-major3-owner-transfer-exit-raw-2026-10-15.json",
+      "git_blob_sha": "30425f9ee554bdf8f883b1c85e01261f1cf438df"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-dragon-native-block-balance-raw-2026-10-15.json",
+      "git_blob_sha": "938823f19b83aa1584c611047ac70dec28bdba88"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-dragon-three-tx-header-and-inbound-raw-2026-10-15.json",
+      "git_blob_sha": "c10889537f981c8b2e58baf4e9800a1882decfee"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-dragon-approval-and-sale-full-receipts-2026-10-15.json",
+      "git_blob_sha": "1cec4b49bd3da060f20d0f84f1d25c21e5f2b6ff"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4b-23x19-early-opportunity-ledger-2026-10-14.json",
+      "git_blob_sha": "f88ed9abfcb0f321ec31e98a029303aca48a8623"
+    }
+  ],
+  "summary": {
+    "frozen_wallets": 23,
+    "frozen_major_CAs": 19,
+    "original_signed_owner_buys_economically_closed": 1,
+    "actual_negative_native_owner_rounds": 1,
+    "actual_positive_native_owner_rounds": 0,
+    "remaining_wallet_CAs_not_audited_for_economic_closure": 436,
+    "market_U_fully_qualified": 0,
+    "live_production": "NO_GO"
+  },
+  "round": {
+    "token": "龙虾",
+    "exact_CA": "0xeccbb861c0dda7efd964010085488b69317e4444",
+    "owner": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+    "entry_tx": "0x35793699fbf006cfb07d5775991f50c106af64ea840db10a2f580b4661a0df12",
+    "entry_block": 83635776,
+    "exit_tx": "0xd63edbb070a8171af5aa37cfb2953ae868a77ff6607b5a1a4f5378abb2249219",
+    "exit_block": 83635800,
+    "elapsed_blocks": 24,
+    "entry_token_amount_raw": "99069253510299993000000000",
+    "exit_token_amount_raw": "99069253510299993000000000",
+    "residual_token_raw": "0",
+    "exit_TokenSale_cost_event_wei": "731498918699373186",
+    "exit_TokenSale_fee_event_wei": "7314989186993731",
+    "original_buy_event_cost_wei": "784158415841584155",
+    "original_buy_event_fee_wei": "7841584158415841",
+    "pre_buy_wallet_BNB_wei": "17806507402194926070",
+    "post_buy_wallet_BNB_wei": "16997499825194926074",
+    "pre_exit_wallet_BNB_wei": "16997499825194926074",
+    "post_exit_wallet_BNB_wei": "17714337786680311798",
+    "native_buy_block_debit_wei": "809007576999999996",
+    "native_exit_block_credit_after_gas_wei": "716837961485385724",
+    "exit_block_original_signed_txs": [
+      {
+        "tx": "0x1ccf2e1cc370cf7890a7829d5fdd0a16f9bc5f2344c64415578e3f46c8a177be",
+        "gas_used": "46327",
+        "gas_price_wei": "120000000",
+        "gas_fee_wei": "5559240000000"
+      },
+      {
+        "tx": "0xd63edbb070a8171af5aa37cfb2953ae868a77ff6607b5a1a4f5378abb2249219",
+        "gas_used": "211830",
+        "gas_price_wei": "120000000",
+        "gas_fee_wei": "25419600000000"
+      }
+    ],
+    "exit_block_total_signed_gas_wei": "30978840000000",
+    "exit_event_implied_prepay_credit_wei": "716868940325385724",
+    "exit_native_balance_plus_gas_wei": "716868940325385724",
+    "exit_venue_verified_successful": "FOUR_MEME_TOKENSALE",
+    "native_closed_owner_round_net_wei": "-92169615514614272",
+    "native_closed_owner_round_roi_bps_trunc": -1139,
+    "native_closed_owner_round_classification": "REALIZED_NEGATIVE_BNB_WINDOW",
+    "same_block_owners_txs": 2,
+    "original_buy_block_owner_txs": 1,
+    "other_external_native_inbound_in_two_blocks": "NONE_IN_BOUNDED_EXTERNAL_TX_QUERIES",
+    "same_wallet_BNB_between_buy_and_exit_unchanged": true,
+    "source_buy_full_receipt": "TRUNCATED",
+    "buyer_follower_entry_after_1_5_15min": "UNRESOLVED",
+    "global_first_executable_market_U": "UNRESOLVED",
+    "production": "NO_GO"
+  }
+}

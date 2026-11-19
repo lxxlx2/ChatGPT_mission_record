@@ -1,0 +1,349 @@
+{
+  "schema": "BSC_MEME_ADDRESS_MODEL_V1_P2_EVIDENCE_BLOCKER_QUEUE_V1",
+  "date": "2026-10-13",
+  "branch": "research/bsc-address-model-v1-20261013",
+  "status": "READ_ONLY_NO_GO",
+  "purpose": "Explicitly refuse to promote selected partial, non-owner, mixed-quote or open-position evidence to an economically settled zero-inventory round; focus 2026 opportunity breadth. Stage3 resolves ADFF initial IFML partial and 2ADF first Niulai round; unresolved entire CA token remainders for ADFF MARS/Niulai retain eight audited economic exclusion cases. Stage4 explicitly corrects previous blocker design bug: a single unaudited partial first exit must not forbid a different fully proven later round in the same wallet and exact CA; stage4 R2 A83B and R4 877AF are NEGATIVE controls.",
+  "original_frozen_23_wallets": true,
+  "all_entry_wallets_from_P1_baseline": true,
+  "base_P2_ledger_rounds": 50,
+  "ranked_returns_enabled": false,
+  "items": [
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "token": "牛来",
+      "ca": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "stage": "P2_2026_FIRST",
+      "audit_state": "ONE_EOA_SIGNED_INVENTORY_CLOSED_NEGATIVE_NATIVE_SCOPE_OTHER_RAW_ROUNDS_UNKNOWN",
+      "frozen_2026_transfer_covered": true,
+      "existing_first_stage_signed_trades": 0,
+      "market_outcome": "UNRESOLVED",
+      "record_provenance": [
+        {
+          "path": "crypto-300-profit-mission/research/BSC_MEME_A83B_NIULAI_INBOUND_CURSOR_A_2026-10-12.json",
+          "git_blob_sha": "9c4d37ea37e4d9d06acfe756a4ab684d0605d8d3"
+        },
+        {
+          "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p2-stage4-two-negative-2026-signed-rounds-2026-10-13.json",
+          "git_blob_sha": "5d3b64a96f6ae59585953a620e9414154ee44985"
+        }
+      ],
+      "next": "Read existing full ERC20 cursor/owner original hash, prove signed buys and sell settlement; close token inventory without guessing from transfer count.",
+      "realized_final_PnL": "UNRESOLVED",
+      "audited_closed_episode_indices": [
+        2
+      ],
+      "blocked_specific_episode_indices": [
+        1,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "entire_CA_profit_pnl_state": "UNRESOLVED",
+      "signed_verified_negative_native_scope_episode": {
+        "episode_index": 2,
+        "wei": "-213598956812665039",
+        "proof_path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p2-stage4-two-negative-2026-signed-rounds-2026-10-13.json",
+        "proof_sha": "5d3b64a96f6ae59585953a620e9414154ee44985"
+      },
+      "notes": "R2 owner-signed native scope is audited, R8 exact input tx too long to verify original signer, R12 has third-party original tx: remaining 11 original raw zero rounds unknown, no blanket CA profitability claim."
+    },
+    {
+      "wallet": "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8",
+      "token": "GIGGLE",
+      "ca": "0x20d6015660b3fe52e6690a889b5c51f69902ce0e",
+      "stage": "P2_CONTROL_THEN_2026",
+      "audit_state": "SIGNED_FIRST_ENTRY_AND_7_69_PERCENT_PARTIAL_EXIT_ONLY",
+      "frozen_2026_transfer_covered": false,
+      "existing_first_stage_signed_trades": 2,
+      "first_entry_BNB_value_wei": "100000000000000000",
+      "first_exit_fraction_of_initial_inventory_approx": "0.076886",
+      "first_two_block_native_delta_wei": "148764209579754519",
+      "realized_final_PnL": "UNRESOLVED",
+      "record_provenance": [
+        {
+          "path": "crypto-300-profit-mission/research/BSC_MEME_ADFF_IFML_0ABB_GIGGLE_FIRST_SIGNED_ENTRY_EXIT_2026-10-12.json",
+          "git_blob_sha": "f2e0fb672069490230599292a8feabd764db1887"
+        },
+        {
+          "path": "crypto-300-profit-mission/research/BSC_MEME_0ABB_NIULAI_INBOUND_CURSOR_A_2026-10-12.json",
+          "git_blob_sha": "62b24561ad6c35ef2810adbe1f4bf87b0e0f8265"
+        }
+      ],
+      "next": "Use all full 2026 Niulai/MARS/IFML cursors first; don't turn first GIGGLE partial sale into complete profit.",
+      "audited_closed_episode_indices": [],
+      "blocked_specific_episode_indices": [],
+      "entire_CA_profit_pnl_state": "UNRESOLVED"
+    },
+    {
+      "wallet": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "token": "MARSCOIN",
+      "ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "stage": "P2_2026_FIRST",
+      "audit_state": "ONE_EOA_SIGNED_INVENTORY_CLOSED_NEGATIVE_NATIVE_SCOPE_OTHER_RAW_ROUNDS_UNKNOWN",
+      "frozen_2026_transfer_covered": true,
+      "early_owner_signed_buy_txs": 7,
+      "first_exit_fraction_of_early_inventory_approx": "0.641093",
+      "native_first_sell_block_delta_wei": "508198463321432886",
+      "realized_final_PnL": "UNRESOLVED",
+      "record_provenance": [
+        {
+          "path": "crypto-300-profit-mission/research/BSC_MEME_877AF_MARS_FIRST_PARTIAL_EXIT_COST_BASIS_SENSITIVITY_2026-10-12.json",
+          "git_blob_sha": "f24029e3cc935fc8190a32bf72642d463dbb428f"
+        },
+        {
+          "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p2-stage4-two-negative-2026-signed-rounds-2026-10-13.json",
+          "git_blob_sha": "5d3b64a96f6ae59585953a620e9414154ee44985"
+        },
+        {
+          "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p2-bulk16-verified-outcomes-2026-10-13.json",
+          "git_blob_sha": "51a41aebe7931c242910470a6907e4c93d217568"
+        }
+      ],
+      "next": "Use the full previously paginated MARS token history, segment exact zero-inventory cycles and all signed cashflows. First exit is not a full round and same block contains 3 original wallet external tx.",
+      "audited_closed_episode_indices": [
+        4,
+        5,
+        6,
+        10
+      ],
+      "blocked_specific_episode_indices": [
+        1,
+        2,
+        3,
+        7,
+        8,
+        9,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21
+      ],
+      "entire_CA_profit_pnl_state": "UNRESOLVED",
+      "signed_verified_negative_native_scope_episode": {
+        "episode_index": 4,
+        "wei": "-26064663781901692",
+        "proof_path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p2-stage4-two-negative-2026-signed-rounds-2026-10-13.json",
+        "proof_sha": "5d3b64a96f6ae59585953a620e9414154ee44985"
+      },
+      "notes": "R4 R5 R6 R10 owner-signed BNB native block scoped economic signs independently audited; 17 other original raw cycles and nonzero end token inventory are still UNKNOWN, NOT zero profit. Partial first R1 remains blocked."
+    },
+    {
+      "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "token": "牛来",
+      "ca": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "stage": "P2_2026_FIRST",
+      "audit_state": "TOKEN_RAW_CLOSED_22_WALLET_BLOCKS_BUT_ORIGINAL_SIGNERS_NOT_AUDITED",
+      "frozen_2026_transfer_covered": true,
+      "complete_balance_event_blocks": 22,
+      "native_block_scope_net_wei": "11321909495709854",
+      "realized_final_PnL": "UNRESOLVED",
+      "record_provenance": [
+        {
+          "path": "crypto-300-profit-mission/research/BSC_MEME_DDAC_NIULAI_CLOSED_BNB_BLOCK_AUDIT_2026-10-11.json",
+          "git_blob_sha": "a651daabbaa1420b031b29fb83224c18d73b18a8"
+        }
+      ],
+      "next": "Link all observed blocks to ORIGINAL EOA-signed transactions with success receipts and quote-leg provenance; cannot import 0.0113 BNB as realized profit.",
+      "audited_closed_episode_indices": [],
+      "blocked_specific_episode_indices": [],
+      "entire_CA_profit_pnl_state": "UNRESOLVED"
+    },
+    {
+      "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "token": "牛来",
+      "ca": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "stage": "P2_AFTER_BREADTH",
+      "audit_state": "TOKEN_INVENTORY_REMAINDER_OPEN",
+      "frozen_2026_transfer_covered": true,
+      "remaining_token_raw": "65856455282881733964",
+      "realized_final_PnL": "UNRESOLVED",
+      "record_provenance": [
+        {
+          "path": "crypto-300-profit-mission/research/BSC_MEME_8E6B_DDAC_MARS_NIULAI_NEW_COHORT_BALANCE_AND_SIGNER_QA_2026-10-12.json",
+          "git_blob_sha": "88faddae13bcb9e0454b983a021aebafdd88433a"
+        }
+      ],
+      "next": "Avoid another single-8E6B rabbit hole. Its active Niulai position must not be called a closed win/loss; prioritize A83B/ADFF/877AF elsewhere.",
+      "audited_closed_episode_indices": [],
+      "blocked_specific_episode_indices": [],
+      "entire_CA_profit_pnl_state": "UNRESOLVED"
+    },
+    {
+      "wallet": "0x5c0c5d788661dde7437842fb7f0bbff7f1607583",
+      "token": "MUBARAK",
+      "ca": "0x5c85d6c6825ab4032337f11ee92a72df936b46f6",
+      "stage": "P2_2025_HOLD_CAUSAL",
+      "audit_state": "TWELVE_OWNER_SIGNED_RAW_CLOSED_BUT_INTERNAL_NATIVE_66_BNB_CAUSAL_UNVERIFIED",
+      "frozen_2026_transfer_covered": false,
+      "native_wallet_block_scope_net_wei": "66379663211351567593",
+      "all_owner_signed_12": true,
+      "realized_final_PnL": "UNRESOLVED",
+      "record_provenance": [
+        {
+          "path": "crypto-300-profit-mission/research/BSC_MEME_5C0C_MUBARAK_ALL12_OWNER_SIGNED_66BNB_NATIVE_SCOPE_AUDIT_2026-10-12.json",
+          "git_blob_sha": "3bfcb838a2222dd470fc99171e991e82f2bf4037"
+        }
+      ],
+      "next": "Large raw BNB account change is not final PnL: two outactions plain transfers, gas/internal trace missing. Do not spend entire stage trying paid traces when 2026-wide candidate breadth incomplete.",
+      "audited_closed_episode_indices": [],
+      "blocked_specific_episode_indices": [],
+      "entire_CA_profit_pnl_state": "UNRESOLVED"
+    },
+    {
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "token": "MARSCOIN",
+      "ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "stage": "P2_2026_FIRST",
+      "audit_state": "FULL_ERC20_PAGINATION_QUANTITY_RECONCILED_BUT_TOKEN_REMAINDER_OPEN",
+      "frozen_2026_transfer_covered": true,
+      "full_erc20_in_logs": 43,
+      "full_erc20_out_logs": 37,
+      "source_latest_token_raw_inventory": "2624220920286569690",
+      "realized_final_PnL": "UNRESOLVED",
+      "record_provenance": [
+        {
+          "path": "crypto-300-profit-mission/research/BSC_MEME_ADFF_MARSCOIN_FULL_CURSOR_BALANCE_QA_2026-10-12.json",
+          "git_blob_sha": "1b80a805625d01b4da4f06bc95654513997ffa97"
+        }
+      ],
+      "next": "Original owner-signed transactions must be classified into complete episodes; non-zero latest inventory prohibits treating whole position as closed, past closed subrounds still possible.",
+      "audited_closed_episode_indices": [],
+      "blocked_specific_episode_indices": [],
+      "entire_CA_profit_pnl_state": "UNRESOLVED"
+    },
+    {
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "token": "牛来",
+      "ca": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "stage": "P2_2026_FIRST",
+      "audit_state": "FULL_ERC20_PAGINATION_QUANTITY_RECONCILED_BUT_TOKEN_REMAINDER_OPEN",
+      "frozen_2026_transfer_covered": true,
+      "full_erc20_in_logs": 41,
+      "full_erc20_out_logs": 35,
+      "source_latest_token_raw_inventory": "6382240235403159006",
+      "realized_final_PnL": "UNRESOLVED",
+      "record_provenance": [
+        {
+          "path": "crypto-300-profit-mission/research/BSC_MEME_ADFF_NIULAI_FULL_CURSOR_BALANCE_QA_2026-10-12.json",
+          "git_blob_sha": "1bb9f20444cfee9a54a7ed8ff689fec448c19610"
+        }
+      ],
+      "next": "Original owner-signed transactions must be classified into complete episodes; non-zero latest inventory prohibits treating whole position as closed, past closed subrounds still possible.",
+      "audited_closed_episode_indices": [],
+      "blocked_specific_episode_indices": [],
+      "entire_CA_profit_pnl_state": "UNRESOLVED"
+    }
+  ],
+  "source_manifest": {
+    "BSC_MEME_ADFF_IFML_0ABB_GIGGLE_FIRST_SIGNED_ENTRY_EXIT_2026-10-12.json": {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_ADFF_IFML_0ABB_GIGGLE_FIRST_SIGNED_ENTRY_EXIT_2026-10-12.json",
+      "git_blob_sha": "f2e0fb672069490230599292a8feabd764db1887"
+    },
+    "BSC_MEME_877AF_MARS_FIRST_PARTIAL_EXIT_COST_BASIS_SENSITIVITY_2026-10-12.json": {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_877AF_MARS_FIRST_PARTIAL_EXIT_COST_BASIS_SENSITIVITY_2026-10-12.json",
+      "git_blob_sha": "f24029e3cc935fc8190a32bf72642d463dbb428f"
+    },
+    "BSC_MEME_DDAC_NIULAI_CLOSED_BNB_BLOCK_AUDIT_2026-10-11.json": {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_DDAC_NIULAI_CLOSED_BNB_BLOCK_AUDIT_2026-10-11.json",
+      "git_blob_sha": "a651daabbaa1420b031b29fb83224c18d73b18a8"
+    },
+    "BSC_MEME_2ADF_NIULAI_FULL_CURSOR_BALANCE_QA_2026-10-12.json": {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_2ADF_NIULAI_FULL_CURSOR_BALANCE_QA_2026-10-12.json",
+      "git_blob_sha": "c6098dd06a723cdb609abd0b832b739f99e40c67"
+    },
+    "BSC_MEME_5C0C_MUBARAK_ALL12_OWNER_SIGNED_66BNB_NATIVE_SCOPE_AUDIT_2026-10-12.json": {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_5C0C_MUBARAK_ALL12_OWNER_SIGNED_66BNB_NATIVE_SCOPE_AUDIT_2026-10-12.json",
+      "git_blob_sha": "3bfcb838a2222dd470fc99171e991e82f2bf4037"
+    },
+    "BSC_MEME_8E6B_DDAC_MARS_NIULAI_NEW_COHORT_BALANCE_AND_SIGNER_QA_2026-10-12.json": {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_8E6B_DDAC_MARS_NIULAI_NEW_COHORT_BALANCE_AND_SIGNER_QA_2026-10-12.json",
+      "git_blob_sha": "88faddae13bcb9e0454b983a021aebafdd88433a"
+    },
+    "BSC_MEME_A83B_NIULAI_INBOUND_CURSOR_A_2026-10-12.json": {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_A83B_NIULAI_INBOUND_CURSOR_A_2026-10-12.json",
+      "git_blob_sha": "9c4d37ea37e4d9d06acfe756a4ab684d0605d8d3"
+    },
+    "BSC_MEME_0ABB_NIULAI_INBOUND_CURSOR_A_2026-10-12.json": {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_0ABB_NIULAI_INBOUND_CURSOR_A_2026-10-12.json",
+      "git_blob_sha": "62b24561ad6c35ef2810adbe1f4bf87b0e0f8265"
+    },
+    "BSC_MEME_ADFF_MARSCOIN_FULL_CURSOR_BALANCE_QA_2026-10-12.json": {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_ADFF_MARSCOIN_FULL_CURSOR_BALANCE_QA_2026-10-12.json",
+      "git_blob_sha": "1b80a805625d01b4da4f06bc95654513997ffa97"
+    },
+    "BSC_MEME_ADFF_NIULAI_FULL_CURSOR_BALANCE_QA_2026-10-12.json": {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_ADFF_NIULAI_FULL_CURSOR_BALANCE_QA_2026-10-12.json",
+      "git_blob_sha": "1bb9f20444cfee9a54a7ed8ff689fec448c19610"
+    },
+    "bsc-meme-address-model-v1-p2-stage4-two-negative-2026-signed-rounds-2026-10-13.json": {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p2-stage4-two-negative-2026-signed-rounds-2026-10-13.json",
+      "git_blob_sha": "5d3b64a96f6ae59585953a620e9414154ee44985"
+    },
+    "bsc-meme-address-model-v1-p2-stage4-precommitted-2026-10-13.json": {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p2-stage4-precommitted-2026-10-13.json",
+      "git_blob_sha": "c4477d02dac3de5fda2435c8a1ba226313a3c52c"
+    },
+    "bsc-meme-address-model-v1-p2-bulk16-verified-outcomes-2026-10-13.json": {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p2-bulk16-verified-outcomes-2026-10-13.json",
+      "git_blob_sha": "51a41aebe7931c242910470a6907e4c93d217568"
+    }
+  },
+  "disqualification_rules": [
+    "Partial exit without later complete owner-signed remainder -> NO_CLOSED_ROUND_PNL",
+    "Wallet native block rise without quote asset and internal causal proof -> NATIVE_BLOCK_SCOPE_ONLY",
+    "ERC20 raw amount reconciles and token balance zero without signer/receipt -> NO_ECONOMIC_PNL",
+    "Plain ERC20 transfer not automatically a market exit",
+    "Unrealized remaining exact token raw quantity -> OPEN_POSITION_NOT_REALIZED_WIN",
+    "Early first buyer capital scale/same-block trades must be considered before any follower-alpha claim"
+  ],
+  "next_batch_priority": "ADFF IFML, A83B 2026 major, 877AF MARS full owner signed cycles, 2ADF/DDAC Niulai evidence. DO NOT optimize 8E6B history.",
+  "no_cost_PNL_conversion": true,
+  "resolved_blockers": {
+    "former_ADFF_IFML_first_partial_first_two_tx": "First partial IFML exit was subsequently completed in the full original raw inventory R1 by two more owner-signed successful exits, economic native wallet round included in Stage3 with bounded attribution.",
+    "former_2ADF_NIULAI_first_unaudited": "First raw inventory closed Niulai R1 is now confirmed original EOA signed successful 2 tx and N-1/N native scope NEGATIVE; other nine raw cycles remain unaudited; no promotion of whole 2ADF Niulai position."
+  },
+  "previous_absolute_CA_exclusion_policy_is_invalid": true,
+  "ca_ledger_policy": "Blocker means at least one remaining UNVERIFIED same-CA episode or unresolved entire position. P2 ledger may contain other confirmed signed closed episodes of same CA. Enforce disjoint (wallet, exact CA, episode_index) blocker vs ledger; unrelated wallet×CA cannot be promoted as audited.",
+  "remaining_MARS_877AF_unverified_17_after_bulk16": true,
+  "bulk16_disqualifications": [
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "token": "牛来",
+      "ca": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "episode": 8,
+      "reason": "TRUNCATED_RPC_ORIGINAL_SENDER_UNVERIFIED",
+      "source_sha": "51a41aebe7931c242910470a6907e4c93d217568"
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "token": "牛来",
+      "ca": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "episode": 12,
+      "reason": "THIRD_PARTY_OR_NONOWNER_ORIGINAL_TX",
+      "source_sha": "51a41aebe7931c242910470a6907e4c93d217568"
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "token": "龙虾",
+      "ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "episode": 5,
+      "reason": "THIRD_PARTY_OR_NONOWNER_ORIGINAL_TX",
+      "source_sha": "51a41aebe7931c242910470a6907e4c93d217568"
+    }
+  ]
+}

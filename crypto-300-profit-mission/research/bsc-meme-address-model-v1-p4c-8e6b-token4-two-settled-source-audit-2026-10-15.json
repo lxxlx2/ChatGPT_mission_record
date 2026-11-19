@@ -1,0 +1,392 @@
+{
+  "schema": "BSC_P4C_8E6B_TOKEN4_TWO_SETTLED_OWNER_NATIVE_ROUNDS_19TX_FIVE_SPOT",
+  "scope": "Pin original 8E6B / token 4 across frozen P2 indices 16 loss and 17 gain, all 19 originally owner-signed successful settled EOA native transactions and WBNB exits, gas, route residual. Five preselected live independent full signer/receipt+WBNB mint-burn/native block checks. Original wallet native result (not follower alpha). Fees/residual receiver unknown, first global public U not established; no real 1/5/15min signal.",
+  "source_manifest": [
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-8e6b-token4-two-rounds19-precommit-2026-10-15.json",
+      "git_blob_sha": "738da1a4a3dfc9304ee188b326b7d307da50145c"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-8e6b-token4-independent-five-part1-2026-10-15.json",
+      "git_blob_sha": "75372f649a8ce75188d41b011df6febe33ecbe84"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-8e6b-token4-independent-five-part2-2026-10-15.json",
+      "git_blob_sha": "79a43a6c97085e8e796a8288fffdf175618d26f3"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_STAGE24_8E6B_TOKEN4_TWO_ROUNDS_THREE_MAJOR_POSITIVE_COHORT_2026-10-13.json",
+      "git_blob_sha": "d56c90eff2d062dbb186f5c89e0f59760d6a8d1c"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_8E6B_4_EXACT_SETTLEMENT_RECONCILIATION_2026-10-11.json",
+      "git_blob_sha": "69cc2ec8e27d3d8427645cdbfdfe5c8043376fe1"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_8E6B_4_ORIGIN_RECEIPT_VERIFICATION_2026-10-11.json",
+      "git_blob_sha": "41021e96c0f22023a829e8aae8a460d4752d08ef"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_8E6B_4_NATIVE_BLOCK_AUDIT_2026-10-11.json",
+      "git_blob_sha": "c5f478fd6593d775db16aac0a54c19b180f61ec0"
+    }
+  ],
+  "summary": {
+    "wallets": 1,
+    "major_CAs": 1,
+    "original_native_economic_rounds": 2,
+    "original_owner_signed_successful_txs": 19,
+    "original_native_positive_rounds": 1,
+    "original_native_negative_rounds": 1,
+    "independently_rechecked_full_transactions": 5,
+    "new_followable_signals": 0,
+    "production": "NO_GO"
+  },
+  "rounds": [
+    {
+      "p2_index": 16,
+      "original_episode": 1,
+      "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "exact_CA": "0x0a43fc31a73013089df59194872ecae4cae14444",
+      "token": "4",
+      "original_tx_count": 2,
+      "original_token_inventory_residual_raw": "0",
+      "original_owner_native_net_wei": "-117977426190152496",
+      "paid_gas_wei": "6541656000000000",
+      "route_residual_wei": "3924891210200479",
+      "original_owner_economic_sign": "NEGATIVE",
+      "observer_followable_profit": "UNRESOLVED"
+    },
+    {
+      "p2_index": 17,
+      "original_episode": 2,
+      "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "exact_CA": "0x0a43fc31a73013089df59194872ecae4cae14444",
+      "token": "4",
+      "original_tx_count": 17,
+      "original_token_inventory_residual_raw": "0",
+      "original_owner_native_net_wei": "13282964879793219111",
+      "paid_gas_wei": "23925089273120164",
+      "route_residual_wei": "5118666658977376",
+      "original_owner_economic_sign": "POSITIVE",
+      "observer_followable_profit": "UNRESOLVED"
+    }
+  ],
+  "original_transactions": [
+    {
+      "p2_index": 16,
+      "hash": "0xeb14b461dfd62423bb83e5f930906e9004845c4b47100ae018d19dd81f8af73b",
+      "block": 63056884,
+      "direction": "in",
+      "original_signed_success": true,
+      "original_native_delta_wei": "-504911654000000000",
+      "original_wbnb_withdraw_wei": "0",
+      "original_buy_native_msg_wei": "500000000000000000",
+      "paid_gas_wei": "4911654000000000",
+      "route_residual_wei": "0",
+      "original_token_delta_raw": "1698141038134039799649726",
+      "original_token_inventory_after_raw": "1698141038134039799649726",
+      "independent_spot": {
+        "original_receipt_success": true,
+        "original_signer": true,
+        "independent_native_N_minus1_N": true,
+        "gas_wei": "4911654000000000",
+        "paired_WBNB_deposit_or_withdrawal_wei": "495000000000000000"
+      }
+    },
+    {
+      "p2_index": 16,
+      "hash": "0x11f18d2e8169495b7085787d88b7de644a3579bf3e2dfb6bc609e3e8eae48601",
+      "block": 63056949,
+      "direction": "out",
+      "original_signed_success": true,
+      "original_native_delta_wei": "386934227809847504",
+      "original_wbnb_withdraw_wei": "392489121020047983",
+      "original_buy_native_msg_wei": "0",
+      "paid_gas_wei": "1630002000000000",
+      "route_residual_wei": "3924891210200479",
+      "original_token_delta_raw": "-1698141038134039799649726",
+      "original_token_inventory_after_raw": "0",
+      "independent_spot": {
+        "original_receipt_success": true,
+        "original_signer": true,
+        "independent_native_N_minus1_N": true,
+        "gas_wei": "1630002000000000",
+        "paired_WBNB_deposit_or_withdrawal_wei": "392489121020047983"
+      }
+    },
+    {
+      "p2_index": 17,
+      "hash": "0x8bee775423389c622a648bc22a2e771d0270bef8024764ed604ee527b755ca89",
+      "block": 63057889,
+      "direction": "in",
+      "original_signed_success": true,
+      "original_native_delta_wei": "-304911654000000000",
+      "original_wbnb_withdraw_wei": "0",
+      "original_buy_native_msg_wei": "300000000000000000",
+      "paid_gas_wei": "4911654000000000",
+      "route_residual_wei": "0",
+      "original_token_delta_raw": "4238008047984731651115211",
+      "original_token_inventory_after_raw": "4238008047984731651115211",
+      "independent_spot": {
+        "original_receipt_success": true,
+        "original_signer": true,
+        "independent_native_N_minus1_N": true,
+        "gas_wei": "4911654000000000",
+        "paired_WBNB_deposit_or_withdrawal_wei": "297000000000000000"
+      }
+    },
+    {
+      "p2_index": 17,
+      "hash": "0x79cf3a597877e0bd7e04339590763c31bb599411873f9281e24915f6ef1b6772",
+      "block": 63058886,
+      "direction": "out",
+      "original_signed_success": true,
+      "original_native_delta_wei": "505180521238760289",
+      "original_wbnb_withdraw_wei": "511866665897737665",
+      "original_buy_native_msg_wei": "0",
+      "paid_gas_wei": "1567478000000000",
+      "route_residual_wei": "5118666658977376",
+      "original_token_delta_raw": "-1404199451689091208341405",
+      "original_token_inventory_after_raw": "2833808596295640442773806",
+      "independent_spot": {
+        "original_receipt_success": true,
+        "original_signer": true,
+        "independent_native_N_minus1_N": true,
+        "gas_wei": "1567478000000000",
+        "paired_WBNB_deposit_or_withdrawal_wei": "511866665897737665"
+      }
+    },
+    {
+      "p2_index": 17,
+      "hash": "0xfa6c5f17ea5597ab90402f96d013fb8213b67ac5f4c5af02b450f0386433898a",
+      "block": 63059233,
+      "direction": "out",
+      "original_signed_success": true,
+      "original_native_delta_wei": "468839645781214365",
+      "original_wbnb_withdraw_wei": "470401469781214365",
+      "original_buy_native_msg_wei": "0",
+      "paid_gas_wei": "1561824000000000",
+      "route_residual_wei": "0",
+      "original_token_delta_raw": "-850142578888692132832141",
+      "original_token_inventory_after_raw": "1983666017406948309941665",
+      "independent_spot": null
+    },
+    {
+      "p2_index": 17,
+      "hash": "0x9a5e7e333092f94c7c78656f221c7b08c319727e8693084bf1e117e3c229723b",
+      "block": 63059782,
+      "direction": "out",
+      "original_signed_success": true,
+      "original_native_delta_wei": "549190240675404634",
+      "original_wbnb_withdraw_wei": "550752064675404634",
+      "original_buy_native_msg_wei": "0",
+      "paid_gas_wei": "1561824000000000",
+      "route_residual_wei": "0",
+      "original_token_delta_raw": "-595099805222084492982499",
+      "original_token_inventory_after_raw": "1388566212184863816959166",
+      "independent_spot": null
+    },
+    {
+      "p2_index": 17,
+      "hash": "0x0e89ad3e6f44b8a7de464b10862c61c9ec7060846539fab6ae0df24927e5af7b",
+      "block": 63069490,
+      "direction": "out",
+      "original_signed_success": true,
+      "original_native_delta_wei": "518893872012839939",
+      "original_wbnb_withdraw_wei": "520455696012839939",
+      "original_buy_native_msg_wei": "0",
+      "paid_gas_wei": "1561824000000000",
+      "route_residual_wei": "0",
+      "original_token_delta_raw": "-416569863655459145087749",
+      "original_token_inventory_after_raw": "971996348529404671871417",
+      "independent_spot": null
+    },
+    {
+      "p2_index": 17,
+      "hash": "0x69616d58ef513786ce7536d573027a0bb83f3dc5908d10b0d13a9a6d02070219",
+      "block": 63073432,
+      "direction": "out",
+      "original_signed_success": true,
+      "original_native_delta_wei": "523104793183070446",
+      "original_wbnb_withdraw_wei": "524666617183070446",
+      "original_buy_native_msg_wei": "0",
+      "paid_gas_wei": "1561824000000000",
+      "route_residual_wei": "0",
+      "original_token_delta_raw": "-291598904558821401561425",
+      "original_token_inventory_after_raw": "680397443970583270309992",
+      "independent_spot": null
+    },
+    {
+      "p2_index": 17,
+      "hash": "0xc3d6fd52ea632d2c48a7cd79db4eb16ae5deaf3de930c56ba861ec2d4af8d59d",
+      "block": 63082567,
+      "direction": "out",
+      "original_signed_success": true,
+      "original_native_delta_wei": "932996688597527471",
+      "original_wbnb_withdraw_wei": "934443188597527471",
+      "original_buy_native_msg_wei": "0",
+      "paid_gas_wei": "1446500000000000",
+      "route_residual_wei": "0",
+      "original_token_delta_raw": "-340198721985291635154996",
+      "original_token_inventory_after_raw": "340198721985291635154996",
+      "independent_spot": null
+    },
+    {
+      "p2_index": 17,
+      "hash": "0x206bb565b2114fc58381a7f0d493f0c9454ea254f671ffadfd08c866dbf0c064",
+      "block": 63082969,
+      "direction": "out",
+      "original_signed_success": true,
+      "original_native_delta_wei": "1218001868842888281",
+      "original_wbnb_withdraw_wei": "1219448368842888281",
+      "original_buy_native_msg_wei": "0",
+      "paid_gas_wei": "1446500000000000",
+      "route_residual_wei": "0",
+      "original_token_delta_raw": "-170099360992645817577498",
+      "original_token_inventory_after_raw": "170099360992645817577498",
+      "independent_spot": null
+    },
+    {
+      "p2_index": 17,
+      "hash": "0xbe5101138ca28c421f735b802226bfb0b2b9b57c5605cc9a4dd30413c746a774",
+      "block": 63083603,
+      "direction": "out",
+      "original_signed_success": true,
+      "original_native_delta_wei": "703345782008846815",
+      "original_wbnb_withdraw_wei": "704792282008846815",
+      "original_buy_native_msg_wei": "0",
+      "paid_gas_wei": "1446500000000000",
+      "route_residual_wei": "0",
+      "original_token_delta_raw": "-51029808297793745273249",
+      "original_token_inventory_after_raw": "119069552694852072304249",
+      "independent_spot": null
+    },
+    {
+      "p2_index": 17,
+      "hash": "0x5e8e7847322621870ed19686d0fafdc99de479877556fb704db58b1ac20f2109",
+      "block": 63084131,
+      "direction": "out",
+      "original_signed_success": true,
+      "original_native_delta_wei": "598366914563362802",
+      "original_wbnb_withdraw_wei": "599813282563362802",
+      "original_buy_native_msg_wei": "0",
+      "paid_gas_wei": "1446368000000000",
+      "route_residual_wei": "0",
+      "original_token_delta_raw": "-35720865808455621691274",
+      "original_token_inventory_after_raw": "83348686886396450612975",
+      "independent_spot": null
+    },
+    {
+      "p2_index": 17,
+      "hash": "0x313bfe296591597e08046140255d5b61f6d4cbce64731d70746fbe1626e06a8f",
+      "block": 63085510,
+      "direction": "out",
+      "original_signed_success": true,
+      "original_native_delta_wei": "447982796548531159",
+      "original_wbnb_withdraw_wei": "449429164548531159",
+      "original_buy_native_msg_wei": "0",
+      "paid_gas_wei": "1446368000000000",
+      "route_residual_wei": "0",
+      "original_token_delta_raw": "-25004606065918935183892",
+      "original_token_inventory_after_raw": "58344080820477515429083",
+      "independent_spot": null
+    },
+    {
+      "p2_index": 17,
+      "hash": "0xd39be2185edbed118db78ab7dbd4a3d414823af83e1c9097c821d88718e0a2f4",
+      "block": 63200942,
+      "direction": "out",
+      "original_signed_success": true,
+      "original_native_delta_wei": "1056469341608489113",
+      "original_wbnb_withdraw_wei": "1058031165608489113",
+      "original_buy_native_msg_wei": "0",
+      "paid_gas_wei": "1561824000000000",
+      "route_residual_wei": "0",
+      "original_token_delta_raw": "-19253546670757580091597",
+      "original_token_inventory_after_raw": "39090534149719935337486",
+      "independent_spot": null
+    },
+    {
+      "p2_index": 17,
+      "hash": "0xd571753fe2493bafff570702d8848f634e4b3bb8deeec7a1a0ecbc751e39ad94",
+      "block": 63262672,
+      "direction": "out",
+      "original_signed_success": true,
+      "original_native_delta_wei": "1224664276507655958",
+      "original_wbnb_withdraw_wei": "1224681245407655958",
+      "original_buy_native_msg_wei": "0",
+      "paid_gas_wei": "16968900000000",
+      "route_residual_wei": "0",
+      "original_token_delta_raw": "-9772633537429983834371",
+      "original_token_inventory_after_raw": "29317900612289951503115",
+      "independent_spot": null
+    },
+    {
+      "p2_index": 17,
+      "hash": "0x4c30211d8372ee683b9b20eaa7b965b317be21e8285f98e0215598061a78c5b1",
+      "block": 63328710,
+      "direction": "out",
+      "original_signed_success": true,
+      "original_native_delta_wei": "1402658376521530120",
+      "original_wbnb_withdraw_wei": "1403052876521530120",
+      "original_buy_native_msg_wei": "0",
+      "paid_gas_wei": "394500000000000",
+      "route_residual_wei": "0",
+      "original_token_delta_raw": "-8795370183686985450934",
+      "original_token_inventory_after_raw": "20522530428602966052181",
+      "independent_spot": null
+    },
+    {
+      "p2_index": 17,
+      "hash": "0x2f6a73dc8d4009595ffa1da7f5a2be1a0a2dac9a57ad7d7c759f8d74347eda0f",
+      "block": 63335246,
+      "direction": "out",
+      "original_signed_success": true,
+      "original_native_delta_wei": "1038944722383794327",
+      "original_wbnb_withdraw_wei": "1039370674383794327",
+      "original_buy_native_msg_wei": "0",
+      "paid_gas_wei": "425952000000000",
+      "route_residual_wei": "0",
+      "original_token_delta_raw": "-6156759128580889815654",
+      "original_token_inventory_after_raw": "14365771300022076236527",
+      "independent_spot": null
+    },
+    {
+      "p2_index": 17,
+      "hash": "0x7a464040b2d448505a0fa8b7e61ebc35e7384903f2097f3fb32bfea5d1e7eb84",
+      "block": 63901440,
+      "direction": "out",
+      "original_signed_success": true,
+      "original_native_delta_wei": "1034009086383959250",
+      "original_wbnb_withdraw_wei": "1035568666383959250",
+      "original_buy_native_msg_wei": "0",
+      "paid_gas_wei": "1559580000000000",
+      "route_residual_wei": "0",
+      "original_token_delta_raw": "-4740704529007285158053",
+      "original_token_inventory_after_raw": "9625066771014791078474",
+      "independent_spot": null
+    },
+    {
+      "p2_index": 17,
+      "hash": "0x0e51e0e953ed22e8635665a05fb93bd28202d6e7cfd92b5de3b29c9d382d4462",
+      "block": 64458294,
+      "direction": "out",
+      "original_signed_success": true,
+      "original_native_delta_wei": "1365227606935344142",
+      "original_wbnb_withdraw_wei": "1365235207308464306",
+      "original_buy_native_msg_wei": "0",
+      "paid_gas_wei": "7600373120164",
+      "route_residual_wei": "0",
+      "original_token_delta_raw": "-9625066771014791078474",
+      "original_token_inventory_after_raw": "0",
+      "independent_spot": {
+        "original_receipt_success": true,
+        "original_signer": true,
+        "independent_native_N_minus1_N": true,
+        "gas_wei": "7600373120164",
+        "paired_WBNB_deposit_or_withdrawal_wei": "1365235207308464306"
+      }
+    }
+  ]
+}

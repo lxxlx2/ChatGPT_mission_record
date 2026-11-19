@@ -1,0 +1,28 @@
+name: BSC P4C frozen seven active wallets
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/bsc-meme-p4c-sevenwallet-crosschecks.yml"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4c_sevenwallet_batch.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4c_sevenwallet_batch.py"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4c_crosswallet_verified23x19.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4c_crosswallet_verified23x19.py"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  seven-wallet:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify original fixed seven-wallet evidence and whole cohort
+        run: |
+          cd crypto-300-profit-mission/research
+          python3 -B -m unittest -v test_bsc_meme_address_model_v1_p4c_sevenwallet_batch.py test_bsc_meme_address_model_v1_p4c_crosswallet_verified23x19.py
+          python3 -B bsc_meme_address_model_v1_p4c_sevenwallet_batch.py --output /tmp/seven-wallets.json
+          python3 -B bsc_meme_address_model_v1_p4c_crosswallet_verified23x19.py --output /tmp/whole-23x19.json
+          python3 -B -c 'import json; from pathlib import Path; a=json.loads(Path("/tmp/seven-wallets.json").read_text()); b=json.loads(Path("/tmp/whole-23x19.json").read_text()); assert (a["summary"]["source_owner_signature_reverified_transactions"],a["summary"]["independently_settled_native_positive_rounds"])==(14,2); assert (b["summary"]["implicit_wallet_CAs"],b["summary"]["verified_native_positive_rounds"],b["summary"]["verified_native_negative_rounds"],b["summary"]["not_economically_audited_cells"])==(437,2,1,434); assert a["summary"]["production"]==b["summary"]["production"]=="NO_GO"'

@@ -1,0 +1,41 @@
+{
+  "schema": "BSC_P4B_FLAP_MAJOR2_HISTORICAL_QUOTE_DECIMALS_RAW",
+  "source_precommit_git_blob_sha": "eafe53cd42ac0a5fc23336b2169b5078a120e1b1",
+  "rows": [
+    {
+      "token": "牛来",
+      "quote_CA": "0x205812cdbed920aff76c6580abd681a46d11efc7",
+      "buy_tax_bps": 100,
+      "sell_tax_bps": 100,
+      "creation_block": 115628768,
+      "creation_tx": "0x907beed290b7daeb45cd2f05085c7ca67f997c06749f716c40ed431b2b2eb62d",
+      "buy_block": 115628774,
+      "decimals_creation_raw": "0x0000000000000000000000000000000000000000000000000000000000000012",
+      "decimals_at_buy_raw": "0x0000000000000000000000000000000000000000000000000000000000000012",
+      "metadata_current": {
+        "decimals": 18,
+        "logo": null,
+        "name": "Q3B",
+        "symbol": "Q3B"
+      }
+    },
+    {
+      "token": "MARSCOIN",
+      "quote_CA": "0xbe9d156892e55e7154bcd3cb0fea677f9d3103e1",
+      "buy_tax_bps": 300,
+      "sell_tax_bps": 300,
+      "creation_block": 112441387,
+      "creation_tx": "0xb499cc66534db949c6040dbc914ba0e3e50423a408717f69a193a8e29eeeb7a2",
+      "buy_block": 112441394,
+      "decimals_creation_raw": "0x0000000000000000000000000000000000000000000000000000000000000012",
+      "decimals_at_buy_raw": "0x0000000000000000000000000000000000000000000000000000000000000012",
+      "metadata_current": {
+        "decimals": 18,
+        "logo": null,
+        "name": "S5B",
+        "symbol": "S5B"
+      }
+    }
+  ],
+  "production": "NO_GO"
+}

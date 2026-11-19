@@ -1,0 +1,16 @@
+{
+  "schema": "BSC_P4C_ADFF_IMMUTABLE_PROVENANCE_CORRECTION_V1",
+  "date": "2026-10-15",
+  "correction_kind": "APPEND_ONLY_SOURCE_PROVENANCE_ALIAS",
+  "historical_source_path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-three-unclosed-ADFF-transfer-probe-2026-10-15.json",
+  "historical_source_git_blob_sha": "ec26c14395b770ca036f6ee765603edd273717bc",
+  "historical_placeholder": "dummyprecommit",
+  "actual_precommit_path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-three-unclosed-router-event-precommit-2026-10-15.json",
+  "actual_precommit_git_blob_sha": "9816653aae69785222ec75eb85c0abb19e1dd555",
+  "earlier_seven_wallet_precommit_path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-sevenwallet-balanced-five-round-precommit-2026-10-15.json",
+  "earlier_seven_wallet_precommit_git_blob_sha": "85a39f4c5c9723e98180a1c018b9dd94588fe3b6",
+  "reason": "Independent other AI fixed SHA ea6684a3478d301534ff9d26b5984367eb7530f3 APPROVE reported nonblocking stale ADFF source precommit_sha='dummyprecommit'. Historical source immutable by Git blob pin and mainnet RPC independent audit. This append-only alias links exact historical bytes to original selection freeze rather than overwriting original.",
+  "historical_data_rewritten": false,
+  "economic_evidence_upgraded": false,
+  "production": "NO_GO"
+}

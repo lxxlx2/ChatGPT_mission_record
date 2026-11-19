@@ -1,0 +1,27 @@
+# BSC 地址分析 P4-C — 2026-10-15 外部 AI 独立审核及整改登记
+
+**Review verdict received from the user in this conversation: `APPROVE` for exactly `ea6684a3478d301534ff9d26b5984367eb7530f3`.** Comparison base: `4b15b446fc3b6f680ee0854078b1c3c3f2bfb598`. Original [Draft PR #40](https://github.com/lxxlx2/ChatGPT_mission_record/pull/40). This is a user-provided independent AI audit report, **not a claim that a GitHub APPROVE review was submitted** or that the report's temporary `/tmp/p4c-independent-audit-20261015` files were uploaded to this repository. Do not cite the other AI's ephemeral absolute paths as GitHub evidence.
+
+## Independent reviewer scope and conclusion (user-provided)
+
+- Reviewer separately checked seven original BSC chainId 56 transactions and log identity using read-only RPC, independently recalculated three original owner inventories with integer math, recursively checked **106 unique original Git source blobs**, inspected frozen 23×19 denominator, reviewed true historical WBNB/Q3B quote routing, and compared the original 8E6B two positive and DDAC one negative owner BNB cashflows. No independent secp256k1 recovery beyond on-chain transaction signer from standard RPC.
+- The fixed source run approved **3/3 owner token inventory-closed but economically unqualified source rounds**, **0 newly proven native profitable/losing rounds**, and no false profit promotion; **2 previously proven positive 8E6B owner rounds**, **1 previously proven negative DDAC owner round**, **434 other economic-unreviewed wallet×CA cells**. Do not use these historic owner profits as 1/5/15-minute follower alpha.
+- Four CI runs checked by independent reviewer had matching exact SHA and SUCCESS: [Main #38618139284](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38618139284), [Three quote #38618139289](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38618139289), [Seven owners #38618139339](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38618139339), [8E6B positive #38618139348](https://github.com/lxxlx2/ChatGPT_mission_record/actions/runs/38618139348).
+- Original additional broad-suite execution `python3 -B -m unittest discover -p 'test_bsc*.py'` yielded **285/286 PASS**, one *pre-existing* legacy MARSCOIN CA length failure also reproduced on the original comparison base. No new source economic bug identified.
+- **Independent review `APPROVE` is code/evidence-grading ONLY for original SHA. P4-C PARTIAL, P4-B U UNRESOLVED, P5 BLOCKED, `NO_GO/NO_MERGE/NO_DEPLOY`.** All subsequent changed code and CI SHAs require their own QA or new independent review before advancing G6, and review acceptance does not authorize merge, Mac changes, signals or live trades.
+
+## Exact audit findings, changes made in the same original draft PR branch
+
+| Finding | Reviewer severity | Resolution | Code / evidence |
+| --- | --- | --- | --- |
+| Duplicating original ADFF ERC20 log array or changing log `removed` to true could bypass raw `build()` validity checks; old `load()` original blob pin already protected the fixed data | P3, nonblocking | Added per-row source validity plus `(blockHash,transactionHash,logIndex)` uniqueness, `removed=false`, checked blockNumber, rejected provider error; adversarial duplicates/reorg/block/quote tests | `bsc_meme_address_model_v1_p4c_three_quote_gate.py`; `test_bsc_meme_address_model_v1_p4c_three_quote_gate.py` |
+| Historical ADFF source had `precommit_sha:"dummyprecommit"` rather than true frozen blob | P3, nonblocking | **Append-only** provenance correction manifest fixes identity link, pins actual prior frozen Git blob and historical source; original raw source unchanged, model `load()` validates new manifest Git blob | `bsc-meme-address-model-v1-p4c-ADFF-precommit-immutable-correction-2026-10-15.json`, model |
+| Old `bsc_meme_top_traders_readonly.py` MARSCOIN CA was missing a character; legacy `test_bsc_meme_top_traders_readonly.py` did not pass in baseline | P2, pre-existing | Corrected exact CA to frozen `0xfe189e97832da1573e4e4ff034f4ffc3a15c7777`, pinned new regression assertion, expanded BSC main CI to discover all `test_bsc*.py` | Legacy read-only constant & test; `.github/workflows/bsc-meme-address-model-v1-tests.yml` |
+
+**Historical untouched assets:** All previous original stage sources and normalized economic result JSON remain immutable; economic cohort size, quoted asset route, token inventories, sample selection, 23×19 universe and first executable market U conclusions unchanged. Legacy GMGN tooling is **NOT** switched on, no API key purchased, no actual monitoring, no deployment, no wallet action, no production.
+
+## Forward work and safety
+
+After full BSC CI on the actual post-fix SHA is confirmed, resume the planned **balanced multi-owner 2026 major Meme economic settlement batches**, prioritizing original P2 source-curated signed positive *and* negative candidate rounds. No endless ADFF/2ADF/A83B router paid tracing loops. P4-B market first observer-visible executable U and P5 1/5/15-minute later real capacity/slippage/tax/exit validation still required. If a new independent review becomes a gate, deliver a complete copy-ready prompt with the **then-current 40-character SHA** and real CI/source URLs per `bsc-meme-address-model-v1-development-rules-2026-10-15.md`.
+
+**The original audited SHA was APPROVED. Current follow-up SHA is not yet independently approved.**

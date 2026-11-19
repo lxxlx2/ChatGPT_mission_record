@@ -1,0 +1,97 @@
+{
+  "schema": "BSC_P4C_3EOA_5CASE_BNB_BALANCE_FROZEN_QUERY_PLAN",
+  "precommit_git_blob_sha": "21ad05ced290877ef66baa8721acd0361a9f595e",
+  "network": "bnb-mainnet",
+  "production": "NO_GO",
+  "jobs": [
+    {
+      "p2": 3,
+      "owner": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "token": "我踏马来了",
+      "tx": "0xb19db9769e263071ebaa9a90d452aaac86cbc5ee5dcceae954996a334e1b8246",
+      "block": 74460512,
+      "before_block": 74460511
+    },
+    {
+      "p2": 3,
+      "owner": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "token": "我踏马来了",
+      "tx": "0xaf25e6a23743c25bae818e760f16919fc7d1617451a34470e1f93fe7999a762e",
+      "block": 74468389,
+      "before_block": 74468388
+    },
+    {
+      "p2": 4,
+      "owner": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "token": "我踏马来了",
+      "tx": "0x0788b4e8ba13e70c101a0b793445dbf39451d9d0173f0c767161f3b12a94cb0a",
+      "block": 74473636,
+      "before_block": 74473635
+    },
+    {
+      "p2": 4,
+      "owner": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "token": "我踏马来了",
+      "tx": "0x6dcec649a72a9aaafcdde3b47172d0a7961ec9e68c5784bd553163db0d2912ad",
+      "block": 74473637,
+      "before_block": 74473636
+    },
+    {
+      "p2": 4,
+      "owner": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "token": "我踏马来了",
+      "tx": "0xd3e43e528a6e60c93e379b2d0f4820be8bc0b1feca73773eb5857cd7af93e19e",
+      "block": 74473641,
+      "before_block": 74473640
+    },
+    {
+      "p2": 43,
+      "owner": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "token": "龙虾",
+      "tx": "0x7d2a5ae4c18d56b9ed8dec99d15ba307b99d8cbd54fb900b7f833dd11b2258b1",
+      "block": 84962371,
+      "before_block": 84962370
+    },
+    {
+      "p2": 43,
+      "owner": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "token": "龙虾",
+      "tx": "0x650b9e4e945ff0cecc22b2f57c2c3339913d48bc1c1042f43b384335afa9b7aa",
+      "block": 84963046,
+      "before_block": 84963045
+    },
+    {
+      "p2": 44,
+      "owner": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "token": "龙虾",
+      "tx": "0x13f5678b90e1bd0e2b703e23934a7777ba639f75ec1c8c70200f350ff43c4952",
+      "block": 121783426,
+      "before_block": 121783425
+    },
+    {
+      "p2": 44,
+      "owner": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "token": "龙虾",
+      "tx": "0xc0098aafadbf7a3789d7beb64717b4f5f7c0c1698f1e5d5386419f7b57cc9fbd",
+      "block": 121786352,
+      "before_block": 121786351
+    },
+    {
+      "p2": 48,
+      "owner": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "token": "龙虾",
+      "tx": "0x45ebe939bb00ca5660ffde899a6096076cb75ed01d5db89537f91380f2424bf4",
+      "block": 83720393,
+      "before_block": 83720392
+    },
+    {
+      "p2": 48,
+      "owner": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "token": "龙虾",
+      "tx": "0x9a0cc58d9b3a32d79af78b4d543b98c1ab2bb1c13c742866e7f2b7c28b552a36",
+      "block": 83720398,
+      "before_block": 83720397
+    }
+  ],
+  "scope": "query native BNB account before N-1 and after N for 11 exact previously frozen original owner-signed transactions; original episode signs cannot automatically become fully attributed profit when quote/Gas receipt truncated. No new samples."
+}

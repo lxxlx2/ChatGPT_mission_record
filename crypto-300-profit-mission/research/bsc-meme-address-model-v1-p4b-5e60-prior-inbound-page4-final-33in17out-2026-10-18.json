@@ -1,0 +1,56 @@
+{
+  "schema": "BSC_P4B_5E60_2026_OLDER_INBOUND_DRAGON_PAGE4_FINAL_READBACK_V1",
+  "source_prefreeze": "bsc-meme-address-model-v1-p4b-5e60-older-inbound-page4-prefreeze-2026-10-18.json",
+  "network": "bnb-mainnet",
+  "provider": "Alchemy existing free",
+  "method": "getAssetTransfers",
+  "input_cursor": "8710e33d-c3a0-47e5-be9a-aaa93cb9635b",
+  "returned_count": 3,
+  "remaining_pageKey": null,
+  "window_complete_inbound_stream": true,
+  "response_chars": 2100,
+  "rows": [
+    {
+      "rank": 31,
+      "block": 85957511,
+      "blockHex": "0x51f9b87",
+      "hash": "0x14e53f831954d5c00f835c3f01e42de3c7232382ca32f649968e11c199092b09",
+      "from": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+      "to": "0x5e600e259e3cff0757e3736223685958665866c6",
+      "rawHex": "0xa1f0b0aaba3fc7e042d",
+      "rawUint": "47796309531986436686893"
+    },
+    {
+      "rank": 32,
+      "block": 85957516,
+      "blockHex": "0x51f9b8c",
+      "hash": "0x815af70187b632c625ee9be445cdd72dd29129e35d147536c6c84fb35d8800a1",
+      "from": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+      "to": "0x5e600e259e3cff0757e3736223685958665866c6",
+      "rawHex": "0xa0eb91934ae7c78184e",
+      "rawUint": "47495256995423837493326"
+    },
+    {
+      "rank": 33,
+      "block": 85957526,
+      "blockHex": "0x51f9b96",
+      "hash": "0xa89f50382c80b0747aa1438ac43994417dab619a93b424f3cfd9b7169e845a85",
+      "from": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+      "to": "0x5e600e259e3cff0757e3736223685958665866c6",
+      "rawHex": "0xa1777ccfd0dc1c4e21b",
+      "rawUint": "47656572495213061530139"
+    }
+  ],
+  "complete_window_summary": {
+    "inbound_records": 33,
+    "outbound_records": 17,
+    "range_from": 85900000,
+    "range_to": 85959961,
+    "all_transfer_pages_have_empty_final_cursor": true
+  },
+  "source_grade": "FULL_LAST_PAGE_PARSED_ALCHEMY_ERC20_TRANSFERS_NOT_ALL_ORIGINAL_TX_OR_PAYMENT_SOURCE",
+  "warn": "Completeness applies only to category erc20 exact Dragon transfer streams in fixed block window, not all times, original cash costs, trading PnL, or actual public signal.",
+  "P4_B": "PARTIAL",
+  "P5": "BLOCKED",
+  "PRODUCTION": "NO_GO"
+}

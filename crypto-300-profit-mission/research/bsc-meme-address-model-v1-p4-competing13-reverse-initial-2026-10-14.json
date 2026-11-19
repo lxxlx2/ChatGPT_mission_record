@@ -1,0 +1,113 @@
+{
+  "schema": "BSC_P4_COMPETING13_REVERSE_FACTORY_INITIAL",
+  "source_precommit_sha": "7aedda2a06655213a789f975bf6a4947aecb452a",
+  "probes": [
+    {
+      "index": 0,
+      "token": "TST",
+      "block": 46419353,
+      "returned_pool": "0x16969fa79651bae11736f2f6576a86fe2726b42b",
+      "existed_at_earlier_block": true,
+      "raw_not_deployed": false
+    },
+    {
+      "index": 1,
+      "token": "CHEEMS",
+      "block": 42636396,
+      "returned_pool": "0x0000000000000000000000000000000000000000",
+      "existed_at_earlier_block": false,
+      "raw_not_deployed": false
+    },
+    {
+      "index": 2,
+      "token": "MUBARAK",
+      "block": 47440095,
+      "returned_pool": "0x90a54475d512b8f3852351611c38fad30a513491",
+      "existed_at_earlier_block": true,
+      "raw_not_deployed": false
+    },
+    {
+      "index": 3,
+      "token": "MUBARAK",
+      "block": 47440095,
+      "returned_pool": "0x8be0d063873f68a08c8b5bca2fe981618bbf5047",
+      "existed_at_earlier_block": true,
+      "raw_not_deployed": false
+    },
+    {
+      "index": 4,
+      "token": "TUT",
+      "block": 46519916,
+      "returned_pool": "0x6dafbf0ab4fd72e2a5c0ad5a1ed277d3bf8a8d1f",
+      "existed_at_earlier_block": true,
+      "raw_not_deployed": false
+    },
+    {
+      "index": 5,
+      "token": "BROCCOLI714",
+      "block": 46625666,
+      "returned_pool": "0x0000000000000000000000000000000000000000",
+      "existed_at_earlier_block": false,
+      "raw_not_deployed": false
+    },
+    {
+      "index": 6,
+      "token": "BROCCOLIF3B",
+      "block": 46626368,
+      "returned_pool": "0x0000000000000000000000000000000000000000",
+      "existed_at_earlier_block": false,
+      "raw_not_deployed": false
+    },
+    {
+      "index": 7,
+      "token": "SIREN",
+      "block": 46826774,
+      "returned_pool": "0xb2af49dbf526054faf19602860a5e298a79f3d05",
+      "existed_at_earlier_block": true,
+      "raw_not_deployed": false
+    },
+    {
+      "index": 8,
+      "token": "BANANAS31",
+      "block": 46869900,
+      "returned_pool": "0x7f51bbf34156ba802deb0e38b7671dc4fa32041d",
+      "existed_at_earlier_block": true,
+      "raw_not_deployed": false
+    },
+    {
+      "index": 9,
+      "token": "BANANAS31",
+      "block": 46869900,
+      "returned_pool": "0xf65d3c3f99e431da5dbae7948c0dd1905c268121",
+      "existed_at_earlier_block": true,
+      "raw_not_deployed": false
+    },
+    {
+      "index": 10,
+      "token": "BULLA",
+      "block": 50980278,
+      "returned_pool": "0x626f90c9a2d9fbaecd11fa350bbf568f81ab06c1",
+      "existed_at_earlier_block": true,
+      "raw_not_deployed": false
+    },
+    {
+      "index": 11,
+      "token": "BULLA",
+      "block": 50980278,
+      "returned_pool": "0x802c7a20ecd42a383c5ce96a59af062bbaf887d3",
+      "existed_at_earlier_block": true,
+      "raw_not_deployed": false
+    },
+    {
+      "index": 16,
+      "token": "BUBB",
+      "block": 47618790,
+      "returned_pool": "0xc8255e3fa0f4c6e6678807d663f9e2263e23a8e8",
+      "existed_at_earlier_block": true,
+      "raw_not_deployed": false
+    }
+  ],
+  "zero_bracket_confirmed": 3,
+  "needs_exponential_earlier_probe": 10,
+  "production": "NO_GO"
+}

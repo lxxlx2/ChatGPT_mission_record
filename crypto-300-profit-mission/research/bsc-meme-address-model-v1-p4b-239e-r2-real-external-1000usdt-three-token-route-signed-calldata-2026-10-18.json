@@ -1,0 +1,54 @@
+{
+  "schema": "BSC_P4B_2026_239E_R2_REAL_EXTERNAL_5E60_ROUTER_USDT_TO_WBNB_TO_DRAGON_ORIGINAL_SIGNED_CALLDATA_V1",
+  "source_prefreeze": "bsc-meme-address-model-v1-p4b-239e-r2-external-5e60-full-router-input-prefreeze-2026-10-18.json",
+  "provider": "Alchemy existing free",
+  "method": "eth_getTransactionByHash",
+  "queries": 1,
+  "source_grade": "FULL_TOOL_PARSED_1265_CHAR_ORIGINAL_TX_INPUT_NOT_PROVIDER_WIRE_TRANSPORT",
+  "exact_hash": "0x2b93cfb6ae16ab4943f5f209fff1820f98368fd357cbdcb4f624708440bf8f47",
+  "from": "0x5e600e259e3cff0757e3736223685958665866c6",
+  "to": "0x10ed43c718714eb63d5aa57b78b54704e256024e",
+  "blockNumber": "0x51fa51a",
+  "transactionIndex": "0x2",
+  "value": "0x0",
+  "gasLimit": "0x7a120",
+  "gasPrice": "0x1dcd6500",
+  "blockTimestamp": "0x69b15097",
+  "input": "0x38ed173900000000000000000000000000000000000000000000003635c9adc5dea0000000000000000000000000000000000000000000000000094374834187aaf65a0300000000000000000000000000000000000000000000000000000000000000a00000000000000000000000005e600e259e3cff0757e3736223685958665866c60000000000000000000000000000000000000000000000000000000069b151c3000000000000000000000000000000000000000000000000000000000000000300000000000000000000000055d398326f99059ff775485246999027b3197955000000000000000000000000bb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c000000000000000000000000eccbb861c0dda7efd964010085488b69317e4444",
+  "ABI_selector": "0x38ed1739",
+  "ABI_function": "swapExactTokensForTokens(uint256,uint256,address[],address,uint256)",
+  "decoded": {
+    "amountIn_raw": "1000000000000000000000",
+    "minAmountOut_raw": "43745625824946640280067",
+    "path": [
+      "0x55d398326f99059ff775485246999027b3197955",
+      "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "0xeccbb861c0dda7efd964010085488b69317e4444"
+    ],
+    "to_recipient": "0x5e600e259e3cff0757e3736223685958665866c6",
+    "deadline_unix_seconds": 1773228483,
+    "ABI_dynamic_array_offset_bytes": 160,
+    "transfer_type": "ERC20_TOKEN_TO_TOKEN",
+    "amountIn_asset_label": "USDT_ON_BNB_BEP20_18_DECIMALS",
+    "amountIn_units": "1000",
+    "token_hops": 2
+  },
+  "actual_LP_WBNB_in_wei": "1562236003910333182",
+  "actual_final_ERC20_received_raw": "48454704178311452125501",
+  "same_signed_tx_and_full_token_transfer_confirmed": true,
+  "actual_USDT_spend_wallet_debited": "PENDING_SEPARATE_ERC20_BALANCE_AND_TRANSFER_CHECK",
+  "actual_gasUsed": "UNRESOLVED",
+  "profit_sold_or_exited": "UNRESOLVED",
+  "limits": [
+    "ABI amountIn is signed Router instructed ERC20 transfer input, not yet a separate historical proof of USDT wallet balance debit.",
+    "Pair WBNB input is intermediate asset, must not be mistaken for buyer direct WBNB spend.",
+    "No claim of DDAC or 239E causal copied signal, signed tx block timestamp same second as 239E preceding signal block.",
+    "External buyer held 335173.813691889308361853 Dragon before; this is add-to-existing wallet holdings."
+  ],
+  "gates": {
+    "P4_B": "PARTIAL",
+    "PUBLIC_EXECUTABLE_U": "UNRESOLVED",
+    "P5": "BLOCKED",
+    "PRODUCTION": "NO_GO"
+  }
+}

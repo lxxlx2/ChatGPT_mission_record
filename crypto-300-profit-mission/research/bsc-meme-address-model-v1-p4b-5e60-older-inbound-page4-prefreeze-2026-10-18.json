@@ -1,0 +1,31 @@
+{
+  "schema": "BSC_P4B_5E60_2026_INBOUND_DRAGON_PAGE4_PRECOMMIT_V1",
+  "date": "2026-10-18",
+  "prior_page3_file": "bsc-meme-address-model-v1-p4b-5e60-historic-dragon-in3-out2-readback-2026-10-18.json",
+  "prior_page3_commit": "0a78b5eeb3951eb49a8e39dfd302fc1efd6727b0",
+  "request": {
+    "network": "bnb-mainnet",
+    "toAddress": "0x5e600e259e3cff0757e3736223685958665866c6",
+    "fromBlock": "0x51ebae0",
+    "toBlock": "0x51fa519",
+    "category": [
+      "erc20"
+    ],
+    "contractAddresses": [
+      "0xeccbb861c0dda7efd964010085488b69317e4444"
+    ],
+    "order": "asc",
+    "maxCount": "0xa",
+    "excludeZeroValue": true,
+    "pageKey": "8710e33d-c3a0-47e5-be9a-aaa93cb9635b"
+  },
+  "max_queries": 1,
+  "no_retry": true,
+  "archival": "Archive every returned record and next_pageKey, whether empty or not; no hopping to more profitable wallet.",
+  "cautions": [
+    "Only Dragon transfers; signed USDT paid and prior inventory unverified.",
+    "No net realized PnL or public follow upgrade."
+  ],
+  "P4_B": "PARTIAL",
+  "P5": "BLOCKED"
+}

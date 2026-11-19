@@ -1,0 +1,144 @@
+{
+  "schema": "BSC_P4C_PRECOMMITTED_FOUR_ROUND_ECONOMIC_ORIGINAL_TX_PROBE_V1",
+  "date_bangkok": "2026-10-15",
+  "network": "bnb-mainnet",
+  "scope": "Same frozen 239E Dragon P2 #29/#30 and 877AF MARSCOIN #37/#38. Single-block original ERC20 Transfer owner-in/out, matched exact signed transaction hash, original WBNB transfers for native quote possibility. Historical N−1/N native balances exactly one per unique source wallet block, receipt only source-selected eleven tx. Read all positives and negatives with same method, keep truncated statuses. No partial positive native scope may become settled owner profit without quote/gas proof.",
+  "sources": [
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-next239e877af-balanced-four-rounds-precommit-2026-10-15.json",
+      "git_blob_sha": "d3c22d013c5815a11839ef179abae575cc4c161a"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-next239e877af-four-signers-reconciled-2026-10-15.json",
+      "git_blob_sha": "c791e1b2335c29f7383a7501b7632e0ea358b89f"
+    }
+  ],
+  "WBNB": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+  "topic0_transfer": "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+  "batches": [
+    {
+      "episode_index": 29,
+      "owner": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+      "token": "龙虾",
+      "ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "original_native_net_scope_wei": "-15332805033002259",
+      "original_signed_txs": [
+        {
+          "tx": "0x43a76faa30a37a7028cb82f75a6bc3340bd6ef6e50230126d4d40f2700606a81",
+          "block": 85954137
+        },
+        {
+          "tx": "0xc85767729665b41c7c3c18f1140328c788893606ca624d36165f9eb0ba64f86f",
+          "block": 85954824
+        },
+        {
+          "tx": "0x3e64fc9233617942d8c23edccd55c2273da16e8d32543178d1f9e9795544ba93",
+          "block": 85957578
+        }
+      ],
+      "probes": [
+        "CA_ERC20_FROM_OWNER",
+        "CA_ERC20_TO_OWNER",
+        "WBNB_ERC20_TO_OWNER",
+        "WBNB_ERC20_FROM_OWNER"
+      ],
+      "balance_blocks": [
+        85954137,
+        85954824,
+        85957578
+      ]
+    },
+    {
+      "episode_index": 30,
+      "owner": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+      "token": "龙虾",
+      "ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "original_native_net_scope_wei": "22647938898252522",
+      "original_signed_txs": [
+        {
+          "tx": "0x7aa4b9daf5bdcafbd6453dbb5d86957d8ce1336c897c8b308570be54ce7d9e6c",
+          "block": 85959961
+        },
+        {
+          "tx": "0x5f7d389c874b47509989190287fdd57cf6d4a2a5f252110d1cdd71783faa6bf1",
+          "block": 85961371
+        }
+      ],
+      "probes": [
+        "CA_ERC20_FROM_OWNER",
+        "CA_ERC20_TO_OWNER",
+        "WBNB_ERC20_TO_OWNER",
+        "WBNB_ERC20_FROM_OWNER"
+      ],
+      "balance_blocks": [
+        85959961,
+        85961371
+      ]
+    },
+    {
+      "episode_index": 37,
+      "owner": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "token": "MARSCOIN",
+      "ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "original_native_net_scope_wei": "254614082156488843",
+      "original_signed_txs": [
+        {
+          "tx": "0xb24f907d3d49d22cab32c024fb56481a5897891ebfa4dda0abe59432696e9695",
+          "block": 112633681
+        },
+        {
+          "tx": "0x6034212914ca925ebb875121f1e7a5c8a4a15a2c63a6bc870ce28634db15423e",
+          "block": 112633772
+        },
+        {
+          "tx": "0x971a9ab0217b0bef829991cf12d9eb848e83cfd2fa3e9e11cb82bbc2e752a125",
+          "block": 112633805
+        }
+      ],
+      "probes": [
+        "CA_ERC20_FROM_OWNER",
+        "CA_ERC20_TO_OWNER",
+        "WBNB_ERC20_TO_OWNER",
+        "WBNB_ERC20_FROM_OWNER"
+      ],
+      "balance_blocks": [
+        112633681,
+        112633772,
+        112633805
+      ]
+    },
+    {
+      "episode_index": 38,
+      "owner": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "token": "MARSCOIN",
+      "ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "original_native_net_scope_wei": "-73127027700839968",
+      "original_signed_txs": [
+        {
+          "tx": "0xb3215e0bf0884fa79f7c061f94730e72ed822b4c32df5879d9e218a33c6b05a9",
+          "block": 112634149
+        },
+        {
+          "tx": "0xcfdf1cce9e7d4b17fb86e31cd4eeb93ec54a00ca7e6e6908fc0db0f42fed4f89",
+          "block": 112634161
+        },
+        {
+          "tx": "0xeb77015b8189b7dde56ed6cd98d313c5a8e17cf13b254fb9378abe5e9e091d31",
+          "block": 112634184
+        }
+      ],
+      "probes": [
+        "CA_ERC20_FROM_OWNER",
+        "CA_ERC20_TO_OWNER",
+        "WBNB_ERC20_TO_OWNER",
+        "WBNB_ERC20_FROM_OWNER"
+      ],
+      "balance_blocks": [
+        112634149,
+        112634161,
+        112634184
+      ]
+    }
+  ],
+  "production": "NO_GO"
+}

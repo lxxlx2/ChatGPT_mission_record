@@ -1,0 +1,169 @@
+{
+  "schema": "BSC_P4C_2026_MAJOR3_ORIGINAL_OWNER_EXIT_TRANSFER_ASC_DESC_RAW",
+  "precommit_git_blob_sha": "e3b0d383a7b8e99c5e597a075df0ec7918cc527a",
+  "rows": [
+    {
+      "token": "龙虾",
+      "order": "asc",
+      "original_criteria": {
+        "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+        "exact_CA": "0xeccbb861c0dda7efd964010085488b69317e4444",
+        "fromBlock": "0x4fc2e40",
+        "maxCount": "0x14"
+      },
+      "status": "COMPLETE_PAGE",
+      "transfers": [
+        {
+          "blockNum": "0x4fc2e58",
+          "uniqueId": "0xd63edbb070a8171af5aa37cfb2953ae868a77ff6607b5a1a4f5378abb2249219:log:170",
+          "hash": "0xd63edbb070a8171af5aa37cfb2953ae868a77ff6607b5a1a4f5378abb2249219",
+          "from": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+          "to": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+          "value": 99069253.5103,
+          "erc721TokenId": null,
+          "erc1155Metadata": [],
+          "tokenId": null,
+          "asset": "龙虾",
+          "category": "erc20",
+          "rawContract": {
+            "value": "0x51f2bafe7e98ea859a3a00",
+            "address": "0xeccbb861c0dda7efd964010085488b69317e4444",
+            "decimal": "0x12"
+          },
+          "metadata": null
+        },
+        {
+          "blockNum": "0x501da31",
+          "uniqueId": "0xb6e9bf6e4f9ceb0e39b5665bfb1b15345e383670f13d98689e8767401e438fe8:log:850",
+          "hash": "0xb6e9bf6e4f9ceb0e39b5665bfb1b15345e383670f13d98689e8767401e438fe8",
+          "from": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+          "to": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+          "value": 195581.66253143322,
+          "erc721TokenId": null,
+          "erc1155Metadata": [],
+          "tokenId": null,
+          "asset": "龙虾",
+          "category": "erc20",
+          "rawContract": {
+            "value": "0x296a80cfcc47829e4c4d",
+            "address": "0xeccbb861c0dda7efd964010085488b69317e4444",
+            "decimal": "0x12"
+          },
+          "metadata": null
+        }
+      ],
+      "pageKey": null,
+      "error": null
+    },
+    {
+      "token": "龙虾",
+      "order": "desc",
+      "original_criteria": {
+        "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+        "exact_CA": "0xeccbb861c0dda7efd964010085488b69317e4444",
+        "fromBlock": "0x4fc2e40",
+        "maxCount": "0x14"
+      },
+      "status": "COMPLETE_PAGE",
+      "transfers": [
+        {
+          "blockNum": "0x501da31",
+          "uniqueId": "0xb6e9bf6e4f9ceb0e39b5665bfb1b15345e383670f13d98689e8767401e438fe8:log:850",
+          "hash": "0xb6e9bf6e4f9ceb0e39b5665bfb1b15345e383670f13d98689e8767401e438fe8",
+          "from": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+          "to": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+          "value": 195581.66253143322,
+          "erc721TokenId": null,
+          "erc1155Metadata": [],
+          "tokenId": null,
+          "asset": "龙虾",
+          "category": "erc20",
+          "rawContract": {
+            "value": "0x296a80cfcc47829e4c4d",
+            "address": "0xeccbb861c0dda7efd964010085488b69317e4444",
+            "decimal": "0x12"
+          },
+          "metadata": null
+        },
+        {
+          "blockNum": "0x4fc2e58",
+          "uniqueId": "0xd63edbb070a8171af5aa37cfb2953ae868a77ff6607b5a1a4f5378abb2249219:log:170",
+          "hash": "0xd63edbb070a8171af5aa37cfb2953ae868a77ff6607b5a1a4f5378abb2249219",
+          "from": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+          "to": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+          "value": 99069253.5103,
+          "erc721TokenId": null,
+          "erc1155Metadata": [],
+          "tokenId": null,
+          "asset": "龙虾",
+          "category": "erc20",
+          "rawContract": {
+            "value": "0x51f2bafe7e98ea859a3a00",
+            "address": "0xeccbb861c0dda7efd964010085488b69317e4444",
+            "decimal": "0x12"
+          },
+          "metadata": null
+        }
+      ],
+      "pageKey": null,
+      "error": null
+    },
+    {
+      "token": "牛来",
+      "order": "asc",
+      "original_criteria": {
+        "wallet": "0xb0d0c4c1ee4ba9fac874db4ede587718ad9484d9",
+        "exact_CA": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+        "fromBlock": "0x6e45ae6",
+        "maxCount": "0x14"
+      },
+      "status": "RPC_ERROR",
+      "transfers": [],
+      "pageKey": null,
+      "error": "SyntaxError: Expected double-quoted property name in JSON at position 8002 (line 220 column 1)"
+    },
+    {
+      "token": "牛来",
+      "order": "desc",
+      "original_criteria": {
+        "wallet": "0xb0d0c4c1ee4ba9fac874db4ede587718ad9484d9",
+        "exact_CA": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+        "fromBlock": "0x6e45ae6",
+        "maxCount": "0x14"
+      },
+      "status": "RPC_ERROR",
+      "transfers": [],
+      "pageKey": null,
+      "error": "SyntaxError: Expected ',' or '}' after property value in JSON at position 8002 (line 220 column 1)"
+    },
+    {
+      "token": "MARSCOIN",
+      "order": "asc",
+      "original_criteria": {
+        "wallet": "0x504ba7b11be98c66a379a3e5de91dc5ab2dde3ea",
+        "exact_CA": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+        "fromBlock": "0x6b3b832",
+        "maxCount": "0x14"
+      },
+      "status": "RPC_ERROR",
+      "transfers": [],
+      "pageKey": null,
+      "error": "SyntaxError: Expected double-quoted property name in JSON at position 8002 (line 219 column 1)"
+    },
+    {
+      "token": "MARSCOIN",
+      "order": "desc",
+      "original_criteria": {
+        "wallet": "0x504ba7b11be98c66a379a3e5de91dc5ab2dde3ea",
+        "exact_CA": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+        "fromBlock": "0x6b3b832",
+        "maxCount": "0x14"
+      },
+      "status": "RPC_ERROR",
+      "transfers": [],
+      "pageKey": null,
+      "error": "SyntaxError: Bad control character in string literal in JSON at position 8000 (line 217 column 9)"
+    }
+  ],
+  "production": "NO_GO"
+}

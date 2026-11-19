@@ -1,0 +1,55 @@
+{
+  "schema": "BSC_P4B_2026_FOUR_FROZEN_10BLOCK_PAIR_SWAP_LOGS_TRUNCATED_V1",
+  "precommit": "bsc-meme-address-model-v1-p4b-239e-four-v2-swap-free10block-precommit-2026-10-18.json",
+  "source_grade": "ALCHEMY_8098CHAR_LOG_TEXT_CLIPPED_ALL_4_NO_COMPLETE_LOG_ARRAY",
+  "provider": "Alchemy BNB mainnet existing free",
+  "method": "eth_getLogs",
+  "count": 4,
+  "errors": 0,
+  "parseable_full_response_count": 0,
+  "selected_ranges": [
+    {
+      "case": "R1",
+      "window": "EARLY",
+      "start": 85954138,
+      "end": 85954147,
+      "response_size_chars": 8098,
+      "status": "TRUNCATED_UNPARSEABLE_JSON"
+    },
+    {
+      "case": "R1",
+      "window": "LATER",
+      "start": 85954737,
+      "end": 85954746,
+      "response_size_chars": 8098,
+      "status": "TRUNCATED_UNPARSEABLE_JSON"
+    },
+    {
+      "case": "R2",
+      "window": "EARLY",
+      "start": 85959962,
+      "end": 85959971,
+      "response_size_chars": 8098,
+      "status": "TRUNCATED_UNPARSEABLE_JSON"
+    },
+    {
+      "case": "R2",
+      "window": "LATER",
+      "start": 85960561,
+      "end": 85960570,
+      "response_size_chars": 8098,
+      "status": "TRUNCATED_UNPARSEABLE_JSON"
+    }
+  ],
+  "can_confirm_exact_swap_count": false,
+  "can_confirm_no_swaps": false,
+  "can_confirm_external_original_signed_EOA": false,
+  "can_confirm_true_complete_gas_and_exit": false,
+  "permit_response_prefix_to_be_considered_complete": false,
+  "preserve_original_holdings": "The separate 4 real historical owner balanceOf results remain valid at precommitted endpoints.",
+  "decision": "DO_NOT_RETRY_THESE_SAME_FOUR_CALLS. A distinct pre-frozen single-block diagnostic can test whether completeness is achievable; if also clipped stop splitting scope and record provider inability.",
+  "public_follower_U": "UNRESOLVED",
+  "P4_B": "PARTIAL",
+  "P5": "BLOCKED",
+  "production": "NO_GO"
+}

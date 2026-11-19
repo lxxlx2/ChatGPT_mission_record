@@ -1,0 +1,169 @@
+{
+  "schema": "BSC_MEME_ADDRESS_MODEL_V1_P3_ERC20_ROSTER_SCAN_BATCH",
+  "part": 4,
+  "precommit_sha": "18cc2246135b381044403e09dc73eb1c0d436597",
+  "range": [
+    11,
+    14
+  ],
+  "rows": [
+    {
+      "wallet": "0x5c48a7c2113aa044d9c1381588b9c7b3c352387c",
+      "direction": "in",
+      "source_state": "COMPLETE_FIRST_PAGE",
+      "raw_length": 21,
+      "pageKey": null,
+      "events": []
+    },
+    {
+      "wallet": "0x5c48a7c2113aa044d9c1381588b9c7b3c352387c",
+      "direction": "out",
+      "source_state": "COMPLETE_FIRST_PAGE",
+      "raw_length": 21,
+      "pageKey": null,
+      "events": []
+    },
+    {
+      "wallet": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "direction": "in",
+      "source_state": "RESPONSE_TRUNCATED_UNPARSEABLE",
+      "raw_length": 8098,
+      "events": [],
+      "pageKey": null
+    },
+    {
+      "wallet": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "direction": "out",
+      "source_state": "COMPLETE_FIRST_PAGE",
+      "raw_length": 3485,
+      "pageKey": null,
+      "events": [
+        {
+          "block": "0x73f1b98",
+          "hash": "0x6a25ab9f05e35b435a2e8d5cd39b98fe6ad68d720c52b70fe8adaaa442351d33",
+          "id": "0x6a25ab9f05e35b435a2e8d5cd39b98fe6ad68d720c52b70fe8adaaa442351d33:log:358",
+          "from": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+          "to": "0xf0a949d3d93b833c183a27ee067165b6f2c9625e",
+          "ca": "0x0a43fc31a73013089df59194872ecae4cae14444",
+          "raw_value": "0x668402ac607294090b",
+          "asset": "4"
+        },
+        {
+          "block": "0x73f1bf8",
+          "hash": "0x1aaf2c4b34ffe45d100cf2cb821635b08e4b442f908a0c9b6c1a8fda40455a69",
+          "id": "0x1aaf2c4b34ffe45d100cf2cb821635b08e4b442f908a0c9b6c1a8fda40455a69:log:3",
+          "from": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+          "to": "0xdb25c09d96c165b62f6e6f9d9b17174738d897ba",
+          "ca": "0x12b4356c65340fb02cdff01293f95febb1512f3b",
+          "raw_value": "0x12fc8c3aeeea749e242",
+          "asset": "Broccoli"
+        },
+        {
+          "block": "0x73f1cc7",
+          "hash": "0xc4e4877086fa0e39cc539a620706d69cafab78b2d81fbfd22f3b328f4af69d8d",
+          "id": "0xc4e4877086fa0e39cc539a620706d69cafab78b2d81fbfd22f3b328f4af69d8d:log:2",
+          "from": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+          "to": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+          "ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
+          "raw_value": "0x617da25a99384a4ed",
+          "asset": "龙虾"
+        },
+        {
+          "block": "0x73f1cd9",
+          "hash": "0x5a0b51d29f2dc1c4999b95ff395ae5d7573294261ebe5d8572429a9a192e6204",
+          "id": "0x5a0b51d29f2dc1c4999b95ff395ae5d7573294261ebe5d8572429a9a192e6204:log:2",
+          "from": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+          "to": "0x66f289de31eef70d52186729d2637ac978cfc56b",
+          "ca": "0x924fa68a0fc644485b8df8abfa0a41c2e7744444",
+          "raw_value": "0x27791677eeb518bc1",
+          "asset": "币安人生"
+        },
+        {
+          "block": "0x73f1cf2",
+          "hash": "0x38c2495cff34e029b83ddc87ac4bdf886d814809f063b0ecacb3749916a7e153",
+          "id": "0x38c2495cff34e029b83ddc87ac4bdf886d814809f063b0ecacb3749916a7e153:log:3",
+          "from": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+          "to": "0x16969fa79651bae11736f2f6576a86fe2726b42b",
+          "ca": "0x86bb94ddd16efc8bc58e6b056e8df71d9e666429",
+          "raw_value": "0x6b2c51d20b89bff2de",
+          "asset": "TST"
+        }
+      ]
+    },
+    {
+      "wallet": "0x8d8c031fd095b15f6e7ce1b27c1318015723ae25",
+      "direction": "in",
+      "source_state": "COMPLETE_FIRST_PAGE",
+      "raw_length": 21,
+      "pageKey": null,
+      "events": []
+    },
+    {
+      "wallet": "0x8d8c031fd095b15f6e7ce1b27c1318015723ae25",
+      "direction": "out",
+      "source_state": "COMPLETE_FIRST_PAGE",
+      "raw_length": 21,
+      "pageKey": null,
+      "events": []
+    },
+    {
+      "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "direction": "in",
+      "source_state": "COMPLETE_FIRST_PAGE",
+      "raw_length": 2111,
+      "pageKey": null,
+      "events": [
+        {
+          "block": "0x752a334",
+          "hash": "0x348554f16e7d856b14270efa19c9b3b9f87fe4967df18b50517ef49ab531e5de",
+          "id": "0x348554f16e7d856b14270efa19c9b3b9f87fe4967df18b50517ef49ab531e5de:log:285",
+          "from": "0x294094485cb4d4690654ba102c4b092ee544f37a",
+          "to": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+          "ca": "0x924fa68a0fc644485b8df8abfa0a41c2e7744444",
+          "raw_value": "0x15f178c7439693",
+          "asset": "币安人生"
+        },
+        {
+          "block": "0x754af74",
+          "hash": "0x3e926882f0ddccc70402636cc89b854997017b457d6b2fac0e106983c5d075f0",
+          "id": "0x3e926882f0ddccc70402636cc89b854997017b457d6b2fac0e106983c5d075f0:log:1104",
+          "from": "0x758987ae8d4583d94742e5cbb4eaca430cf1a11e",
+          "to": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+          "ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+          "raw_value": "0x99d38a3736677651",
+          "asset": "MarsCoin"
+        },
+        {
+          "block": "0x754b51f",
+          "hash": "0x43cd2b16d6475b45a017684a34922a6462075f50f5cd0a187ace7e61e1b981f2",
+          "id": "0x43cd2b16d6475b45a017684a34922a6462075f50f5cd0a187ace7e61e1b981f2:log:793",
+          "from": "0x758987ae8d4583d94742e5cbb4eaca430cf1a11e",
+          "to": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+          "ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+          "raw_value": "0x329956dd6d8de2e2",
+          "asset": "MarsCoin"
+        }
+      ]
+    },
+    {
+      "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "direction": "out",
+      "source_state": "COMPLETE_FIRST_PAGE",
+      "raw_length": 716,
+      "pageKey": null,
+      "events": [
+        {
+          "block": "0x7450fb1",
+          "hash": "0x72cd4f7d896f045680cbbaf70eb2377e4f534d1939df05f68c26ed75535e12f1",
+          "id": "0x72cd4f7d896f045680cbbaf70eb2377e4f534d1939df05f68c26ed75535e12f1:log:395",
+          "from": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+          "to": "0x66f289de31eef70d52186729d2637ac978cfc56b",
+          "ca": "0x924fa68a0fc644485b8df8abfa0a41c2e7744444",
+          "raw_value": "0x21d904e211e2bf5e9",
+          "asset": "币安人生"
+        }
+      ]
+    }
+  ],
+  "production": "NO_GO"
+}

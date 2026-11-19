@@ -1,0 +1,104 @@
+{
+  "schema": "BSC_P4C_SEVEN_WALLET_ORIGINAL_NATIVE_BALANCE_SOURCE",
+  "part": 2,
+  "precommit_sha": "f3eec501759fe98bacda1eb3ccad2ee1decd3192",
+  "rows": [
+    {
+      "round": "ADFF_DRAGON_R4",
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "token": "龙虾",
+      "block": 83656734,
+      "block_prev": 83656733,
+      "source_txs": [
+        "0xcbd78ec6eed55dba0f9f90bdfa342c48644d3d626d975aa77e931ad0ffe69045"
+      ],
+      "before": {
+        "status": "COMPLETE",
+        "balance_wei": "2515259631870693224"
+      },
+      "after": {
+        "status": "COMPLETE",
+        "balance_wei": "2719890913626497878"
+      },
+      "delta_wei": "204631281755804654"
+    },
+    {
+      "round": "2ADF_NIULAI_R3",
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "token": "牛来",
+      "block": 116038180,
+      "block_prev": 116038179,
+      "source_txs": [
+        "0x5b9f98b8feff8b9589b9a229bd64485689d11f7aa08d7973d7553fd18ba35e1e"
+      ],
+      "before": {
+        "status": "COMPLETE",
+        "balance_wei": "2588034452061658879"
+      },
+      "after": {
+        "status": "COMPLETE",
+        "balance_wei": "2487977535581658879"
+      },
+      "delta_wei": "-100056916480000000"
+    },
+    {
+      "round": "2ADF_NIULAI_R3",
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "token": "牛来",
+      "block": 116087810,
+      "block_prev": 116087809,
+      "source_txs": [
+        "0xc4a493cc5fba197f70e225de4927937b2532cfd18de4efefeb4ebbe3a350d40f"
+      ],
+      "before": {
+        "status": "COMPLETE",
+        "balance_wei": "2386272524940965280"
+      },
+      "after": {
+        "status": "COMPLETE",
+        "balance_wei": "2518167128322895779"
+      },
+      "delta_wei": "131894603381930499"
+    },
+    {
+      "round": "A83B_NIULAI_R2",
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "token": "牛来",
+      "block": 116113193,
+      "block_prev": 116113192,
+      "source_txs": [
+        "0x8a22a65a977409a7e82266d05ceaf1e98074d1f6b50e942486600dacdc672716",
+        "0x3e8b50350c8d2cf87d9662434ad205d08a33595eaf253dac04996134a35e2971"
+      ],
+      "before": {
+        "status": "COMPLETE",
+        "balance_wei": "120756094992493369191"
+      },
+      "after": {
+        "status": "COMPLETE",
+        "balance_wei": "117859421102493369191"
+      },
+      "delta_wei": "-2896673890000000000"
+    },
+    {
+      "round": "A83B_NIULAI_R2",
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "token": "牛来",
+      "block": 116113197,
+      "block_prev": 116113196,
+      "source_txs": [
+        "0xd0bc93c086a44affed01a7bfb25022cd51e18513401b15d2fbb3692ec1bde9a4"
+      ],
+      "before": {
+        "status": "COMPLETE",
+        "balance_wei": "117859372118493369191"
+      },
+      "after": {
+        "status": "COMPLETE",
+        "balance_wei": "120542447051680704152"
+      },
+      "delta_wei": "2683074933187334961"
+    }
+  ],
+  "production": "NO_GO"
+}

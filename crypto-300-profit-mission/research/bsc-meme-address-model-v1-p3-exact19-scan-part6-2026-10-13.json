@@ -1,0 +1,98 @@
+{
+  "schema": "BSC_MEME_ADDRESS_MODEL_V1_P3_ERC20_ROSTER_SCAN_BATCH",
+  "part": 6,
+  "precommit_sha": "18cc2246135b381044403e09dc73eb1c0d436597",
+  "range": [
+    19,
+    22
+  ],
+  "rows": [
+    {
+      "wallet": "0xcceea39c8a5b5306a4eabaaca82a2777a39d8037",
+      "direction": "in",
+      "source_state": "COMPLETE_FIRST_PAGE",
+      "raw_length": 21,
+      "pageKey": null,
+      "events": []
+    },
+    {
+      "wallet": "0xcceea39c8a5b5306a4eabaaca82a2777a39d8037",
+      "direction": "out",
+      "source_state": "COMPLETE_FIRST_PAGE",
+      "raw_length": 21,
+      "pageKey": null,
+      "events": []
+    },
+    {
+      "wallet": "0xd70ce47ec32625420640da206f0b3525c2bec678",
+      "direction": "in",
+      "source_state": "COMPLETE_FIRST_PAGE",
+      "raw_length": 21,
+      "pageKey": null,
+      "events": []
+    },
+    {
+      "wallet": "0xd70ce47ec32625420640da206f0b3525c2bec678",
+      "direction": "out",
+      "source_state": "COMPLETE_FIRST_PAGE",
+      "raw_length": 21,
+      "pageKey": null,
+      "events": []
+    },
+    {
+      "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "direction": "in",
+      "source_state": "COMPLETE_FIRST_PAGE",
+      "raw_length": 713,
+      "pageKey": null,
+      "events": [
+        {
+          "block": "0x7836076",
+          "hash": "0x46f4ebf92b95cd023d89a50ee20f0957eea2ec31e27fa53419dba7a3498fb17d",
+          "id": "0x46f4ebf92b95cd023d89a50ee20f0957eea2ec31e27fa53419dba7a3498fb17d:log:89",
+          "from": "0x83aaf02b71f399805419853dfc314a369321c523",
+          "to": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+          "ca": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+          "raw_value": "0x9e6ef025cf8afc84",
+          "asset": "牛来"
+        }
+      ]
+    },
+    {
+      "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "direction": "out",
+      "source_state": "COMPLETE_FIRST_PAGE",
+      "raw_length": 715,
+      "pageKey": null,
+      "events": [
+        {
+          "block": "0x78360f9",
+          "hash": "0xa9eabce653ba2cfd6ec10656da7da32a9d929f0d45d6cf040693e36c97f6bc47",
+          "id": "0xa9eabce653ba2cfd6ec10656da7da32a9d929f0d45d6cf040693e36c97f6bc47:log:262",
+          "from": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+          "to": "0xe5ae318389b8d6d09370a675479c64862152d126",
+          "ca": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+          "raw_value": "0x24fedf09ec0f65dc4d",
+          "asset": "牛来"
+        }
+      ]
+    },
+    {
+      "wallet": "0xe54bdcaff91ed27e53a19bb1203b10bc5e2dc568",
+      "direction": "in",
+      "source_state": "COMPLETE_FIRST_PAGE",
+      "raw_length": 21,
+      "pageKey": null,
+      "events": []
+    },
+    {
+      "wallet": "0xe54bdcaff91ed27e53a19bb1203b10bc5e2dc568",
+      "direction": "out",
+      "source_state": "COMPLETE_FIRST_PAGE",
+      "raw_length": 21,
+      "pageKey": null,
+      "events": []
+    }
+  ],
+  "production": "NO_GO"
+}

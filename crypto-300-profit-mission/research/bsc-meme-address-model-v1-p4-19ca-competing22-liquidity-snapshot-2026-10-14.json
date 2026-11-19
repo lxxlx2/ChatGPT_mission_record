@@ -1,0 +1,989 @@
+{
+  "schema": "BSC_P4_FROZEN19_COMPETING22_ACTUAL_LIQUIDITY_SNAPSHOT",
+  "network": "bnb-mainnet",
+  "scope": "22 nonzero competing factory pools at source V2 initial liquidity block. Active in-range Uniswap V3 liquidity() and slot0 sqrtPrice>0 or V2 both reserves>0. Does NOT prove first liquidity was before V2, liquid swap quote for any size, taxes, sellability, or profitable missed trades.",
+  "source_manifest": [
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4-competing22-liquidity-precommit-2026-10-14.json",
+      "git_blob_sha": "2cc89a63db6d070ac3e5706e8d5bda198b8feee6"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4-competing22-liquidity-part1-2026-10-14.json",
+      "git_blob_sha": "87d5f1f2c7a42cf306b69bdaa435b2d64f2109c6"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4-competing22-liquidity-part2-2026-10-14.json",
+      "git_blob_sha": "c0c142a32a63f6275e572626798e89455181838d"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4-competing22-liquidity-part3-2026-10-14.json",
+      "git_blob_sha": "93454d587bbf474ac52cb931b9adfcf8847224de"
+    }
+  ],
+  "summary": {
+    "major_CAs": 19,
+    "source_competing_slots": 22,
+    "provider_reads_complete": 22,
+    "V2_USDT_with_positive_reserves": 2,
+    "V3_active_initialized_at_V2_baseline": 15,
+    "V3_no_active_liquidity_at_baseline": 5,
+    "total_active_competing_pool_snapshots": 17,
+    "earlier_first_positive_proven": 0,
+    "qualified_misses_proven": 0,
+    "production": "NO_GO"
+  },
+  "rows": [
+    {
+      "token": "TST",
+      "CA": "0x86bb94ddd16efc8bc58e6b056e8df71d9e666429",
+      "at_block": 46421401,
+      "pools": [
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 10000,
+          "pool": "0x16969fa79651bae11736f2f6576a86fe2726b42b",
+          "method": "liquidity_and_slot0",
+          "query_state": "COMPLETE",
+          "classification": "V3_INITIALIZED_ACTIVE_LIQUIDITY_AT_SNAPSHOT",
+          "stats": {
+            "liquidity_raw": "68311369945940304811098",
+            "sqrtPriceX96": "443080131772028543525031649"
+          },
+          "reads": [
+            {
+              "pool": "0x16969fa79651bae11736f2f6576a86fe2726b42b",
+              "kind": "liquidity",
+              "selector": "1a686502",
+              "read": {
+                "success": true,
+                "raw_hex": "0x000000000000000000000000000000000000000000000e772ab26caee2f3545a",
+                "bytes": 32
+              }
+            },
+            {
+              "pool": "0x16969fa79651bae11736f2f6576a86fe2726b42b",
+              "kind": "slot0",
+              "selector": "3850c7bd",
+              "read": {
+                "success": true,
+                "raw_hex": "0x0000000000000000000000000000000000000000016e81de129736d88a718ee1fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe6acc000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000c800c800000000000000000000000000000000000000000000000000000000000000001",
+                "bytes": 224
+              }
+            }
+          ]
+        }
+      ],
+      "rpc": "MULTICALL3_COMPLETE",
+      "earlier_than_V2_liquidity": "UNRESOLVED",
+      "first_executable_quote_size": "UNRESOLVED",
+      "wallet_miss_qualification": "UNRESOLVED"
+    },
+    {
+      "token": "CHEEMS",
+      "CA": "0x0df0587216a4a1bb7d5082fdc491d93d2dd4b413",
+      "at_block": 42638444,
+      "pools": [
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 2500,
+          "pool": "0x38231d4ef9d33ebea944c75a21301ff6986499c3",
+          "method": "liquidity_and_slot0",
+          "query_state": "COMPLETE",
+          "classification": "V3_INITIALIZED_ACTIVE_LIQUIDITY_AT_SNAPSHOT",
+          "stats": {
+            "liquidity_raw": "29628661728160858142316297",
+            "sqrtPriceX96": "641769080827258572266890"
+          },
+          "reads": [
+            {
+              "pool": "0x38231d4ef9d33ebea944c75a21301ff6986499c3",
+              "kind": "liquidity",
+              "selector": "1a686502",
+              "read": {
+                "success": true,
+                "raw_hex": "0x00000000000000000000000000000000000000000018821cf87e30a1db9e9709",
+                "bytes": 32
+              }
+            },
+            {
+              "pool": "0x38231d4ef9d33ebea944c75a21301ff6986499c3",
+              "kind": "slot0",
+              "selector": "3850c7bd",
+              "read": {
+                "success": true,
+                "raw_hex": "0x0000000000000000000000000000000000000000000087e65f201612e5625d8afffffffffffffffffffffffffffffffffffffffffffffffffffffffffffc6c0c000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000c800c800000000000000000000000000000000000000000000000000000000000000001",
+                "bytes": 224
+              }
+            }
+          ]
+        }
+      ],
+      "rpc": "MULTICALL3_COMPLETE",
+      "earlier_than_V2_liquidity": "UNRESOLVED",
+      "first_executable_quote_size": "UNRESOLVED",
+      "wallet_miss_qualification": "UNRESOLVED"
+    },
+    {
+      "token": "MUBARAK",
+      "CA": "0x5c85d6c6825ab4032337f11ee92a72df936b46f6",
+      "at_block": 47442143,
+      "pools": [
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 2500,
+          "pool": "0x90a54475d512b8f3852351611c38fad30a513491",
+          "method": "liquidity_and_slot0",
+          "query_state": "COMPLETE",
+          "classification": "V3_INITIALIZED_ACTIVE_LIQUIDITY_AT_SNAPSHOT",
+          "stats": {
+            "liquidity_raw": "70236940548980633276332",
+            "sqrtPriceX96": "145706181937581359764617535"
+          },
+          "reads": [
+            {
+              "pool": "0x90a54475d512b8f3852351611c38fad30a513491",
+              "kind": "liquidity",
+              "selector": "1a686502",
+              "read": {
+                "success": true,
+                "raw_hex": "0x000000000000000000000000000000000000000000000edf8d5b7209bc708fac",
+                "bytes": 32
+              }
+            },
+            {
+              "pool": "0x90a54475d512b8f3852351611c38fad30a513491",
+              "kind": "slot0",
+              "selector": "3850c7bd",
+              "read": {
+                "success": true,
+                "raw_hex": "0x00000000000000000000000000000000000000000078867bf3377094f8c0393ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe13e7000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000c800c800000000000000000000000000000000000000000000000000000000000000001",
+                "bytes": 224
+              }
+            }
+          ]
+        },
+        {
+          "protocol": "V2",
+          "quote": "USDT",
+          "fee_pips": null,
+          "pool": "0x8be0d063873f68a08c8b5bca2fe981618bbf5047",
+          "method": "getReserves",
+          "query_state": "COMPLETE",
+          "classification": "V2_POSITIVE_RESERVES_AT_SNAPSHOT",
+          "stats": {
+            "reserve0": "7882917861512386",
+            "reserve1": "2935018959343202219"
+          },
+          "reads": [
+            {
+              "pool": "0x8be0d063873f68a08c8b5bca2fe981618bbf5047",
+              "kind": "getReserves",
+              "selector": "0902f1ac",
+              "read": {
+                "success": true,
+                "raw_hex": "0x000000000000000000000000000000000000000000000000001c0178d6edd4c200000000000000000000000000000000000000000000000028bb483170b02fab0000000000000000000000000000000000000000000000000000000067d360e3",
+                "bytes": 96
+              }
+            }
+          ]
+        }
+      ],
+      "rpc": "MULTICALL3_COMPLETE",
+      "earlier_than_V2_liquidity": "UNRESOLVED",
+      "first_executable_quote_size": "UNRESOLVED",
+      "wallet_miss_qualification": "UNRESOLVED"
+    },
+    {
+      "token": "TUT",
+      "CA": "0xcaae2a2f939f51d97cdfa9a86e79e3f085b799f3",
+      "at_block": 46521964,
+      "pools": [
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 10000,
+          "pool": "0x6dafbf0ab4fd72e2a5c0ad5a1ed277d3bf8a8d1f",
+          "method": "liquidity_and_slot0",
+          "query_state": "COMPLETE",
+          "classification": "V3_INITIALIZED_ACTIVE_LIQUIDITY_AT_SNAPSHOT",
+          "stats": {
+            "liquidity_raw": "88547311273780368892085",
+            "sqrtPriceX96": "43465683602357109914089512236796"
+          },
+          "reads": [
+            {
+              "pool": "0x6dafbf0ab4fd72e2a5c0ad5a1ed277d3bf8a8d1f",
+              "kind": "liquidity",
+              "selector": "1a686502",
+              "read": {
+                "success": true,
+                "raw_hex": "0x0000000000000000000000000000000000000000000012c028cbfbbdd473e0b5",
+                "bytes": 32
+              }
+            },
+            {
+              "pool": "0x6dafbf0ab4fd72e2a5c0ad5a1ed277d3bf8a8d1f",
+              "kind": "slot0",
+              "selector": "3850c7bd",
+              "read": {
+                "success": true,
+                "raw_hex": "0x00000000000000000000000000000000000002249d32c98828418d14dae3f6fc000000000000000000000000000000000000000000000000000000000001ecca000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000c800c800000000000000000000000000000000000000000000000000000000000000001",
+                "bytes": 224
+              }
+            }
+          ]
+        }
+      ],
+      "rpc": "MULTICALL3_COMPLETE",
+      "earlier_than_V2_liquidity": "UNRESOLVED",
+      "first_executable_quote_size": "UNRESOLVED",
+      "wallet_miss_qualification": "UNRESOLVED"
+    },
+    {
+      "token": "BROCCOLI714",
+      "CA": "0x6d5ad1592ed9d6d1df9b93c793ab759573ed6714",
+      "at_block": 46627714,
+      "pools": [
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 10000,
+          "pool": "0xa5067360b13fc7a2685dc82dcd1bf2b4b8d7868b",
+          "method": "liquidity_and_slot0",
+          "query_state": "COMPLETE",
+          "classification": "V3_INITIALIZED_ACTIVE_LIQUIDITY_AT_SNAPSHOT",
+          "stats": {
+            "liquidity_raw": "70636190282723561762831",
+            "sqrtPriceX96": "520190615841632522165805037"
+          },
+          "reads": [
+            {
+              "pool": "0xa5067360b13fc7a2685dc82dcd1bf2b4b8d7868b",
+              "kind": "liquidity",
+              "selector": "1a686502",
+              "read": {
+                "success": true,
+                "raw_hex": "0x000000000000000000000000000000000000000000000ef5320f6f8fbcfaf00f",
+                "bytes": 32
+              }
+            },
+            {
+              "pool": "0xa5067360b13fc7a2685dc82dcd1bf2b4b8d7868b",
+              "kind": "slot0",
+              "selector": "3850c7bd",
+              "read": {
+                "success": true,
+                "raw_hex": "0x000000000000000000000000000000000000000001ae4aa5ca4439733f17dfedfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe7755000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000c800c800000000000000000000000000000000000000000000000000000000000000001",
+                "bytes": 224
+              }
+            }
+          ]
+        }
+      ],
+      "rpc": "MULTICALL3_COMPLETE",
+      "earlier_than_V2_liquidity": "UNRESOLVED",
+      "first_executable_quote_size": "UNRESOLVED",
+      "wallet_miss_qualification": "UNRESOLVED"
+    },
+    {
+      "token": "BROCCOLIF3B",
+      "CA": "0x12b4356c65340fb02cdff01293f95febb1512f3b",
+      "at_block": 46628416,
+      "pools": [
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 10000,
+          "pool": "0xdb25c09d96c165b62f6e6f9d9b17174738d897ba",
+          "method": "liquidity_and_slot0",
+          "query_state": "COMPLETE",
+          "classification": "V3_INITIALIZED_ACTIVE_LIQUIDITY_AT_SNAPSHOT",
+          "stats": {
+            "liquidity_raw": "69064614155695763281771",
+            "sqrtPriceX96": "257019000986212577059686780"
+          },
+          "reads": [
+            {
+              "pool": "0xdb25c09d96c165b62f6e6f9d9b17174738d897ba",
+              "kind": "liquidity",
+              "selector": "1a686502",
+              "read": {
+                "success": true,
+                "raw_hex": "0x000000000000000000000000000000000000000000000ea0000f6e98cce0d76b",
+                "bytes": 32
+              }
+            },
+            {
+              "pool": "0xdb25c09d96c165b62f6e6f9d9b17174738d897ba",
+              "kind": "slot0",
+              "selector": "3850c7bd",
+              "read": {
+                "success": true,
+                "raw_hex": "0x000000000000000000000000000000000000000000d499e3f6435b5b3f8a497cfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe403f000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000c800c800000000000000000000000000000000000000000000000000000000000000001",
+                "bytes": 224
+              }
+            }
+          ]
+        }
+      ],
+      "rpc": "MULTICALL3_COMPLETE",
+      "earlier_than_V2_liquidity": "UNRESOLVED",
+      "first_executable_quote_size": "UNRESOLVED",
+      "wallet_miss_qualification": "UNRESOLVED"
+    },
+    {
+      "token": "SIREN",
+      "CA": "0x997a58129890bbda032231a52ed1ddc845fc18e1",
+      "at_block": 46828822,
+      "pools": [
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 10000,
+          "pool": "0xb2af49dbf526054faf19602860a5e298a79f3d05",
+          "method": "liquidity_and_slot0",
+          "query_state": "COMPLETE",
+          "classification": "V3_INITIALIZED_ACTIVE_LIQUIDITY_AT_SNAPSHOT",
+          "stats": {
+            "liquidity_raw": "77772215226182336170861",
+            "sqrtPriceX96": "890062445536577057372625553"
+          },
+          "reads": [
+            {
+              "pool": "0xb2af49dbf526054faf19602860a5e298a79f3d05",
+              "kind": "liquidity",
+              "selector": "1a686502",
+              "read": {
+                "success": true,
+                "raw_hex": "0x0000000000000000000000000000000000000000000010780a4cdd5b5032cb6d",
+                "bytes": 32
+              }
+            },
+            {
+              "pool": "0xb2af49dbf526054faf19602860a5e298a79f3d05",
+              "kind": "slot0",
+              "selector": "3850c7bd",
+              "read": {
+                "success": true,
+                "raw_hex": "0x000000000000000000000000000000000000000002e03e0ddadc6c5540e5da91fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffea14b000000000000000000000000000000000000000000000000000000000000000d00000000000000000000000000000000000000000000000000000000000000140000000000000000000000000000000000000000000000000000000000000014000000000000000000000000000000000000000000000000000000000c800c800000000000000000000000000000000000000000000000000000000000000001",
+                "bytes": 224
+              }
+            }
+          ]
+        }
+      ],
+      "rpc": "MULTICALL3_COMPLETE",
+      "earlier_than_V2_liquidity": "UNRESOLVED",
+      "first_executable_quote_size": "UNRESOLVED",
+      "wallet_miss_qualification": "UNRESOLVED"
+    },
+    {
+      "token": "BANANAS31",
+      "CA": "0x3d4f0513e8a29669b960f9dbca61861548a9a760",
+      "at_block": 46871948,
+      "pools": [
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 100,
+          "pool": "0x7f51bbf34156ba802deb0e38b7671dc4fa32041d",
+          "method": "liquidity_and_slot0",
+          "query_state": "COMPLETE",
+          "classification": "V3_INITIALIZED_ACTIVE_LIQUIDITY_AT_SNAPSHOT",
+          "stats": {
+            "liquidity_raw": "499166953299975284102053",
+            "sqrtPriceX96": "127159132404467188868873950"
+          },
+          "reads": [
+            {
+              "pool": "0x7f51bbf34156ba802deb0e38b7671dc4fa32041d",
+              "kind": "liquidity",
+              "selector": "1a686502",
+              "read": {
+                "success": true,
+                "raw_hex": "0x0000000000000000000000000000000000000000000069b3e50efe7653ea93a5",
+                "bytes": 32
+              }
+            },
+            {
+              "pool": "0x7f51bbf34156ba802deb0e38b7671dc4fa32041d",
+              "kind": "slot0",
+              "selector": "3850c7bd",
+              "read": {
+                "success": true,
+                "raw_hex": "0x000000000000000000000000000000000000000000692efe6155c12e5fc47edefffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe0944000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000ce40ce40000000000000000000000000000000000000000000000000000000000000001",
+                "bytes": 224
+              }
+            }
+          ]
+        },
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 10000,
+          "pool": "0xe736f1b0e809ff648e557dd3ea591580f416c2ed",
+          "method": "liquidity_and_slot0",
+          "query_state": "COMPLETE",
+          "classification": "V3_NO_ACTIVE_LIQUIDITY_AT_SNAPSHOT",
+          "stats": {
+            "liquidity_raw": "0",
+            "sqrtPriceX96": "128762441549353111859488310"
+          },
+          "reads": [
+            {
+              "pool": "0xe736f1b0e809ff648e557dd3ea591580f416c2ed",
+              "kind": "liquidity",
+              "selector": "1a686502",
+              "read": {
+                "success": true,
+                "raw_hex": "0x0000000000000000000000000000000000000000000000000000000000000000",
+                "bytes": 32
+              }
+            },
+            {
+              "pool": "0xe736f1b0e809ff648e557dd3ea591580f416c2ed",
+              "kind": "slot0",
+              "selector": "3850c7bd",
+              "read": {
+                "success": true,
+                "raw_hex": "0x0000000000000000000000000000000000000000006a8281f17023032427e636fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe0a3f000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000c800c800000000000000000000000000000000000000000000000000000000000000001",
+                "bytes": 224
+              }
+            }
+          ]
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 10000,
+          "pool": "0xf65d3c3f99e431da5dbae7948c0dd1905c268121",
+          "method": "liquidity_and_slot0",
+          "query_state": "COMPLETE",
+          "classification": "V3_INITIALIZED_ACTIVE_LIQUIDITY_AT_SNAPSHOT",
+          "stats": {
+            "liquidity_raw": "11653349451995818247359",
+            "sqrtPriceX96": "3254202357545672765815586954"
+          },
+          "reads": [
+            {
+              "pool": "0xf65d3c3f99e431da5dbae7948c0dd1905c268121",
+              "kind": "liquidity",
+              "selector": "1a686502",
+              "read": {
+                "success": true,
+                "raw_hex": "0x000000000000000000000000000000000000000000000277bab6007fa7c044bf",
+                "bytes": 32
+              }
+            },
+            {
+              "pool": "0xf65d3c3f99e431da5dbae7948c0dd1905c268121",
+              "kind": "slot0",
+              "selector": "3850c7bd",
+              "read": {
+                "success": true,
+                "raw_hex": "0x00000000000000000000000000000000000000000a83d02749b559a3d8bf008affffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0695000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000c800c800000000000000000000000000000000000000000000000000000000000000001",
+                "bytes": 224
+              }
+            }
+          ]
+        }
+      ],
+      "rpc": "MULTICALL3_COMPLETE",
+      "earlier_than_V2_liquidity": "UNRESOLVED",
+      "first_executable_quote_size": "UNRESOLVED",
+      "wallet_miss_qualification": "UNRESOLVED"
+    },
+    {
+      "token": "BOB",
+      "CA": "0x51363f073b1e4920fda7aa9e9d84ba97ede1560e",
+      "at_block": 44007572,
+      "pools": [],
+      "rpc": "NOT_NEEDED",
+      "earlier_than_V2_liquidity": "UNRESOLVED",
+      "first_executable_quote_size": "UNRESOLVED",
+      "wallet_miss_qualification": "UNRESOLVED"
+    },
+    {
+      "token": "BULLA",
+      "CA": "0x595e21b20e78674f8a64c1566a20b2b316bc3511",
+      "at_block": 50982326,
+      "pools": [
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 2500,
+          "pool": "0x26b5508768c049d930f0b3c15337b74ed7d244a0",
+          "method": "liquidity_and_slot0",
+          "query_state": "COMPLETE",
+          "classification": "V3_NO_ACTIVE_LIQUIDITY_AT_SNAPSHOT",
+          "stats": {
+            "liquidity_raw": "0",
+            "sqrtPriceX96": "1384844822230552255363366739"
+          },
+          "reads": [
+            {
+              "pool": "0x26b5508768c049d930f0b3c15337b74ed7d244a0",
+              "kind": "liquidity",
+              "selector": "1a686502",
+              "read": {
+                "success": true,
+                "raw_hex": "0x0000000000000000000000000000000000000000000000000000000000000000",
+                "bytes": 32
+              }
+            },
+            {
+              "pool": "0x26b5508768c049d930f0b3c15337b74ed7d244a0",
+              "kind": "slot0",
+              "selector": "3850c7bd",
+              "read": {
+                "success": true,
+                "raw_hex": "0x00000000000000000000000000000000000000000479844c3daa87f1ddb13f53fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffec3d5000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000c800c800000000000000000000000000000000000000000000000000000000000000001",
+                "bytes": 224
+              }
+            }
+          ]
+        },
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 10000,
+          "pool": "0x626f90c9a2d9fbaecd11fa350bbf568f81ab06c1",
+          "method": "liquidity_and_slot0",
+          "query_state": "COMPLETE",
+          "classification": "V3_INITIALIZED_ACTIVE_LIQUIDITY_AT_SNAPSHOT",
+          "stats": {
+            "liquidity_raw": "140815101878957563409",
+            "sqrtPriceX96": "1321121018644741022383475643"
+          },
+          "reads": [
+            {
+              "pool": "0x626f90c9a2d9fbaecd11fa350bbf568f81ab06c1",
+              "kind": "liquidity",
+              "selector": "1a686502",
+              "read": {
+                "success": true,
+                "raw_hex": "0x000000000000000000000000000000000000000000000007a233bd16a9b4de11",
+                "bytes": 32
+              }
+            },
+            {
+              "pool": "0x626f90c9a2d9fbaecd11fa350bbf568f81ab06c1",
+              "kind": "slot0",
+              "selector": "3850c7bd",
+              "read": {
+                "success": true,
+                "raw_hex": "0x00000000000000000000000000000000000000000444ce41ed3205e702f20bbbfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffec026000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000c800c800000000000000000000000000000000000000000000000000000000000000001",
+                "bytes": 224
+              }
+            }
+          ]
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 10000,
+          "pool": "0x802c7a20ecd42a383c5ce96a59af062bbaf887d3",
+          "method": "liquidity_and_slot0",
+          "query_state": "COMPLETE",
+          "classification": "V3_INITIALIZED_ACTIVE_LIQUIDITY_AT_SNAPSHOT",
+          "stats": {
+            "liquidity_raw": "25624020529964783978864",
+            "sqrtPriceX96": "186358473192804611824503605264"
+          },
+          "reads": [
+            {
+              "pool": "0x802c7a20ecd42a383c5ce96a59af062bbaf887d3",
+              "kind": "liquidity",
+              "selector": "1a686502",
+              "read": {
+                "success": true,
+                "raw_hex": "0x00000000000000000000000000000000000000000000056d14b83e1fab934970",
+                "bytes": 32
+              }
+            },
+            {
+              "pool": "0x802c7a20ecd42a383c5ce96a59af062bbaf887d3",
+              "kind": "slot0",
+              "selector": "3850c7bd",
+              "read": {
+                "success": true,
+                "raw_hex": "0x00000000000000000000000000000000000000025a281db2d6056816943dc81000000000000000000000000000000000000000000000000000000000000042d3000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000c800c800000000000000000000000000000000000000000000000000000000000000001",
+                "bytes": 224
+              }
+            }
+          ]
+        }
+      ],
+      "rpc": "MULTICALL3_COMPLETE",
+      "earlier_than_V2_liquidity": "UNRESOLVED",
+      "first_executable_quote_size": "UNRESOLVED",
+      "wallet_miss_qualification": "UNRESOLVED"
+    },
+    {
+      "token": "4",
+      "CA": "0x0a43fc31a73013089df59194872ecae4cae14444",
+      "at_block": 63056879,
+      "pools": [],
+      "rpc": "NOT_NEEDED",
+      "earlier_than_V2_liquidity": "UNRESOLVED",
+      "first_executable_quote_size": "UNRESOLVED",
+      "wallet_miss_qualification": "UNRESOLVED"
+    },
+    {
+      "token": "GIGGLE",
+      "CA": "0x20d6015660b3fe52e6690a889b5c51f69902ce0e",
+      "at_block": 61963725,
+      "pools": [],
+      "rpc": "NOT_NEEDED",
+      "earlier_than_V2_liquidity": "UNRESOLVED",
+      "first_executable_quote_size": "UNRESOLVED",
+      "wallet_miss_qualification": "UNRESOLVED"
+    },
+    {
+      "token": "币安人生",
+      "CA": "0x924fa68a0fc644485b8df8abfa0a41c2e7744444",
+      "at_block": 63454407,
+      "pools": [],
+      "rpc": "NOT_NEEDED",
+      "earlier_than_V2_liquidity": "UNRESOLVED",
+      "first_executable_quote_size": "UNRESOLVED",
+      "wallet_miss_qualification": "UNRESOLVED"
+    },
+    {
+      "token": "我踏马来了",
+      "CA": "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
+      "at_block": 73658906,
+      "pools": [],
+      "rpc": "NOT_NEEDED",
+      "earlier_than_V2_liquidity": "UNRESOLVED",
+      "first_executable_quote_size": "UNRESOLVED",
+      "wallet_miss_qualification": "UNRESOLVED"
+    },
+    {
+      "token": "龙虾",
+      "CA": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "at_block": 83636128,
+      "pools": [],
+      "rpc": "NOT_NEEDED",
+      "earlier_than_V2_liquidity": "UNRESOLVED",
+      "first_executable_quote_size": "UNRESOLVED",
+      "wallet_miss_qualification": "UNRESOLVED"
+    },
+    {
+      "token": "牛来",
+      "CA": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "at_block": 116314917,
+      "pools": [
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 2500,
+          "pool": "0xc461d52be79a3ad77bca0f2e8a7d38c3ad7a6f82",
+          "method": "liquidity_and_slot0",
+          "query_state": "COMPLETE",
+          "classification": "V3_NO_ACTIVE_LIQUIDITY_AT_SNAPSHOT",
+          "stats": {
+            "liquidity_raw": "0",
+            "sqrtPriceX96": "22573890250393346738002662394535"
+          },
+          "reads": [
+            {
+              "pool": "0xc461d52be79a3ad77bca0f2e8a7d38c3ad7a6f82",
+              "kind": "liquidity",
+              "selector": "1a686502",
+              "read": {
+                "success": true,
+                "raw_hex": "0x0000000000000000000000000000000000000000000000000000000000000000",
+                "bytes": 32
+              }
+            },
+            {
+              "pool": "0xc461d52be79a3ad77bca0f2e8a7d38c3ad7a6f82",
+              "kind": "slot0",
+              "selector": "3850c7bd",
+              "read": {
+                "success": true,
+                "raw_hex": "0x000000000000000000000000000000000000011cec2c5d724a6bf5fe39960aa7000000000000000000000000000000000000000000000000000000000001b99a000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000c800c800000000000000000000000000000000000000000000000000000000000000001",
+                "bytes": 224
+              }
+            }
+          ]
+        },
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 10000,
+          "pool": "0xab388f885f0bd58d8f98ea8134c67507d67188aa",
+          "method": "liquidity_and_slot0",
+          "query_state": "COMPLETE",
+          "classification": "V3_NO_ACTIVE_LIQUIDITY_AT_SNAPSHOT",
+          "stats": {
+            "liquidity_raw": "0",
+            "sqrtPriceX96": "15173702016425001706802983815264"
+          },
+          "reads": [
+            {
+              "pool": "0xab388f885f0bd58d8f98ea8134c67507d67188aa",
+              "kind": "liquidity",
+              "selector": "1a686502",
+              "read": {
+                "success": true,
+                "raw_hex": "0x0000000000000000000000000000000000000000000000000000000000000000",
+                "bytes": 32
+              }
+            },
+            {
+              "pool": "0xab388f885f0bd58d8f98ea8134c67507d67188aa",
+              "kind": "slot0",
+              "selector": "3850c7bd",
+              "read": {
+                "success": true,
+                "raw_hex": "0x00000000000000000000000000000000000000bf84e020eec886ca74de9148600000000000000000000000000000000000000000000000000000000000019a91000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000c800c800000000000000000000000000000000000000000000000000000000000000001",
+                "bytes": 224
+              }
+            }
+          ]
+        },
+        {
+          "protocol": "V2",
+          "quote": "USDT",
+          "fee_pips": null,
+          "pool": "0x57143fffeba8aecfe31d18bcbdc9ed590990dc1a",
+          "method": "getReserves",
+          "query_state": "COMPLETE",
+          "classification": "V2_POSITIVE_RESERVES_AT_SNAPSHOT",
+          "stats": {
+            "reserve0": "2426977504541710",
+            "reserve1": "76491244432170084"
+          },
+          "reads": [
+            {
+              "pool": "0x57143fffeba8aecfe31d18bcbdc9ed590990dc1a",
+              "kind": "getReserves",
+              "selector": "0902f1ac",
+              "read": {
+                "success": true,
+                "raw_hex": "0x00000000000000000000000000000000000000000000000000089f52bc093c0e000000000000000000000000000000000000000000000000010fc061acce9c64000000000000000000000000000000000000000000000000000000006a81f767",
+                "bytes": 96
+              }
+            }
+          ]
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 2500,
+          "pool": "0xe5ae318389b8d6d09370a675479c64862152d126",
+          "method": "liquidity_and_slot0",
+          "query_state": "COMPLETE",
+          "classification": "V3_INITIALIZED_ACTIVE_LIQUIDITY_AT_SNAPSHOT",
+          "stats": {
+            "liquidity_raw": "61427839005197665994123",
+            "sqrtPriceX96": "439736195961311087032000334372"
+          },
+          "reads": [
+            {
+              "pool": "0xe5ae318389b8d6d09370a675479c64862152d126",
+              "kind": "liquidity",
+              "selector": "1a686502",
+              "read": {
+                "success": true,
+                "raw_hex": "0x000000000000000000000000000000000000000000000d020283e4967382858b",
+                "bytes": 32
+              }
+            },
+            {
+              "pool": "0xe5ae318389b8d6d09370a675479c64862152d126",
+              "kind": "slot0",
+              "selector": "3850c7bd",
+              "read": {
+                "success": true,
+                "raw_hex": "0x00000000000000000000000000000000000000058cdd418516977dc28ee04a2400000000000000000000000000000000000000000000000000000000000085e6000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000c800c800000000000000000000000000000000000000000000000000000000000000001",
+                "bytes": 224
+              }
+            }
+          ]
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 10000,
+          "pool": "0xab058332a7279f1e64162be08f59ac0cd9601759",
+          "method": "liquidity_and_slot0",
+          "query_state": "COMPLETE",
+          "classification": "V3_INITIALIZED_ACTIVE_LIQUIDITY_AT_SNAPSHOT",
+          "stats": {
+            "liquidity_raw": "10861383580848093618949372",
+            "sqrtPriceX96": "440715011034201904295610106159"
+          },
+          "reads": [
+            {
+              "pool": "0xab058332a7279f1e64162be08f59ac0cd9601759",
+              "kind": "liquidity",
+              "selector": "1a686502",
+              "read": {
+                "success": true,
+                "raw_hex": "0x00000000000000000000000000000000000000000008fbfcc8a260d0f95accfc",
+                "bytes": 32
+              }
+            },
+            {
+              "pool": "0xab058332a7279f1e64162be08f59ac0cd9601759",
+              "kind": "slot0",
+              "selector": "3850c7bd",
+              "read": {
+                "success": true,
+                "raw_hex": "0x00000000000000000000000000000000000000059006e9ac8342ce9f519f412f0000000000000000000000000000000000000000000000000000000000008613000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000c800c800000000000000000000000000000000000000000000000000000000000000001",
+                "bytes": 224
+              }
+            }
+          ]
+        }
+      ],
+      "rpc": "MULTICALL3_COMPLETE",
+      "earlier_than_V2_liquidity": "UNRESOLVED",
+      "first_executable_quote_size": "UNRESOLVED",
+      "wallet_miss_qualification": "UNRESOLVED"
+    },
+    {
+      "token": "MARSCOIN",
+      "CA": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "at_block": 112668701,
+      "pools": [
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 10000,
+          "pool": "0x4a4bea953813c118c260be9a26b2321e57aa62e5",
+          "method": "liquidity_and_slot0",
+          "query_state": "COMPLETE",
+          "classification": "V3_INITIALIZED_ACTIVE_LIQUIDITY_AT_SNAPSHOT",
+          "stats": {
+            "liquidity_raw": "3476294796395995435650002",
+            "sqrtPriceX96": "1120744947417192507056039693510"
+          },
+          "reads": [
+            {
+              "pool": "0x4a4bea953813c118c260be9a26b2321e57aa62e5",
+              "kind": "liquidity",
+              "selector": "1a686502",
+              "read": {
+                "success": true,
+                "raw_hex": "0x00000000000000000000000000000000000000000002e022518ab2f549d44bd2",
+                "bytes": 32
+              }
+            },
+            {
+              "pool": "0x4a4bea953813c118c260be9a26b2321e57aa62e5",
+              "kind": "slot0",
+              "selector": "3850c7bd",
+              "read": {
+                "success": true,
+                "raw_hex": "0x000000000000000000000000000000000000000e25527dfb97f7f6d2dfc48cc6000000000000000000000000000000000000000000000000000000000000cefe000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000c800c800000000000000000000000000000000000000000000000000000000000000001",
+                "bytes": 224
+              }
+            }
+          ]
+        }
+      ],
+      "rpc": "MULTICALL3_COMPLETE",
+      "earlier_than_V2_liquidity": "UNRESOLVED",
+      "first_executable_quote_size": "UNRESOLVED",
+      "wallet_miss_qualification": "UNRESOLVED"
+    },
+    {
+      "token": "哈基米 / HAJIMI",
+      "CA": "0x82ec31d69b3c289e541b50e30681fd1acad24444",
+      "at_block": 63838943,
+      "pools": [],
+      "rpc": "NOT_NEEDED",
+      "earlier_than_V2_liquidity": "UNRESOLVED",
+      "first_executable_quote_size": "UNRESOLVED",
+      "wallet_miss_qualification": "UNRESOLVED"
+    },
+    {
+      "token": "BUBB",
+      "CA": "0xd5369a3cac0f4448a9a96bb98af9c887c92fc37b",
+      "at_block": 47620838,
+      "pools": [
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 2500,
+          "pool": "0xc8255e3fa0f4c6e6678807d663f9e2263e23a8e8",
+          "method": "liquidity_and_slot0",
+          "query_state": "COMPLETE",
+          "classification": "V3_INITIALIZED_ACTIVE_LIQUIDITY_AT_SNAPSHOT",
+          "stats": {
+            "liquidity_raw": "70382990189844472073507",
+            "sqrtPriceX96": "37687934402737649505800598529072"
+          },
+          "reads": [
+            {
+              "pool": "0xc8255e3fa0f4c6e6678807d663f9e2263e23a8e8",
+              "kind": "liquidity",
+              "selector": "1a686502",
+              "read": {
+                "success": true,
+                "raw_hex": "0x000000000000000000000000000000000000000000000ee7783400997aed0d23",
+                "bytes": 32
+              }
+            },
+            {
+              "pool": "0xc8255e3fa0f4c6e6678807d663f9e2263e23a8e8",
+              "kind": "slot0",
+              "selector": "3850c7bd",
+              "read": {
+                "success": true,
+                "raw_hex": "0x00000000000000000000000000000000000001dbb048aa44f7928f49585f2430000000000000000000000000000000000000000000000000000000000001e1a5000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000c800c800000000000000000000000000000000000000000000000000000000000000001",
+                "bytes": 224
+              }
+            }
+          ]
+        },
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 10000,
+          "pool": "0x6a1d472628d9279c53e9d9002c2dae5fff224035",
+          "method": "liquidity_and_slot0",
+          "query_state": "COMPLETE",
+          "classification": "V3_NO_ACTIVE_LIQUIDITY_AT_SNAPSHOT",
+          "stats": {
+            "liquidity_raw": "0",
+            "sqrtPriceX96": "48125206706414319828720013100893"
+          },
+          "reads": [
+            {
+              "pool": "0x6a1d472628d9279c53e9d9002c2dae5fff224035",
+              "kind": "liquidity",
+              "selector": "1a686502",
+              "read": {
+                "success": true,
+                "raw_hex": "0x0000000000000000000000000000000000000000000000000000000000000000",
+                "bytes": 32
+              }
+            },
+            {
+              "pool": "0x6a1d472628d9279c53e9d9002c2dae5fff224035",
+              "kind": "slot0",
+              "selector": "3850c7bd",
+              "read": {
+                "success": true,
+                "raw_hex": "0x000000000000000000000000000000000000025f6cedf6706b2d15a03c51475d000000000000000000000000000000000000000000000000000000000001f4bf000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000c800c800000000000000000000000000000000000000000000000000000000000000001",
+                "bytes": 224
+              }
+            }
+          ]
+        }
+      ],
+      "rpc": "MULTICALL3_COMPLETE",
+      "earlier_than_V2_liquidity": "UNRESOLVED",
+      "first_executable_quote_size": "UNRESOLVED",
+      "wallet_miss_qualification": "UNRESOLVED"
+    }
+  ]
+}

@@ -1,0 +1,275 @@
+{
+  "schema": "BSC_P4C_ORIGINAL_8E6B_TOKEN4_TWO_ROUNDS_19TX_5INDEPENDENT_SPOT_PRECOMMIT_V1",
+  "network": "bnb-mainnet",
+  "production": "NO_GO",
+  "intent": "Source-pinned historical 8E6B major 4 exactly two original opposite sign 2025 buy/sell round trips out of 19, P2 indices 16/17, before fresh independent RPC. Reconcile all 19 original fixed receipts/quote/gas/native and 5 original tx/receipt/balance spot checks. Do not declare follower opportunity 1/5/15 min, do not mislabel preselected major cohort unbiased. Do not claim this is a new original P2 episode or price prediction.",
+  "source_manifest": [
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p2-evidence-ledger-2026-10-13.json",
+      "git_blob_sha": "2a19dbd88c2971efff60a15894d952d0d05e64d9"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_STAGE24_8E6B_TOKEN4_TWO_ROUNDS_THREE_MAJOR_POSITIVE_COHORT_2026-10-13.json",
+      "git_blob_sha": "d56c90eff2d062dbb186f5c89e0f59760d6a8d1c"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_8E6B_4_EXACT_SETTLEMENT_RECONCILIATION_2026-10-11.json",
+      "git_blob_sha": "69cc2ec8e27d3d8427645cdbfdfe5c8043376fe1"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_8E6B_4_ORIGIN_RECEIPT_VERIFICATION_2026-10-11.json",
+      "git_blob_sha": "41021e96c0f22023a829e8aae8a460d4752d08ef"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_8E6B_4_NATIVE_BLOCK_AUDIT_2026-10-11.json",
+      "git_blob_sha": "c5f478fd6593d775db16aac0a54c19b180f61ec0"
+    }
+  ],
+  "original_wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+  "major_exact_CA": "0x0a43fc31a73013089df59194872ecae4cae14444",
+  "original_rounds": [
+    {
+      "p2_index": 16,
+      "round": 1,
+      "sign": "NEGATIVE",
+      "original_tx_count": 2,
+      "stage_native_wei": "-117977426190152496",
+      "full_raw_inventory_zero": true
+    },
+    {
+      "p2_index": 17,
+      "round": 2,
+      "sign": "POSITIVE",
+      "original_tx_count": 17,
+      "stage_native_wei": "13282964879793219111",
+      "full_raw_inventory_zero": true
+    }
+  ],
+  "all_19_original_selected_txs": [
+    {
+      "case": 1,
+      "hash": "0xeb14b461dfd62423bb83e5f930906e9004845c4b47100ae018d19dd81f8af73b",
+      "block": 63056884,
+      "direction": "in",
+      "native_delta_wei": "-504911654000000000",
+      "stage_gas_wei": "4911654000000000",
+      "stage_wbnb_withdraw_wei": "0",
+      "stage_token_delta_raw": "1698141038134039799649726"
+    },
+    {
+      "case": 1,
+      "hash": "0x11f18d2e8169495b7085787d88b7de644a3579bf3e2dfb6bc609e3e8eae48601",
+      "block": 63056949,
+      "direction": "out",
+      "native_delta_wei": "386934227809847504",
+      "stage_gas_wei": "1630002000000000",
+      "stage_wbnb_withdraw_wei": "392489121020047983",
+      "stage_token_delta_raw": "-1698141038134039799649726"
+    },
+    {
+      "case": 2,
+      "hash": "0x8bee775423389c622a648bc22a2e771d0270bef8024764ed604ee527b755ca89",
+      "block": 63057889,
+      "direction": "in",
+      "native_delta_wei": "-304911654000000000",
+      "stage_gas_wei": "4911654000000000",
+      "stage_wbnb_withdraw_wei": "0",
+      "stage_token_delta_raw": "4238008047984731651115211"
+    },
+    {
+      "case": 2,
+      "hash": "0x79cf3a597877e0bd7e04339590763c31bb599411873f9281e24915f6ef1b6772",
+      "block": 63058886,
+      "direction": "out",
+      "native_delta_wei": "505180521238760289",
+      "stage_gas_wei": "1567478000000000",
+      "stage_wbnb_withdraw_wei": "511866665897737665",
+      "stage_token_delta_raw": "-1404199451689091208341405"
+    },
+    {
+      "case": 2,
+      "hash": "0xfa6c5f17ea5597ab90402f96d013fb8213b67ac5f4c5af02b450f0386433898a",
+      "block": 63059233,
+      "direction": "out",
+      "native_delta_wei": "468839645781214365",
+      "stage_gas_wei": "1561824000000000",
+      "stage_wbnb_withdraw_wei": "470401469781214365",
+      "stage_token_delta_raw": "-850142578888692132832141"
+    },
+    {
+      "case": 2,
+      "hash": "0x9a5e7e333092f94c7c78656f221c7b08c319727e8693084bf1e117e3c229723b",
+      "block": 63059782,
+      "direction": "out",
+      "native_delta_wei": "549190240675404634",
+      "stage_gas_wei": "1561824000000000",
+      "stage_wbnb_withdraw_wei": "550752064675404634",
+      "stage_token_delta_raw": "-595099805222084492982499"
+    },
+    {
+      "case": 2,
+      "hash": "0x0e89ad3e6f44b8a7de464b10862c61c9ec7060846539fab6ae0df24927e5af7b",
+      "block": 63069490,
+      "direction": "out",
+      "native_delta_wei": "518893872012839939",
+      "stage_gas_wei": "1561824000000000",
+      "stage_wbnb_withdraw_wei": "520455696012839939",
+      "stage_token_delta_raw": "-416569863655459145087749"
+    },
+    {
+      "case": 2,
+      "hash": "0x69616d58ef513786ce7536d573027a0bb83f3dc5908d10b0d13a9a6d02070219",
+      "block": 63073432,
+      "direction": "out",
+      "native_delta_wei": "523104793183070446",
+      "stage_gas_wei": "1561824000000000",
+      "stage_wbnb_withdraw_wei": "524666617183070446",
+      "stage_token_delta_raw": "-291598904558821401561425"
+    },
+    {
+      "case": 2,
+      "hash": "0xc3d6fd52ea632d2c48a7cd79db4eb16ae5deaf3de930c56ba861ec2d4af8d59d",
+      "block": 63082567,
+      "direction": "out",
+      "native_delta_wei": "932996688597527471",
+      "stage_gas_wei": "1446500000000000",
+      "stage_wbnb_withdraw_wei": "934443188597527471",
+      "stage_token_delta_raw": "-340198721985291635154996"
+    },
+    {
+      "case": 2,
+      "hash": "0x206bb565b2114fc58381a7f0d493f0c9454ea254f671ffadfd08c866dbf0c064",
+      "block": 63082969,
+      "direction": "out",
+      "native_delta_wei": "1218001868842888281",
+      "stage_gas_wei": "1446500000000000",
+      "stage_wbnb_withdraw_wei": "1219448368842888281",
+      "stage_token_delta_raw": "-170099360992645817577498"
+    },
+    {
+      "case": 2,
+      "hash": "0xbe5101138ca28c421f735b802226bfb0b2b9b57c5605cc9a4dd30413c746a774",
+      "block": 63083603,
+      "direction": "out",
+      "native_delta_wei": "703345782008846815",
+      "stage_gas_wei": "1446500000000000",
+      "stage_wbnb_withdraw_wei": "704792282008846815",
+      "stage_token_delta_raw": "-51029808297793745273249"
+    },
+    {
+      "case": 2,
+      "hash": "0x5e8e7847322621870ed19686d0fafdc99de479877556fb704db58b1ac20f2109",
+      "block": 63084131,
+      "direction": "out",
+      "native_delta_wei": "598366914563362802",
+      "stage_gas_wei": "1446368000000000",
+      "stage_wbnb_withdraw_wei": "599813282563362802",
+      "stage_token_delta_raw": "-35720865808455621691274"
+    },
+    {
+      "case": 2,
+      "hash": "0x313bfe296591597e08046140255d5b61f6d4cbce64731d70746fbe1626e06a8f",
+      "block": 63085510,
+      "direction": "out",
+      "native_delta_wei": "447982796548531159",
+      "stage_gas_wei": "1446368000000000",
+      "stage_wbnb_withdraw_wei": "449429164548531159",
+      "stage_token_delta_raw": "-25004606065918935183892"
+    },
+    {
+      "case": 2,
+      "hash": "0xd39be2185edbed118db78ab7dbd4a3d414823af83e1c9097c821d88718e0a2f4",
+      "block": 63200942,
+      "direction": "out",
+      "native_delta_wei": "1056469341608489113",
+      "stage_gas_wei": "1561824000000000",
+      "stage_wbnb_withdraw_wei": "1058031165608489113",
+      "stage_token_delta_raw": "-19253546670757580091597"
+    },
+    {
+      "case": 2,
+      "hash": "0xd571753fe2493bafff570702d8848f634e4b3bb8deeec7a1a0ecbc751e39ad94",
+      "block": 63262672,
+      "direction": "out",
+      "native_delta_wei": "1224664276507655958",
+      "stage_gas_wei": "16968900000000",
+      "stage_wbnb_withdraw_wei": "1224681245407655958",
+      "stage_token_delta_raw": "-9772633537429983834371"
+    },
+    {
+      "case": 2,
+      "hash": "0x4c30211d8372ee683b9b20eaa7b965b317be21e8285f98e0215598061a78c5b1",
+      "block": 63328710,
+      "direction": "out",
+      "native_delta_wei": "1402658376521530120",
+      "stage_gas_wei": "394500000000000",
+      "stage_wbnb_withdraw_wei": "1403052876521530120",
+      "stage_token_delta_raw": "-8795370183686985450934"
+    },
+    {
+      "case": 2,
+      "hash": "0x2f6a73dc8d4009595ffa1da7f5a2be1a0a2dac9a57ad7d7c759f8d74347eda0f",
+      "block": 63335246,
+      "direction": "out",
+      "native_delta_wei": "1038944722383794327",
+      "stage_gas_wei": "425952000000000",
+      "stage_wbnb_withdraw_wei": "1039370674383794327",
+      "stage_token_delta_raw": "-6156759128580889815654"
+    },
+    {
+      "case": 2,
+      "hash": "0x7a464040b2d448505a0fa8b7e61ebc35e7384903f2097f3fb32bfea5d1e7eb84",
+      "block": 63901440,
+      "direction": "out",
+      "native_delta_wei": "1034009086383959250",
+      "stage_gas_wei": "1559580000000000",
+      "stage_wbnb_withdraw_wei": "1035568666383959250",
+      "stage_token_delta_raw": "-4740704529007285158053"
+    },
+    {
+      "case": 2,
+      "hash": "0x0e51e0e953ed22e8635665a05fb93bd28202d6e7cfd92b5de3b29c9d382d4462",
+      "block": 64458294,
+      "direction": "out",
+      "native_delta_wei": "1365227606935344142",
+      "stage_gas_wei": "7600373120164",
+      "stage_wbnb_withdraw_wei": "1365235207308464306",
+      "stage_token_delta_raw": "-9625066771014791078474"
+    }
+  ],
+  "fresh_original_five_spot_readback": [
+    {
+      "hash": "0xeb14b461dfd62423bb83e5f930906e9004845c4b47100ae018d19dd81f8af73b",
+      "block": 63056884,
+      "case": 1,
+      "direction": "in"
+    },
+    {
+      "hash": "0x11f18d2e8169495b7085787d88b7de644a3579bf3e2dfb6bc609e3e8eae48601",
+      "block": 63056949,
+      "case": 1,
+      "direction": "out"
+    },
+    {
+      "hash": "0x8bee775423389c622a648bc22a2e771d0270bef8024764ed604ee527b755ca89",
+      "block": 63057889,
+      "case": 2,
+      "direction": "in"
+    },
+    {
+      "hash": "0x79cf3a597877e0bd7e04339590763c31bb599411873f9281e24915f6ef1b6772",
+      "block": 63058886,
+      "case": 2,
+      "direction": "out"
+    },
+    {
+      "hash": "0x0e51e0e953ed22e8635665a05fb93bd28202d6e7cfd92b5de3b29c9d382d4462",
+      "block": 64458294,
+      "case": 2,
+      "direction": "out"
+    }
+  ],
+  "model_rank": "NOT_RANKED",
+  "observer_first_executable_U": "UNRESOLVED",
+  "production_guard": "NO_GO"
+}

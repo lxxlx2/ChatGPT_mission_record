@@ -14,6 +14,8 @@ class ReadOnlyTopTraderTests(unittest.TestCase):
         self.assertEqual(len(TOKENS), 19)
         self.assertEqual(len({ca.lower() for _, ca, _ in TOKENS}), 19)
         self.assertTrue(all(len(ca) == 42 and ca.startswith("0x") for _, ca, _ in TOKENS))
+        self.assertEqual(next(ca for label, ca, year in TOKENS if label == "MARSCOIN"),
+                         "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777")
 
     def test_vendor_response_must_contain_valid_list(self):
         self.assertEqual(unwrap({"code": 0, "data": {"list": [{"address": "x"}]}}),

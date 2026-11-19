@@ -1,0 +1,612 @@
+{
+  "schema": "BSC_P4_COMPETING13_BRACKET_ACCUMULATOR",
+  "source_precommit_sha": "7aedda2a06655213a789f975bf6a4947aecb452a",
+  "initial_sha": "5dbc0566b72e6275fad05af4ab60fd2626a3ee11",
+  "round": 11,
+  "states": [
+    {
+      "index": 0,
+      "token": "TST",
+      "lo": 46405017,
+      "hi": 46413209,
+      "offset": 32768,
+      "observations": [
+        {
+          "index": 0,
+          "token": "TST",
+          "block": 46419353,
+          "returned_pool": "0x16969fa79651bae11736f2f6576a86fe2726b42b",
+          "existed_at_earlier_block": true,
+          "raw_not_deployed": false
+        },
+        {
+          "index": 0,
+          "block": 46417305,
+          "result": "0x16969fa79651bae11736f2f6576a86fe2726b42b",
+          "exists": true,
+          "offset": 4096
+        },
+        {
+          "index": 0,
+          "block": 46413209,
+          "result": "0x16969fa79651bae11736f2f6576a86fe2726b42b",
+          "exists": true,
+          "offset": 8192
+        },
+        {
+          "index": 0,
+          "block": 46405017,
+          "result": "0x0000000000000000000000000000000000000000",
+          "exists": false,
+          "offset": 16384
+        }
+      ]
+    },
+    {
+      "index": 1,
+      "token": "CHEEMS",
+      "lo": 42636396,
+      "hi": 42638444,
+      "offset": 4096,
+      "observations": [
+        {
+          "index": 1,
+          "token": "CHEEMS",
+          "block": 42636396,
+          "returned_pool": "0x0000000000000000000000000000000000000000",
+          "existed_at_earlier_block": false,
+          "raw_not_deployed": false
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "token": "MUBARAK",
+      "lo": 47409375,
+      "hi": 47425759,
+      "offset": 65536,
+      "observations": [
+        {
+          "index": 2,
+          "token": "MUBARAK",
+          "block": 47440095,
+          "returned_pool": "0x90a54475d512b8f3852351611c38fad30a513491",
+          "existed_at_earlier_block": true,
+          "raw_not_deployed": false
+        },
+        {
+          "index": 2,
+          "block": 47438047,
+          "result": "0x90a54475d512b8f3852351611c38fad30a513491",
+          "exists": true,
+          "offset": 4096
+        },
+        {
+          "index": 2,
+          "block": 47433951,
+          "result": "0x90a54475d512b8f3852351611c38fad30a513491",
+          "exists": true,
+          "offset": 8192
+        },
+        {
+          "index": 2,
+          "block": 47425759,
+          "result": "0x90a54475d512b8f3852351611c38fad30a513491",
+          "exists": true,
+          "offset": 16384
+        },
+        {
+          "index": 2,
+          "block": 47409375,
+          "result": "0x0000000000000000000000000000000000000000",
+          "exists": false,
+          "offset": 32768
+        }
+      ]
+    },
+    {
+      "index": 3,
+      "token": "MUBARAK",
+      "lo": 47425759,
+      "hi": 47433951,
+      "offset": 32768,
+      "observations": [
+        {
+          "index": 3,
+          "token": "MUBARAK",
+          "block": 47440095,
+          "returned_pool": "0x8be0d063873f68a08c8b5bca2fe981618bbf5047",
+          "existed_at_earlier_block": true,
+          "raw_not_deployed": false
+        },
+        {
+          "index": 3,
+          "block": 47438047,
+          "result": "0x8be0d063873f68a08c8b5bca2fe981618bbf5047",
+          "exists": true,
+          "offset": 4096
+        },
+        {
+          "index": 3,
+          "block": 47433951,
+          "result": "0x8be0d063873f68a08c8b5bca2fe981618bbf5047",
+          "exists": true,
+          "offset": 8192
+        },
+        {
+          "index": 3,
+          "block": 47425759,
+          "result": "0x0000000000000000000000000000000000000000",
+          "exists": false,
+          "offset": 16384
+        }
+      ]
+    },
+    {
+      "index": 4,
+      "token": "TUT",
+      "lo": 46456428,
+      "hi": 46489196,
+      "offset": 131072,
+      "observations": [
+        {
+          "index": 4,
+          "token": "TUT",
+          "block": 46519916,
+          "returned_pool": "0x6dafbf0ab4fd72e2a5c0ad5a1ed277d3bf8a8d1f",
+          "existed_at_earlier_block": true,
+          "raw_not_deployed": false
+        },
+        {
+          "index": 4,
+          "block": 46517868,
+          "result": "0x6dafbf0ab4fd72e2a5c0ad5a1ed277d3bf8a8d1f",
+          "exists": true,
+          "offset": 4096
+        },
+        {
+          "index": 4,
+          "block": 46513772,
+          "result": "0x6dafbf0ab4fd72e2a5c0ad5a1ed277d3bf8a8d1f",
+          "exists": true,
+          "offset": 8192
+        },
+        {
+          "index": 4,
+          "block": 46505580,
+          "result": "0x6dafbf0ab4fd72e2a5c0ad5a1ed277d3bf8a8d1f",
+          "exists": true,
+          "offset": 16384
+        },
+        {
+          "index": 4,
+          "block": 46489196,
+          "result": "0x6dafbf0ab4fd72e2a5c0ad5a1ed277d3bf8a8d1f",
+          "exists": true,
+          "offset": 32768
+        },
+        {
+          "index": 4,
+          "block": 46456428,
+          "result": "0x0000000000000000000000000000000000000000",
+          "exists": false,
+          "offset": 65536
+        }
+      ]
+    },
+    {
+      "index": 5,
+      "token": "BROCCOLI714",
+      "lo": 46625666,
+      "hi": 46627714,
+      "offset": 4096,
+      "observations": [
+        {
+          "index": 5,
+          "token": "BROCCOLI714",
+          "block": 46625666,
+          "returned_pool": "0x0000000000000000000000000000000000000000",
+          "existed_at_earlier_block": false,
+          "raw_not_deployed": false
+        }
+      ]
+    },
+    {
+      "index": 6,
+      "token": "BROCCOLIF3B",
+      "lo": 46626368,
+      "hi": 46628416,
+      "offset": 4096,
+      "observations": [
+        {
+          "index": 6,
+          "token": "BROCCOLIF3B",
+          "block": 46626368,
+          "returned_pool": "0x0000000000000000000000000000000000000000",
+          "existed_at_earlier_block": false,
+          "raw_not_deployed": false
+        }
+      ]
+    },
+    {
+      "index": 7,
+      "token": "SIREN",
+      "lo": 46304534,
+      "hi": 46566678,
+      "offset": 1048576,
+      "observations": [
+        {
+          "index": 7,
+          "token": "SIREN",
+          "block": 46826774,
+          "returned_pool": "0xb2af49dbf526054faf19602860a5e298a79f3d05",
+          "existed_at_earlier_block": true,
+          "raw_not_deployed": false
+        },
+        {
+          "index": 7,
+          "block": 46824726,
+          "result": "0xb2af49dbf526054faf19602860a5e298a79f3d05",
+          "exists": true,
+          "offset": 4096
+        },
+        {
+          "index": 7,
+          "block": 46820630,
+          "result": "0xb2af49dbf526054faf19602860a5e298a79f3d05",
+          "exists": true,
+          "offset": 8192
+        },
+        {
+          "index": 7,
+          "block": 46812438,
+          "result": "0xb2af49dbf526054faf19602860a5e298a79f3d05",
+          "exists": true,
+          "offset": 16384
+        },
+        {
+          "index": 7,
+          "block": 46796054,
+          "result": "0xb2af49dbf526054faf19602860a5e298a79f3d05",
+          "exists": true,
+          "offset": 32768
+        },
+        {
+          "index": 7,
+          "block": 46763286,
+          "result": "0xb2af49dbf526054faf19602860a5e298a79f3d05",
+          "exists": true,
+          "offset": 65536
+        },
+        {
+          "index": 7,
+          "block": 46697750,
+          "result": "0xb2af49dbf526054faf19602860a5e298a79f3d05",
+          "exists": true,
+          "offset": 131072
+        },
+        {
+          "index": 7,
+          "block": 46566678,
+          "result": "0xb2af49dbf526054faf19602860a5e298a79f3d05",
+          "exists": true,
+          "offset": 262144
+        },
+        {
+          "index": 7,
+          "block": 46304534,
+          "result": "0x0000000000000000000000000000000000000000",
+          "exists": false,
+          "offset": 524288
+        }
+      ]
+    },
+    {
+      "index": 8,
+      "token": "BANANAS31",
+      "lo": 42677644,
+      "hi": 44774796,
+      "offset": 8388608,
+      "observations": [
+        {
+          "index": 8,
+          "token": "BANANAS31",
+          "block": 46869900,
+          "returned_pool": "0x7f51bbf34156ba802deb0e38b7671dc4fa32041d",
+          "existed_at_earlier_block": true,
+          "raw_not_deployed": false
+        },
+        {
+          "index": 8,
+          "block": 46867852,
+          "result": "0x7f51bbf34156ba802deb0e38b7671dc4fa32041d",
+          "exists": true,
+          "offset": 4096
+        },
+        {
+          "index": 8,
+          "block": 46863756,
+          "result": "0x7f51bbf34156ba802deb0e38b7671dc4fa32041d",
+          "exists": true,
+          "offset": 8192
+        },
+        {
+          "index": 8,
+          "block": 46855564,
+          "result": "0x7f51bbf34156ba802deb0e38b7671dc4fa32041d",
+          "exists": true,
+          "offset": 16384
+        },
+        {
+          "index": 8,
+          "block": 46839180,
+          "result": "0x7f51bbf34156ba802deb0e38b7671dc4fa32041d",
+          "exists": true,
+          "offset": 32768
+        },
+        {
+          "index": 8,
+          "block": 46806412,
+          "result": "0x7f51bbf34156ba802deb0e38b7671dc4fa32041d",
+          "exists": true,
+          "offset": 65536
+        },
+        {
+          "index": 8,
+          "block": 46740876,
+          "result": "0x7f51bbf34156ba802deb0e38b7671dc4fa32041d",
+          "exists": true,
+          "offset": 131072
+        },
+        {
+          "index": 8,
+          "block": 46609804,
+          "result": "0x7f51bbf34156ba802deb0e38b7671dc4fa32041d",
+          "exists": true,
+          "offset": 262144
+        },
+        {
+          "index": 8,
+          "block": 46347660,
+          "result": "0x7f51bbf34156ba802deb0e38b7671dc4fa32041d",
+          "exists": true,
+          "offset": 524288
+        },
+        {
+          "index": 8,
+          "block": 45823372,
+          "result": "0x7f51bbf34156ba802deb0e38b7671dc4fa32041d",
+          "exists": true,
+          "offset": 1048576
+        },
+        {
+          "index": 8,
+          "block": 44774796,
+          "result": "0x7f51bbf34156ba802deb0e38b7671dc4fa32041d",
+          "exists": true,
+          "offset": 2097152
+        },
+        {
+          "index": 8,
+          "block": 42677644,
+          "result": "0x0000000000000000000000000000000000000000",
+          "exists": false,
+          "offset": 4194304
+        }
+      ]
+    },
+    {
+      "index": 9,
+      "token": "BANANAS31",
+      "lo": 42677644,
+      "hi": 44774796,
+      "offset": 8388608,
+      "observations": [
+        {
+          "index": 9,
+          "token": "BANANAS31",
+          "block": 46869900,
+          "returned_pool": "0xf65d3c3f99e431da5dbae7948c0dd1905c268121",
+          "existed_at_earlier_block": true,
+          "raw_not_deployed": false
+        },
+        {
+          "index": 9,
+          "block": 46867852,
+          "result": "0xf65d3c3f99e431da5dbae7948c0dd1905c268121",
+          "exists": true,
+          "offset": 4096
+        },
+        {
+          "index": 9,
+          "block": 46863756,
+          "result": "0xf65d3c3f99e431da5dbae7948c0dd1905c268121",
+          "exists": true,
+          "offset": 8192
+        },
+        {
+          "index": 9,
+          "block": 46855564,
+          "result": "0xf65d3c3f99e431da5dbae7948c0dd1905c268121",
+          "exists": true,
+          "offset": 16384
+        },
+        {
+          "index": 9,
+          "block": 46839180,
+          "result": "0xf65d3c3f99e431da5dbae7948c0dd1905c268121",
+          "exists": true,
+          "offset": 32768
+        },
+        {
+          "index": 9,
+          "block": 46806412,
+          "result": "0xf65d3c3f99e431da5dbae7948c0dd1905c268121",
+          "exists": true,
+          "offset": 65536
+        },
+        {
+          "index": 9,
+          "block": 46740876,
+          "result": "0xf65d3c3f99e431da5dbae7948c0dd1905c268121",
+          "exists": true,
+          "offset": 131072
+        },
+        {
+          "index": 9,
+          "block": 46609804,
+          "result": "0xf65d3c3f99e431da5dbae7948c0dd1905c268121",
+          "exists": true,
+          "offset": 262144
+        },
+        {
+          "index": 9,
+          "block": 46347660,
+          "result": "0xf65d3c3f99e431da5dbae7948c0dd1905c268121",
+          "exists": true,
+          "offset": 524288
+        },
+        {
+          "index": 9,
+          "block": 45823372,
+          "result": "0xf65d3c3f99e431da5dbae7948c0dd1905c268121",
+          "exists": true,
+          "offset": 1048576
+        },
+        {
+          "index": 9,
+          "block": 44774796,
+          "result": "0xf65d3c3f99e431da5dbae7948c0dd1905c268121",
+          "exists": true,
+          "offset": 2097152
+        },
+        {
+          "index": 9,
+          "block": 42677644,
+          "result": "0x0000000000000000000000000000000000000000",
+          "exists": false,
+          "offset": 4194304
+        }
+      ]
+    },
+    {
+      "index": 10,
+      "token": "BULLA",
+      "lo": 50965942,
+      "hi": 50974134,
+      "offset": 32768,
+      "observations": [
+        {
+          "index": 10,
+          "token": "BULLA",
+          "block": 50980278,
+          "returned_pool": "0x626f90c9a2d9fbaecd11fa350bbf568f81ab06c1",
+          "existed_at_earlier_block": true,
+          "raw_not_deployed": false
+        },
+        {
+          "index": 10,
+          "block": 50978230,
+          "result": "0x626f90c9a2d9fbaecd11fa350bbf568f81ab06c1",
+          "exists": true,
+          "offset": 4096
+        },
+        {
+          "index": 10,
+          "block": 50974134,
+          "result": "0x626f90c9a2d9fbaecd11fa350bbf568f81ab06c1",
+          "exists": true,
+          "offset": 8192
+        },
+        {
+          "index": 10,
+          "block": 50965942,
+          "result": "0x0000000000000000000000000000000000000000",
+          "exists": false,
+          "offset": 16384
+        }
+      ]
+    },
+    {
+      "index": 11,
+      "token": "BULLA",
+      "lo": 50965942,
+      "hi": 50974134,
+      "offset": 32768,
+      "observations": [
+        {
+          "index": 11,
+          "token": "BULLA",
+          "block": 50980278,
+          "returned_pool": "0x802c7a20ecd42a383c5ce96a59af062bbaf887d3",
+          "existed_at_earlier_block": true,
+          "raw_not_deployed": false
+        },
+        {
+          "index": 11,
+          "block": 50978230,
+          "result": "0x802c7a20ecd42a383c5ce96a59af062bbaf887d3",
+          "exists": true,
+          "offset": 4096
+        },
+        {
+          "index": 11,
+          "block": 50974134,
+          "result": "0x802c7a20ecd42a383c5ce96a59af062bbaf887d3",
+          "exists": true,
+          "offset": 8192
+        },
+        {
+          "index": 11,
+          "block": 50965942,
+          "result": "0x0000000000000000000000000000000000000000",
+          "exists": false,
+          "offset": 16384
+        }
+      ]
+    },
+    {
+      "index": 16,
+      "token": "BUBB",
+      "lo": 47604454,
+      "hi": 47612646,
+      "offset": 32768,
+      "observations": [
+        {
+          "index": 16,
+          "token": "BUBB",
+          "block": 47618790,
+          "returned_pool": "0xc8255e3fa0f4c6e6678807d663f9e2263e23a8e8",
+          "existed_at_earlier_block": true,
+          "raw_not_deployed": false
+        },
+        {
+          "index": 16,
+          "block": 47616742,
+          "result": "0xc8255e3fa0f4c6e6678807d663f9e2263e23a8e8",
+          "exists": true,
+          "offset": 4096
+        },
+        {
+          "index": 16,
+          "block": 47612646,
+          "result": "0xc8255e3fa0f4c6e6678807d663f9e2263e23a8e8",
+          "exists": true,
+          "offset": 8192
+        },
+        {
+          "index": 16,
+          "block": 47604454,
+          "result": "0x0000000000000000000000000000000000000000",
+          "exists": false,
+          "offset": 16384
+        }
+      ]
+    }
+  ],
+  "production": "NO_GO",
+  "prior_sha": "275f854e2af373ca5a8f2596917aa1178f23856a",
+  "source_accumulator_blob_sha": "7c90ef0fead3d414f158a1a0fb4b76a3882b30a6",
+  "status": "ALL_13_CREATION_FACTORY_ZERO_TO_NONZERO_BRACKETED",
+  "pending_pool_creations_unresolved": 13
+}

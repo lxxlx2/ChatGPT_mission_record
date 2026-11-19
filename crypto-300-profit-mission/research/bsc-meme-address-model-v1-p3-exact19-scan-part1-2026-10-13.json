@@ -1,0 +1,172 @@
+{
+  "schema": "BSC_MEME_ADDRESS_MODEL_V1_P3_ERC20_ROSTER_SCAN_BATCH",
+  "part": 1,
+  "precommit_sha": "18cc2246135b381044403e09dc73eb1c0d436597",
+  "range": [
+    0,
+    2
+  ],
+  "rows": [
+    {
+      "wallet": "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8",
+      "direction": "in",
+      "source_state": "COMPLETE_FIRST_PAGE",
+      "raw_length": 6262,
+      "pageKey": null,
+      "events": [
+        {
+          "block": "0x73f1459",
+          "hash": "0x56d55b7af0d732f9cea5cf50428183b5b927b4a4b77f5ea45324f07fa9cea066",
+          "id": "0x56d55b7af0d732f9cea5cf50428183b5b927b4a4b77f5ea45324f07fa9cea066:log:260",
+          "from": "0x9bc9620b66cdce07a7ad8bb9d707079504b8dc04",
+          "to": "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8",
+          "ca": "0x82ec31d69b3c289e541b50e30681fd1acad24444",
+          "raw_value": "0x5cd56d394cdf27fc0",
+          "asset": "哈基米"
+        },
+        {
+          "block": "0x73f1dd5",
+          "hash": "0x2f96e3776f63412acda88baf842138cea5c819ef982c3c45fdf7b468697b5006",
+          "id": "0x2f96e3776f63412acda88baf842138cea5c819ef982c3c45fdf7b468697b5006:log:455",
+          "from": "0x9bc9620b66cdce07a7ad8bb9d707079504b8dc04",
+          "to": "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8",
+          "ca": "0x82ec31d69b3c289e541b50e30681fd1acad24444",
+          "raw_value": "0x5f6ae4b91560308a4",
+          "asset": "哈基米"
+        },
+        {
+          "block": "0x73f33ca",
+          "hash": "0x9d7f70873d9b9d106733b0e6d155912eb9dd2998a8a45df5f5bed237d21bb890",
+          "id": "0x9d7f70873d9b9d106733b0e6d155912eb9dd2998a8a45df5f5bed237d21bb890:log:524",
+          "from": "0x9bc9620b66cdce07a7ad8bb9d707079504b8dc04",
+          "to": "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8",
+          "ca": "0x82ec31d69b3c289e541b50e30681fd1acad24444",
+          "raw_value": "0x5a2ab353a014de4c8",
+          "asset": "哈基米"
+        },
+        {
+          "block": "0x75a4099",
+          "hash": "0x00d5eabcd78fa629f2f9036d74bfbac889cea475f8617111c32db45fae5413ed",
+          "id": "0x00d5eabcd78fa629f2f9036d74bfbac889cea475f8617111c32db45fae5413ed:log:140",
+          "from": "0x9bc9620b66cdce07a7ad8bb9d707079504b8dc04",
+          "to": "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8",
+          "ca": "0x82ec31d69b3c289e541b50e30681fd1acad24444",
+          "raw_value": "0x26a804be34823b4d5",
+          "asset": "哈基米"
+        },
+        {
+          "block": "0x75a4099",
+          "hash": "0x00d5eabcd78fa629f2f9036d74bfbac889cea475f8617111c32db45fae5413ed",
+          "id": "0x00d5eabcd78fa629f2f9036d74bfbac889cea475f8617111c32db45fae5413ed:log:149",
+          "from": "0x58f6213a0d5f6a32ea5dd5a727ff4a32abdf5f5b",
+          "to": "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8",
+          "ca": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+          "raw_value": "0xfe50d26e49bbf96",
+          "asset": "牛来"
+        },
+        {
+          "block": "0x75a4099",
+          "hash": "0x00d5eabcd78fa629f2f9036d74bfbac889cea475f8617111c32db45fae5413ed",
+          "id": "0x00d5eabcd78fa629f2f9036d74bfbac889cea475f8617111c32db45fae5413ed:log:154",
+          "from": "0x9bab04f9731858ed7b4c9b9c2a2443fc18d0914c",
+          "to": "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8",
+          "ca": "0x20d6015660b3fe52e6690a889b5c51f69902ce0e",
+          "raw_value": "0x29b4c564c4c512",
+          "asset": "GIGGLE"
+        },
+        {
+          "block": "0x75a4099",
+          "hash": "0x00d5eabcd78fa629f2f9036d74bfbac889cea475f8617111c32db45fae5413ed",
+          "id": "0x00d5eabcd78fa629f2f9036d74bfbac889cea475f8617111c32db45fae5413ed:log:182",
+          "from": "0x918498ac17964a90678d6e811f26595764bb2fd7",
+          "to": "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8",
+          "ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
+          "raw_value": "0x34923962d9fb165c",
+          "asset": "龙虾"
+        },
+        {
+          "block": "0x779381d",
+          "hash": "0x40dd73581cb30270e2609e7c6db71104769d9d306914f7987d59f28070177ce5",
+          "id": "0x40dd73581cb30270e2609e7c6db71104769d9d306914f7987d59f28070177ce5:log:405",
+          "from": "0xcfc0b770a9042d21e526192e1a7c50d9a8bf3de3",
+          "to": "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8",
+          "ca": "0x0df0587216a4a1bb7d5082fdc491d93d2dd4b413",
+          "raw_value": "0x29738df8b4c5e42ef7c1",
+          "asset": "Cheems"
+        },
+        {
+          "block": "0x78bd880",
+          "hash": "0xf9d57b0971395dc6f59a0317ba4bcbee3d4c0920e34474cf6f153300f76275d9",
+          "id": "0xf9d57b0971395dc6f59a0317ba4bcbee3d4c0920e34474cf6f153300f76275d9:log:330",
+          "from": "0x0dc747269b1759a91314c55ce36c2d7bce07ff4d",
+          "to": "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8",
+          "ca": "0x20d6015660b3fe52e6690a889b5c51f69902ce0e",
+          "raw_value": "0x2c685c67f6bac7",
+          "asset": "GIGGLE"
+        }
+      ]
+    },
+    {
+      "wallet": "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8",
+      "direction": "out",
+      "source_state": "COMPLETE_FIRST_PAGE",
+      "raw_length": 1409,
+      "pageKey": null,
+      "events": [
+        {
+          "block": "0x73faff3",
+          "hash": "0x619f25d8d4248e6fdcda656de45716f5bc5bb6e7802871e5bf56fdd8189c15f9",
+          "id": "0x619f25d8d4248e6fdcda656de45716f5bc5bb6e7802871e5bf56fdd8189c15f9:log:80",
+          "from": "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8",
+          "to": "0xc33bacff9141da689875e6381c1932348ab4c5cb",
+          "ca": "0x82ec31d69b3c289e541b50e30681fd1acad24444",
+          "raw_value": "0x1166b0546025436d2c",
+          "asset": "哈基米"
+        },
+        {
+          "block": "0x75ae8cd",
+          "hash": "0xfbfe1c19521081887048a36144a7c20b4606cd65c958b5dc18dddb8610fe051f",
+          "id": "0xfbfe1c19521081887048a36144a7c20b4606cd65c958b5dc18dddb8610fe051f:log:165",
+          "from": "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8",
+          "to": "0xc33bacff9141da689875e6381c1932348ab4c5cb",
+          "ca": "0x82ec31d69b3c289e541b50e30681fd1acad24444",
+          "raw_value": "0x26a804be34823b4d5",
+          "asset": "哈基米"
+        }
+      ]
+    },
+    {
+      "wallet": "0x11a7327957ed5d370d2e009ec250ab0da2ab98d8",
+      "direction": "in",
+      "source_state": "COMPLETE_FIRST_PAGE",
+      "raw_length": 21,
+      "pageKey": null,
+      "events": []
+    },
+    {
+      "wallet": "0x11a7327957ed5d370d2e009ec250ab0da2ab98d8",
+      "direction": "out",
+      "source_state": "COMPLETE_FIRST_PAGE",
+      "raw_length": 21,
+      "pageKey": null,
+      "events": []
+    },
+    {
+      "wallet": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+      "direction": "in",
+      "source_state": "COMPLETE_FIRST_PAGE",
+      "raw_length": 21,
+      "pageKey": null,
+      "events": []
+    },
+    {
+      "wallet": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+      "direction": "out",
+      "source_state": "COMPLETE_FIRST_PAGE",
+      "raw_length": 21,
+      "pageKey": null,
+      "events": []
+    }
+  ],
+  "production": "NO_GO"
+}

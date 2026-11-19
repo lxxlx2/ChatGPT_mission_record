@@ -1,0 +1,124 @@
+{
+  "schema": "BSC_P4B_DRAGON_POST_OWNER_TWO_BUYERS_HISTORICAL_NATIVE_BALANCE_V1",
+  "captured": "2026-10-16",
+  "network": "bnb-mainnet",
+  "address_a": "0xd503f69b37efbfe510e37f46a4ca34e0adb1a7aa",
+  "address_b": "0xe11b917d591db3bf40ecb5bf7ea4ea5af503460c",
+  "samples": [
+    {
+      "wallet": "0xd503f69b37efbfe510e37f46a4ca34e0adb1a7aa",
+      "block": 83635999,
+      "for_block": 83636000,
+      "wei": "641299627849344648",
+      "raw_rpc_return": "0x8e65a9d208ce688",
+      "status": "COMPLETE"
+    },
+    {
+      "wallet": "0xd503f69b37efbfe510e37f46a4ca34e0adb1a7aa",
+      "block": 83636000,
+      "for_block": 83636000,
+      "wei": "450427926849344652",
+      "raw_rpc_return": "0x6403dd020c5548c",
+      "status": "COMPLETE"
+    },
+    {
+      "wallet": "0xd503f69b37efbfe510e37f46a4ca34e0adb1a7aa",
+      "block": 83636017,
+      "for_block": 83636018,
+      "wei": "450427926849344652",
+      "raw_rpc_return": "0x6403dd020c5548c",
+      "status": "COMPLETE"
+    },
+    {
+      "wallet": "0xd503f69b37efbfe510e37f46a4ca34e0adb1a7aa",
+      "block": 83636018,
+      "for_block": 83636018,
+      "wei": "665564506003818390",
+      "raw_rpc_return": "0x93c8f6453774796",
+      "status": "COMPLETE"
+    },
+    {
+      "wallet": "0xd503f69b37efbfe510e37f46a4ca34e0adb1a7aa",
+      "block": 83636083,
+      "for_block": 83636084,
+      "wei": "665564506003818390",
+      "raw_rpc_return": "0x93c8f6453774796",
+      "status": "COMPLETE"
+    },
+    {
+      "wallet": "0xd503f69b37efbfe510e37f46a4ca34e0adb1a7aa",
+      "block": 83636084,
+      "for_block": 83636084,
+      "wei": "443530537003818408",
+      "raw_rpc_return": "0x627bcac69269da8",
+      "status": "COMPLETE"
+    },
+    {
+      "wallet": "0xd503f69b37efbfe510e37f46a4ca34e0adb1a7aa",
+      "block": 83636093,
+      "for_block": 83636094,
+      "wei": "443530537003818408",
+      "raw_rpc_return": "0x627bcac69269da8",
+      "status": "COMPLETE"
+    },
+    {
+      "wallet": "0xd503f69b37efbfe510e37f46a4ca34e0adb1a7aa",
+      "block": 83636094,
+      "for_block": 83636094,
+      "wei": "702517654718204083",
+      "raw_rpc_return": "0x9bfd815b9eb48b3",
+      "status": "COMPLETE"
+    },
+    {
+      "wallet": "0xe11b917d591db3bf40ecb5bf7ea4ea5af503460c",
+      "block": 83635999,
+      "for_block": 83636000,
+      "wei": "15323685316902657",
+      "raw_rpc_return": "0x3670cf83f6bf01",
+      "status": "COMPLETE"
+    },
+    {
+      "wallet": "0xe11b917d591db3bf40ecb5bf7ea4ea5af503460c",
+      "block": 83636000,
+      "for_block": 83636000,
+      "wei": "3304174759788189",
+      "raw_rpc_return": "0xbbd2122d53e9d",
+      "status": "COMPLETE"
+    }
+  ],
+  "movements": [
+    {
+      "block": 83636000,
+      "pre_balance_wei": "641299627849344648",
+      "end_balance_wei": "450427926849344652",
+      "block_native_delta_wei": "-190871700999999996",
+      "grade": "EOA_BLOCK_SCOPE_ONLY_NOT_TRANSACTION_PNL"
+    },
+    {
+      "block": 83636018,
+      "pre_balance_wei": "450427926849344652",
+      "end_balance_wei": "665564506003818390",
+      "block_native_delta_wei": "215136579154473738",
+      "grade": "EOA_BLOCK_SCOPE_ONLY_NOT_TRANSACTION_PNL"
+    },
+    {
+      "block": 83636084,
+      "pre_balance_wei": "665564506003818390",
+      "end_balance_wei": "443530537003818408",
+      "block_native_delta_wei": "-222033968999999982",
+      "grade": "EOA_BLOCK_SCOPE_ONLY_NOT_TRANSACTION_PNL"
+    },
+    {
+      "block": 83636094,
+      "pre_balance_wei": "443530537003818408",
+      "end_balance_wei": "702517654718204083",
+      "block_native_delta_wei": "258987117714385675",
+      "grade": "EOA_BLOCK_SCOPE_ONLY_NOT_TRANSACTION_PNL"
+    }
+  ],
+  "selected_4_blocks_sum_D503_native_delta_wei": "61218026868859435",
+  "selected_4_blocks_sum_BNB": 0.06121802686885943,
+  "grade": "RAW_EOA_BLOCK_BALANCE_SCOPE_ONLY_NOT_ATTRIBUTED_PNL",
+  "explicit_limitations": "Per-block EOA deltas may contain internal BNB transfers, refunds or other same-block transactions; reject causal PnL until signer, gas, internal quote flows and competing same-block value transfers identified.",
+  "production": "NO_GO"
+}

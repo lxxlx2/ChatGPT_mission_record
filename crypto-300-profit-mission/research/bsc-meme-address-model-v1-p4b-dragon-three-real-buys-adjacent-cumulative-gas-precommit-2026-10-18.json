@@ -1,0 +1,62 @@
+{
+  "schema": "BSC_P4B_2026_DRAGON_THREE_EXTERNAL_BUY_RECEIPT_GAS_USED_BY_ADJACENT_CUMULATIVE_PRECOMMIT_V1",
+  "created_date": "2026-10-18",
+  "parent_fixed_pr_SHA": "e5785521aaac8ec351ded9484fa1df104d718b9e",
+  "network": "bnb-mainnet",
+  "methodology": "On BNB same block, gasUsed(target) = cumulativeGasUsed(target receipt) - cumulativeGasUsed(immediately preceding tx receipt). Strict adjacent transaction indices, exact same block. Do not use ETH tx gas limit or EOA block delta as receipt gas.",
+  "source_pins": {
+    "actual_5_signed_tx": "9e8653a684aa88ecdb808b64d647ca676a2327d2",
+    "actual_5_signed_precommit": "47225db058589e131132ac6b308280b81c0cb4ff",
+    "original_7_signed_events": "b06b2ef565ebd74bc7f83ad4a2ea731eeb5cb2b9",
+    "old_D503_2_truncated_receipt_cumulative": "833ffbc7b6adf73389cf18417cde45305764d6c5",
+    "actual_4_wallet_BNB_blocks": "9ac3c2bef80e5ada78c87f0949d19f80eb55ecab"
+  },
+  "queries_frozen": [
+    {
+      "case": "D503_BUY_1",
+      "block": 83636000,
+      "target_transaction_index": 1,
+      "previous_transaction_index": 0,
+      "buy_tx": "0xd099d33a83c217e47f21b618483ae48de6018fb7fd26d093924f2eb25d219118",
+      "known_target_cumulative_hex": "0x4fa3f",
+      "target_gasPrice_wei": "3000000000"
+    },
+    {
+      "case": "D503_BUY_2",
+      "block": 83636084,
+      "target_transaction_index": 55,
+      "previous_transaction_index": 54,
+      "buy_tx": "0xbc1622bb9a1850b5966f7c056d0344e586c3ffcf7b882df84cb07673bd13bfb5",
+      "known_target_cumulative_hex": "0x1ac4653",
+      "target_gasPrice_wei": "7000000000"
+    },
+    {
+      "case": "E11B_BUY_1",
+      "block": 83636000,
+      "target_transaction_index": 67,
+      "previous_transaction_index": 66,
+      "buy_tx": "0xc0262a91f9e2036a5700f88753aec82496104410b8d8a02610f33c8a2d5a6c7a",
+      "known_target_cumulative_hex": null,
+      "target_gasPrice_wei": "57531543"
+    }
+  ],
+  "max_live_reads": 7,
+  "read_plan": [
+    "For each of 3 frozen buys, exactly 1 ethGetTransactionByBlockNumberAndIndex(block, target_index-1) to obtain previous tx hash",
+    "Then exactly 1 ethGetTransactionReceipt for each preceding tx hash (3 calls); require same block and adjacent index, parse cumulativeGasUsed if available",
+    "For E11B target buy only, exactly 1 ethGetTransactionReceipt to read cumulativeGasUsed (D503 prior target receipt cum values already Git-pinned)",
+    "Any API/provider output truncated must NOT be claimed a full raw receipt; if cumulativeGasUsed exact field visible and neighbor identity independently valid, label as DERIVED_FROM_TOOL_VISIBLE_CUMULATIVE_FIELDS_NOT_FULL_PROVIDER_WIRE",
+    "If any target cumulative or prev cumulative missing/inconsistent -> leave gasUsed UNKNOWN; no retry/no new tx discovery",
+    "Result is historical actual transaction gas units when adjacency checks hold; fee requires tx gasPrice for legacy type0, receipt effectiveGasPrice if available; don't claim refund/tax/internal BNB flow closure"
+  ],
+  "zero_retries": true,
+  "original_23x19_sample_unchanged": true,
+  "warning": "This is not a public observer U or an original DDAC follower PnL demonstration; external D503 entered after DDAC exited; E11B exit unresolved.",
+  "gates": {
+    "P4_B": "PARTIAL",
+    "PUBLIC_EXECUTABLE_U": "UNRESOLVED",
+    "P5": "BLOCKED",
+    "PRODUCTION": "NO_GO",
+    "permissions": "NO_MERGE NO_DEPLOY NO_GMAIL NO_TRADE"
+  }
+}

@@ -1,0 +1,90 @@
+{
+  "schema": "BSC_P4B_2026_239E_R2_REAL_EXTERNAL_BUYER_EXISTING_WALLET_PANC_ERC20_TRANSFER_AND_HISTORY_V1",
+  "source_prefreeze": "bsc-meme-address-model-v1-p4b-239e-r2-real-external-buyer-4-balances-and-transfer-precommit-2026-10-18.json",
+  "date": "2026-10-18",
+  "network": "bnb-mainnet",
+  "provider": "Alchemy existing free",
+  "calls_executed": 5,
+  "gas_and_original_follower_profits": "UNRESOLVED",
+  "real_signed_external_buy_source": "bsc-meme-address-model-v1-p4b-239e-r2-one-real-external-buy-signer-other-sell-truncated-2026-10-18.json",
+  "full_Pair_Swap_source": "bsc-meme-address-model-v1-p4b-239e-single-block-r1-clipped-r2-four-real-v2-swap-events-2026-10-18.json",
+  "wallet": "0x5e600e259e3cff0757e3736223685958665866c6",
+  "original_source_owner": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+  "token_CA": "0xeccbb861c0dda7efd964010085488b69317e4444",
+  "real_signed_router_buy_tx": "0x2b93cfb6ae16ab4943f5f209fff1820f98368fd357cbdcb4f624708440bf8f47",
+  "one_pair_swap_WBNB_in_wei": "1562236003910333182",
+  "pair_swap_token_gross_out_raw": "48454704178311452125501",
+  "balanceOf_rows": [
+    {
+      "label": "BEFORE_BUY",
+      "block": 85959961,
+      "response_full_valid_32byte": true,
+      "balanceOf_full_raw": "0x0000000000000000000000000000000000000000000046f9cf10adccc4cb647d",
+      "parsed_owner_token_balance_raw": "335173813691889308361853"
+    },
+    {
+      "label": "AFTER_BUY",
+      "block": 85959962,
+      "response_full_valid_32byte": true,
+      "balanceOf_full_raw": "0x00000000000000000000000000000000000000000000513c8b2b03f2dec6cdba",
+      "parsed_owner_token_balance_raw": "383628517870200760487354"
+    },
+    {
+      "label": "LATER_WHILE_OWNER_HOLDS",
+      "block": 85960573,
+      "response_full_valid_32byte": true,
+      "balanceOf_full_raw": "0x00000000000000000000000000000000000000000000513c8b2b03f2dec6cdba",
+      "parsed_owner_token_balance_raw": "383628517870200760487354"
+    },
+    {
+      "label": "AFTER_ORIGINAL_OWNER_FINAL_SELL",
+      "block": 85961371,
+      "response_full_valid_32byte": true,
+      "balanceOf_full_raw": "0x00000000000000000000000000000000000000000000513c8b2b03f2dec6cdba",
+      "parsed_owner_token_balance_raw": "383628517870200760487354"
+    }
+  ],
+  "raw_token_balance_delta_in_buy_block": "48454704178311452125501",
+  "transfer_to_buyer_logs": {
+    "response_full_parseable": true,
+    "response_chars": 727,
+    "log_count": 1,
+    "logs": [
+      {
+        "address": "0xeccbb861c0dda7efd964010085488b69317e4444",
+        "topics": [
+          "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+          "0x00000000000000000000000022af7297243c4eef12e2d5a4f888b92e56bf127c",
+          "0x0000000000000000000000005e600e259e3cff0757e3736223685958665866c6"
+        ],
+        "data": "0x000000000000000000000000000000000000000000000a42bc1a562619fb693d",
+        "transactionHash": "0x2b93cfb6ae16ab4943f5f209fff1820f98368fd357cbdcb4f624708440bf8f47",
+        "blockNumber": "0x51fa51a",
+        "transactionIndex": "0x2",
+        "logIndex": "0xd"
+      }
+    ]
+  },
+  "proof_grade": "REAL_EXTERNAL_SIGNED_ROUTER_TX_PLUS_FULL_SINGLE_BLOCK_PAIR_SWAP_AND_ERC20_TRANSFER_LOG_AND_4_TRUE_HISTORIC_BALANCES_NOT_FULL_PROVIDER_WIRE",
+  "classification": "EXISTING_HOLDER_ADDED_POSITION_DURING_ORIGINAL_239E_HOLDING",
+  "unverified": {
+    "external_source_before_buy_new_wallet": false,
+    "owner_causal_observer_receive_time": true,
+    "external_wallet_WBNB_actual_token_spend": true,
+    "external_buy_gasUsed": true,
+    "external_wallet_realized_sell": true,
+    "fixed_delay_1_5_15_min_return": true,
+    "first_global_public_U": true
+  },
+  "notes": [
+    "This wallet held 335173.813691889308361853 token units before the reported 48454.704178311452125501 token buy; MUST classify as addition to old position, not first new wallet entry.",
+    "At selected blocks after owner 239E real signed exit, external buyer still holds token, not eligible for realized positive exit evidence.",
+    "Historical snapshot balanceOf returns are end-block, do not prove no intervening activity between snapshots."
+  ],
+  "status": {
+    "P4_B": "PARTIAL",
+    "PUBLIC_EXECUTABLE_U": "UNRESOLVED",
+    "P5": "BLOCKED",
+    "PRODUCTION": "NO_GO"
+  }
+}

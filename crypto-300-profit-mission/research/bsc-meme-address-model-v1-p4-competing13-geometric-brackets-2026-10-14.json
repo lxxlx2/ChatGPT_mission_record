@@ -1,0 +1,211 @@
+{
+  "schema": "BSC_P4_COMPETING13_GEOMETRIC_VERIFIED_BOUNDS",
+  "sources": [
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4-competing13-creation-precommit-2026-10-14.json",
+      "blob_sha": "b62ce08245322c9bfdc6b6ad0c6898ee9a5795b1"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4-competing13-factory-bisect-stage1-2026-10-14.json",
+      "blob_sha": "3f18e347a3aa31ccabfbf52941274442094cb277"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4-competing13-anchor1000-2026-10-14.json",
+      "blob_sha": "fb67dd3e61153bc161f538230bfa8e6902b9b4a5"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4-competing13-anchor100000-2026-10-14.json",
+      "blob_sha": "f77bd824988936b60f9395802e04263d2757048a"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4-competing13-anchor1000000-2026-10-14.json",
+      "blob_sha": "a64e02f4240b990647c85fdba593ca1978411a8c"
+    }
+  ],
+  "scope": "13 frozen pool factory mapped creation bounds, zero/nonzero historical precommitted anchor reads; neither liquidity nor tradability evidence",
+  "brackets": [
+    {
+      "index": 0,
+      "token": "TST",
+      "pool": "0x16969fa79651bae11736f2f6576a86fe2726b42b",
+      "CA": "0x86bb94ddd16efc8bc58e6b056e8df71d9e666429",
+      "protocol": "V3",
+      "fee_pips": 10000,
+      "quote": "WBNB",
+      "baseline_block": 46421401,
+      "lo_absent": 46321401,
+      "hi_present": 46420401,
+      "width": 99000,
+      "read_count": 3
+    },
+    {
+      "index": 1,
+      "token": "CHEEMS",
+      "pool": "0x38231d4ef9d33ebea944c75a21301ff6986499c3",
+      "CA": "0x0df0587216a4a1bb7d5082fdc491d93d2dd4b413",
+      "protocol": "V3",
+      "fee_pips": 2500,
+      "quote": "WBNB",
+      "baseline_block": 42638444,
+      "lo_absent": 42637444,
+      "hi_present": 42638444,
+      "width": 1000,
+      "read_count": 2
+    },
+    {
+      "index": 2,
+      "token": "MUBARAK",
+      "pool": "0x90a54475d512b8f3852351611c38fad30a513491",
+      "CA": "0x5c85d6c6825ab4032337f11ee92a72df936b46f6",
+      "protocol": "V3",
+      "fee_pips": 2500,
+      "quote": "WBNB",
+      "baseline_block": 47442143,
+      "lo_absent": 47342143,
+      "hi_present": 47441143,
+      "width": 99000,
+      "read_count": 3
+    },
+    {
+      "index": 3,
+      "token": "MUBARAK",
+      "pool": "0x8be0d063873f68a08c8b5bca2fe981618bbf5047",
+      "CA": "0x5c85d6c6825ab4032337f11ee92a72df936b46f6",
+      "protocol": "V2",
+      "fee_pips": null,
+      "quote": "USDT",
+      "baseline_block": 47442143,
+      "lo_absent": 47342143,
+      "hi_present": 47441143,
+      "width": 99000,
+      "read_count": 3
+    },
+    {
+      "index": 4,
+      "token": "TUT",
+      "pool": "0x6dafbf0ab4fd72e2a5c0ad5a1ed277d3bf8a8d1f",
+      "CA": "0xcaae2a2f939f51d97cdfa9a86e79e3f085b799f3",
+      "protocol": "V3",
+      "fee_pips": 10000,
+      "quote": "WBNB",
+      "baseline_block": 46521964,
+      "lo_absent": 46421964,
+      "hi_present": 46520964,
+      "width": 99000,
+      "read_count": 3
+    },
+    {
+      "index": 5,
+      "token": "BROCCOLI714",
+      "pool": "0xa5067360b13fc7a2685dc82dcd1bf2b4b8d7868b",
+      "CA": "0x6d5ad1592ed9d6d1df9b93c793ab759573ed6714",
+      "protocol": "V3",
+      "fee_pips": 10000,
+      "quote": "WBNB",
+      "baseline_block": 46627714,
+      "lo_absent": 46626714,
+      "hi_present": 46627714,
+      "width": 1000,
+      "read_count": 2
+    },
+    {
+      "index": 6,
+      "token": "BROCCOLIF3B",
+      "pool": "0xdb25c09d96c165b62f6e6f9d9b17174738d897ba",
+      "CA": "0x12b4356c65340fb02cdff01293f95febb1512f3b",
+      "protocol": "V3",
+      "fee_pips": 10000,
+      "quote": "WBNB",
+      "baseline_block": 46628416,
+      "lo_absent": 46528416,
+      "hi_present": 46627416,
+      "width": 99000,
+      "read_count": 3
+    },
+    {
+      "index": 7,
+      "token": "SIREN",
+      "pool": "0xb2af49dbf526054faf19602860a5e298a79f3d05",
+      "CA": "0x997a58129890bbda032231a52ed1ddc845fc18e1",
+      "protocol": "V3",
+      "fee_pips": 10000,
+      "quote": "WBNB",
+      "baseline_block": 46828822,
+      "lo_absent": 45828822,
+      "hi_present": 46728822,
+      "width": 900000,
+      "read_count": 4
+    },
+    {
+      "index": 8,
+      "token": "BANANAS31",
+      "pool": "0x7f51bbf34156ba802deb0e38b7671dc4fa32041d",
+      "CA": "0x3d4f0513e8a29669b960f9dbca61861548a9a760",
+      "protocol": "V3",
+      "fee_pips": 100,
+      "quote": "WBNB",
+      "baseline_block": 46871948,
+      "lo_absent": 23435974,
+      "hi_present": 45871948,
+      "width": 22435974,
+      "read_count": 4
+    },
+    {
+      "index": 9,
+      "token": "BANANAS31",
+      "pool": "0xf65d3c3f99e431da5dbae7948c0dd1905c268121",
+      "CA": "0x3d4f0513e8a29669b960f9dbca61861548a9a760",
+      "protocol": "V3",
+      "fee_pips": 10000,
+      "quote": "USDT",
+      "baseline_block": 46871948,
+      "lo_absent": 23435974,
+      "hi_present": 45871948,
+      "width": 22435974,
+      "read_count": 4
+    },
+    {
+      "index": 10,
+      "token": "BULLA",
+      "pool": "0x626f90c9a2d9fbaecd11fa350bbf568f81ab06c1",
+      "CA": "0x595e21b20e78674f8a64c1566a20b2b316bc3511",
+      "protocol": "V3",
+      "fee_pips": 10000,
+      "quote": "WBNB",
+      "baseline_block": 50982326,
+      "lo_absent": 50882326,
+      "hi_present": 50981326,
+      "width": 99000,
+      "read_count": 3
+    },
+    {
+      "index": 11,
+      "token": "BULLA",
+      "pool": "0x802c7a20ecd42a383c5ce96a59af062bbaf887d3",
+      "CA": "0x595e21b20e78674f8a64c1566a20b2b316bc3511",
+      "protocol": "V3",
+      "fee_pips": 10000,
+      "quote": "USDT",
+      "baseline_block": 50982326,
+      "lo_absent": 50882326,
+      "hi_present": 50981326,
+      "width": 99000,
+      "read_count": 3
+    },
+    {
+      "index": 12,
+      "token": "BUBB",
+      "pool": "0xc8255e3fa0f4c6e6678807d663f9e2263e23a8e8",
+      "CA": "0xd5369a3cac0f4448a9a96bb98af9c887c92fc37b",
+      "protocol": "V3",
+      "fee_pips": 2500,
+      "quote": "WBNB",
+      "baseline_block": 47620838,
+      "lo_absent": 47520838,
+      "hi_present": 47619838,
+      "width": 99000,
+      "read_count": 3
+    }
+  ],
+  "production": "NO_GO"
+}

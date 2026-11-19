@@ -1,0 +1,116 @@
+{
+  "schema": "BSC_P4B_TWO_EOA_FULL_BLOCK_BNB_BALANCE_DELTA_NONATTRIBUTION_V1",
+  "recorded_date": "2026-10-19",
+  "network": "bnb-mainnet",
+  "source": "USER_CONNECTED_ALCHEMY_FREE_READ_ONLY",
+  "scope": "Exact adjacent block-level ETH balance and EOA transaction count. NOT per-transaction internal trace and NOT realized PnL.",
+  "cases": [
+    {
+      "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "token": "FLAP",
+      "rows": [
+        {
+          "role": "ENTRY",
+          "block": 127758979,
+          "block_hex": "0x79d7283",
+          "before": "6325683251563181611",
+          "after": "6175637322763181611",
+          "nonce_before": 24338,
+          "nonce_after": 24339,
+          "observed_token_tx": "0x795a0d949ef8c65c043d7b2f9301a8a5ecf82f2fb7cb7508ee7be6b6b0214b67",
+          "native_tx_value_wei": "150000000000000000",
+          "wallet_bnb_block_delta_wei": "-150045928800000000",
+          "sender_nonce_delta_in_block": 1,
+          "directly_attributable_to_single_tx": false,
+          "first_party_witness": "Alchemy ethGetBalance & ethGetTransactionCount paired adjacent block numbers"
+        },
+        {
+          "role": "EXIT1",
+          "block": 127760321,
+          "block_hex": "0x79d77c1",
+          "before": "6111291183556520392",
+          "after": "6251514927511981728",
+          "nonce_before": 24342,
+          "nonce_after": 24344,
+          "observed_token_tx": "0x514945d5da5f7fd373fd0d3772d6e50d8ded905590fd443d7304be2d1df7e73f",
+          "native_tx_value_wei": "0",
+          "wallet_bnb_block_delta_wei": "140223743955461336",
+          "sender_nonce_delta_in_block": 2,
+          "directly_attributable_to_single_tx": false,
+          "first_party_witness": "Alchemy ethGetBalance & ethGetTransactionCount paired adjacent block numbers"
+        },
+        {
+          "role": "EXIT2",
+          "block": 127893440,
+          "block_hex": "0x79f7fc0",
+          "before": "6251514927511981728",
+          "after": "6261680272633865598",
+          "nonce_before": 24344,
+          "nonce_after": 24346,
+          "observed_token_tx": "0x9d6c8d64d24367f2f52cdcdb9cebe84c7462209b71ba291377a9056000ac6559",
+          "native_tx_value_wei": "0",
+          "wallet_bnb_block_delta_wei": "10165345121883870",
+          "sender_nonce_delta_in_block": 2,
+          "directly_attributable_to_single_tx": false,
+          "first_party_witness": "Alchemy ethGetBalance & ethGetTransactionCount paired adjacent block numbers"
+        }
+      ]
+    },
+    {
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "token": "yoki酱",
+      "rows": [
+        {
+          "role": "ENTRY",
+          "block": 128198012,
+          "block_hex": "0x7a4257c",
+          "before": "102861804305312629",
+          "after": "22816570425312629",
+          "nonce_before": 27735,
+          "nonce_after": 27736,
+          "observed_token_tx": "0x676f0c753d49761a80dadd8b9485e60e9ffb8ae6e72f17498ff476a3d75cfa80",
+          "native_tx_value_wei": "80000000000000000",
+          "wallet_bnb_block_delta_wei": "-80045233880000000",
+          "sender_nonce_delta_in_block": 1,
+          "directly_attributable_to_single_tx": false,
+          "first_party_witness": "Alchemy ethGetBalance & ethGetTransactionCount paired adjacent block numbers"
+        },
+        {
+          "role": "EXIT",
+          "block": 128324413,
+          "block_hex": "0x7a6133d",
+          "before": "40265056096018451",
+          "after": "111280528875685181",
+          "nonce_before": 27742,
+          "nonce_after": 27744,
+          "observed_token_tx": "0x092edd1dc44a7b1671d0e6de1e7594bca1b9129a6c12a7ea9967c0326e235c6a",
+          "native_tx_value_wei": "0",
+          "wallet_bnb_block_delta_wei": "71015472779666730",
+          "sender_nonce_delta_in_block": 2,
+          "directly_attributable_to_single_tx": false,
+          "first_party_witness": "Alchemy ethGetBalance & ethGetTransactionCount paired adjacent block numbers"
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "entry_8e6b_bnb_block_delta_wei": "-150045928800000000",
+    "entry_2adf_bnb_block_delta_wei": "-80045233880000000",
+    "each_exit_block_contains_multiple_signed_owner_transactions": true,
+    "actual_exit_proceeds_per_transaction": "UNRESOLVED",
+    "full_gas_and_internal_traces": "UNRESOLVED",
+    "free_tier_trace_allowed": false,
+    "profit_verified": 0
+  },
+  "limitations": [
+    "The wallet balance difference spans all transactions and deposits/withdrawals in each mined block, not just the selected swap.",
+    "For every exit block the owner nonce increases by two, demonstrating nonunique owner transaction attribution; other movements remain possible even if asset-transfer index lists one outward ERC20 transfer tx.",
+    "BNB trace_transaction is blocked by paid tier. Eth_getLogs token movements do not establish net native BNB receipt.",
+    "No production, paid subscription, signing, trade, notification, or enhanced monitoring invoked."
+  ],
+  "gates": {
+    "PUBLIC_EXECUTABLE_U": "UNRESOLVED",
+    "P5": "BLOCKED",
+    "PRODUCTION": "NO_GO"
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "schema": "BSC_P4B_2026_DRAGON_D503_E11B_FIVE_ORIGINAL_TX_ALCHEMY_FREE_FALLBACK_PRECOMMIT_V1",
+  "created_at_bangkok": "2026-10-18",
+  "previous_provider": "Blockscout public get_transaction_info access denied, explicitly required paid PRO API key. Failure recorded in a separate new file.",
+  "frozen_prior_same_five": "bsc-meme-address-model-v1-p4b-dragon-five-actual-external-tx-independent-fee-precommit-2026-10-18.json",
+  "prior_head_sha": "897cb96004336e3a776afb884b696b7a50fe9a3a",
+  "purpose": "Read five same previously frozen Dragon external original signer tx from existing Alchemy BNB free read-only network. Confirm sender, outer BNB tx.value, gasPrice, original chain blockTimestamp and gas limit without claiming missing gasUsed as confirmed.",
+  "provider": "Alchemy existing free bnb-mainnet",
+  "network": "bnb-mainnet",
+  "method": "eth_getTransactionByHash",
+  "frozen_hashes": [
+    {
+      "case": "D503_BUY_1",
+      "hash": "0xd099d33a83c217e47f21b618483ae48de6018fb7fd26d093924f2eb25d219118",
+      "expected_block": 83636000,
+      "owner": "0xd503f69b37efbfe510e37f46a4ca34e0adb1a7aa",
+      "expected_value_wei": "190000000000000000"
+    },
+    {
+      "case": "D503_SELL_1",
+      "hash": "0x854ce4c5edc725bf9d763c043e29e0d8ef8a9ab89a3c39bdf7fba31dda98416d",
+      "expected_block": 83636018,
+      "owner": "0xd503f69b37efbfe510e37f46a4ca34e0adb1a7aa",
+      "expected_value_wei": "0"
+    },
+    {
+      "case": "D503_BUY_2",
+      "hash": "0xbc1622bb9a1850b5966f7c056d0344e586c3ffcf7b882df84cb07673bd13bfb5",
+      "expected_block": 83636084,
+      "owner": "0xd503f69b37efbfe510e37f46a4ca34e0adb1a7aa",
+      "expected_value_wei": "220000000000000000"
+    },
+    {
+      "case": "D503_SELL_2",
+      "hash": "0x25122e07f529fc935856f99cc948f442587ac09d1e339a859eb86537e93eca0a",
+      "expected_block": 83636094,
+      "owner": "0xd503f69b37efbfe510e37f46a4ca34e0adb1a7aa",
+      "expected_value_wei": "0"
+    },
+    {
+      "case": "E11B_BUY_1",
+      "hash": "0xc0262a91f9e2036a5700f88753aec82496104410b8d8a02610f33c8a2d5a6c7a",
+      "expected_block": 83636000,
+      "owner": "0xe11b917d591db3bf40ecb5bf7ea4ea5af503460c",
+      "expected_value_wei": "12000000000000000"
+    }
+  ],
+  "max_calls": 5,
+  "retries": 0,
+  "strict_precommitted_selection": true,
+  "further_source_pins": {
+    "original_seven": "b06b2ef565ebd74bc7f83ad4a2ea731eeb5cb2b9",
+    "original_four_balance_delta": "9ac3c2bef80e5ada78c87f0949d19f80eb55ecab",
+    "original_D503_token_inventory": "06bba24e15530cf9f0f7fde24ab876fcc764d173",
+    "original_DDAC_full_early_loss": "4e76eea4d7ab001360af82f15de5eefc8509c501"
+  },
+  "limits": [
+    "eth_getTransactionByHash gas is gas LIMIT not actual gasUsed",
+    "No buyer gasUsed evidence if original receipt truncated",
+    "EOA selected block delta can include other BNB movements; cannot convert block net into guaranteed tx-specific fee without isolation proof",
+    "A buyer who buys after DDAC sold is NOT proven DDAC follower",
+    "E11B positive inventory and no signed exit in selected window is EXIT_UNKNOWN, not realized loss",
+    "No public signal observed time and 1/5/15-minute follower PnL"
+  ],
+  "gates": {
+    "P4_B": "PARTIAL",
+    "PUBLIC_EXECUTABLE_U": "UNRESOLVED",
+    "P5": "BLOCKED",
+    "production": "NO_GO",
+    "permissions": "NO_MERGE NO_DEPLOY NO_GMAIL NO_TRADE"
+  }
+}

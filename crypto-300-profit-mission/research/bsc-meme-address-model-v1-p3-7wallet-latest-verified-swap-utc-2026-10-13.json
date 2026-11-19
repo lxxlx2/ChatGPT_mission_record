@@ -1,0 +1,76 @@
+{
+  "schema": "BSC_MEME_P3_SEVEN_WALLETS_LATEST_STRICT_SWAP_UTC",
+  "source": "Read-only Alchemy BNB mainnet eth_getTransactionByHash: each original tx hash sender, block and blockTimestamp rechecked",
+  "scope": "Latest confirmed strict pool swap in frozen 19 CA snapshot, not last transaction across all tokens",
+  "window": {
+    "start": "2026-09-13T08:37:36Z",
+    "end": "2026-10-13T08:37:36Z"
+  },
+  "wallet_count": 7,
+  "wallets": [
+    {
+      "wallet": "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8",
+      "hash": "0xfbfe1c19521081887048a36144a7c20b4606cd65c958b5dc18dddb8610fe051f",
+      "block": 123398349,
+      "blockTimestampHex": "0x6ab2a0c0",
+      "block_UTC": "2026-09-22T15:37:36.000Z",
+      "original_signer_verified": true,
+      "original_block_verified": true
+    },
+    {
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "hash": "0x118dd6d6d2c4766660342cf7e67518753928ea441943cedd8ff7a6f4f66a5756",
+      "block": 122995918,
+      "blockTimestampHex": "0x6aafdd1c",
+      "block_UTC": "2026-09-20T13:18:20.000Z",
+      "original_signer_verified": true,
+      "original_block_verified": true
+    },
+    {
+      "wallet": "0x498528e32b04bdaa73d5c8943a09aeffd15bd99a",
+      "hash": "0x158c28e5efafde2a93fa1549d328082b2357369f666fd4cbd48eec0e54ff222b",
+      "block": 122742452,
+      "blockTimestampHex": "0x6aae1f65",
+      "block_UTC": "2026-09-19T05:36:37.000Z",
+      "original_signer_verified": true,
+      "original_block_verified": true
+    },
+    {
+      "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "hash": "0x72cd4f7d896f045680cbbaf70eb2377e4f534d1939df05f68c26ed75535e12f1",
+      "block": 121966513,
+      "blockTimestampHex": "0x6aa8cadf",
+      "block_UTC": "2026-09-15T04:34:39.000Z",
+      "original_signer_verified": true,
+      "original_block_verified": true
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "hash": "0xcfcc99e6a8d6900fa805cf5b8da72761e9d175455914772ebf394778d9d8aed4",
+      "block": 127174819,
+      "blockTimestampHex": "0x6acc92e3",
+      "block_UTC": "2026-10-12T07:57:23.000Z",
+      "original_signer_verified": true,
+      "original_block_verified": true
+    },
+    {
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "hash": "0xc0098aafadbf7a3789d7beb64717b4f5f7c0c1698f1e5d5386419f7b57cc9fbd",
+      "block": 121786352,
+      "blockTimestampHex": "0x6aa78e0d",
+      "block_UTC": "2026-09-14T06:02:53.000Z",
+      "original_signer_verified": true,
+      "original_block_verified": true
+    },
+    {
+      "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "hash": "0xa9eabce653ba2cfd6ec10656da7da32a9d929f0d45d6cf040693e36c97f6bc47",
+      "block": 126050553,
+      "blockTimestampHex": "0x6ac4d8a6",
+      "block_UTC": "2026-10-06T11:16:54.000Z",
+      "original_signer_verified": true,
+      "original_block_verified": true
+    }
+  ],
+  "production": "NO_GO"
+}

@@ -1,0 +1,102 @@
+{
+  "schema": "BSC_P4_FACTORY190_QUERY_PART",
+  "part": 10,
+  "range": [
+    100,
+    114
+  ],
+  "precommit_sha": "c9b0be420a3e456e2927953288fdd17f6e78036d",
+  "records": [
+    {
+      "index": 100,
+      "state": "DIRECT_HISTORICAL_FACTORY",
+      "pool": "0xf0a949d3d93b833c183a27ee067165b6f2c9625e",
+      "raw": "0x000000000000000000000000f0a949d3d93b833c183a27ee067165b6f2c9625e"
+    },
+    {
+      "index": 101,
+      "state": "DIRECT_HISTORICAL_FACTORY",
+      "pool": "0xbc8bf094530a4149034474a5e8bf7ae926d91199",
+      "raw": "0x000000000000000000000000bc8bf094530a4149034474a5e8bf7ae926d91199"
+    },
+    {
+      "index": 102,
+      "state": "DIRECT_HISTORICAL_FACTORY",
+      "pool": "0x20f2abb3963ffccf4ae53e7f7d6e66f3cb707c70",
+      "raw": "0x00000000000000000000000020f2abb3963ffccf4ae53e7f7d6e66f3cb707c70"
+    },
+    {
+      "index": 103,
+      "state": "DIRECT_HISTORICAL_FACTORY",
+      "pool": "0xc9f124dccc7095de7bf65d388cd75519669a6b2e",
+      "raw": "0x000000000000000000000000c9f124dccc7095de7bf65d388cd75519669a6b2e"
+    },
+    {
+      "index": 104,
+      "state": "DIRECT_HISTORICAL_FACTORY",
+      "pool": "0xfad3b1b70868e16e93e323ea1375e2136a6c829a",
+      "raw": "0x000000000000000000000000fad3b1b70868e16e93e323ea1375e2136a6c829a"
+    },
+    {
+      "index": 105,
+      "state": "DIRECT_HISTORICAL_FACTORY",
+      "pool": "0xd90c29c0e08be05bd2929e8506ba9b771ce84b22",
+      "raw": "0x000000000000000000000000d90c29c0e08be05bd2929e8506ba9b771ce84b22"
+    },
+    {
+      "index": 106,
+      "state": "DIRECT_HISTORICAL_FACTORY",
+      "pool": "0x371fe68d4da145f6968aa9d88501741ff05afd70",
+      "raw": "0x000000000000000000000000371fe68d4da145f6968aa9d88501741ff05afd70"
+    },
+    {
+      "index": 107,
+      "state": "DIRECT_HISTORICAL_FACTORY",
+      "pool": "0xf732b569b3eada451bba4f78db10fff2b6f0f9a2",
+      "raw": "0x000000000000000000000000f732b569b3eada451bba4f78db10fff2b6f0f9a2"
+    },
+    {
+      "index": 108,
+      "state": "DIRECT_HISTORICAL_FACTORY",
+      "pool": "0xee04b2a82bab9efefcd626f5d66f51cc2b6fa12a",
+      "raw": "0x000000000000000000000000ee04b2a82bab9efefcd626f5d66f51cc2b6fa12a"
+    },
+    {
+      "index": 109,
+      "state": "DIRECT_HISTORICAL_FACTORY",
+      "pool": "0xee2c567273d4a503caa919c38f883c7c00fd6dcb",
+      "raw": "0x000000000000000000000000ee2c567273d4a503caa919c38f883c7c00fd6dcb"
+    },
+    {
+      "index": 110,
+      "state": "DIRECT_HISTORICAL_FACTORY",
+      "pool": "0xd6b652aecb704b0aebec6317315afb90ba641d57",
+      "raw": "0x000000000000000000000000d6b652aecb704b0aebec6317315afb90ba641d57"
+    },
+    {
+      "index": 111,
+      "state": "DIRECT_HISTORICAL_FACTORY",
+      "pool": "0x4149b9408e6bfa3981ab8600da02256033e7a9fb",
+      "raw": "0x0000000000000000000000004149b9408e6bfa3981ab8600da02256033e7a9fb"
+    },
+    {
+      "index": 112,
+      "state": "DIRECT_HISTORICAL_FACTORY",
+      "pool": "0x69dff2dbce428462e55710c14a733b4978c2bb38",
+      "raw": "0x00000000000000000000000069dff2dbce428462e55710c14a733b4978c2bb38"
+    },
+    {
+      "index": 113,
+      "state": "DIRECT_HISTORICAL_FACTORY",
+      "pool": "0xa2905d8d5dbe04e359d94c7da958088039a75d8a",
+      "raw": "0x000000000000000000000000a2905d8d5dbe04e359d94c7da958088039a75d8a"
+    },
+    {
+      "index": 114,
+      "state": "DIRECT_HISTORICAL_FACTORY",
+      "pool": "0xd9704dabefd6500b9b469ee02e00a0b3b0ab6f8a",
+      "raw": "0x000000000000000000000000d9704dabefd6500b9b469ee02e00a0b3b0ab6f8a"
+    }
+  ],
+  "production": "NO_GO"
+}

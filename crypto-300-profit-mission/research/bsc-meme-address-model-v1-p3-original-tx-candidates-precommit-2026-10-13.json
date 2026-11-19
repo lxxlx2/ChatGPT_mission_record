@@ -1,0 +1,994 @@
+{
+  "schema": "BSC_MEME_ADDRESS_MODEL_V1_P3_ALL_TRANSFER_ORIGINAL_TX_HASH_PRECOMMIT",
+  "as_of": "2026-10-13T08:37:36Z",
+  "production": "NO_GO",
+  "source_census_path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p3-23wallet-19ca-transfer-census-2026-10-13.json",
+  "source_census_sha": "5592cc84099adf23b4862b8addb888b5f581c661",
+  "original_candidates": [
+    {
+      "wallet": "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8",
+      "hash": "0x00d5eabcd78fa629f2f9036d74bfbac889cea475f8617111c32db45fae5413ed",
+      "transfer_blocks": [
+        123355289
+      ],
+      "token_CAs": [
+        "0x20d6015660b3fe52e6690a889b5c51f69902ce0e",
+        "0x82ec31d69b3c289e541b50e30681fd1acad24444",
+        "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+        "0xeccbb861c0dda7efd964010085488b69317e4444"
+      ],
+      "directions": [
+        "in"
+      ]
+    },
+    {
+      "wallet": "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8",
+      "hash": "0xfbfe1c19521081887048a36144a7c20b4606cd65c958b5dc18dddb8610fe051f",
+      "transfer_blocks": [
+        123398349
+      ],
+      "token_CAs": [
+        "0x82ec31d69b3c289e541b50e30681fd1acad24444"
+      ],
+      "directions": [
+        "out"
+      ]
+    },
+    {
+      "wallet": "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8",
+      "hash": "0x40dd73581cb30270e2609e7c6db71104769d9d306914f7987d59f28070177ce5",
+      "transfer_blocks": [
+        125384733
+      ],
+      "token_CAs": [
+        "0x0df0587216a4a1bb7d5082fdc491d93d2dd4b413"
+      ],
+      "directions": [
+        "in"
+      ]
+    },
+    {
+      "wallet": "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8",
+      "hash": "0xf9d57b0971395dc6f59a0317ba4bcbee3d4c0920e34474cf6f153300f76275d9",
+      "transfer_blocks": [
+        126605440
+      ],
+      "token_CAs": [
+        "0x20d6015660b3fe52e6690a889b5c51f69902ce0e"
+      ],
+      "directions": [
+        "in"
+      ]
+    },
+    {
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "hash": "0xae1def223a10ca11bf4e13f716f475b99693047e4e541c465e9dde0a30b24189",
+      "transfer_blocks": [
+        122582898
+      ],
+      "token_CAs": [
+        "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777"
+      ],
+      "directions": [
+        "out"
+      ]
+    },
+    {
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "hash": "0xcab3ab44e62796268d5817e67b89823b0e14cd199b5b9100f4bfc38fe2689f7f",
+      "transfer_blocks": [
+        122582910
+      ],
+      "token_CAs": [
+        "0xeccbb861c0dda7efd964010085488b69317e4444"
+      ],
+      "directions": [
+        "out"
+      ]
+    },
+    {
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "hash": "0x31d00d5cd9f1f65f38b2f44529dc39bc94c2271464fc381febb8ae3f45889ac8",
+      "transfer_blocks": [
+        122986050
+      ],
+      "token_CAs": [
+        "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777"
+      ],
+      "directions": [
+        "in"
+      ]
+    },
+    {
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "hash": "0xed280439fe38101ab1065564f1245fc689de6ea50276e42f0871cb55d6cf4414",
+      "transfer_blocks": [
+        122987489
+      ],
+      "token_CAs": [
+        "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777"
+      ],
+      "directions": [
+        "in"
+      ]
+    },
+    {
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "hash": "0xafca658cebd8cb5a0e0afb73426451f8f3fc1fcd3796478dc6ac0269472353b8",
+      "transfer_blocks": [
+        122987987
+      ],
+      "token_CAs": [
+        "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777"
+      ],
+      "directions": [
+        "in"
+      ]
+    },
+    {
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "hash": "0xe1520b559ea7186bc733c290ba34c64e9486d9a4daf2380a2240c1993af59b9a",
+      "transfer_blocks": [
+        122987993
+      ],
+      "token_CAs": [
+        "0xbeea1d618e533a387d941f58a7d4c9b7bd377777"
+      ],
+      "directions": [
+        "in"
+      ]
+    },
+    {
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "hash": "0x488a4bef32fca7a08c31cb8416ebe63f9375e46974c0978b0e308c4e75ed6874",
+      "transfer_blocks": [
+        122987995
+      ],
+      "token_CAs": [
+        "0x12b4356c65340fb02cdff01293f95febb1512f3b"
+      ],
+      "directions": [
+        "in"
+      ]
+    },
+    {
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "hash": "0xc81eadbe91ba27a418a7e574e327d3cc4d47eea8ec13221a42b746795ca4bb72",
+      "transfer_blocks": [
+        122988185
+      ],
+      "token_CAs": [
+        "0xbeea1d618e533a387d941f58a7d4c9b7bd377777"
+      ],
+      "directions": [
+        "out"
+      ]
+    },
+    {
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "hash": "0x4915f70f5a07dcc6cb6152f8a7390ffa90060a983c80c012b8254497bb165496",
+      "transfer_blocks": [
+        122988406
+      ],
+      "token_CAs": [
+        "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777"
+      ],
+      "directions": [
+        "in"
+      ]
+    },
+    {
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "hash": "0x4c65e9d3f64fdf5ef8d7365f218d0a921029c5c8fbf0f779180e8fca763e22fa",
+      "transfer_blocks": [
+        122989805
+      ],
+      "token_CAs": [
+        "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777"
+      ],
+      "directions": [
+        "in"
+      ]
+    },
+    {
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "hash": "0xbcedfed2ae16de72f7b45a265a720b9edf2cc2d22a16c29aa9e9d4b09fe10776",
+      "transfer_blocks": [
+        122992092
+      ],
+      "token_CAs": [
+        "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777"
+      ],
+      "directions": [
+        "in"
+      ]
+    },
+    {
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "hash": "0xcaf9e13e30e2ee90106f3f4ad15bd7652e664f432f4e37c2d58645f3c491317d",
+      "transfer_blocks": [
+        122993505
+      ],
+      "token_CAs": [
+        "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777"
+      ],
+      "directions": [
+        "in"
+      ]
+    },
+    {
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "hash": "0x118dd6d6d2c4766660342cf7e67518753928ea441943cedd8ff7a6f4f66a5756",
+      "transfer_blocks": [
+        122995918
+      ],
+      "token_CAs": [
+        "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777"
+      ],
+      "directions": [
+        "out"
+      ]
+    },
+    {
+      "wallet": "0x498528e32b04bdaa73d5c8943a09aeffd15bd99a",
+      "hash": "0x8ecd40fddcdc93ee3c90328166f098ec412ad4d80f50c00ed98601b0e9bb4fa2",
+      "transfer_blocks": [
+        122367977
+      ],
+      "token_CAs": [
+        "0x0a43fc31a73013089df59194872ecae4cae14444"
+      ],
+      "directions": [
+        "out"
+      ]
+    },
+    {
+      "wallet": "0x498528e32b04bdaa73d5c8943a09aeffd15bd99a",
+      "hash": "0x158c28e5efafde2a93fa1549d328082b2357369f666fd4cbd48eec0e54ff222b",
+      "transfer_blocks": [
+        122742452
+      ],
+      "token_CAs": [
+        "0xbeea1d618e533a387d941f58a7d4c9b7bd377777"
+      ],
+      "directions": [
+        "out"
+      ]
+    },
+    {
+      "wallet": "0x498528e32b04bdaa73d5c8943a09aeffd15bd99a",
+      "hash": "0x21277102094b1d8ac9b69d568a243031e4b7b9143dde02b2564f88925a628348",
+      "transfer_blocks": [
+        122989133
+      ],
+      "token_CAs": [
+        "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777"
+      ],
+      "directions": [
+        "in"
+      ]
+    },
+    {
+      "wallet": "0x498528e32b04bdaa73d5c8943a09aeffd15bd99a",
+      "hash": "0x5a892f6cf9dd394e1d3f78bb12d7f5a6bbec4414f587a81079ddecc10fc9c6e1",
+      "transfer_blocks": [
+        122990643
+      ],
+      "token_CAs": [
+        "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777"
+      ],
+      "directions": [
+        "in"
+      ]
+    },
+    {
+      "wallet": "0x498528e32b04bdaa73d5c8943a09aeffd15bd99a",
+      "hash": "0x49748cf3ec185c54bc3b46dc4bb6c92e225d2bcbf0a1aadf1a49c0fb093f53ca",
+      "transfer_blocks": [
+        123506149
+      ],
+      "token_CAs": [
+        "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777"
+      ],
+      "directions": [
+        "out"
+      ]
+    },
+    {
+      "wallet": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "hash": "0xf19978af78bad12e1bd232a494880a1117f6543968424b4fa696a58ca4578065",
+      "transfer_blocks": [
+        121764831
+      ],
+      "token_CAs": [
+        "0xbeea1d618e533a387d941f58a7d4c9b7bd377777"
+      ],
+      "directions": [
+        "in"
+      ]
+    },
+    {
+      "wallet": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "hash": "0x64b04e507e66e45112bd630c93d041a338d1e0acecd400573436babcc39fa974",
+      "transfer_blocks": [
+        121766276
+      ],
+      "token_CAs": [
+        "0xbeea1d618e533a387d941f58a7d4c9b7bd377777"
+      ],
+      "directions": [
+        "in"
+      ]
+    },
+    {
+      "wallet": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "hash": "0x3478e181e41ac36355e193818e42fa76e8bb6760964e580e5247bec64e32271c",
+      "transfer_blocks": [
+        123609650
+      ],
+      "token_CAs": [
+        "0x924fa68a0fc644485b8df8abfa0a41c2e7744444"
+      ],
+      "directions": [
+        "in"
+      ]
+    },
+    {
+      "wallet": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "hash": "0x2189f45d7a2f86c0159ac256d1d68530d814740392fe80d819f9a2dcf3b3d016",
+      "transfer_blocks": [
+        124942810
+      ],
+      "token_CAs": [
+        "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777"
+      ],
+      "directions": [
+        "in"
+      ]
+    },
+    {
+      "wallet": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "hash": "0xb91fcc8bfa951eb473941128fa79759a9e7906bb9d3bd9d66f9ed8ec32d975b9",
+      "transfer_blocks": [
+        125822906
+      ],
+      "token_CAs": [
+        "0x20d6015660b3fe52e6690a889b5c51f69902ce0e"
+      ],
+      "directions": [
+        "in"
+      ]
+    },
+    {
+      "wallet": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "hash": "0x0ed25068a83a92fea19ddbe3c352ccb2cdf5a6195f6ee91a91094e79df555928",
+      "transfer_blocks": [
+        126083443
+      ],
+      "token_CAs": [
+        "0x0a43fc31a73013089df59194872ecae4cae14444"
+      ],
+      "directions": [
+        "in"
+      ]
+    },
+    {
+      "wallet": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "hash": "0x0245294448b6197e70660a0fdc5fb9186f8c5b98919567d22915c552dbca9be6",
+      "transfer_blocks": [
+        126840114
+      ],
+      "token_CAs": [
+        "0x924fa68a0fc644485b8df8abfa0a41c2e7744444",
+        "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777"
+      ],
+      "directions": [
+        "in"
+      ]
+    },
+    {
+      "wallet": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "hash": "0x8421eb9bd2bc261f6b7c2562668c3c7f2a5912894f91634d5bbc26e7effabeb8",
+      "transfer_blocks": [
+        126840130
+      ],
+      "token_CAs": [
+        "0x0a43fc31a73013089df59194872ecae4cae14444"
+      ],
+      "directions": [
+        "in"
+      ]
+    },
+    {
+      "wallet": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "hash": "0x41d1b44d7f17218ed671609bab4cbd6dbe9eb613ed79540ff9d0be0d905fd230",
+      "transfer_blocks": [
+        126840137
+      ],
+      "token_CAs": [
+        "0x20d6015660b3fe52e6690a889b5c51f69902ce0e"
+      ],
+      "directions": [
+        "in"
+      ]
+    },
+    {
+      "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "hash": "0x72cd4f7d896f045680cbbaf70eb2377e4f534d1939df05f68c26ed75535e12f1",
+      "transfer_blocks": [
+        121966513
+      ],
+      "token_CAs": [
+        "0x924fa68a0fc644485b8df8abfa0a41c2e7744444"
+      ],
+      "directions": [
+        "out"
+      ]
+    },
+    {
+      "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "hash": "0x348554f16e7d856b14270efa19c9b3b9f87fe4967df18b50517ef49ab531e5de",
+      "transfer_blocks": [
+        122856244
+      ],
+      "token_CAs": [
+        "0x924fa68a0fc644485b8df8abfa0a41c2e7744444"
+      ],
+      "directions": [
+        "in"
+      ]
+    },
+    {
+      "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "hash": "0x3e926882f0ddccc70402636cc89b854997017b457d6b2fac0e106983c5d075f0",
+      "transfer_blocks": [
+        122990452
+      ],
+      "token_CAs": [
+        "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777"
+      ],
+      "directions": [
+        "in"
+      ]
+    },
+    {
+      "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "hash": "0x43cd2b16d6475b45a017684a34922a6462075f50f5cd0a187ace7e61e1b981f2",
+      "transfer_blocks": [
+        122991903
+      ],
+      "token_CAs": [
+        "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777"
+      ],
+      "directions": [
+        "in"
+      ]
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "hash": "0xe1fd9469b96c4ffcf532a811d29454ffe6168c92a1e73cdde32a7e2d1fc85b5b",
+      "transfer_blocks": [
+        121764983
+      ],
+      "token_CAs": [
+        "0xbeea1d618e533a387d941f58a7d4c9b7bd377777"
+      ],
+      "directions": [
+        "in"
+      ]
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "hash": "0x669a7eab0bfc29051dae1a9672e3bb868880e813a4cda5c802235caddc31bf85",
+      "transfer_blocks": [
+        121801453
+      ],
+      "token_CAs": [
+        "0x51363f073b1e4920fda7aa9e9d84ba97ede1560e"
+      ],
+      "directions": [
+        "in"
+      ]
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "hash": "0xed3c3418f5f698c5f66ff0d119448e873aa2fe8f45c78bd59272ba5f11441436",
+      "transfer_blocks": [
+        122033986
+      ],
+      "token_CAs": [
+        "0x20d6015660b3fe52e6690a889b5c51f69902ce0e"
+      ],
+      "directions": [
+        "in"
+      ]
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "hash": "0x921200caa5bb19fec2b034d75d1fc3394049eae6ef8b9344a1853d69a3aa3e51",
+      "transfer_blocks": [
+        122172455
+      ],
+      "token_CAs": [
+        "0x924fa68a0fc644485b8df8abfa0a41c2e7744444"
+      ],
+      "directions": [
+        "in"
+      ]
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "hash": "0x7f102b2a4c626994c0837512a75f23208d28e879ad9292986c9cf2986102333e",
+      "transfer_blocks": [
+        122173889
+      ],
+      "token_CAs": [
+        "0x924fa68a0fc644485b8df8abfa0a41c2e7744444"
+      ],
+      "directions": [
+        "in"
+      ]
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "hash": "0xb1bfafce1f6ef795be04b80188a9803b29aea57c6e62f07c6c62ae894b8e05fd",
+      "transfer_blocks": [
+        122184416
+      ],
+      "token_CAs": [
+        "0xbeea1d618e533a387d941f58a7d4c9b7bd377777"
+      ],
+      "directions": [
+        "in"
+      ]
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "hash": "0xf6a9531f7b1cbcd3f0f11879c677dc4e0874de568b876cba75b0bc5d46dfdd98",
+      "transfer_blocks": [
+        122185846
+      ],
+      "token_CAs": [
+        "0xbeea1d618e533a387d941f58a7d4c9b7bd377777"
+      ],
+      "directions": [
+        "in"
+      ]
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "hash": "0x886381944f0c7171f808dda40930dea262236b9af08af6195b430352e54e57b4",
+      "transfer_blocks": [
+        122185934
+      ],
+      "token_CAs": [
+        "0xbeea1d618e533a387d941f58a7d4c9b7bd377777"
+      ],
+      "directions": [
+        "out"
+      ]
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "hash": "0x1690c38ce30ca5007e2aaa5d726901b1f891c701905d42bf2112bb9a96061017",
+      "transfer_blocks": [
+        122380364
+      ],
+      "token_CAs": [
+        "0xbeea1d618e533a387d941f58a7d4c9b7bd377777"
+      ],
+      "directions": [
+        "in"
+      ]
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "hash": "0x31d00d5cd9f1f65f38b2f44529dc39bc94c2271464fc381febb8ae3f45889ac8",
+      "transfer_blocks": [
+        122986050
+      ],
+      "token_CAs": [
+        "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777"
+      ],
+      "directions": [
+        "in"
+      ]
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "hash": "0xdcf3df398e17587a96b5d2e43a247eee1f3d4f76dea1a4eadb67c260430e7e62",
+      "transfer_blocks": [
+        122987344
+      ],
+      "token_CAs": [
+        "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777"
+      ],
+      "directions": [
+        "in"
+      ]
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "hash": "0xed280439fe38101ab1065564f1245fc689de6ea50276e42f0871cb55d6cf4414",
+      "transfer_blocks": [
+        122987489
+      ],
+      "token_CAs": [
+        "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777"
+      ],
+      "directions": [
+        "in"
+      ]
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "hash": "0x331f498eeeccd7016706ba6a07af3441a54d3359d535c36638d911715a0c584b",
+      "transfer_blocks": [
+        122987650
+      ],
+      "token_CAs": [
+        "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777"
+      ],
+      "directions": [
+        "in"
+      ]
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "hash": "0x38a46891ba00fa6ffeff72ed90f2ae3f291f4c36245d7aef416739ce73e45663",
+      "transfer_blocks": [
+        122987878
+      ],
+      "token_CAs": [
+        "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777"
+      ],
+      "directions": [
+        "out"
+      ]
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "hash": "0xbe5f3f98ab9c7c7e9c3f7c197c0d3bee653ab4953a8f2420e1c26b8f8fec5cac",
+      "transfer_blocks": [
+        122988777
+      ],
+      "token_CAs": [
+        "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777"
+      ],
+      "directions": [
+        "in"
+      ]
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "hash": "0x429260276a594e13c325d4ede69acdd2506845fb68e2e4b74166ae44eb95d327",
+      "transfer_blocks": [
+        122988962
+      ],
+      "token_CAs": [
+        "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777"
+      ],
+      "directions": [
+        "in"
+      ]
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "hash": "0x21277102094b1d8ac9b69d568a243031e4b7b9143dde02b2564f88925a628348",
+      "transfer_blocks": [
+        122989133
+      ],
+      "token_CAs": [
+        "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777"
+      ],
+      "directions": [
+        "in"
+      ]
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "hash": "0x04cad9f0aae0cb0224e49b4b19434d2ff607edba5527d614571cc3eb4fb1b3ba",
+      "transfer_blocks": [
+        123019626
+      ],
+      "token_CAs": [
+        "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777"
+      ],
+      "directions": [
+        "out"
+      ]
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "hash": "0x3478e181e41ac36355e193818e42fa76e8bb6760964e580e5247bec64e32271c",
+      "transfer_blocks": [
+        123609650
+      ],
+      "token_CAs": [
+        "0x924fa68a0fc644485b8df8abfa0a41c2e7744444"
+      ],
+      "directions": [
+        "in"
+      ]
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "hash": "0x411a0d6ba1b211133e2a549b71bfdc286dd115d34cc146c6d9c5adcf4de2bf94",
+      "transfer_blocks": [
+        123644309
+      ],
+      "token_CAs": [
+        "0xbeea1d618e533a387d941f58a7d4c9b7bd377777"
+      ],
+      "directions": [
+        "in"
+      ]
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "hash": "0x5c853608c3bc8793e3ea53e25289bc3fbeadc377a04e266d05c6cfdebef23849",
+      "transfer_blocks": [
+        123682058
+      ],
+      "token_CAs": [
+        "0x924fa68a0fc644485b8df8abfa0a41c2e7744444"
+      ],
+      "directions": [
+        "in"
+      ]
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "hash": "0x1c69f5bcf9acfbb07340890713a290e280d8f3d8dfd0957aa86c3044b92d9fe6",
+      "transfer_blocks": [
+        123682061
+      ],
+      "token_CAs": [
+        "0x924fa68a0fc644485b8df8abfa0a41c2e7744444"
+      ],
+      "directions": [
+        "out"
+      ]
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "hash": "0xe276fb4ca7b1d0c8eed1eb7fed6f0ff44a8afd3cee5c4edb0eb0ed41926da503",
+      "transfer_blocks": [
+        123685688
+      ],
+      "token_CAs": [
+        "0x924fa68a0fc644485b8df8abfa0a41c2e7744444"
+      ],
+      "directions": [
+        "out"
+      ]
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "hash": "0x37f551a7c8a5f8e7fd2e84d1fdb4ff8959bbe59d38709fad6b99bfeb564f1cd7",
+      "transfer_blocks": [
+        125126128
+      ],
+      "token_CAs": [
+        "0x3d4f0513e8a29669b960f9dbca61861548a9a760"
+      ],
+      "directions": [
+        "in"
+      ]
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "hash": "0x93e784e8a88c3ebe3a6c2c307d2e35074cd7d255d900f9dc33d2d015cd2a52fc",
+      "transfer_blocks": [
+        125127506
+      ],
+      "token_CAs": [
+        "0x3d4f0513e8a29669b960f9dbca61861548a9a760"
+      ],
+      "directions": [
+        "in"
+      ]
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "hash": "0x29b1be890337cad7325b419da22b0dd272945dba84855b39c13f515306a55405",
+      "transfer_blocks": [
+        125384619
+      ],
+      "token_CAs": [
+        "0x0df0587216a4a1bb7d5082fdc491d93d2dd4b413"
+      ],
+      "directions": [
+        "in"
+      ]
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "hash": "0x0688c737243ad718ab3f9fae4ee4d1fbcf3208dd092fb5af3f7a66e47bc61929",
+      "transfer_blocks": [
+        126467804
+      ],
+      "token_CAs": [
+        "0x3d4f0513e8a29669b960f9dbca61861548a9a760"
+      ],
+      "directions": [
+        "out"
+      ]
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "hash": "0xaa57afb7da6d5bb86ce2eacedec42abf6e99749972321d85adc0f352ef1c4065",
+      "transfer_blocks": [
+        126467931
+      ],
+      "token_CAs": [
+        "0xbeea1d618e533a387d941f58a7d4c9b7bd377777"
+      ],
+      "directions": [
+        "out"
+      ]
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "hash": "0xd581b586b41038a4a0d3ea573a65a4a2c06b9b7674d7f5f84a5e768809209dab",
+      "transfer_blocks": [
+        126468036
+      ],
+      "token_CAs": [
+        "0x82ec31d69b3c289e541b50e30681fd1acad24444"
+      ],
+      "directions": [
+        "out"
+      ]
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "hash": "0xe651156fb79e04c22e6e3740e1930e657ba106c0134dd79fcc59563711de1db1",
+      "transfer_blocks": [
+        126468121
+      ],
+      "token_CAs": [
+        "0x6d5ad1592ed9d6d1df9b93c793ab759573ed6714"
+      ],
+      "directions": [
+        "out"
+      ]
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "hash": "0x6875c13bfba6382f1078ea29d26a5e261ba662c52a00131583017f4b326ef7b6",
+      "transfer_blocks": [
+        126468394
+      ],
+      "token_CAs": [
+        "0x0df0587216a4a1bb7d5082fdc491d93d2dd4b413"
+      ],
+      "directions": [
+        "out"
+      ]
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "hash": "0x6cbb4a85cdbeaf6066f5e860a96ae4f85d90f8710723dbcedb94dfef7b6c7915",
+      "transfer_blocks": [
+        126468527
+      ],
+      "token_CAs": [
+        "0x0a43fc31a73013089df59194872ecae4cae14444"
+      ],
+      "directions": [
+        "out"
+      ]
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "hash": "0xcfcc99e6a8d6900fa805cf5b8da72761e9d175455914772ebf394778d9d8aed4",
+      "transfer_blocks": [
+        127174819
+      ],
+      "token_CAs": [
+        "0x86bb94ddd16efc8bc58e6b056e8df71d9e666429"
+      ],
+      "directions": [
+        "out"
+      ]
+    },
+    {
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "hash": "0x13f5678b90e1bd0e2b703e23934a7777ba639f75ec1c8c70200f350ff43c4952",
+      "transfer_blocks": [
+        121783426
+      ],
+      "token_CAs": [
+        "0xeccbb861c0dda7efd964010085488b69317e4444"
+      ],
+      "directions": [
+        "in"
+      ]
+    },
+    {
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "hash": "0xc0098aafadbf7a3789d7beb64717b4f5f7c0c1698f1e5d5386419f7b57cc9fbd",
+      "transfer_blocks": [
+        121786352
+      ],
+      "token_CAs": [
+        "0xeccbb861c0dda7efd964010085488b69317e4444"
+      ],
+      "directions": [
+        "out"
+      ]
+    },
+    {
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "hash": "0x6b411510ce6ddb3d38b124c232fd059c431f1623c2528113f84fdb58bfbc80ae",
+      "transfer_blocks": [
+        121848139
+      ],
+      "token_CAs": [
+        "0x51363f073b1e4920fda7aa9e9d84ba97ede1560e"
+      ],
+      "directions": [
+        "in"
+      ]
+    },
+    {
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "hash": "0x87176f7f43cd9b1e48832683a706238b1beecf072bb590709d85bd2988fa2514",
+      "transfer_blocks": [
+        122015238
+      ],
+      "token_CAs": [
+        "0x51363f073b1e4920fda7aa9e9d84ba97ede1560e"
+      ],
+      "directions": [
+        "out"
+      ]
+    },
+    {
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "hash": "0x6c7f28fe04982f805eca509287ce053260ed1133a89c7fe937608a7d4baed9f7",
+      "transfer_blocks": [
+        122213277
+      ],
+      "token_CAs": [
+        "0x86bb94ddd16efc8bc58e6b056e8df71d9e666429"
+      ],
+      "directions": [
+        "in"
+      ]
+    },
+    {
+      "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "hash": "0x46f4ebf92b95cd023d89a50ee20f0957eea2ec31e27fa53419dba7a3498fb17d",
+      "transfer_blocks": [
+        126050422
+      ],
+      "token_CAs": [
+        "0xbeea1d618e533a387d941f58a7d4c9b7bd377777"
+      ],
+      "directions": [
+        "in"
+      ]
+    },
+    {
+      "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "hash": "0xa9eabce653ba2cfd6ec10656da7da32a9d929f0d45d6cf040693e36c97f6bc47",
+      "transfer_blocks": [
+        126050553
+      ],
+      "token_CAs": [
+        "0xbeea1d618e533a387d941f58a7d4c9b7bd377777"
+      ],
+      "directions": [
+        "out"
+      ]
+    }
+  ],
+  "summary": {
+    "wallets_with_candidate_tx": 8,
+    "total_unique_wallet_tx_hashes": 75,
+    "distinct_hashes_global": 71,
+    "claim": "Each candidate is only a token transfer tx, not confirmed original EOA market swap; all hash check results including nonowner/unreadable must be recorded."
+  }
+}

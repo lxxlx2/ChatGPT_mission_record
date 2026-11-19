@@ -1,0 +1,79 @@
+{
+  "schema": "BSC_P4C_POSTAPPROVE_WBNB_10_TX_PART_C_2_TX_4_QUERIES_V1",
+  "source_scope_blob_sha": "7576ae8dd73ae46169d7baa25b9073fa8042a2a7",
+  "source_scope_path": "bsc-meme-address-model-v1-p4c-postapprove4-wallets10-wbnb-event-query-scope-2026-10-16.json",
+  "source_offsets": [
+    8,
+    10
+  ],
+  "cases": [
+    {
+      "hash": "0x13f5678b90e1bd0e2b703e23934a7777ba639f75ec1c8c70200f350ff43c4952",
+      "block": 121783426,
+      "p2_index": 44,
+      "owner": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "token": "龙虾",
+      "scope": "POSITIVE_NATIVE_SCOPE",
+      "events": [
+        {
+          "type": "Deposit",
+          "full_block_filter_reply": true,
+          "total_block_logs": 6,
+          "response_text_length": 3908,
+          "selected_tx_events": [],
+          "unreadable_excerpt": null
+        },
+        {
+          "type": "Withdrawal",
+          "full_block_filter_reply": true,
+          "total_block_logs": 1,
+          "response_text_length": 654,
+          "selected_tx_events": [],
+          "unreadable_excerpt": null
+        }
+      ]
+    },
+    {
+      "hash": "0xc0098aafadbf7a3789d7beb64717b4f5f7c0c1698f1e5d5386419f7b57cc9fbd",
+      "block": 121786352,
+      "p2_index": 44,
+      "owner": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "token": "龙虾",
+      "scope": "POSITIVE_NATIVE_SCOPE",
+      "events": [
+        {
+          "type": "Deposit",
+          "full_block_filter_reply": true,
+          "total_block_logs": 12,
+          "response_text_length": 7817,
+          "selected_tx_events": [],
+          "unreadable_excerpt": null
+        },
+        {
+          "type": "Withdrawal",
+          "full_block_filter_reply": true,
+          "total_block_logs": 7,
+          "response_text_length": 4560,
+          "selected_tx_events": [
+            {
+              "transactionHash": "0xc0098aafadbf7a3789d7beb64717b4f5f7c0c1698f1e5d5386419f7b57cc9fbd",
+              "logIndex": "0x1e",
+              "topics": [
+                "0x7fcf532c15f0a6db0bd6d0e038bea71d30d808c7d98cb3bf7268a95bf5081b65",
+                "0x0000000000000000000000001de460f363af910f51726def188f9004276bf4bc"
+              ],
+              "data": "0x000000000000000000000000000000000000000000000000001598a5eb8d3a1e",
+              "amount_wei": "6078812899850782"
+            }
+          ],
+          "unreadable_excerpt": null
+        }
+      ]
+    }
+  ],
+  "chain": "bnb-mainnet",
+  "contract": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+  "source_method": "ethGetLogs one exact block per original tx, WBNB Deposit/Withdrawal, zeros retained",
+  "PnL": "UNRESOLVED",
+  "production": "NO_GO"
+}

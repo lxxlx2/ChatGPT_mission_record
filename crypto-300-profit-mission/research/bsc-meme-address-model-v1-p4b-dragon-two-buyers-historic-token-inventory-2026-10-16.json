@@ -1,0 +1,108 @@
+{
+  "schema": "BSC_P4B_DRAGON_D503_E11B_SIGNED_ROUNDTRIP_HISTORICAL_ERC20_BALANCE_SNAPSHOTS_V1",
+  "captured": "2026-10-16",
+  "network": "bnb-mainnet",
+  "token_exact_CA": "0xeccbb861c0dda7efd964010085488b69317e4444",
+  "scope": "Specified block-end historical ERC20 balanceOf; no same-block intra-transaction assertion",
+  "samples": [
+    {
+      "wallet": "0xd503f69b37efbfe510e37f46a4ca34e0adb1a7aa",
+      "block": 83635999,
+      "source": "eth_call historical ERC20 balanceOf(address)",
+      "token_raw": "0",
+      "raw_rpc_return": "0x0000000000000000000000000000000000000000000000000000000000000000",
+      "status": "COMPLETE"
+    },
+    {
+      "wallet": "0xd503f69b37efbfe510e37f46a4ca34e0adb1a7aa",
+      "block": 83636000,
+      "source": "eth_call historical ERC20 balanceOf(address)",
+      "token_raw": "5033644503996605000000000",
+      "raw_rpc_return": "0x0000000000000000000000000000000000000000000429ea6a539154e0372200",
+      "status": "COMPLETE"
+    },
+    {
+      "wallet": "0xd503f69b37efbfe510e37f46a4ca34e0adb1a7aa",
+      "block": 83636017,
+      "source": "eth_call historical ERC20 balanceOf(address)",
+      "token_raw": "5033644503996605000000000",
+      "raw_rpc_return": "0x0000000000000000000000000000000000000000000429ea6a539154e0372200",
+      "status": "COMPLETE"
+    },
+    {
+      "wallet": "0xd503f69b37efbfe510e37f46a4ca34e0adb1a7aa",
+      "block": 83636018,
+      "source": "eth_call historical ERC20 balanceOf(address)",
+      "token_raw": "0",
+      "raw_rpc_return": "0x0000000000000000000000000000000000000000000000000000000000000000",
+      "status": "COMPLETE"
+    },
+    {
+      "wallet": "0xd503f69b37efbfe510e37f46a4ca34e0adb1a7aa",
+      "block": 83636083,
+      "source": "eth_call historical ERC20 balanceOf(address)",
+      "token_raw": "0",
+      "raw_rpc_return": "0x0000000000000000000000000000000000000000000000000000000000000000",
+      "status": "COMPLETE"
+    },
+    {
+      "wallet": "0xd503f69b37efbfe510e37f46a4ca34e0adb1a7aa",
+      "block": 83636084,
+      "source": "eth_call historical ERC20 balanceOf(address)",
+      "token_raw": "3119477321356746000000000",
+      "raw_rpc_return": "0x00000000000000000000000000000000000000000002949334564ac448356400",
+      "status": "COMPLETE"
+    },
+    {
+      "wallet": "0xd503f69b37efbfe510e37f46a4ca34e0adb1a7aa",
+      "block": 83636093,
+      "source": "eth_call historical ERC20 balanceOf(address)",
+      "token_raw": "3119477321356746000000000",
+      "raw_rpc_return": "0x00000000000000000000000000000000000000000002949334564ac448356400",
+      "status": "COMPLETE"
+    },
+    {
+      "wallet": "0xd503f69b37efbfe510e37f46a4ca34e0adb1a7aa",
+      "block": 83636094,
+      "source": "eth_call historical ERC20 balanceOf(address)",
+      "token_raw": "0",
+      "raw_rpc_return": "0x0000000000000000000000000000000000000000000000000000000000000000",
+      "status": "COMPLETE"
+    },
+    {
+      "wallet": "0xd503f69b37efbfe510e37f46a4ca34e0adb1a7aa",
+      "block": 83636127,
+      "source": "eth_call historical ERC20 balanceOf(address)",
+      "token_raw": "0",
+      "raw_rpc_return": "0x0000000000000000000000000000000000000000000000000000000000000000",
+      "status": "COMPLETE"
+    },
+    {
+      "wallet": "0xe11b917d591db3bf40ecb5bf7ea4ea5af503460c",
+      "block": 83635999,
+      "source": "eth_call historical ERC20 balanceOf(address)",
+      "token_raw": "0",
+      "raw_rpc_return": "0x0000000000000000000000000000000000000000000000000000000000000000",
+      "status": "COMPLETE"
+    },
+    {
+      "wallet": "0xe11b917d591db3bf40ecb5bf7ea4ea5af503460c",
+      "block": 83636000,
+      "source": "eth_call historical ERC20 balanceOf(address)",
+      "token_raw": "347546637309143000000000",
+      "raw_rpc_return": "0x0000000000000000000000000000000000000000000049988a7c63a9bec7a600",
+      "status": "COMPLETE"
+    },
+    {
+      "wallet": "0xe11b917d591db3bf40ecb5bf7ea4ea5af503460c",
+      "block": 83636127,
+      "source": "eth_call historical ERC20 balanceOf(address)",
+      "token_raw": "347546637309143000000000",
+      "raw_rpc_return": "0x0000000000000000000000000000000000000000000049988a7c63a9bec7a600",
+      "status": "COMPLETE"
+    }
+  ],
+  "original_frozen_candidate_count": 2,
+  "limitations": "BSC historical end-of-block token balances cannot independently prove economic settlement or public signal visibility; matched transactions/transfer required",
+  "production": "NO_GO"
+}

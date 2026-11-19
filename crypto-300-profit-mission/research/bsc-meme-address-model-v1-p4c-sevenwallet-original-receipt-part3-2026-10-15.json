@@ -1,0 +1,56 @@
+{
+  "schema": "BSC_P4C_SEVEN_WALLET_ORIGINAL_MINED_RECEIPT_PROOFS",
+  "source_precommit_sha": "a88dd45852ae32d70b4c32bea5cf52fa42607a37",
+  "part": 3,
+  "rows": [
+    {
+      "source": {
+        "round": "A83B_NIULAI_R2",
+        "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+        "token": "牛来",
+        "tx": "0x3e8b50350c8d2cf87d9662434ad205d08a33595eaf253dac04996134a35e2971",
+        "block": 116113193
+      },
+      "status": "TRUNCATED_NO_FULL_RECEIPT",
+      "raw_head": "{\n  \"type\": \"0x0\",\n  \"status\": \"0x1\",\n  \"cumulativeGasUsed\": \"0x147f2ac\",\n  \"logs\": [\n    {\n      \"address\": \"0x1de460f363af910f51726def188f9004276bf4bc\",\n      \"topics\": [\n        \"0x205442d60b70af1203d43cab62352c3b69b94f091be32fe683198057282b5c92\",\n        \"0x000000000000000000",
+      "receipt_header_status": "0x1"
+    },
+    {
+      "source": {
+        "round": "A83B_NIULAI_R2",
+        "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+        "token": "牛来",
+        "tx": "0xd0bc93c086a44affed01a7bfb25022cd51e18513401b15d2fbb3692ec1bde9a4",
+        "block": 116113197
+      },
+      "status": "TRUNCATED_NO_FULL_RECEIPT",
+      "raw_head": "{\n  \"type\": \"0x0\",\n  \"status\": \"0x1\",\n  \"cumulativeGasUsed\": \"0x13edc7\",\n  \"logs\": [\n    {\n      \"address\": \"0xbeea1d618e533a387d941f58a7d4c9b7bd377777\",\n      \"topics\": [\n        \"0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925\",\n        \"0x0000000000000000000",
+      "receipt_header_status": "0x1"
+    },
+    {
+      "source": {
+        "round": "RECENT_ACTIVITY_ONLY",
+        "wallet": "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8",
+        "token": "NOT_CLOSED",
+        "tx": "0xfbfe1c19521081887048a36144a7c20b4606cd65c958b5dc18dddb8610fe051f",
+        "block": 123398349
+      },
+      "status": "TRUNCATED_NO_FULL_RECEIPT",
+      "raw_head": "{\n  \"type\": \"0x0\",\n  \"status\": \"0x1\",\n  \"cumulativeGasUsed\": \"0x4d5ed0\",\n  \"logs\": [\n    {\n      \"address\": \"0x82ec31d69b3c289e541b50e30681fd1acad24444\",\n      \"topics\": [\n        \"0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925\",\n        \"0x0000000000000000000",
+      "receipt_header_status": "0x1"
+    },
+    {
+      "source": {
+        "round": "RECENT_ACTIVITY_ONLY",
+        "wallet": "0x498528e32b04bdaa73d5c8943a09aeffd15bd99a",
+        "token": "NOT_CLOSED",
+        "tx": "0x158c28e5efafde2a93fa1549d328082b2357369f666fd4cbd48eec0e54ff222b",
+        "block": 122742452
+      },
+      "status": "TRUNCATED_NO_FULL_RECEIPT",
+      "raw_head": "{\n  \"type\": \"0x0\",\n  \"status\": \"0x1\",\n  \"cumulativeGasUsed\": \"0x622f40\",\n  \"logs\": [\n    {\n      \"address\": \"0x55d398326f99059ff775485246999027b3197955\",\n      \"topics\": [\n        \"0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef\",\n        \"0x0000000000000000000",
+      "receipt_header_status": "0x1"
+    }
+  ],
+  "production": "NO_GO"
+}

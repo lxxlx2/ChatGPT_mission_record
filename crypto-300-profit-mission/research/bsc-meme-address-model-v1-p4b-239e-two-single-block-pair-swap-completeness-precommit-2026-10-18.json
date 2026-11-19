@@ -1,0 +1,33 @@
+{
+  "schema": "BSC_P4B_2026_R1_R2_SINGLE_BLOCK_PAIR_SWAP_DIAGNOSTIC_PRECOMMIT_V1",
+  "date": "2026-10-18",
+  "source_prior_12block_denial": "bsc-meme-address-model-v1-p4b-239e-owner-4-historical-balances-v2-12block-swap-denied-2026-10-18.json",
+  "source_prior_10block_truncation": "bsc-meme-address-model-v1-p4b-239e-four-10block-pair-swap-results-truncated-2026-10-18.json",
+  "method": "eth_getLogs",
+  "network": "bnb-mainnet",
+  "pair": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+  "topic": "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822",
+  "scope": [
+    {
+      "case": "R1",
+      "block": 85954138,
+      "source_signed_buy_block": 85954137,
+      "source_signed_final_sell_block": 85957578
+    },
+    {
+      "case": "R2",
+      "block": 85959962,
+      "source_signed_buy_block": 85959961,
+      "source_signed_final_sell_block": 85961371
+    }
+  ],
+  "max_rpc_calls": 2,
+  "zero_retries": true,
+  "limit_logic": "Exactly first block after both original signed owner buys, selected strictly before any one-block log result. Never retry and never change to a different block according to winner or apparent market activity.",
+  "hard_stop_if_any_failure": "Record exact source status; no additional microblock window narrowing after these two. Any complete logs are still Pair Swap, NOT necessarily real EOA signer buy+sell or causal follower.",
+  "verified_owner_balances_at_following_checkpoints_from_previous_sources": true,
+  "stage": "P4_B_PARTIAL",
+  "P5": "BLOCKED",
+  "PRODUCTION": "NO_GO",
+  "trade_prohibited": true
+}

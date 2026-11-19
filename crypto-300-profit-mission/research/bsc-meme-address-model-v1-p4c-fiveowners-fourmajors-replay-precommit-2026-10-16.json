@@ -1,0 +1,155 @@
+{
+  "schema": "BSC_P4C_FIVE_CROSS_OWNER_FOUR_MAJOR_EXACT_CA_PRECOMMIT_V1",
+  "captured_date": "2026-10-16",
+  "base_reviewed_sha": "da0799dbae2314659ea6b21799d86a879cd1066c",
+  "declared_causal_order": "This Git precommit occurs before any new RPC for the five selected original P2 episodes in this stage. The original episode source is previously known, not an untouched holdout.",
+  "requirements": "No retrospective reselecting winners. Preserve all 5 positive/negative controls and their original unknown quote/gas scopes. All five wallets from original 23; D503/E11B excluded.",
+  "freeze_source": {
+    "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p2-evidence-ledger-2026-10-13.json",
+    "git_blob_sha": "2a19dbd88c2971efff60a15894d952d0d05e64d9",
+    "episode_indices_zero_based": [
+      13,
+      31,
+      38,
+      46,
+      42
+    ]
+  },
+  "selection_policy": {
+    "selected_fixed_wallets": 5,
+    "selected_distinct_major_exact_CAs": 4,
+    "selected_2026_original_episode_count": 5,
+    "source_native_scope_positive": 3,
+    "source_native_scope_negative": 2,
+    "no_expost_reward_threshold_adjustment": true,
+    "all_are_existing_P2_signed_rounds": true,
+    "not_representative_sample": true,
+    "not_untouched_P5_validation": true,
+    "grades_preserved_without_downgrade": true
+  },
+  "episodes": [
+    {
+      "p2_zero_based_index": 13,
+      "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "major_token": "龙虾",
+      "exact_CA": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "original_episode_index": 2,
+      "original_first_block": 93584281,
+      "original_last_block": 94208823,
+      "raw_token_round_closed_in_original": true,
+      "source_original_signed_success": true,
+      "source_native_block_scope_sign": "POSITIVE_NATIVE_SCOPE",
+      "source_native_block_delta_wei": "253300282319389315",
+      "original_source_grade": "SETTLED_NATIVE_DIRECT_WBNB_GAS",
+      "original_provenance": {
+        "source_path": "crypto-300-profit-mission/research/BSC_MEME_STAGE23_8E6B_REPEAT_WINNER_HAJIMI_LOBSTER_IFML_CROSS_MAJOR_ROUNDS_2026-10-13.json",
+        "source_git_blob_sha": "6227e69fabd6c0d991add0d7ff5c6e406babd40b",
+        "record_selector": "cross_coin_summary:龙虾:2"
+      },
+      "follower_U": "UNRESOLVED",
+      "realized_profit_grade": "SOURCE_SETTLED_NATIVE_GRADE_NEEDS_ORIGINAL_PIN_RECHECK"
+    },
+    {
+      "p2_zero_based_index": 31,
+      "wallet": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+      "major_token": "龙虾",
+      "exact_CA": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "original_episode_index": 6,
+      "original_first_block": 86649314,
+      "original_last_block": 87876365,
+      "raw_token_round_closed_in_original": true,
+      "source_original_signed_success": true,
+      "source_native_block_scope_sign": "NEGATIVE_NATIVE_SCOPE",
+      "source_native_block_delta_wei": "-44116281066489617",
+      "original_source_grade": "SIGNED_NATIVE_BLOCK_SCOPE",
+      "original_provenance": {
+        "source_path": "crypto-300-profit-mission/research/BSC_MEME_239E_ORIGINAL_LATE_EPISODE_NATIVE_CASHFLOW_CHECK_2026-10-11.json",
+        "source_git_blob_sha": "af69e24108b64d9ba70511d128a42d9e559f623c",
+        "record_selector": "cohorts[token=龙虾].original_episodes[episode_num=6]"
+      },
+      "follower_U": "UNRESOLVED",
+      "realized_profit_grade": "NOT_PROVEN_BY_NATIVE_BLOCK_SCOPE"
+    },
+    {
+      "p2_zero_based_index": 38,
+      "wallet": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "major_token": "MARSCOIN",
+      "exact_CA": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "original_episode_index": 6,
+      "original_first_block": 112634149,
+      "original_last_block": 112634184,
+      "raw_token_round_closed_in_original": true,
+      "source_original_signed_success": true,
+      "source_native_block_scope_sign": "NEGATIVE_NATIVE_SCOPE",
+      "source_native_block_delta_wei": "-73127027700839968",
+      "original_source_grade": "SIGNED_NATIVE_BLOCK_SCOPE",
+      "original_provenance": {
+        "source_path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p2-bulk16-verified-outcomes-2026-10-13.json",
+        "source_git_blob_sha": "51a41aebe7931c242910470a6907e4c93d217568",
+        "record_selector": "rounds[selection_index=3]"
+      },
+      "follower_U": "UNRESOLVED",
+      "realized_profit_grade": "NOT_PROVEN_BY_NATIVE_BLOCK_SCOPE"
+    },
+    {
+      "p2_zero_based_index": 46,
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "major_token": "牛来",
+      "exact_CA": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "original_episode_index": 4,
+      "original_first_block": 116099537,
+      "original_last_block": 116211969,
+      "raw_token_round_closed_in_original": true,
+      "source_original_signed_success": true,
+      "source_native_block_scope_sign": "POSITIVE_NATIVE_SCOPE",
+      "source_native_block_delta_wei": "79161007546994146",
+      "original_source_grade": "SIGNED_NATIVE_BLOCK_SCOPE",
+      "original_provenance": {
+        "source_path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p2-bulk16-verified-outcomes-2026-10-13.json",
+        "source_git_blob_sha": "51a41aebe7931c242910470a6907e4c93d217568",
+        "record_selector": "rounds[selection_index=11]"
+      },
+      "follower_U": "UNRESOLVED",
+      "realized_profit_grade": "NOT_PROVEN_BY_NATIVE_BLOCK_SCOPE"
+    },
+    {
+      "p2_zero_based_index": 42,
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "major_token": "我踏马来了",
+      "exact_CA": "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
+      "original_episode_index": 4,
+      "original_first_block": 73339965,
+      "original_last_block": 73339992,
+      "raw_token_round_closed_in_original": true,
+      "source_original_signed_success": true,
+      "source_native_block_scope_sign": "POSITIVE_NATIVE_SCOPE",
+      "source_native_block_delta_wei": "8453378795990330",
+      "original_source_grade": "SIGNED_NATIVE_BLOCK_SCOPE",
+      "original_provenance": {
+        "source_path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p2-bulk16-verified-outcomes-2026-10-13.json",
+        "source_git_blob_sha": "51a41aebe7931c242910470a6907e4c93d217568",
+        "record_selector": "rounds[selection_index=7]"
+      },
+      "follower_U": "UNRESOLVED",
+      "realized_profit_grade": "NOT_PROVEN_BY_NATIVE_BLOCK_SCOPE"
+    }
+  ],
+  "research_execution_plan": [
+    "Batch reread only already selected episode tx evidence from each original fixed provenance and original signed transaction hashes; preserve all failed queries.",
+    "Recheck wallet×exact CA signer, original token inventory and receipts; compute exact raw native/quote transfers and gas if free sources allow.",
+    "Keep source-upgraded SETTLED_NATIVE_DIRECT_WBNB_GAS separate from historical native-block-only cases; do not lose negative controls.",
+    "Investigate earliest publicly observable executable U for each CA separately; avoid treating owner block timestamp as dissemination time.",
+    "Run read-only deterministic replay and balanced negative tests, then separate other-AI review before any economic or P5 promotion."
+  ],
+  "research_only": true,
+  "production": "NO_GO",
+  "gates": {
+    "P4_B_PUBLIC_EXECUTABLE_U": "UNRESOLVED",
+    "P4_C": "PARTIAL",
+    "P5": "BLOCKED",
+    "NO_MERGE": true,
+    "NO_DEPLOY": true,
+    "NO_GMAIL": true,
+    "NO_TRADE": true
+  }
+}

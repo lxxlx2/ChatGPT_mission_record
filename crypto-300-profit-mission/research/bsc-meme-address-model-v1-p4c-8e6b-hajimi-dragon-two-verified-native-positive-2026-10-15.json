@@ -1,0 +1,133 @@
+{
+  "schema": "BSC_P4C_8E6B_INDEPENDENT_TWO_MAJOR_WBNB_GAS_CLOSED_OWNER_POSITIVE",
+  "scope": "Two pre-existing frozen P2 8E6B fully inventory-closed 2026 major rounds, HAJIMI and Dragon. Independently re-read exact original EOA tx, 5 complete successful receipts, original CA token + original WBNB transfers, paid gas, 5 unique historical wallet N-1/N balances. All 5 native changes match signed input + gas on buy or WBNB withdrawal - gas on sale exactly, no invented price mark. True positive for these two *selected signed owner rounds*, not owner lifetime PnL, ability to observe entry, or 1/5/15-minute follower execution.",
+  "source_manifest": [
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_STAGE23_8E6B_REPEAT_WINNER_HAJIMI_LOBSTER_IFML_CROSS_MAJOR_ROUNDS_2026-10-13.json",
+      "git_blob_sha": "6227e69fabd6c0d991add0d7ff5c6e406babd40b"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-sevenwallet-balanced-five-round-precommit-2026-10-15.json",
+      "git_blob_sha": "85a39f4c5c9723e98180a1c018b9dd94588fe3b6"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-sevenwallet-owner-tx-part1-2026-10-15.json",
+      "git_blob_sha": "a038983867c6cfbad35c1fcd4b070992eba3fe8f"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-sevenwallet-original-receipt-part1-2026-10-15.json",
+      "git_blob_sha": "0351062ea8b6290e465412e38d02a7790ae8f9a3"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-sevenwallet-five-round-native-part1-2026-10-15.json",
+      "git_blob_sha": "71d8c4549c176fcf9f78002f648d956aedc4a026"
+    }
+  ],
+  "summary": {
+    "owner_wallets": 1,
+    "independent_major_CAs": 2,
+    "source_proven_signed_positive_native_rounds": 2,
+    "original_full_success_tx_receipts": 5,
+    "original_historic_native_blocks": 5,
+    "profit_in_quote": "BNB_NATIVE",
+    "source_proven_native_net_sum_wei": "521893275237019248",
+    "signed_outcome": "TWO_POSITIVE_NATIVE_SETTLED_ROUNDS",
+    "qualified_observer_trades": 0,
+    "profit_ranking_ready": false,
+    "production": "NO_GO"
+  },
+  "rounds": [
+    {
+      "round_key": "8E6B_HAJIMI_R1",
+      "owner": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "token": "哈基米 / HAJIMI",
+      "exact_CA": "0x82ec31d69b3c289e541b50e30681fd1acad24444",
+      "source_closed_raw_quantity": true,
+      "source_original_EOA_all_signed": true,
+      "original_receipt_success_all": true,
+      "buy": [
+        {
+          "hash": "0x379a9f56fa6b47182c30a5854240aeb08a599b61d530ea969a446adfbfa09231",
+          "block": 74741352,
+          "received_token_raw": "129258096390654177201047",
+          "sent_signed_native_wei": "5000000000000000000",
+          "WBNB_route_to_pool_wei": "4950000000000000000",
+          "native_wallet_balance_change_wei": "-5005442723000000000",
+          "gas_wei": "5442723000000000"
+        }
+      ],
+      "sells": [
+        {
+          "hash": "0x7e6c7bfecd6815c38ad53af6d15faef516f6aec40ca5d5ee7ca2200053357efe",
+          "block": 74741573,
+          "sold_token_raw": "64629048195327088600523",
+          "WBNB_to_router_wei": "2626966650753062114",
+          "native_wallet_balance_change_wei": "2626703650753062114",
+          "gas_wei": "263000000000000"
+        },
+        {
+          "hash": "0x3055cbb9f252a4b20a8cb2a127011fea8fc3c4ccaa24464a7f4bd75881d0e95e",
+          "block": 74741587,
+          "sold_token_raw": "64629048195327088600524",
+          "WBNB_to_router_wei": "2647606433164567819",
+          "native_wallet_balance_change_wei": "2647332065164567819",
+          "gas_wei": "274368000000000"
+        }
+      ],
+      "original_full_token_bought_raw": "129258096390654177201047",
+      "original_full_token_sold_raw": "129258096390654177201047",
+      "residual_raw": "0",
+      "native_wallet_buy_block_spend_wei": "5005442723000000000",
+      "native_wallet_sell_block_total_net_credit_wei": "5274035715917629933",
+      "actual_native_round_net_wei": "268592992917629933",
+      "actual_native_roi_bps_trunc": 536,
+      "classification": "SETTLED_OWNER_NATIVE_POSITIVE_WITH_WBNB_GAS",
+      "quote": "BNB_NATIVE_WITH_WBNB_SETTLEMENT",
+      "owner_observer_follower_1_5_15min": "UNRESOLVED",
+      "first_executable_global_U": "UNRESOLVED",
+      "production": "NO_GO"
+    },
+    {
+      "round_key": "8E6B_DRAGON_R2",
+      "owner": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "token": "龙虾",
+      "exact_CA": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "source_closed_raw_quantity": true,
+      "source_original_EOA_all_signed": true,
+      "original_receipt_success_all": true,
+      "buy": [
+        {
+          "hash": "0xe96df53014497d00b74d6a08fb903661b35a4ceea42851bcb31de80fca223f34",
+          "block": 93584281,
+          "received_token_raw": "216289963627303641745350",
+          "sent_signed_native_wei": "3000000000000000000",
+          "WBNB_route_to_pool_wei": "2970000000000000000",
+          "native_wallet_balance_change_wei": "-3000021096840000000",
+          "gas_wei": "21096840000000"
+        }
+      ],
+      "sells": [
+        {
+          "hash": "0xd3b7eafb4d5193be7f7ff9dd62b968a65fae16b37c430726e13207ed51c71530",
+          "block": 94208823,
+          "sold_token_raw": "216289963627303641745350",
+          "WBNB_to_router_wei": "3253458601159389315",
+          "native_wallet_balance_change_wei": "3253321379159389315",
+          "gas_wei": "137222000000000"
+        }
+      ],
+      "original_full_token_bought_raw": "216289963627303641745350",
+      "original_full_token_sold_raw": "216289963627303641745350",
+      "residual_raw": "0",
+      "native_wallet_buy_block_spend_wei": "3000021096840000000",
+      "native_wallet_sell_block_total_net_credit_wei": "3253321379159389315",
+      "actual_native_round_net_wei": "253300282319389315",
+      "actual_native_roi_bps_trunc": 844,
+      "classification": "SETTLED_OWNER_NATIVE_POSITIVE_WITH_WBNB_GAS",
+      "quote": "BNB_NATIVE_WITH_WBNB_SETTLEMENT",
+      "owner_observer_follower_1_5_15min": "UNRESOLVED",
+      "first_executable_global_U": "UNRESOLVED",
+      "production": "NO_GO"
+    }
+  ]
+}

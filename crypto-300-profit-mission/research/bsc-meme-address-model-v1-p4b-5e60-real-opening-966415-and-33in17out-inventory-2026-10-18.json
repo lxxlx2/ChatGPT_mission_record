@@ -1,0 +1,50 @@
+{
+  "schema": "BSC_P4B_2026_5E60_PREEXISTING_966415_DRAGON_INVENTORY_EXACT_OPEN_CLOSE_STATE_READBACK_V1",
+  "prefreeze": "bsc-meme-address-model-v1-p4b-5e60-inventory-open-start-33in17out-prefreeze-2026-10-18.json",
+  "provider": "Alchemy free bnb-mainnet eth_call",
+  "calls": 2,
+  "retries": 0,
+  "contract": "0xeccbb861c0dda7efd964010085488b69317e4444",
+  "wallet": "0x5e600e259e3cff0757e3736223685958665866c6",
+  "balanceOfSelector": "0x70a08231",
+  "observations": [
+    {
+      "block": 85899999,
+      "blockHex": "0x51ebadf",
+      "rawResponse": "0x00000000000000000000000000000000000000000000cca5806d3a3112311c08",
+      "rawDecimal": "966415729394361448864776",
+      "grade": "VALID_32_BYTE_historical_tool_parsed_balanceOf"
+    },
+    {
+      "block": 85959961,
+      "blockHex": "0x51fa519",
+      "rawResponse": "0x0000000000000000000000000000000000000000000046f9cf10adccc4cb647d",
+      "rawDecimal": "335173813691889308361853",
+      "grade": "VALID_32_BYTE_historical_tool_parsed_balanceOf"
+    }
+  ],
+  "fixed_window_transfers": {
+    "inbound_count": 33,
+    "outbound_count": 17,
+    "inbound_raw": "2096771771412964976312348",
+    "outbound_raw": "2728013687115437116815271",
+    "start_plus_in_minus_out": "335173813691889308361853",
+    "owner_balance_match": true
+  },
+  "economic_classification": {
+    "wallet_opening_Dragon_before_frozen_window": "NONZERO_966415_OLD_COST_UNRESOLVED",
+    "scoped_in_out_ERC20_inventory": "RECONCILED",
+    "external_realized_8399USDT_exit_receipts": "VERIFIED_CASH_RECEIPT",
+    "standalone_profit_on_1000USDT_increment": "NOT_ATTRIBUTABLE_WITH_UNKNOWN_PREEXISTING_POSITION",
+    "original_owner_public_causal_follow": "UNRESOLVED"
+  },
+  "limitations": [
+    "This verifies token quantity only, not funding amount for 33 in/out tx, no historical USD cost, no first acquisition.",
+    "Scope is 85900000..85959961 only. wallet has 966415 raw 18-decimal token units at the preceding block; cannot assume zero initial cost.",
+    "No user signal recommendation or production deploy permitted."
+  ],
+  "P4_B": "PARTIAL",
+  "PUBLIC_EXECUTABLE_U": "UNRESOLVED",
+  "P5": "BLOCKED",
+  "PRODUCTION": "NO_GO"
+}

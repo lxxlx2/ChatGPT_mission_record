@@ -1,0 +1,110 @@
+{
+  "schema": "BSC_P4C_THREE_EOA_ORIGINAL_NATIVE_BLOCK_READBACK",
+  "part": 2,
+  "query_manifest_sha": "bd03697b39f1acdecab4cfd35635ffcd9951cc2a",
+  "rows": [
+    {
+      "p2": 43,
+      "owner": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "token": "龙虾",
+      "tx": "0x7d2a5ae4c18d56b9ed8dec99d15ba307b99d8cbd54fb900b7f833dd11b2258b1",
+      "block": 84962371,
+      "before_block": 84962370,
+      "before": {
+        "status": "COMPLETE",
+        "wei": "2650836981718089506"
+      },
+      "after": {
+        "status": "COMPLETE",
+        "wei": "2450721218378089506"
+      },
+      "delta_wei": "-200115763340000000"
+    },
+    {
+      "p2": 43,
+      "owner": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "token": "龙虾",
+      "tx": "0x650b9e4e945ff0cecc22b2f57c2c3339913d48bc1c1042f43b384335afa9b7aa",
+      "block": 84963046,
+      "before_block": 84963045,
+      "before": {
+        "status": "COMPLETE",
+        "wei": "2350601875858089506"
+      },
+      "after": {
+        "status": "COMPLETE",
+        "wei": "2550375481129760780"
+      },
+      "delta_wei": "199773605271671274"
+    },
+    {
+      "p2": 44,
+      "owner": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "token": "龙虾",
+      "tx": "0x13f5678b90e1bd0e2b703e23934a7777ba639f75ec1c8c70200f350ff43c4952",
+      "block": 121783426,
+      "before_block": 121783425,
+      "before": {
+        "status": "COMPLETE",
+        "wei": "4852799332649570504"
+      },
+      "after": {
+        "status": "COMPLETE",
+        "wei": "4852652012474570504"
+      },
+      "delta_wei": "-147320175000000"
+    },
+    {
+      "p2": 44,
+      "owner": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "token": "龙虾",
+      "tx": "0xc0098aafadbf7a3789d7beb64717b4f5f7c0c1698f1e5d5386419f7b57cc9fbd",
+      "block": 121786352,
+      "before_block": 121786351,
+      "before": {
+        "status": "COMPLETE",
+        "wei": "4860355826768457125"
+      },
+      "after": {
+        "status": "COMPLETE",
+        "wei": "4866188954739309400"
+      },
+      "delta_wei": "5833127970852275"
+    },
+    {
+      "p2": 48,
+      "owner": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "token": "龙虾",
+      "tx": "0x45ebe939bb00ca5660ffde899a6096076cb75ed01d5db89537f91380f2424bf4",
+      "block": 83720393,
+      "before_block": 83720392,
+      "before": {
+        "status": "COMPLETE",
+        "wei": "61123469541251570227"
+      },
+      "after": {
+        "status": "COMPLETE",
+        "wei": "58722645566251570227"
+      },
+      "delta_wei": "-2400823975000000000"
+    },
+    {
+      "p2": 48,
+      "owner": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "token": "龙虾",
+      "tx": "0x9a0cc58d9b3a32d79af78b4d543b98c1ab2bb1c13c742866e7f2b7c28b552a36",
+      "block": 83720398,
+      "before_block": 83720397,
+      "before": {
+        "status": "COMPLETE",
+        "wei": "58722645566251570227"
+      },
+      "after": {
+        "status": "COMPLETE",
+        "wei": "60948841476332641298"
+      },
+      "delta_wei": "2226195910081071071"
+    }
+  ],
+  "production": "NO_GO"
+}

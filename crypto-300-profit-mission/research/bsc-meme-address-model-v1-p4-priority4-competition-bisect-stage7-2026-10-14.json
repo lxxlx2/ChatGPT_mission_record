@@ -1,0 +1,140 @@
+{
+  "schema": "BSC_P4_PRIORITY4_COMPETING_FACTORY_BISECTION",
+  "stage": 7,
+  "rounds": [
+    26,
+    28
+  ],
+  "source_precommit_sha": "b1c2395c949ba664c2424c8b8da84924c967ab90",
+  "previous_stage_sha": "6990a03157147bfc6d4aa184632ff6cbe27a6c99",
+  "selected_indices": [
+    12,
+    13,
+    14,
+    15
+  ],
+  "from_bounds": [
+    {
+      "lo": 116207844,
+      "hi": 116207847
+    },
+    {
+      "lo": 116156657,
+      "hi": 116156660
+    },
+    {
+      "lo": 115919187,
+      "hi": 115919190
+    },
+    {
+      "lo": 112642881,
+      "hi": 112642885
+    }
+  ],
+  "to_bounds": [
+    {
+      "lo": 116207844,
+      "hi": 116207845
+    },
+    {
+      "lo": 116156657,
+      "hi": 116156658
+    },
+    {
+      "lo": 115919187,
+      "hi": 115919188
+    },
+    {
+      "lo": 112642884,
+      "hi": 112642885
+    }
+  ],
+  "probes": [
+    {
+      "round": 26,
+      "index": 12,
+      "block": 116207845,
+      "value": "0x57143fffeba8aecfe31d18bcbdc9ed590990dc1a",
+      "exists": true
+    },
+    {
+      "round": 26,
+      "index": 13,
+      "block": 116156658,
+      "value": "0xe5ae318389b8d6d09370a675479c64862152d126",
+      "exists": true
+    },
+    {
+      "round": 26,
+      "index": 14,
+      "block": 115919188,
+      "value": "0xab058332a7279f1e64162be08f59ac0cd9601759",
+      "exists": true
+    },
+    {
+      "round": 26,
+      "index": 15,
+      "block": 112642883,
+      "value": "0x0000000000000000000000000000000000000000",
+      "exists": false
+    },
+    {
+      "round": 27,
+      "index": 12,
+      "block": null,
+      "value": null,
+      "exists": null
+    },
+    {
+      "round": 27,
+      "index": 13,
+      "block": null,
+      "value": null,
+      "exists": null
+    },
+    {
+      "round": 27,
+      "index": 14,
+      "block": null,
+      "value": null,
+      "exists": null
+    },
+    {
+      "round": 27,
+      "index": 15,
+      "block": 112642884,
+      "value": "0x0000000000000000000000000000000000000000",
+      "exists": false
+    },
+    {
+      "round": 28,
+      "index": 12,
+      "block": null,
+      "value": null,
+      "exists": null
+    },
+    {
+      "round": 28,
+      "index": 13,
+      "block": null,
+      "value": null,
+      "exists": null
+    },
+    {
+      "round": 28,
+      "index": 14,
+      "block": null,
+      "value": null,
+      "exists": null
+    },
+    {
+      "round": 28,
+      "index": 15,
+      "block": null,
+      "value": null,
+      "exists": null
+    }
+  ],
+  "status": "CREATION_FACTORY_MAPPING_EXACT_BOUNDARY_PENDING_EVENT",
+  "production": "NO_GO"
+}

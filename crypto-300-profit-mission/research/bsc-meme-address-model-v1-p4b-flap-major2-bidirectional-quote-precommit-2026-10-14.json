@@ -1,0 +1,43 @@
+{
+  "schema": "BSC_P4B_FLAP_2026_MAJOR2_FIXED_BIDIRECTIONAL_ARCHIVE_QUOTE_PRECOMMIT",
+  "scope": "Only 2 original 2026 major Flap Portal token markets, historical end-block immediately preceding frozen original TokenBought, exact original historical quote assets 18 decimals, target tokens 18 decimals. Try read-only quoteExactInput(inputQuote=0.01, targetOutput) and inverse quoteExactInput(inputTarget=1 token, outputQuote). This can revert and is only mathematical quote, never a successful simulated transfer/sell and not a common USD value.",
+  "portal": "0xe2ce6ab80874fa9fa2aae65d277dd6b8e65c9de0",
+  "ABI_reference": "https://github.com/flap-sh/FlapVaultExample/blob/main/src/flap/IPortal.sol",
+  "signature": "quoteExactInput((address,address,uint256))",
+  "selector": "0xfc847c2b",
+  "source_manifest": [
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4b-flap-major2-topic-raw-part1-2026-10-14.json",
+      "git_blob_sha": "b7bd1f907e94e2103b2c4e35c763ea18cf15b28e"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4b-flap-major2-topic-raw-part2-2026-10-14.json",
+      "git_blob_sha": "1cd57c862cc373183dcd1df05853863268ce4586"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4b-flap-major2-quote-decimals-raw-2026-10-14.json",
+      "git_blob_sha": "1dd5c89162a9a510d6bcf0f585293ee1efe0d40f"
+    }
+  ],
+  "markets": [
+    {
+      "token": "牛来",
+      "CA": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "first_observed_buy_block": 115628774,
+      "quote_CA": "0x205812cdbed920aff76c6580abd681a46d11efc7",
+      "quote_block": 115628773,
+      "fixed_quote_in_raw": "10000000000000000",
+      "fixed_token_sell_in_raw": "1000000000000000000"
+    },
+    {
+      "token": "MARSCOIN",
+      "CA": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "first_observed_buy_block": 112441394,
+      "quote_CA": "0xbe9d156892e55e7154bcd3cb0fea677f9d3103e1",
+      "quote_block": 112441393,
+      "fixed_quote_in_raw": "10000000000000000",
+      "fixed_token_sell_in_raw": "1000000000000000000"
+    }
+  ],
+  "production": "NO_GO"
+}

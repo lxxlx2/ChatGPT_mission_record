@@ -1,0 +1,122 @@
+{
+  "schema": "BSC_P4C_SEVEN_WALLET_ORIGINAL_NATIVE_BALANCE_SOURCE",
+  "part": 1,
+  "precommit_sha": "f3eec501759fe98bacda1eb3ccad2ee1decd3192",
+  "rows": [
+    {
+      "round": "8E6B_HAJIMI_R1",
+      "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "token": "哈基米 / HAJIMI",
+      "block": 74741352,
+      "block_prev": 74741351,
+      "source_txs": [
+        "0x379a9f56fa6b47182c30a5854240aeb08a599b61d530ea969a446adfbfa09231"
+      ],
+      "before": {
+        "status": "COMPLETE",
+        "balance_wei": "6096794095912521610"
+      },
+      "after": {
+        "status": "COMPLETE",
+        "balance_wei": "1091351372912521610"
+      },
+      "delta_wei": "-5005442723000000000"
+    },
+    {
+      "round": "8E6B_HAJIMI_R1",
+      "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "token": "哈基米 / HAJIMI",
+      "block": 74741573,
+      "block_prev": 74741572,
+      "source_txs": [
+        "0x7e6c7bfecd6815c38ad53af6d15faef516f6aec40ca5d5ee7ca2200053357efe"
+      ],
+      "before": {
+        "status": "COMPLETE",
+        "balance_wei": "627174891986515998"
+      },
+      "after": {
+        "status": "COMPLETE",
+        "balance_wei": "3253878542739578112"
+      },
+      "delta_wei": "2626703650753062114"
+    },
+    {
+      "round": "8E6B_HAJIMI_R1",
+      "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "token": "哈基米 / HAJIMI",
+      "block": 74741587,
+      "block_prev": 74741586,
+      "source_txs": [
+        "0x3055cbb9f252a4b20a8cb2a127011fea8fc3c4ccaa24464a7f4bd75881d0e95e"
+      ],
+      "before": {
+        "status": "COMPLETE",
+        "balance_wei": "3253878542739578112"
+      },
+      "after": {
+        "status": "COMPLETE",
+        "balance_wei": "5901210607904145931"
+      },
+      "delta_wei": "2647332065164567819"
+    },
+    {
+      "round": "8E6B_DRAGON_R2",
+      "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "token": "龙虾",
+      "block": 93584281,
+      "block_prev": 93584280,
+      "source_txs": [
+        "0xe96df53014497d00b74d6a08fb903661b35a4ceea42851bcb31de80fca223f34"
+      ],
+      "before": {
+        "status": "COMPLETE",
+        "balance_wei": "6907823523652494429"
+      },
+      "after": {
+        "status": "COMPLETE",
+        "balance_wei": "3907802426812494429"
+      },
+      "delta_wei": "-3000021096840000000"
+    },
+    {
+      "round": "8E6B_DRAGON_R2",
+      "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "token": "龙虾",
+      "block": 94208823,
+      "block_prev": 94208822,
+      "source_txs": [
+        "0xd3b7eafb4d5193be7f7ff9dd62b968a65fae16b37c430726e13207ed51c71530"
+      ],
+      "before": {
+        "status": "COMPLETE",
+        "balance_wei": "946685360792867484"
+      },
+      "after": {
+        "status": "COMPLETE",
+        "balance_wei": "4200006739952256799"
+      },
+      "delta_wei": "3253321379159389315"
+    },
+    {
+      "round": "ADFF_DRAGON_R4",
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "token": "龙虾",
+      "block": 83656622,
+      "block_prev": 83656621,
+      "source_txs": [
+        "0xf295cea8ca007cf8bbf00889acf7be78d9d035300be51da67a194fe50c33a3e3"
+      ],
+      "before": {
+        "status": "COMPLETE",
+        "balance_wei": "2622691562200409173"
+      },
+      "after": {
+        "status": "COMPLETE",
+        "balance_wei": "2422582718300409173"
+      },
+      "delta_wei": "-200108843900000000"
+    }
+  ],
+  "production": "NO_GO"
+}

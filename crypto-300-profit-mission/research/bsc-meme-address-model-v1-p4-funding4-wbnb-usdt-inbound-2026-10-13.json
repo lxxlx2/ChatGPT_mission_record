@@ -1,0 +1,69 @@
+{
+  "schema": "BSC_P4_FUNDING4_SELECTED_ERC20_INBOUND_SOURCE",
+  "source_precommit_sha": "9b0a5f08a9009af016de7d8cbea9f6ad16c7165c",
+  "scope": "Only WBNB and BSC USDT inbound over frozen 30d-to-earliest-confirmed-swap interval; no full-token funding proof",
+  "network": "bnb-mainnet",
+  "wallets": [
+    {
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "state": "COMPLETE_PROVIDER_RETURN",
+      "pageKey": null,
+      "count": 2,
+      "records": [
+        {
+          "hash": "0x13f5678b90e1bd0e2b703e23934a7777ba639f75ec1c8c70200f350ff43c4952",
+          "from": "0x136b7d7f72466b80a99b0d181172274ccbe5d033",
+          "to": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+          "block_hex": "0x7424482",
+          "asset": "WBNB",
+          "contract": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+          "raw_value_hex": "0xa05a696d69cb"
+        },
+        {
+          "hash": "0x6264da0f7578e1ca20f8e3039529530e83501c10fb4fad00f272ea96964b900d",
+          "from": "0x44346cae91e90d99c056f31c980bd7190565f0b8",
+          "to": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+          "block_hex": "0x73ce372",
+          "asset": "WBNB",
+          "contract": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+          "raw_value_hex": "0xc30cc8bbc4ee"
+        }
+      ]
+    },
+    {
+      "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "state": "COMPLETE_PROVIDER_RETURN",
+      "pageKey": null,
+      "count": 1,
+      "records": [
+        {
+          "hash": "0xb0ccfd1717244fe831aaf946317c6d37b10be15e6af1cdc2a63a6f3e01d9da91",
+          "from": "0x2e454d525761f9c80aaedff40eec0742bf9bc955",
+          "to": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+          "block_hex": "0x73ca2fb",
+          "asset": "WBNB",
+          "contract": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+          "raw_value_hex": "0x149555b0560c3d"
+        }
+      ]
+    },
+    {
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "state": "COMPLETE_PROVIDER_RETURN",
+      "pageKey": null,
+      "count": 0,
+      "records": []
+    },
+    {
+      "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "state": "UNRESOLVED_RPC",
+      "error": "SyntaxError: Expected ',' or '}' after property value in JSON at position 8002 (line 220 column 1)"
+    }
+  ],
+  "summary": {
+    "wallets": 4,
+    "fully_paginated": 3,
+    "events": 3
+  },
+  "production": "NO_GO"
+}

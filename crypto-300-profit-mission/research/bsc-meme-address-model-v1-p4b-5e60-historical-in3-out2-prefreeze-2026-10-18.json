@@ -1,0 +1,50 @@
+{
+  "schema": "BSC_P4B_5E60_2026_HISTORICAL_IN_PAGE3_OUT_PAGE2_PRECOMMIT_V1",
+  "prior_readback_blob_sha": "bcb9bb22e57c5030ecb8e0addd31b67d9b4bbf5d",
+  "prior_readback_file": "bsc-meme-address-model-v1-p4b-5e60-historical-dragon-in-page2-out-page1-censored-2026-10-18.json",
+  "cohort": "same_external_5e60",
+  "provider": "Alchemy free",
+  "method": "getAssetTransfers",
+  "request": {
+    "network": "bnb-mainnet",
+    "fromBlock": "0x51ebae0",
+    "toBlock": "0x51fa519",
+    "category": [
+      "erc20"
+    ],
+    "contractAddresses": [
+      "0xeccbb861c0dda7efd964010085488b69317e4444"
+    ],
+    "maxCount": "0xa",
+    "order": "asc",
+    "excludeZeroValue": true
+  },
+  "page_operations": [
+    {
+      "id": "IN_PAGE3",
+      "field": "toAddress",
+      "address": "0x5e600e259e3cff0757e3736223685958665866c6",
+      "pageKey": "d7e9f66e-6047-4d9a-957b-67e3ed89967f"
+    },
+    {
+      "id": "OUT_PAGE2",
+      "field": "fromAddress",
+      "address": "0x5e600e259e3cff0757e3736223685958665866c6",
+      "pageKey": "5882faae-d342-4646-9854-dae55162846e"
+    }
+  ],
+  "max_calls": 2,
+  "retries": 0,
+  "stop_after_exact_two_reads": true,
+  "no_reselection": true,
+  "if_pageKey_nonempty": "Mark still CENSORED, never assume exhaustive cost basis.",
+  "limits": [
+    "In-out ERC20 Dragon inventory amounts are not original USDT paid or received; original signed tx and costs not yet proven.",
+    "No 1000USDT tranche profitability calculation or U upgrade."
+  ],
+  "gates": {
+    "P4_B": "PARTIAL",
+    "P5": "BLOCKED",
+    "PRODUCTION": "NO_GO"
+  }
+}

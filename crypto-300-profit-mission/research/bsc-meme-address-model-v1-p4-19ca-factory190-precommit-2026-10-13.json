@@ -1,0 +1,1740 @@
+{
+  "schema": "BSC_MEME_ADDRESS_MODEL_V1_P4_19CA_FIXED_WBNB_USDT_POOL_FACTORY_QUERY_PLAN",
+  "status": "FROZEN_BEFORE_ANY_FULL_190_QUERY",
+  "network": "bnb-mainnet",
+  "source": {
+    "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p3-recent30d-precommit-2026-10-13.json",
+    "git_blob_sha": "18cc2246135b381044403e09dc73eb1c0d436597"
+  },
+  "as_of_snapshot_block": 127372023,
+  "as_of_snapshot_utc": "2026-10-13T08:37:36Z",
+  "selectors": {
+    "V2_getPair": "0xe6a43905",
+    "V3_getPool": "0x1698ee82"
+  },
+  "scope": "19 frozen major exact CAs x WBNB/USDT x V2 + V3 100/500/2500/10000 fee-pips only; not full all-chain all-quotes all-factories U universe, historical first tradability or liquidity proof",
+  "source_checks": {
+    "existing_lobster_WBNB_v2": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+    "observed_fee_2500_v3": "0x23ecb1266df4ad88a63f64456f530a997627a5b1"
+  },
+  "method": "eth_call factory getPair/getPool pinned at snapshot block; all 190 calls executed regardless outputs; verify nonzero pool code/ historical deployment/liquidity separately; null cannot be labeled unavailable trading beyond quote/protocol universe",
+  "summary": {
+    "frozen_CA": 19,
+    "quotes": 2,
+    "protocol_fees_per_quote": 5,
+    "total_factory_calls": 190
+  },
+  "queries": [
+    {
+      "token": "TST",
+      "token_CA": "0x86bb94ddd16efc8bc58e6b056e8df71d9e666429",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V2",
+      "fee_pips": null,
+      "factory": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73"
+    },
+    {
+      "token": "TST",
+      "token_CA": "0x86bb94ddd16efc8bc58e6b056e8df71d9e666429",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V3",
+      "fee_pips": 100,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "TST",
+      "token_CA": "0x86bb94ddd16efc8bc58e6b056e8df71d9e666429",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V3",
+      "fee_pips": 500,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "TST",
+      "token_CA": "0x86bb94ddd16efc8bc58e6b056e8df71d9e666429",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V3",
+      "fee_pips": 2500,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "TST",
+      "token_CA": "0x86bb94ddd16efc8bc58e6b056e8df71d9e666429",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V3",
+      "fee_pips": 10000,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "TST",
+      "token_CA": "0x86bb94ddd16efc8bc58e6b056e8df71d9e666429",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V2",
+      "fee_pips": null,
+      "factory": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73"
+    },
+    {
+      "token": "TST",
+      "token_CA": "0x86bb94ddd16efc8bc58e6b056e8df71d9e666429",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V3",
+      "fee_pips": 100,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "TST",
+      "token_CA": "0x86bb94ddd16efc8bc58e6b056e8df71d9e666429",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V3",
+      "fee_pips": 500,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "TST",
+      "token_CA": "0x86bb94ddd16efc8bc58e6b056e8df71d9e666429",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V3",
+      "fee_pips": 2500,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "TST",
+      "token_CA": "0x86bb94ddd16efc8bc58e6b056e8df71d9e666429",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V3",
+      "fee_pips": 10000,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "CHEEMS",
+      "token_CA": "0x0df0587216a4a1bb7d5082fdc491d93d2dd4b413",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V2",
+      "fee_pips": null,
+      "factory": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73"
+    },
+    {
+      "token": "CHEEMS",
+      "token_CA": "0x0df0587216a4a1bb7d5082fdc491d93d2dd4b413",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V3",
+      "fee_pips": 100,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "CHEEMS",
+      "token_CA": "0x0df0587216a4a1bb7d5082fdc491d93d2dd4b413",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V3",
+      "fee_pips": 500,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "CHEEMS",
+      "token_CA": "0x0df0587216a4a1bb7d5082fdc491d93d2dd4b413",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V3",
+      "fee_pips": 2500,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "CHEEMS",
+      "token_CA": "0x0df0587216a4a1bb7d5082fdc491d93d2dd4b413",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V3",
+      "fee_pips": 10000,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "CHEEMS",
+      "token_CA": "0x0df0587216a4a1bb7d5082fdc491d93d2dd4b413",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V2",
+      "fee_pips": null,
+      "factory": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73"
+    },
+    {
+      "token": "CHEEMS",
+      "token_CA": "0x0df0587216a4a1bb7d5082fdc491d93d2dd4b413",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V3",
+      "fee_pips": 100,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "CHEEMS",
+      "token_CA": "0x0df0587216a4a1bb7d5082fdc491d93d2dd4b413",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V3",
+      "fee_pips": 500,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "CHEEMS",
+      "token_CA": "0x0df0587216a4a1bb7d5082fdc491d93d2dd4b413",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V3",
+      "fee_pips": 2500,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "CHEEMS",
+      "token_CA": "0x0df0587216a4a1bb7d5082fdc491d93d2dd4b413",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V3",
+      "fee_pips": 10000,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "MUBARAK",
+      "token_CA": "0x5c85d6c6825ab4032337f11ee92a72df936b46f6",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V2",
+      "fee_pips": null,
+      "factory": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73"
+    },
+    {
+      "token": "MUBARAK",
+      "token_CA": "0x5c85d6c6825ab4032337f11ee92a72df936b46f6",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V3",
+      "fee_pips": 100,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "MUBARAK",
+      "token_CA": "0x5c85d6c6825ab4032337f11ee92a72df936b46f6",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V3",
+      "fee_pips": 500,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "MUBARAK",
+      "token_CA": "0x5c85d6c6825ab4032337f11ee92a72df936b46f6",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V3",
+      "fee_pips": 2500,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "MUBARAK",
+      "token_CA": "0x5c85d6c6825ab4032337f11ee92a72df936b46f6",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V3",
+      "fee_pips": 10000,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "MUBARAK",
+      "token_CA": "0x5c85d6c6825ab4032337f11ee92a72df936b46f6",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V2",
+      "fee_pips": null,
+      "factory": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73"
+    },
+    {
+      "token": "MUBARAK",
+      "token_CA": "0x5c85d6c6825ab4032337f11ee92a72df936b46f6",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V3",
+      "fee_pips": 100,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "MUBARAK",
+      "token_CA": "0x5c85d6c6825ab4032337f11ee92a72df936b46f6",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V3",
+      "fee_pips": 500,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "MUBARAK",
+      "token_CA": "0x5c85d6c6825ab4032337f11ee92a72df936b46f6",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V3",
+      "fee_pips": 2500,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "MUBARAK",
+      "token_CA": "0x5c85d6c6825ab4032337f11ee92a72df936b46f6",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V3",
+      "fee_pips": 10000,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "TUT",
+      "token_CA": "0xcaae2a2f939f51d97cdfa9a86e79e3f085b799f3",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V2",
+      "fee_pips": null,
+      "factory": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73"
+    },
+    {
+      "token": "TUT",
+      "token_CA": "0xcaae2a2f939f51d97cdfa9a86e79e3f085b799f3",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V3",
+      "fee_pips": 100,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "TUT",
+      "token_CA": "0xcaae2a2f939f51d97cdfa9a86e79e3f085b799f3",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V3",
+      "fee_pips": 500,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "TUT",
+      "token_CA": "0xcaae2a2f939f51d97cdfa9a86e79e3f085b799f3",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V3",
+      "fee_pips": 2500,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "TUT",
+      "token_CA": "0xcaae2a2f939f51d97cdfa9a86e79e3f085b799f3",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V3",
+      "fee_pips": 10000,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "TUT",
+      "token_CA": "0xcaae2a2f939f51d97cdfa9a86e79e3f085b799f3",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V2",
+      "fee_pips": null,
+      "factory": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73"
+    },
+    {
+      "token": "TUT",
+      "token_CA": "0xcaae2a2f939f51d97cdfa9a86e79e3f085b799f3",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V3",
+      "fee_pips": 100,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "TUT",
+      "token_CA": "0xcaae2a2f939f51d97cdfa9a86e79e3f085b799f3",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V3",
+      "fee_pips": 500,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "TUT",
+      "token_CA": "0xcaae2a2f939f51d97cdfa9a86e79e3f085b799f3",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V3",
+      "fee_pips": 2500,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "TUT",
+      "token_CA": "0xcaae2a2f939f51d97cdfa9a86e79e3f085b799f3",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V3",
+      "fee_pips": 10000,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "BROCCOLI714",
+      "token_CA": "0x6d5ad1592ed9d6d1df9b93c793ab759573ed6714",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V2",
+      "fee_pips": null,
+      "factory": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73"
+    },
+    {
+      "token": "BROCCOLI714",
+      "token_CA": "0x6d5ad1592ed9d6d1df9b93c793ab759573ed6714",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V3",
+      "fee_pips": 100,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "BROCCOLI714",
+      "token_CA": "0x6d5ad1592ed9d6d1df9b93c793ab759573ed6714",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V3",
+      "fee_pips": 500,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "BROCCOLI714",
+      "token_CA": "0x6d5ad1592ed9d6d1df9b93c793ab759573ed6714",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V3",
+      "fee_pips": 2500,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "BROCCOLI714",
+      "token_CA": "0x6d5ad1592ed9d6d1df9b93c793ab759573ed6714",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V3",
+      "fee_pips": 10000,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "BROCCOLI714",
+      "token_CA": "0x6d5ad1592ed9d6d1df9b93c793ab759573ed6714",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V2",
+      "fee_pips": null,
+      "factory": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73"
+    },
+    {
+      "token": "BROCCOLI714",
+      "token_CA": "0x6d5ad1592ed9d6d1df9b93c793ab759573ed6714",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V3",
+      "fee_pips": 100,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "BROCCOLI714",
+      "token_CA": "0x6d5ad1592ed9d6d1df9b93c793ab759573ed6714",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V3",
+      "fee_pips": 500,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "BROCCOLI714",
+      "token_CA": "0x6d5ad1592ed9d6d1df9b93c793ab759573ed6714",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V3",
+      "fee_pips": 2500,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "BROCCOLI714",
+      "token_CA": "0x6d5ad1592ed9d6d1df9b93c793ab759573ed6714",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V3",
+      "fee_pips": 10000,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "BROCCOLIF3B",
+      "token_CA": "0x12b4356c65340fb02cdff01293f95febb1512f3b",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V2",
+      "fee_pips": null,
+      "factory": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73"
+    },
+    {
+      "token": "BROCCOLIF3B",
+      "token_CA": "0x12b4356c65340fb02cdff01293f95febb1512f3b",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V3",
+      "fee_pips": 100,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "BROCCOLIF3B",
+      "token_CA": "0x12b4356c65340fb02cdff01293f95febb1512f3b",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V3",
+      "fee_pips": 500,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "BROCCOLIF3B",
+      "token_CA": "0x12b4356c65340fb02cdff01293f95febb1512f3b",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V3",
+      "fee_pips": 2500,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "BROCCOLIF3B",
+      "token_CA": "0x12b4356c65340fb02cdff01293f95febb1512f3b",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V3",
+      "fee_pips": 10000,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "BROCCOLIF3B",
+      "token_CA": "0x12b4356c65340fb02cdff01293f95febb1512f3b",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V2",
+      "fee_pips": null,
+      "factory": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73"
+    },
+    {
+      "token": "BROCCOLIF3B",
+      "token_CA": "0x12b4356c65340fb02cdff01293f95febb1512f3b",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V3",
+      "fee_pips": 100,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "BROCCOLIF3B",
+      "token_CA": "0x12b4356c65340fb02cdff01293f95febb1512f3b",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V3",
+      "fee_pips": 500,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "BROCCOLIF3B",
+      "token_CA": "0x12b4356c65340fb02cdff01293f95febb1512f3b",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V3",
+      "fee_pips": 2500,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "BROCCOLIF3B",
+      "token_CA": "0x12b4356c65340fb02cdff01293f95febb1512f3b",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V3",
+      "fee_pips": 10000,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "SIREN",
+      "token_CA": "0x997a58129890bbda032231a52ed1ddc845fc18e1",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V2",
+      "fee_pips": null,
+      "factory": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73"
+    },
+    {
+      "token": "SIREN",
+      "token_CA": "0x997a58129890bbda032231a52ed1ddc845fc18e1",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V3",
+      "fee_pips": 100,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "SIREN",
+      "token_CA": "0x997a58129890bbda032231a52ed1ddc845fc18e1",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V3",
+      "fee_pips": 500,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "SIREN",
+      "token_CA": "0x997a58129890bbda032231a52ed1ddc845fc18e1",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V3",
+      "fee_pips": 2500,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "SIREN",
+      "token_CA": "0x997a58129890bbda032231a52ed1ddc845fc18e1",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V3",
+      "fee_pips": 10000,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "SIREN",
+      "token_CA": "0x997a58129890bbda032231a52ed1ddc845fc18e1",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V2",
+      "fee_pips": null,
+      "factory": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73"
+    },
+    {
+      "token": "SIREN",
+      "token_CA": "0x997a58129890bbda032231a52ed1ddc845fc18e1",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V3",
+      "fee_pips": 100,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "SIREN",
+      "token_CA": "0x997a58129890bbda032231a52ed1ddc845fc18e1",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V3",
+      "fee_pips": 500,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "SIREN",
+      "token_CA": "0x997a58129890bbda032231a52ed1ddc845fc18e1",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V3",
+      "fee_pips": 2500,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "SIREN",
+      "token_CA": "0x997a58129890bbda032231a52ed1ddc845fc18e1",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V3",
+      "fee_pips": 10000,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "BANANAS31",
+      "token_CA": "0x3d4f0513e8a29669b960f9dbca61861548a9a760",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V2",
+      "fee_pips": null,
+      "factory": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73"
+    },
+    {
+      "token": "BANANAS31",
+      "token_CA": "0x3d4f0513e8a29669b960f9dbca61861548a9a760",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V3",
+      "fee_pips": 100,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "BANANAS31",
+      "token_CA": "0x3d4f0513e8a29669b960f9dbca61861548a9a760",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V3",
+      "fee_pips": 500,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "BANANAS31",
+      "token_CA": "0x3d4f0513e8a29669b960f9dbca61861548a9a760",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V3",
+      "fee_pips": 2500,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "BANANAS31",
+      "token_CA": "0x3d4f0513e8a29669b960f9dbca61861548a9a760",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V3",
+      "fee_pips": 10000,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "BANANAS31",
+      "token_CA": "0x3d4f0513e8a29669b960f9dbca61861548a9a760",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V2",
+      "fee_pips": null,
+      "factory": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73"
+    },
+    {
+      "token": "BANANAS31",
+      "token_CA": "0x3d4f0513e8a29669b960f9dbca61861548a9a760",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V3",
+      "fee_pips": 100,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "BANANAS31",
+      "token_CA": "0x3d4f0513e8a29669b960f9dbca61861548a9a760",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V3",
+      "fee_pips": 500,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "BANANAS31",
+      "token_CA": "0x3d4f0513e8a29669b960f9dbca61861548a9a760",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V3",
+      "fee_pips": 2500,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "BANANAS31",
+      "token_CA": "0x3d4f0513e8a29669b960f9dbca61861548a9a760",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V3",
+      "fee_pips": 10000,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "BOB",
+      "token_CA": "0x51363f073b1e4920fda7aa9e9d84ba97ede1560e",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V2",
+      "fee_pips": null,
+      "factory": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73"
+    },
+    {
+      "token": "BOB",
+      "token_CA": "0x51363f073b1e4920fda7aa9e9d84ba97ede1560e",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V3",
+      "fee_pips": 100,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "BOB",
+      "token_CA": "0x51363f073b1e4920fda7aa9e9d84ba97ede1560e",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V3",
+      "fee_pips": 500,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "BOB",
+      "token_CA": "0x51363f073b1e4920fda7aa9e9d84ba97ede1560e",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V3",
+      "fee_pips": 2500,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "BOB",
+      "token_CA": "0x51363f073b1e4920fda7aa9e9d84ba97ede1560e",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V3",
+      "fee_pips": 10000,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "BOB",
+      "token_CA": "0x51363f073b1e4920fda7aa9e9d84ba97ede1560e",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V2",
+      "fee_pips": null,
+      "factory": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73"
+    },
+    {
+      "token": "BOB",
+      "token_CA": "0x51363f073b1e4920fda7aa9e9d84ba97ede1560e",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V3",
+      "fee_pips": 100,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "BOB",
+      "token_CA": "0x51363f073b1e4920fda7aa9e9d84ba97ede1560e",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V3",
+      "fee_pips": 500,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "BOB",
+      "token_CA": "0x51363f073b1e4920fda7aa9e9d84ba97ede1560e",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V3",
+      "fee_pips": 2500,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "BOB",
+      "token_CA": "0x51363f073b1e4920fda7aa9e9d84ba97ede1560e",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V3",
+      "fee_pips": 10000,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "BULLA",
+      "token_CA": "0x595e21b20e78674f8a64c1566a20b2b316bc3511",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V2",
+      "fee_pips": null,
+      "factory": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73"
+    },
+    {
+      "token": "BULLA",
+      "token_CA": "0x595e21b20e78674f8a64c1566a20b2b316bc3511",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V3",
+      "fee_pips": 100,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "BULLA",
+      "token_CA": "0x595e21b20e78674f8a64c1566a20b2b316bc3511",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V3",
+      "fee_pips": 500,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "BULLA",
+      "token_CA": "0x595e21b20e78674f8a64c1566a20b2b316bc3511",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V3",
+      "fee_pips": 2500,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "BULLA",
+      "token_CA": "0x595e21b20e78674f8a64c1566a20b2b316bc3511",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V3",
+      "fee_pips": 10000,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "BULLA",
+      "token_CA": "0x595e21b20e78674f8a64c1566a20b2b316bc3511",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V2",
+      "fee_pips": null,
+      "factory": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73"
+    },
+    {
+      "token": "BULLA",
+      "token_CA": "0x595e21b20e78674f8a64c1566a20b2b316bc3511",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V3",
+      "fee_pips": 100,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "BULLA",
+      "token_CA": "0x595e21b20e78674f8a64c1566a20b2b316bc3511",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V3",
+      "fee_pips": 500,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "BULLA",
+      "token_CA": "0x595e21b20e78674f8a64c1566a20b2b316bc3511",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V3",
+      "fee_pips": 2500,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "BULLA",
+      "token_CA": "0x595e21b20e78674f8a64c1566a20b2b316bc3511",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V3",
+      "fee_pips": 10000,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "4",
+      "token_CA": "0x0a43fc31a73013089df59194872ecae4cae14444",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V2",
+      "fee_pips": null,
+      "factory": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73"
+    },
+    {
+      "token": "4",
+      "token_CA": "0x0a43fc31a73013089df59194872ecae4cae14444",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V3",
+      "fee_pips": 100,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "4",
+      "token_CA": "0x0a43fc31a73013089df59194872ecae4cae14444",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V3",
+      "fee_pips": 500,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "4",
+      "token_CA": "0x0a43fc31a73013089df59194872ecae4cae14444",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V3",
+      "fee_pips": 2500,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "4",
+      "token_CA": "0x0a43fc31a73013089df59194872ecae4cae14444",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V3",
+      "fee_pips": 10000,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "4",
+      "token_CA": "0x0a43fc31a73013089df59194872ecae4cae14444",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V2",
+      "fee_pips": null,
+      "factory": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73"
+    },
+    {
+      "token": "4",
+      "token_CA": "0x0a43fc31a73013089df59194872ecae4cae14444",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V3",
+      "fee_pips": 100,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "4",
+      "token_CA": "0x0a43fc31a73013089df59194872ecae4cae14444",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V3",
+      "fee_pips": 500,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "4",
+      "token_CA": "0x0a43fc31a73013089df59194872ecae4cae14444",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V3",
+      "fee_pips": 2500,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "4",
+      "token_CA": "0x0a43fc31a73013089df59194872ecae4cae14444",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V3",
+      "fee_pips": 10000,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "GIGGLE",
+      "token_CA": "0x20d6015660b3fe52e6690a889b5c51f69902ce0e",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V2",
+      "fee_pips": null,
+      "factory": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73"
+    },
+    {
+      "token": "GIGGLE",
+      "token_CA": "0x20d6015660b3fe52e6690a889b5c51f69902ce0e",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V3",
+      "fee_pips": 100,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "GIGGLE",
+      "token_CA": "0x20d6015660b3fe52e6690a889b5c51f69902ce0e",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V3",
+      "fee_pips": 500,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "GIGGLE",
+      "token_CA": "0x20d6015660b3fe52e6690a889b5c51f69902ce0e",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V3",
+      "fee_pips": 2500,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "GIGGLE",
+      "token_CA": "0x20d6015660b3fe52e6690a889b5c51f69902ce0e",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V3",
+      "fee_pips": 10000,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "GIGGLE",
+      "token_CA": "0x20d6015660b3fe52e6690a889b5c51f69902ce0e",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V2",
+      "fee_pips": null,
+      "factory": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73"
+    },
+    {
+      "token": "GIGGLE",
+      "token_CA": "0x20d6015660b3fe52e6690a889b5c51f69902ce0e",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V3",
+      "fee_pips": 100,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "GIGGLE",
+      "token_CA": "0x20d6015660b3fe52e6690a889b5c51f69902ce0e",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V3",
+      "fee_pips": 500,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "GIGGLE",
+      "token_CA": "0x20d6015660b3fe52e6690a889b5c51f69902ce0e",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V3",
+      "fee_pips": 2500,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "GIGGLE",
+      "token_CA": "0x20d6015660b3fe52e6690a889b5c51f69902ce0e",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V3",
+      "fee_pips": 10000,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "币安人生",
+      "token_CA": "0x924fa68a0fc644485b8df8abfa0a41c2e7744444",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V2",
+      "fee_pips": null,
+      "factory": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73"
+    },
+    {
+      "token": "币安人生",
+      "token_CA": "0x924fa68a0fc644485b8df8abfa0a41c2e7744444",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V3",
+      "fee_pips": 100,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "币安人生",
+      "token_CA": "0x924fa68a0fc644485b8df8abfa0a41c2e7744444",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V3",
+      "fee_pips": 500,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "币安人生",
+      "token_CA": "0x924fa68a0fc644485b8df8abfa0a41c2e7744444",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V3",
+      "fee_pips": 2500,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "币安人生",
+      "token_CA": "0x924fa68a0fc644485b8df8abfa0a41c2e7744444",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V3",
+      "fee_pips": 10000,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "币安人生",
+      "token_CA": "0x924fa68a0fc644485b8df8abfa0a41c2e7744444",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V2",
+      "fee_pips": null,
+      "factory": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73"
+    },
+    {
+      "token": "币安人生",
+      "token_CA": "0x924fa68a0fc644485b8df8abfa0a41c2e7744444",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V3",
+      "fee_pips": 100,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "币安人生",
+      "token_CA": "0x924fa68a0fc644485b8df8abfa0a41c2e7744444",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V3",
+      "fee_pips": 500,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "币安人生",
+      "token_CA": "0x924fa68a0fc644485b8df8abfa0a41c2e7744444",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V3",
+      "fee_pips": 2500,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "币安人生",
+      "token_CA": "0x924fa68a0fc644485b8df8abfa0a41c2e7744444",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V3",
+      "fee_pips": 10000,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "我踏马来了",
+      "token_CA": "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V2",
+      "fee_pips": null,
+      "factory": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73"
+    },
+    {
+      "token": "我踏马来了",
+      "token_CA": "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V3",
+      "fee_pips": 100,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "我踏马来了",
+      "token_CA": "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V3",
+      "fee_pips": 500,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "我踏马来了",
+      "token_CA": "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V3",
+      "fee_pips": 2500,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "我踏马来了",
+      "token_CA": "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V3",
+      "fee_pips": 10000,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "我踏马来了",
+      "token_CA": "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V2",
+      "fee_pips": null,
+      "factory": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73"
+    },
+    {
+      "token": "我踏马来了",
+      "token_CA": "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V3",
+      "fee_pips": 100,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "我踏马来了",
+      "token_CA": "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V3",
+      "fee_pips": 500,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "我踏马来了",
+      "token_CA": "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V3",
+      "fee_pips": 2500,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "我踏马来了",
+      "token_CA": "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V3",
+      "fee_pips": 10000,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "龙虾",
+      "token_CA": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V2",
+      "fee_pips": null,
+      "factory": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73"
+    },
+    {
+      "token": "龙虾",
+      "token_CA": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V3",
+      "fee_pips": 100,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "龙虾",
+      "token_CA": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V3",
+      "fee_pips": 500,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "龙虾",
+      "token_CA": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V3",
+      "fee_pips": 2500,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "龙虾",
+      "token_CA": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V3",
+      "fee_pips": 10000,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "龙虾",
+      "token_CA": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V2",
+      "fee_pips": null,
+      "factory": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73"
+    },
+    {
+      "token": "龙虾",
+      "token_CA": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V3",
+      "fee_pips": 100,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "龙虾",
+      "token_CA": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V3",
+      "fee_pips": 500,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "龙虾",
+      "token_CA": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V3",
+      "fee_pips": 2500,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "龙虾",
+      "token_CA": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V3",
+      "fee_pips": 10000,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "牛来",
+      "token_CA": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V2",
+      "fee_pips": null,
+      "factory": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73"
+    },
+    {
+      "token": "牛来",
+      "token_CA": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V3",
+      "fee_pips": 100,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "牛来",
+      "token_CA": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V3",
+      "fee_pips": 500,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "牛来",
+      "token_CA": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V3",
+      "fee_pips": 2500,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "牛来",
+      "token_CA": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V3",
+      "fee_pips": 10000,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "牛来",
+      "token_CA": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V2",
+      "fee_pips": null,
+      "factory": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73"
+    },
+    {
+      "token": "牛来",
+      "token_CA": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V3",
+      "fee_pips": 100,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "牛来",
+      "token_CA": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V3",
+      "fee_pips": 500,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "牛来",
+      "token_CA": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V3",
+      "fee_pips": 2500,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "牛来",
+      "token_CA": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V3",
+      "fee_pips": 10000,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "MARSCOIN",
+      "token_CA": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V2",
+      "fee_pips": null,
+      "factory": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73"
+    },
+    {
+      "token": "MARSCOIN",
+      "token_CA": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V3",
+      "fee_pips": 100,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "MARSCOIN",
+      "token_CA": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V3",
+      "fee_pips": 500,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "MARSCOIN",
+      "token_CA": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V3",
+      "fee_pips": 2500,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "MARSCOIN",
+      "token_CA": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V3",
+      "fee_pips": 10000,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "MARSCOIN",
+      "token_CA": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V2",
+      "fee_pips": null,
+      "factory": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73"
+    },
+    {
+      "token": "MARSCOIN",
+      "token_CA": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V3",
+      "fee_pips": 100,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "MARSCOIN",
+      "token_CA": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V3",
+      "fee_pips": 500,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "MARSCOIN",
+      "token_CA": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V3",
+      "fee_pips": 2500,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "MARSCOIN",
+      "token_CA": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V3",
+      "fee_pips": 10000,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "哈基米 / HAJIMI",
+      "token_CA": "0x82ec31d69b3c289e541b50e30681fd1acad24444",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V2",
+      "fee_pips": null,
+      "factory": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73"
+    },
+    {
+      "token": "哈基米 / HAJIMI",
+      "token_CA": "0x82ec31d69b3c289e541b50e30681fd1acad24444",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V3",
+      "fee_pips": 100,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "哈基米 / HAJIMI",
+      "token_CA": "0x82ec31d69b3c289e541b50e30681fd1acad24444",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V3",
+      "fee_pips": 500,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "哈基米 / HAJIMI",
+      "token_CA": "0x82ec31d69b3c289e541b50e30681fd1acad24444",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V3",
+      "fee_pips": 2500,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "哈基米 / HAJIMI",
+      "token_CA": "0x82ec31d69b3c289e541b50e30681fd1acad24444",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V3",
+      "fee_pips": 10000,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "哈基米 / HAJIMI",
+      "token_CA": "0x82ec31d69b3c289e541b50e30681fd1acad24444",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V2",
+      "fee_pips": null,
+      "factory": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73"
+    },
+    {
+      "token": "哈基米 / HAJIMI",
+      "token_CA": "0x82ec31d69b3c289e541b50e30681fd1acad24444",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V3",
+      "fee_pips": 100,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "哈基米 / HAJIMI",
+      "token_CA": "0x82ec31d69b3c289e541b50e30681fd1acad24444",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V3",
+      "fee_pips": 500,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "哈基米 / HAJIMI",
+      "token_CA": "0x82ec31d69b3c289e541b50e30681fd1acad24444",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V3",
+      "fee_pips": 2500,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "哈基米 / HAJIMI",
+      "token_CA": "0x82ec31d69b3c289e541b50e30681fd1acad24444",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V3",
+      "fee_pips": 10000,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "BUBB",
+      "token_CA": "0xd5369a3cac0f4448a9a96bb98af9c887c92fc37b",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V2",
+      "fee_pips": null,
+      "factory": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73"
+    },
+    {
+      "token": "BUBB",
+      "token_CA": "0xd5369a3cac0f4448a9a96bb98af9c887c92fc37b",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V3",
+      "fee_pips": 100,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "BUBB",
+      "token_CA": "0xd5369a3cac0f4448a9a96bb98af9c887c92fc37b",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V3",
+      "fee_pips": 500,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "BUBB",
+      "token_CA": "0xd5369a3cac0f4448a9a96bb98af9c887c92fc37b",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V3",
+      "fee_pips": 2500,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "BUBB",
+      "token_CA": "0xd5369a3cac0f4448a9a96bb98af9c887c92fc37b",
+      "quote_symbol": "WBNB",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "protocol": "V3",
+      "fee_pips": 10000,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "BUBB",
+      "token_CA": "0xd5369a3cac0f4448a9a96bb98af9c887c92fc37b",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V2",
+      "fee_pips": null,
+      "factory": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73"
+    },
+    {
+      "token": "BUBB",
+      "token_CA": "0xd5369a3cac0f4448a9a96bb98af9c887c92fc37b",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V3",
+      "fee_pips": 100,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "BUBB",
+      "token_CA": "0xd5369a3cac0f4448a9a96bb98af9c887c92fc37b",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V3",
+      "fee_pips": 500,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "BUBB",
+      "token_CA": "0xd5369a3cac0f4448a9a96bb98af9c887c92fc37b",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V3",
+      "fee_pips": 2500,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    },
+    {
+      "token": "BUBB",
+      "token_CA": "0xd5369a3cac0f4448a9a96bb98af9c887c92fc37b",
+      "quote_symbol": "USDT",
+      "quote_CA": "0x55d398326f99059ff775485246999027b3197955",
+      "protocol": "V3",
+      "fee_pips": 10000,
+      "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865"
+    }
+  ],
+  "production": "NO_GO"
+}

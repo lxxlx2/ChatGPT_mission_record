@@ -1,0 +1,780 @@
+{
+  "schema": "BSC_MEME_P3_OWNER37_PRECOMMITTED_COUNTERPARTY_SWAP_LOG_QUERIES",
+  "status": "FROZEN_BEFORE_SWAP_TOPIC_QUERIES",
+  "source": [
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p3-owner37-transfer-log-part1-2026-10-13.json",
+      "sha": "f7f8d43e0fbe54b9e022d0d3c171e8e075d2620c"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p3-owner37-transfer-log-part2-2026-10-13.json",
+      "sha": "a6025d52c265900c9a9dc5db71ad2afb461c1321"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p3-owner37-transfer-log-part3-2026-10-13.json",
+      "sha": "9be666a859d2e2ec8137831d8de1f24c6fc23ff6"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p3-owner37-transfer-log-part4-2026-10-13.json",
+      "sha": "a64e16cfb129ba593f107852e0a37429d4604261"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p3-owner37-transfer-log-part5-2026-10-13.json",
+      "sha": "855e0f12787d2d19584689aeead0ee404b1d74a9"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p3-owner37-transfer-log-part6-2026-10-13.json",
+      "sha": "3960c577f0292fa70d1f65f4d19a6fa39ba39899"
+    }
+  ],
+  "method": "eth_getLogs block-range exact block, address = observed token transfer counterparty addresses excluding owner, exact token CA and zero, topic0 = known V2 or V3 Swap event (allow 3 historical topics); match exact txHash to prevent cross-transaction confusion. NO_SWAP_TOPIC at direct counterparty is insufficient to exclude an indirect route.",
+  "summary": {
+    "tx": 37,
+    "possible_pools": 44,
+    "without_direct_counterparty": 0
+  },
+  "entries": [
+    {
+      "wallet": "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8",
+      "hash": "0x00d5eabcd78fa629f2f9036d74bfbac889cea475f8617111c32db45fae5413ed",
+      "block": 123355289,
+      "exact_token_transfer_logs": [
+        {
+          "ca": "0x82ec31d69b3c289e541b50e30681fd1acad24444",
+          "from": "0x9bc9620b66cdce07a7ad8bb9d707079504b8dc04",
+          "to": "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8",
+          "raw": "44567705351998387413",
+          "logIndex": 140
+        },
+        {
+          "ca": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+          "from": "0x58f6213a0d5f6a32ea5dd5a727ff4a32abdf5f5b",
+          "to": "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8",
+          "raw": "1145336140930989974",
+          "logIndex": 149
+        },
+        {
+          "ca": "0x20d6015660b3fe52e6690a889b5c51f69902ce0e",
+          "from": "0x9bab04f9731858ed7b4c9b9c2a2443fc18d0914c",
+          "to": "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8",
+          "raw": "11739233937310994",
+          "logIndex": 154
+        },
+        {
+          "ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
+          "from": "0x918498ac17964a90678d6e811f26595764bb2fd7",
+          "to": "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8",
+          "raw": "3788153333298697820",
+          "logIndex": 182
+        }
+      ],
+      "possible_venue_contracts": [
+        "0x58f6213a0d5f6a32ea5dd5a727ff4a32abdf5f5b",
+        "0x918498ac17964a90678d6e811f26595764bb2fd7",
+        "0x9bab04f9731858ed7b4c9b9c2a2443fc18d0914c",
+        "0x9bc9620b66cdce07a7ad8bb9d707079504b8dc04"
+      ]
+    },
+    {
+      "wallet": "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8",
+      "hash": "0xfbfe1c19521081887048a36144a7c20b4606cd65c958b5dc18dddb8610fe051f",
+      "block": 123398349,
+      "exact_token_transfer_logs": [
+        {
+          "ca": "0x82ec31d69b3c289e541b50e30681fd1acad24444",
+          "from": "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8",
+          "to": "0xc33bacff9141da689875e6381c1932348ab4c5cb",
+          "raw": "44567705351998387413",
+          "logIndex": 165
+        }
+      ],
+      "possible_venue_contracts": [
+        "0xc33bacff9141da689875e6381c1932348ab4c5cb"
+      ]
+    },
+    {
+      "wallet": "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8",
+      "hash": "0xf9d57b0971395dc6f59a0317ba4bcbee3d4c0920e34474cf6f153300f76275d9",
+      "block": 126605440,
+      "exact_token_transfer_logs": [
+        {
+          "ca": "0x20d6015660b3fe52e6690a889b5c51f69902ce0e",
+          "from": "0x0dc747269b1759a91314c55ce36c2d7bce07ff4d",
+          "to": "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8",
+          "raw": "12499645065771719",
+          "logIndex": 330
+        }
+      ],
+      "possible_venue_contracts": [
+        "0x0dc747269b1759a91314c55ce36c2d7bce07ff4d"
+      ]
+    },
+    {
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "hash": "0xae1def223a10ca11bf4e13f716f475b99693047e4e541c465e9dde0a30b24189",
+      "block": 122582898,
+      "exact_token_transfer_logs": [
+        {
+          "ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+          "from": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+          "to": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+          "raw": "675973280826088410",
+          "logIndex": 437
+        },
+        {
+          "ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+          "from": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+          "to": "0x94f3ed36706c746ad59fadcaf271b7431ab1d8f1",
+          "raw": "21856469413376858605",
+          "logIndex": 439
+        }
+      ],
+      "possible_venue_contracts": [
+        "0x94f3ed36706c746ad59fadcaf271b7431ab1d8f1"
+      ]
+    },
+    {
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "hash": "0xcab3ab44e62796268d5817e67b89823b0e14cd199b5b9100f4bfc38fe2689f7f",
+      "block": 122582910,
+      "exact_token_transfer_logs": [
+        {
+          "ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
+          "from": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+          "to": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+          "raw": "8209491867267820198",
+          "logIndex": 62
+        }
+      ],
+      "possible_venue_contracts": [
+        "0x22af7297243c4eef12e2d5a4f888b92e56bf127c"
+      ]
+    },
+    {
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "hash": "0xafca658cebd8cb5a0e0afb73426451f8f3fc1fcd3796478dc6ac0269472353b8",
+      "block": 122987987,
+      "exact_token_transfer_logs": [
+        {
+          "ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+          "from": "0x758987ae8d4583d94742e5cbb4eaca430cf1a11e",
+          "to": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+          "raw": "3702529027062765513",
+          "logIndex": 168
+        }
+      ],
+      "possible_venue_contracts": [
+        "0x758987ae8d4583d94742e5cbb4eaca430cf1a11e"
+      ]
+    },
+    {
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "hash": "0xe1520b559ea7186bc733c290ba34c64e9486d9a4daf2380a2240c1993af59b9a",
+      "block": 122987993,
+      "exact_token_transfer_logs": [
+        {
+          "ca": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+          "from": "0x1ff5f3d06fd05ab7a436de510c9e470c1961d16b",
+          "to": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+          "raw": "15812501098994538030",
+          "logIndex": 450
+        },
+        {
+          "ca": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+          "from": "0x11a9144e881ac2af84b6d7609ef29e57b3f386aa",
+          "to": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+          "raw": "13243970527658018367",
+          "logIndex": 455
+        }
+      ],
+      "possible_venue_contracts": [
+        "0x11a9144e881ac2af84b6d7609ef29e57b3f386aa",
+        "0x1ff5f3d06fd05ab7a436de510c9e470c1961d16b"
+      ]
+    },
+    {
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "hash": "0x488a4bef32fca7a08c31cb8416ebe63f9375e46974c0978b0e308c4e75ed6874",
+      "block": 122987995,
+      "exact_token_transfer_logs": [
+        {
+          "ca": "0x12b4356c65340fb02cdff01293f95febb1512f3b",
+          "from": "0xff497ca7118bd4b09435168372d188dc2d670f9d",
+          "to": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+          "raw": "59259202743067220443",
+          "logIndex": 360
+        }
+      ],
+      "possible_venue_contracts": [
+        "0xff497ca7118bd4b09435168372d188dc2d670f9d"
+      ]
+    },
+    {
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "hash": "0xc81eadbe91ba27a418a7e574e327d3cc4d47eea8ec13221a42b746795ca4bb72",
+      "block": 122988185,
+      "exact_token_transfer_logs": [
+        {
+          "ca": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+          "from": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+          "to": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+          "raw": "743217557338097123",
+          "logIndex": 1339
+        },
+        {
+          "ca": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+          "from": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+          "to": "0x595d70977dff3c841df0bc0138ce89f80c7c9423",
+          "raw": "73578538176471615252",
+          "logIndex": 1341
+        }
+      ],
+      "possible_venue_contracts": [
+        "0x595d70977dff3c841df0bc0138ce89f80c7c9423"
+      ]
+    },
+    {
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "hash": "0x4915f70f5a07dcc6cb6152f8a7390ffa90060a983c80c012b8254497bb165496",
+      "block": 122988406,
+      "exact_token_transfer_logs": [
+        {
+          "ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+          "from": "0x758987ae8d4583d94742e5cbb4eaca430cf1a11e",
+          "to": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+          "raw": "2700069042523232972",
+          "logIndex": 459
+        }
+      ],
+      "possible_venue_contracts": [
+        "0x758987ae8d4583d94742e5cbb4eaca430cf1a11e"
+      ]
+    },
+    {
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "hash": "0x118dd6d6d2c4766660342cf7e67518753928ea441943cedd8ff7a6f4f66a5756",
+      "block": 122995918,
+      "exact_token_transfer_logs": [
+        {
+          "ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+          "from": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+          "to": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+          "raw": "2623653978979096025",
+          "logIndex": 647
+        },
+        {
+          "ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+          "from": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+          "to": "0x94f3ed36706c746ad59fadcaf271b7431ab1d8f1",
+          "raw": "84831478653657438163",
+          "logIndex": 649
+        }
+      ],
+      "possible_venue_contracts": [
+        "0x94f3ed36706c746ad59fadcaf271b7431ab1d8f1"
+      ]
+    },
+    {
+      "wallet": "0x498528e32b04bdaa73d5c8943a09aeffd15bd99a",
+      "hash": "0x8ecd40fddcdc93ee3c90328166f098ec412ad4d80f50c00ed98601b0e9bb4fa2",
+      "block": 122367977,
+      "exact_token_transfer_logs": [
+        {
+          "ca": "0x0a43fc31a73013089df59194872ecae4cae14444",
+          "from": "0x498528e32b04bdaa73d5c8943a09aeffd15bd99a",
+          "to": "0xf0a949d3d93b833c183a27ee067165b6f2c9625e",
+          "raw": "115121506179271772504",
+          "logIndex": 292
+        }
+      ],
+      "possible_venue_contracts": [
+        "0xf0a949d3d93b833c183a27ee067165b6f2c9625e"
+      ]
+    },
+    {
+      "wallet": "0x498528e32b04bdaa73d5c8943a09aeffd15bd99a",
+      "hash": "0x158c28e5efafde2a93fa1549d328082b2357369f666fd4cbd48eec0e54ff222b",
+      "block": 122742452,
+      "exact_token_transfer_logs": [
+        {
+          "ca": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+          "from": "0x498528e32b04bdaa73d5c8943a09aeffd15bd99a",
+          "to": "0xe5ae318389b8d6d09370a675479c64862152d126",
+          "raw": "8522248924298983736",
+          "logIndex": 158
+        }
+      ],
+      "possible_venue_contracts": [
+        "0xe5ae318389b8d6d09370a675479c64862152d126"
+      ]
+    },
+    {
+      "wallet": "0x498528e32b04bdaa73d5c8943a09aeffd15bd99a",
+      "hash": "0x49748cf3ec185c54bc3b46dc4bb6c92e225d2bcbf0a1aadf1a49c0fb093f53ca",
+      "block": 123506149,
+      "exact_token_transfer_logs": [
+        {
+          "ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+          "from": "0x498528e32b04bdaa73d5c8943a09aeffd15bd99a",
+          "to": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+          "raw": "565649857616195549",
+          "logIndex": 1107
+        },
+        {
+          "ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+          "from": "0x498528e32b04bdaa73d5c8943a09aeffd15bd99a",
+          "to": "0x94f3ed36706c746ad59fadcaf271b7431ab1d8f1",
+          "raw": "18289345396256989423",
+          "logIndex": 1109
+        }
+      ],
+      "possible_venue_contracts": [
+        "0x94f3ed36706c746ad59fadcaf271b7431ab1d8f1"
+      ]
+    },
+    {
+      "wallet": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "hash": "0x0245294448b6197e70660a0fdc5fb9186f8c5b98919567d22915c552dbca9be6",
+      "block": 126840114,
+      "exact_token_transfer_logs": [
+        {
+          "ca": "0x924fa68a0fc644485b8df8abfa0a41c2e7744444",
+          "from": "0xe13cae07364a57304ea71efca0f4638fed9a8923",
+          "to": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+          "raw": "4611010724389426758",
+          "logIndex": 177
+        },
+        {
+          "ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+          "from": "0xe3d43c02e3c7102035e04002b024a7a9ce133570",
+          "to": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+          "raw": "24604788049980996576",
+          "logIndex": 199
+        }
+      ],
+      "possible_venue_contracts": [
+        "0xe13cae07364a57304ea71efca0f4638fed9a8923",
+        "0xe3d43c02e3c7102035e04002b024a7a9ce133570"
+      ]
+    },
+    {
+      "wallet": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "hash": "0x8421eb9bd2bc261f6b7c2562668c3c7f2a5912894f91634d5bbc26e7effabeb8",
+      "block": 126840130,
+      "exact_token_transfer_logs": [
+        {
+          "ca": "0x0a43fc31a73013089df59194872ecae4cae14444",
+          "from": "0xb558b790aa640d97b83be9f55e8c53be6d45c876",
+          "to": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+          "raw": "5623841642118727460",
+          "logIndex": 130
+        }
+      ],
+      "possible_venue_contracts": [
+        "0xb558b790aa640d97b83be9f55e8c53be6d45c876"
+      ]
+    },
+    {
+      "wallet": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "hash": "0x41d1b44d7f17218ed671609bab4cbd6dbe9eb613ed79540ff9d0be0d905fd230",
+      "block": 126840137,
+      "exact_token_transfer_logs": [
+        {
+          "ca": "0x20d6015660b3fe52e6690a889b5c51f69902ce0e",
+          "from": "0x63ea8724874989c4763bf765709b3854412bff88",
+          "to": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+          "raw": "34555158416641366",
+          "logIndex": 49
+        }
+      ],
+      "possible_venue_contracts": [
+        "0x63ea8724874989c4763bf765709b3854412bff88"
+      ]
+    },
+    {
+      "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "hash": "0x72cd4f7d896f045680cbbaf70eb2377e4f534d1939df05f68c26ed75535e12f1",
+      "block": 121966513,
+      "exact_token_transfer_logs": [
+        {
+          "ca": "0x924fa68a0fc644485b8df8abfa0a41c2e7744444",
+          "from": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+          "to": "0x66f289de31eef70d52186729d2637ac978cfc56b",
+          "raw": "39023776675312432617",
+          "logIndex": 395
+        }
+      ],
+      "possible_venue_contracts": [
+        "0x66f289de31eef70d52186729d2637ac978cfc56b"
+      ]
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "hash": "0x886381944f0c7171f808dda40930dea262236b9af08af6195b430352e54e57b4",
+      "block": 122185934,
+      "exact_token_transfer_logs": [
+        {
+          "ca": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+          "from": "0xa83b73f5644cde337b61da79589f10ea15548811",
+          "to": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+          "raw": "1264624893202235324",
+          "logIndex": 1275
+        },
+        {
+          "ca": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+          "from": "0xa83b73f5644cde337b61da79589f10ea15548811",
+          "to": "0x595d70977dff3c841df0bc0138ce89f80c7c9423",
+          "raw": "125197864427021297098",
+          "logIndex": 1277
+        }
+      ],
+      "possible_venue_contracts": [
+        "0x595d70977dff3c841df0bc0138ce89f80c7c9423"
+      ]
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "hash": "0x38a46891ba00fa6ffeff72ed90f2ae3f291f4c36245d7aef416739ce73e45663",
+      "block": 122987878,
+      "exact_token_transfer_logs": [
+        {
+          "ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+          "from": "0xa83b73f5644cde337b61da79589f10ea15548811",
+          "to": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+          "raw": "22931951634525755355",
+          "logIndex": 19
+        },
+        {
+          "ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+          "from": "0xa83b73f5644cde337b61da79589f10ea15548811",
+          "to": "0x94f3ed36706c746ad59fadcaf271b7431ab1d8f1",
+          "raw": "741466436182999423173",
+          "logIndex": 21
+        }
+      ],
+      "possible_venue_contracts": [
+        "0x94f3ed36706c746ad59fadcaf271b7431ab1d8f1"
+      ]
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "hash": "0x04cad9f0aae0cb0224e49b4b19434d2ff607edba5527d614571cc3eb4fb1b3ba",
+      "block": 123019626,
+      "exact_token_transfer_logs": [
+        {
+          "ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+          "from": "0xa83b73f5644cde337b61da79589f10ea15548811",
+          "to": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+          "raw": "3645840285142099408",
+          "logIndex": 79
+        },
+        {
+          "ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+          "from": "0xa83b73f5644cde337b61da79589f10ea15548811",
+          "to": "0x94f3ed36706c746ad59fadcaf271b7431ab1d8f1",
+          "raw": "117882169219594547552",
+          "logIndex": 81
+        }
+      ],
+      "possible_venue_contracts": [
+        "0x94f3ed36706c746ad59fadcaf271b7431ab1d8f1"
+      ]
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "hash": "0x5c853608c3bc8793e3ea53e25289bc3fbeadc377a04e266d05c6cfdebef23849",
+      "block": 123682058,
+      "exact_token_transfer_logs": [
+        {
+          "ca": "0x924fa68a0fc644485b8df8abfa0a41c2e7744444",
+          "from": "0x66f289de31eef70d52186729d2637ac978cfc56b",
+          "to": "0xa83b73f5644cde337b61da79589f10ea15548811",
+          "raw": "615828789188748976583",
+          "logIndex": 9
+        }
+      ],
+      "possible_venue_contracts": [
+        "0x66f289de31eef70d52186729d2637ac978cfc56b"
+      ]
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "hash": "0x1c69f5bcf9acfbb07340890713a290e280d8f3d8dfd0957aa86c3044b92d9fe6",
+      "block": 123682061,
+      "exact_token_transfer_logs": [
+        {
+          "ca": "0x924fa68a0fc644485b8df8abfa0a41c2e7744444",
+          "from": "0xa83b73f5644cde337b61da79589f10ea15548811",
+          "to": "0xe2ce6ab80874fa9fa2aae65d277dd6b8e65c9de0",
+          "raw": "615828789188748976583",
+          "logIndex": 299
+        },
+        {
+          "ca": "0x924fa68a0fc644485b8df8abfa0a41c2e7744444",
+          "from": "0xe2ce6ab80874fa9fa2aae65d277dd6b8e65c9de0",
+          "to": "0x8a08d98cbb218fceb318ecf3abc1ba43d8a7ab0e",
+          "raw": "6158287891887489765",
+          "logIndex": 308
+        }
+      ],
+      "possible_venue_contracts": [
+        "0x8a08d98cbb218fceb318ecf3abc1ba43d8a7ab0e",
+        "0xe2ce6ab80874fa9fa2aae65d277dd6b8e65c9de0"
+      ]
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "hash": "0xe276fb4ca7b1d0c8eed1eb7fed6f0ff44a8afd3cee5c4edb0eb0ed41926da503",
+      "block": 123685688,
+      "exact_token_transfer_logs": [
+        {
+          "ca": "0x924fa68a0fc644485b8df8abfa0a41c2e7744444",
+          "from": "0xa83b73f5644cde337b61da79589f10ea15548811",
+          "to": "0x66f289de31eef70d52186729d2637ac978cfc56b",
+          "raw": "79605467597849162175",
+          "logIndex": 2
+        }
+      ],
+      "possible_venue_contracts": [
+        "0x66f289de31eef70d52186729d2637ac978cfc56b"
+      ]
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "hash": "0x0688c737243ad718ab3f9fae4ee4d1fbcf3208dd092fb5af3f7a66e47bc61929",
+      "block": 126467804,
+      "exact_token_transfer_logs": [
+        {
+          "ca": "0x3d4f0513e8a29669b960f9dbca61861548a9a760",
+          "from": "0xa83b73f5644cde337b61da79589f10ea15548811",
+          "to": "0x7f51bbf34156ba802deb0e38b7671dc4fa32041d",
+          "raw": "1958881327072375562774",
+          "logIndex": 39
+        }
+      ],
+      "possible_venue_contracts": [
+        "0x7f51bbf34156ba802deb0e38b7671dc4fa32041d"
+      ]
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "hash": "0xaa57afb7da6d5bb86ce2eacedec42abf6e99749972321d85adc0f352ef1c4065",
+      "block": 126467931,
+      "exact_token_transfer_logs": [
+        {
+          "ca": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+          "from": "0xa83b73f5644cde337b61da79589f10ea15548811",
+          "to": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+          "raw": "5049222310291438582",
+          "logIndex": 49
+        },
+        {
+          "ca": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+          "from": "0xa83b73f5644cde337b61da79589f10ea15548811",
+          "to": "0x595d70977dff3c841df0bc0138ce89f80c7c9423",
+          "raw": "499873008718852419645",
+          "logIndex": 51
+        }
+      ],
+      "possible_venue_contracts": [
+        "0x595d70977dff3c841df0bc0138ce89f80c7c9423"
+      ]
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "hash": "0xd581b586b41038a4a0d3ea573a65a4a2c06b9b7674d7f5f84a5e768809209dab",
+      "block": 126468036,
+      "exact_token_transfer_logs": [
+        {
+          "ca": "0x82ec31d69b3c289e541b50e30681fd1acad24444",
+          "from": "0xa83b73f5644cde337b61da79589f10ea15548811",
+          "to": "0xc33bacff9141da689875e6381c1932348ab4c5cb",
+          "raw": "283657269119369491643",
+          "logIndex": 2
+        }
+      ],
+      "possible_venue_contracts": [
+        "0xc33bacff9141da689875e6381c1932348ab4c5cb"
+      ]
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "hash": "0xe651156fb79e04c22e6e3740e1930e657ba106c0134dd79fcc59563711de1db1",
+      "block": 126468121,
+      "exact_token_transfer_logs": [
+        {
+          "ca": "0x6d5ad1592ed9d6d1df9b93c793ab759573ed6714",
+          "from": "0xa83b73f5644cde337b61da79589f10ea15548811",
+          "to": "0xa5067360b13fc7a2685dc82dcd1bf2b4b8d7868b",
+          "raw": "1040360660688252204166",
+          "logIndex": 146
+        }
+      ],
+      "possible_venue_contracts": [
+        "0xa5067360b13fc7a2685dc82dcd1bf2b4b8d7868b"
+      ]
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "hash": "0x6875c13bfba6382f1078ea29d26a5e261ba662c52a00131583017f4b326ef7b6",
+      "block": 126468394,
+      "exact_token_transfer_logs": [
+        {
+          "ca": "0x0df0587216a4a1bb7d5082fdc491d93d2dd4b413",
+          "from": "0xa83b73f5644cde337b61da79589f10ea15548811",
+          "to": "0xaf0eb8f2f114917ef0026105c070cf08423f488e",
+          "raw": "24714486924223195044746568",
+          "logIndex": 11
+        }
+      ],
+      "possible_venue_contracts": [
+        "0xaf0eb8f2f114917ef0026105c070cf08423f488e"
+      ]
+    },
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "hash": "0x6cbb4a85cdbeaf6066f5e860a96ae4f85d90f8710723dbcedb94dfef7b6c7915",
+      "block": 126468527,
+      "exact_token_transfer_logs": [
+        {
+          "ca": "0x0a43fc31a73013089df59194872ecae4cae14444",
+          "from": "0xa83b73f5644cde337b61da79589f10ea15548811",
+          "to": "0xf0a949d3d93b833c183a27ee067165b6f2c9625e",
+          "raw": "92861405446918988335",
+          "logIndex": 81
+        }
+      ],
+      "possible_venue_contracts": [
+        "0xf0a949d3d93b833c183a27ee067165b6f2c9625e"
+      ]
+    },
+    {
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "hash": "0x13f5678b90e1bd0e2b703e23934a7777ba639f75ec1c8c70200f350ff43c4952",
+      "block": 121783426,
+      "exact_token_transfer_logs": [
+        {
+          "ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
+          "from": "0xd3604620f75fefab226d0fa50a3894e1d1111137",
+          "to": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+          "raw": "16218722639908748396",
+          "logIndex": 271
+        },
+        {
+          "ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
+          "from": "0x359bf61ca77cbda27a5eb3a8b472f3c02bc2bc75",
+          "to": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+          "raw": "16327310789849655170",
+          "logIndex": 280
+        }
+      ],
+      "possible_venue_contracts": [
+        "0x359bf61ca77cbda27a5eb3a8b472f3c02bc2bc75",
+        "0xd3604620f75fefab226d0fa50a3894e1d1111137"
+      ]
+    },
+    {
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "hash": "0xc0098aafadbf7a3789d7beb64717b4f5f7c0c1698f1e5d5386419f7b57cc9fbd",
+      "block": 121786352,
+      "exact_token_transfer_logs": [
+        {
+          "ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
+          "from": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+          "to": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+          "raw": "32546033429758403566",
+          "logIndex": 26
+        }
+      ],
+      "possible_venue_contracts": [
+        "0x22af7297243c4eef12e2d5a4f888b92e56bf127c"
+      ]
+    },
+    {
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "hash": "0x6b411510ce6ddb3d38b124c232fd059c431f1623c2528113f84fdb58bfbc80ae",
+      "block": 121848139,
+      "exact_token_transfer_logs": [
+        {
+          "ca": "0x51363f073b1e4920fda7aa9e9d84ba97ede1560e",
+          "from": "0x27eca4b0cf0be597a37b7a1819740eb47ea79d1b",
+          "to": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+          "raw": "54955344112037612385974447",
+          "logIndex": 580
+        }
+      ],
+      "possible_venue_contracts": [
+        "0x27eca4b0cf0be597a37b7a1819740eb47ea79d1b"
+      ]
+    },
+    {
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "hash": "0x87176f7f43cd9b1e48832683a706238b1beecf072bb590709d85bd2988fa2514",
+      "block": 122015238,
+      "exact_token_transfer_logs": [
+        {
+          "ca": "0x51363f073b1e4920fda7aa9e9d84ba97ede1560e",
+          "from": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+          "to": "0x3c79593e01a7f7fed5d0735b16621e2d52a6bc58",
+          "raw": "54955344112037612385974447",
+          "logIndex": 1028
+        }
+      ],
+      "possible_venue_contracts": [
+        "0x3c79593e01a7f7fed5d0735b16621e2d52a6bc58"
+      ]
+    },
+    {
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "hash": "0x6c7f28fe04982f805eca509287ce053260ed1133a89c7fe937608a7d4baed9f7",
+      "block": 122213277,
+      "exact_token_transfer_logs": [
+        {
+          "ca": "0x86bb94ddd16efc8bc58e6b056e8df71d9e666429",
+          "from": "0x31704f4b3ff245753d4a7b0239d6fa252aee9bb5",
+          "to": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+          "raw": "10344728484569536266",
+          "logIndex": 318
+        }
+      ],
+      "possible_venue_contracts": [
+        "0x31704f4b3ff245753d4a7b0239d6fa252aee9bb5"
+      ]
+    },
+    {
+      "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "hash": "0x46f4ebf92b95cd023d89a50ee20f0957eea2ec31e27fa53419dba7a3498fb17d",
+      "block": 126050422,
+      "exact_token_transfer_logs": [
+        {
+          "ca": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+          "from": "0x83aaf02b71f399805419853dfc314a369321c523",
+          "to": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+          "raw": "11416326150617234564",
+          "logIndex": 89
+        }
+      ],
+      "possible_venue_contracts": [
+        "0x83aaf02b71f399805419853dfc314a369321c523"
+      ]
+    },
+    {
+      "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "hash": "0xa9eabce653ba2cfd6ec10656da7da32a9d929f0d45d6cf040693e36c97f6bc47",
+      "block": 126050553,
+      "exact_token_transfer_logs": [
+        {
+          "ca": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+          "from": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+          "to": "0xe5ae318389b8d6d09370a675479c64862152d126",
+          "raw": "682448195368459295821",
+          "logIndex": 262
+        }
+      ],
+      "possible_venue_contracts": [
+        "0xe5ae318389b8d6d09370a675479c64862152d126"
+      ]
+    }
+  ],
+  "production": "NO_GO"
+}

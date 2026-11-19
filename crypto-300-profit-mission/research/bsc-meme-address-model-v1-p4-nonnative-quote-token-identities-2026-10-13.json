@@ -1,0 +1,46 @@
+{
+  "schema": "BSC_MEME_ADDRESS_MODEL_V1_P4_NON_NATIVE_QUOTE_TOKEN_IDENTITY",
+  "status": "DIRECT_CHAIN_METADATA_NOT_ECONOMIC_MARK",
+  "network": "bnb-mainnet",
+  "rpc": "eth_call symbol() 0x95d89b41 and decimals() 0x313ce567 at pool historical block",
+  "source_scope": "Each pool first verified token0/token1 with matching exact major Meme CA and these quote addresses in bsc-meme-address-model-v1-p3-pool11-historical-part*.json",
+  "quote_token_checks": [
+    {
+      "token": "牛来",
+      "pool": "0x595d70977dff3c841df0bc0138ce89f80c7c9423",
+      "block": 122185934,
+      "quote_ca": "0x205812cdbed920aff76c6580abd681a46d11efc7",
+      "symbol": "QQQB",
+      "decimals": 18,
+      "symbol_return": "0x000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000045151514200000000000000000000000000000000000000000000000000000000",
+      "decimals_return": "0x0000000000000000000000000000000000000000000000000000000000000012"
+    },
+    {
+      "token": "MARSCOIN",
+      "pool": "0x94f3ed36706c746ad59fadcaf271b7431ab1d8f1",
+      "block": 122582898,
+      "quote_ca": "0xbe9d156892e55e7154bcd3cb0fea677f9d3103e1",
+      "symbol": "SPCXB",
+      "decimals": 18,
+      "symbol_return": "0x000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000055350435842000000000000000000000000000000000000000000000000000000",
+      "decimals_return": "0x0000000000000000000000000000000000000000000000000000000000000012"
+    },
+    {
+      "token": "牛来",
+      "pool": "0xe5ae318389b8d6d09370a675479c64862152d126",
+      "block": 122742452,
+      "quote_ca": "0x55d398326f99059ff775485246999027b3197955",
+      "symbol": "USDT",
+      "decimals": 18,
+      "symbol_return": "0x000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000045553445400000000000000000000000000000000000000000000000000000000",
+      "decimals_return": "0x0000000000000000000000000000000000000000000000000000000000000012"
+    }
+  ],
+  "guardrails": {
+    "symbol_metadata_is_not_USD_price": true,
+    "nonnative_quote_not_native_BNB": true,
+    "native_balance_delta_not_final_trade_PnL": true,
+    "needs_verified_historical_quote_path": true
+  },
+  "production": "NO_GO"
+}

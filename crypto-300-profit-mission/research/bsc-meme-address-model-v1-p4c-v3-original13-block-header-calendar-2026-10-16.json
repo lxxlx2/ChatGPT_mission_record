@@ -1,0 +1,195 @@
+{
+  "schema": "BSC_P4C_V3_INDEPENDENT_HEADERS_6_2026_AND_EXCLUDED_2025_V1",
+  "source": "BNB Mainnet read-only Alchemy eth_getBlockByNumber with fullTransactions=false; provider may truncate full block body but timestamp, milliTimestamp, hash and number fields were verified individually",
+  "date": "2026-10-16",
+  "historical_2026_pairs": {
+    "p2_13": [
+      93584281,
+      94208823
+    ],
+    "p2_15": [
+      76554500,
+      76582674
+    ],
+    "p2_31": [
+      86649314,
+      87876365
+    ],
+    "p2_38": [
+      112634149,
+      112634184
+    ],
+    "p2_46": [
+      116099537,
+      116211969
+    ],
+    "p2_44": [
+      121783426,
+      121786352
+    ]
+  },
+  "excluded_2025_p2_42_first_block": 73339965,
+  "all_2026_source_calendar_verified": true,
+  "all_13_original_block_hashes_and_integer_timestamps": [
+    {
+      "block": 93584281,
+      "block_number_hex": "0x593fb99",
+      "block_hash": "0xb835541cbb228509cf836e3da070e61335027138beaeea68635efdbccda8fb0e",
+      "timestamp_hex": "0x69e5bf45",
+      "milliTimestamp_hex": "0x19da97326e6",
+      "utc_from_integer_milliseconds": "2026-04-20T05:53:09.350Z",
+      "header_fields_checked": true,
+      "whole_block_response_parseable": false,
+      "source_response_length": 8098,
+      "status": "HEADER_VERIFIED_FROM_PROVIDER_RESPONSE_PREFIX"
+    },
+    {
+      "block": 94208823,
+      "block_number_hex": "0x59d8337",
+      "block_hash": "0x7238c4a3a3c6778cc26a770a939edda9c34d631ff95090205cbc23d593760721",
+      "timestamp_hex": "0x69ea0a8c",
+      "milliTimestamp_hex": "0x19dba3934a2",
+      "utc_from_integer_milliseconds": "2026-04-23T12:03:24.450Z",
+      "header_fields_checked": true,
+      "whole_block_response_parseable": false,
+      "source_response_length": 8098,
+      "status": "HEADER_VERIFIED_FROM_PROVIDER_RESPONSE_PREFIX"
+    },
+    {
+      "block": 76554500,
+      "block_number_hex": "0x4902104",
+      "block_hash": "0xa2a9b6fcdabec35f5aab16058f42f4d625383005c31f1b87f653dc93efd1b373",
+      "timestamp_hex": "0x6970b60a",
+      "milliTimestamp_hex": "0x19be04719fe",
+      "utc_from_integer_milliseconds": "2026-01-21T11:18:34.750Z",
+      "header_fields_checked": true,
+      "whole_block_response_parseable": false,
+      "source_response_length": 8098,
+      "status": "HEADER_VERIFIED_FROM_PROVIDER_RESPONSE_PREFIX"
+    },
+    {
+      "block": 76582674,
+      "block_number_hex": "0x4908f12",
+      "block_hash": "0x4839e1ee3a09df3fdacfe48af50dece8cafb73746b7765315325a767a325cf5c",
+      "timestamp_hex": "0x6970e794",
+      "milliTimestamp_hex": "0x19be1089c46",
+      "utc_from_integer_milliseconds": "2026-01-21T14:49:56.550Z",
+      "header_fields_checked": true,
+      "whole_block_response_parseable": false,
+      "source_response_length": 8098,
+      "status": "HEADER_VERIFIED_FROM_PROVIDER_RESPONSE_PREFIX"
+    },
+    {
+      "block": 86649314,
+      "block_number_hex": "0x52a29e2",
+      "block_hash": "0x388ba4764de9062bd91f9a69b2c7d643e2c2af7a7f95a2b806920ca4fb0f4733",
+      "timestamp_hex": "0x69b60cd0",
+      "milliTimestamp_hex": "0x19cef220f6e",
+      "utc_from_integer_milliseconds": "2026-03-15T01:35:12.750Z",
+      "header_fields_checked": true,
+      "whole_block_response_parseable": true,
+      "source_response_length": 7915,
+      "status": "HEADER_VERIFIED_FROM_PROVIDER_RESPONSE_PREFIX"
+    },
+    {
+      "block": 87876365,
+      "block_number_hex": "0x53ce30d",
+      "block_hash": "0x717c48956f5074ebc9d6b262150c51ca2806d0c68cba65d377c4400a378783f4",
+      "timestamp_hex": "0x69be82b0",
+      "milliTimestamp_hex": "0x19d102e8016",
+      "utc_from_integer_milliseconds": "2026-03-21T11:36:16.150Z",
+      "header_fields_checked": true,
+      "whole_block_response_parseable": true,
+      "source_response_length": 7101,
+      "status": "HEADER_VERIFIED_FROM_PROVIDER_RESPONSE_PREFIX"
+    },
+    {
+      "block": 112634149,
+      "block_number_hex": "0x6b6a925",
+      "block_hash": "0xff8b6075ed2265ef79844ca4a65c1770e3002515f28d3d971b1f594e4aabc39f",
+      "timestamp_hex": "0x6a68aea5",
+      "milliTimestamp_hex": "0x19fa8ea37da",
+      "utc_from_integer_milliseconds": "2026-07-28T13:29:09.850Z",
+      "header_fields_checked": true,
+      "whole_block_response_parseable": false,
+      "source_response_length": 8098,
+      "status": "HEADER_VERIFIED_FROM_PROVIDER_RESPONSE_PREFIX"
+    },
+    {
+      "block": 112634184,
+      "block_number_hex": "0x6b6a948",
+      "block_hash": "0xc1cb3f71aa601e0dc6cf7a17d35c8a75f1e032c1caea3d8199eb4fa4a4f406db",
+      "timestamp_hex": "0x6a68aeb5",
+      "milliTimestamp_hex": "0x19fa8ea7560",
+      "utc_from_integer_milliseconds": "2026-07-28T13:29:25.600Z",
+      "header_fields_checked": true,
+      "whole_block_response_parseable": false,
+      "source_response_length": 8098,
+      "status": "HEADER_VERIFIED_FROM_PROVIDER_RESPONSE_PREFIX"
+    },
+    {
+      "block": 116099537,
+      "block_number_hex": "0x6eb89d1",
+      "block_hash": "0x343d016e4688cefe32ae563293bdc3072c91b355ca5e9840a22c09dcc113f221",
+      "timestamp_hex": "0x6a807cf7",
+      "milliTimestamp_hex": "0x1a005e8250a",
+      "utc_from_integer_milliseconds": "2026-08-15T14:51:35.050Z",
+      "header_fields_checked": true,
+      "whole_block_response_parseable": false,
+      "source_response_length": 8098,
+      "status": "HEADER_VERIFIED_FROM_PROVIDER_RESPONSE_PREFIX"
+    },
+    {
+      "block": 116211969,
+      "block_number_hex": "0x6ed4101",
+      "block_hash": "0xa0230dc167e1dc9292290cc000ea3b735c0b19cdd11637188a7f9eac15799308",
+      "timestamp_hex": "0x6a8142a4",
+      "milliTimestamp_hex": "0x1a008ec5136",
+      "utc_from_integer_milliseconds": "2026-08-16T04:55:00.150Z",
+      "header_fields_checked": true,
+      "whole_block_response_parseable": false,
+      "source_response_length": 8098,
+      "status": "HEADER_VERIFIED_FROM_PROVIDER_RESPONSE_PREFIX"
+    },
+    {
+      "block": 121783426,
+      "block_number_hex": "0x7424482",
+      "block_hash": "0xc1987a9505cb035ac31dc724fa423d4b03b58d16f194cb0f94afe7ec79d7a36a",
+      "timestamp_hex": "0x6aa788e8",
+      "milliTimestamp_hex": "0x1a09e6ecb9e",
+      "utc_from_integer_milliseconds": "2026-09-14T05:40:56.350Z",
+      "header_fields_checked": true,
+      "whole_block_response_parseable": true,
+      "source_response_length": 7693,
+      "status": "HEADER_VERIFIED_FROM_PROVIDER_RESPONSE_PREFIX"
+    },
+    {
+      "block": 121786352,
+      "block_number_hex": "0x7424ff0",
+      "block_hash": "0xbadc2626be496b9b6a215782c2fe76db53be48cff76f76a40ea066a7f72a7b9b",
+      "timestamp_hex": "0x6aa78e0d",
+      "milliTimestamp_hex": "0x1a09e82e390",
+      "utc_from_integer_milliseconds": "2026-09-14T06:02:53.200Z",
+      "header_fields_checked": true,
+      "whole_block_response_parseable": false,
+      "source_response_length": 8098,
+      "status": "HEADER_VERIFIED_FROM_PROVIDER_RESPONSE_PREFIX"
+    },
+    {
+      "block": 73339965,
+      "block_number_hex": "0x45f143d",
+      "block_hash": "0x8e7770ef3e55b4b12ff570b63e85c596610418ea16244c65a93638b80b941357",
+      "timestamp_hex": "0x6952639f",
+      "milliTimestamp_hex": "0x19b69d52518",
+      "utc_from_integer_milliseconds": "2025-12-29T11:18:55.000Z",
+      "header_fields_checked": true,
+      "whole_block_response_parseable": false,
+      "source_response_length": 8098,
+      "status": "HEADER_VERIFIED_FROM_PROVIDER_RESPONSE_PREFIX"
+    }
+  ],
+  "semantics": "Historical BNB header UTC year, not observer public signal/broadcast timestamp",
+  "public_executable_U": "UNRESOLVED",
+  "P5": "BLOCKED",
+  "production": "NO_GO"
+}

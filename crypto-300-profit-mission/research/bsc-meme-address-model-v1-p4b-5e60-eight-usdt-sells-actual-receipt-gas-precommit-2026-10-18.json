@@ -1,0 +1,85 @@
+{
+  "schema": "BSC_P4B_2026_5E60_EIGHT_REAL_SIGNED_USDT_SELLS_RECEIPT_GAS_PREFREEZE_V1",
+  "date": "2026-10-18",
+  "source_eight_USDT_exact_sells_path": "bsc-meme-address-model-v1-p4b-5e60-eight-real-signed-usdt-sells-and-five-full-exit-2026-10-18.json",
+  "source_eight_USDT_exact_sells_sha": "902871db18ac42d98647ce43d61438e8e32b7947",
+  "provider": "Alchemy existing free bnb-mainnet",
+  "method": "ethGetTransactionReceipt",
+  "frozen_records": [
+    {
+      "rank": 1,
+      "tx": "0x473a6f97e4580036e82142e56b1cd9d4b0fd026dd5363dcf33cf8271651777e4",
+      "block": 85961702,
+      "signer": "0x5e600e259e3cff0757e3736223685958665866c6",
+      "raw_Dragon_sell": "115088555360000000000000",
+      "actual_USDT_in": "2511292317080730962150"
+    },
+    {
+      "rank": 2,
+      "tx": "0x9d52a9208bae6f42154b2f974745be5c43ad116ea801badba61fc9fd1ec8701f",
+      "block": 85961711,
+      "signer": "0x5e600e259e3cff0757e3736223685958665866c6",
+      "raw_Dragon_sell": "26853996250000000000000",
+      "actual_USDT_in": "585327128205946387713"
+    },
+    {
+      "rank": 3,
+      "tx": "0x67e653802aa2c2907313ecd7428ab93fe0ff92b36f75eb7600e676e278c50984",
+      "block": 85961724,
+      "signer": "0x5e600e259e3cff0757e3736223685958665866c6",
+      "raw_Dragon_sell": "24168596630000000000000",
+      "actual_USDT_in": "529979032978949999464"
+    },
+    {
+      "rank": 4,
+      "tx": "0xe62f8b2435117348bfb8f320f0533638cd97f21fcced5b15edbad154eb712ef6",
+      "block": 85961776,
+      "signer": "0x5e600e259e3cff0757e3736223685958665866c6",
+      "raw_Dragon_sell": "108758684820000000000000",
+      "actual_USDT_in": "2385297721548076113170"
+    },
+    {
+      "rank": 5,
+      "tx": "0xbc1e4d56e0946bf63343e045dd2da459431219acbc80ba2cc0478d28901fd7f2",
+      "block": 85961787,
+      "signer": "0x5e600e259e3cff0757e3736223685958665866c6",
+      "raw_Dragon_sell": "108758684810200760487354",
+      "actual_USDT_in": "2387723926769129620988"
+    },
+    {
+      "rank": 6,
+      "tx": "0x9c71aaf82a867109076b58bea79ba8f52043f151484de6e0ac40361219750545",
+      "block": 85980702,
+      "signer": "0x5e600e259e3cff0757e3736223685958665866c6",
+      "raw_Dragon_sell": "244762540070000000000000",
+      "actual_USDT_in": "4064998831054595966191"
+    },
+    {
+      "rank": 7,
+      "tx": "0x3fd9ef769f6c294fe2d0a4949c88e5c261935e769c5144470a4570df59b5591a",
+      "block": 85980740,
+      "signer": "0x5e600e259e3cff0757e3736223685958665866c6",
+      "raw_Dragon_sell": "285556296750000000000000",
+      "actual_USDT_in": "4749802259266624265186"
+    },
+    {
+      "rank": 8,
+      "tx": "0xf6bba19e1dafc184f6887e672d0f3dbef662465c65ed929172ccf299193062a2",
+      "block": 85980748,
+      "signer": "0x5e600e259e3cff0757e3736223685958665866c6",
+      "raw_Dragon_sell": "285556296752723286997184",
+      "actual_USDT_in": "4725956365867561598425"
+    }
+  ],
+  "max_calls": 8,
+  "zero_retries": true,
+  "if_truncated": "Record field grade and do not treat unchecked gasUsed as zero; no receipt retry or source reselection.",
+  "fees": "All signed tx type 0 and 500000000 wei/gas observed in original signed tx, multiply by complete receipt gasUsed iff receipt status success and exact hash, block, transactionIndex are independently matched.",
+  "economics_guard": "Full first-five 8399.620126 USDT proceeds are gross receipts before eight BNB gas. Prior 335173 Dragon acquisition basis unknown, and additional post-first-five 815875 Dragon acquisition basis unknown. Never calculate true trade profit until source purchases reconciled.",
+  "gates": {
+    "P4_B": "PARTIAL",
+    "PUBLIC_EXECUTABLE_U": "UNRESOLVED",
+    "P5": "BLOCKED",
+    "PRODUCTION": "NO_GO"
+  }
+}
