@@ -11,7 +11,7 @@ def snapshot():
                      'snapshot_consistent': True,
                      'special_normalization_complete': True, 'gaps': []},
         'holder_rankings': {'requested': True, 'status': 'COMPLETE_SNAPSHOT',
-                            'normalization_complete': True},
+                            'normalization_complete': True, 'snapshot_slot': 100, 'supply_slot': 100},
         'market': {'status': 'OK', 'source': 'DEXSCREENER_API'},
         'assessment': {'chain_permission_status': 'PASS',
                        'cluster_status': 'NO_MATERIAL_CONTROL_CLUSTER_FOUND'},
@@ -39,9 +39,21 @@ def test_green_chain_and_complete_balance_ranks_do_not_complete_due_diligence():
 def test_legacy_sample_flags_cannot_promote_global_ranks_or_roles(rank):
     report=snapshot();report['holder_rankings']=rank
     rows={row['id']:row for row in report_completeness(report)['requirements']}
-    if rank.get('status')!='COMPLETE_SNAPSHOT':
-        assert rows['holder_balances']['status']!='VERIFIED_SNAPSHOT'
+    assert rows['holder_balances']['status']!='VERIFIED_SNAPSHOT'
     assert rows['holder_roles']['status']!='VERIFIED_SNAPSHOT'
+
+
+@pytest.mark.parametrize("authority_slot,expected",[
+    (None,"PARTIAL"),(95,"PARTIAL"),(90,"VERIFIED_SNAPSHOT"),
+])
+def test_complete_snapshot_requires_cross_slot_authority_evidence(authority_slot,expected):
+    report=snapshot()
+    report['holder_rankings'].update(supply_slot=90,supply_bracket={
+        'method':'NO_MINT_AUTHORITY_MONOTONIC_SUPPLY_BRACKET','before_slot':90,
+        'after_slot':105,'mint_authority_slot':authority_slot,
+    })
+    assert next(row for row in report_completeness(report)['requirements']
+                if row['id']=='holder_balances')['status']==expected
 
 
 def test_unavailable_sources_remain_separate_from_uncollected_capabilities():

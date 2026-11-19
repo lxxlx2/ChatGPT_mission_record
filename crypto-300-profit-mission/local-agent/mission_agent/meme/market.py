@@ -74,15 +74,23 @@ class DexScreenerMarketClient:
             return {"status":"UNAVAILABLE","source":"DEXSCREENER_API","chain":"solana","mint":mint,
                     "source_ref":source_ref,"observed_at":observed_at,"reason":"RESPONSE_INVALID"}
 
-        pairs=[
-            x for x in payload
-            if isinstance(x,dict)
-            and x.get("chainId")=="solana"
-            and (x.get("baseToken") or {}).get("address")==mint
-        ]
+        pool_candidates=[]
+        pairs=[]
+        for item in payload:
+            if not isinstance(item,dict) or item.get("chainId")!="solana":
+                continue
+            base,quote=item.get("baseToken"),item.get("quoteToken")
+            base_address=base.get("address") if isinstance(base,dict) else None
+            quote_address=quote.get("address") if isinstance(quote,dict) else None
+            if mint not in (base_address,quote_address):
+                continue
+            pool_candidates.append({"pair_address":item.get("pairAddress"),"base_address":base_address,"quote_address":quote_address})
+            if base_address==mint:
+                pairs.append(item)
         if not pairs:
             return {"status":"UNAVAILABLE","source":"DEXSCREENER_API","chain":"solana","mint":mint,
-                    "source_ref":source_ref,"observed_at":observed_at,"reason":"NO_BASE_TOKEN_PAIR"}
+                    "source_ref":source_ref,"observed_at":observed_at,"reason":"NO_BASE_TOKEN_PAIR",
+                    "pool_candidates":pool_candidates,"pool_candidates_not_selected":0}
 
         def liquidity(pair):
             try:
@@ -104,7 +112,7 @@ class DexScreenerMarketClient:
             "mint":mint,
             "observed_at":observed_at,
             "pair_count":len(pairs),
-            "pool_candidates":[{"pair_address":x.get("pairAddress"),"base_address":(x.get("baseToken") or {}).get("address"),"quote_address":(x.get("quoteToken") or {}).get("address")} for x in pairs],
+            "pool_candidates":pool_candidates,
             "pool_candidates_not_selected":0,
             "name":base.get("name"),
             "symbol":base.get("symbol"),

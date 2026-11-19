@@ -1,7 +1,7 @@
 """Filtered shared-authority discovery; every response and wire is injected."""
 import copy,json
 import pytest
-from mission_agent.meme.pool_discovery import query,valid_pool_discovery_query,collect_global_pool_hints,MAX_QUERY_ACCOUNTS
+from mission_agent.meme.pool_discovery import query,valid_pool_discovery_query,collect_global_pool_hints
 from mission_agent.meme.pool_programs import CPMM,AMM_V4,stored_bump_authority,pubkey_bytes,decode_pool
 from mission_agent.meme.special_roles import collect_special_roles
 from test_meme_pool_vaults import MINT,QUOTE,POOL,BASE_VAULT,QUOTE_VAULT,P,account,k
@@ -94,14 +94,13 @@ def test_filtered_pool_response_has_256KiB_wire_cap_and_no_size_retry_or_cache()
     with pytest.raises(RPCError,match='RPC_POOL_RESPONSE_LIMIT'):r.call('getProgramAccounts',query(MINT,CPMM,0,100),ttl=30)
     assert sizes==[MAX_RPC_BYTES+1] and r.calls==1
 
-@pytest.mark.parametrize('bad',['envelope','older','too_many','duplicate','filter','layout','wrong_owner','missing_vault'])
+@pytest.mark.parametrize('bad',['envelope','older','duplicate','filter','layout','wrong_owner','missing_vault'])
 def test_incomplete_malformed_or_unrelated_pool_response_never_becomes_an_exclusion(bad):
     source,rpc,_=fixture()
     def mutate(result):
         if not result['value']:return
         if bad=='envelope':result['hasMore']=True
         elif bad=='older':result['context']['slot']=99
-        elif bad=='too_many':result['value']*=MAX_QUERY_ACCOUNTS+1
         elif bad=='duplicate':result['value']*=2
         elif bad in {'filter','layout','wrong_owner'}:
             from test_meme_pool_vaults import change_data

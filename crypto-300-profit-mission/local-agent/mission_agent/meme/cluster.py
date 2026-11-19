@@ -992,6 +992,18 @@ class WalletClusterAnalyzer:
         extensions = info.get("extensions", [])
         if not isinstance(extensions, list):
             return {"status": "UNAVAILABLE", "source": source, "reason": "MINT_EXTENSIONS_UNVERIFIED"}
+        # An extended Mint with an empty or unparseable extension list cannot
+        # rule out MintCloseAuthority. The program can close such a Mint at zero.
+        mint_close_authority_excluded = program != TOKEN_2022_PROGRAM or (
+            (value.get("space") == 82 and not extensions)
+            or (bool(extensions) and all(
+                isinstance(extension, dict)
+                and isinstance(extension.get("extension"), str)
+                and _extension_name(extension["extension"]) not in {
+                    "", "mintcloseauthority", "unparseableextension", "uninitialized",
+                }
+                for extension in extensions))
+        )
         if program==TOKEN_2022_PROGRAM:token_program="SPL Token-2022"
         else:token_program="SPL Token"
         found_update, update_authority = False, None
@@ -1036,6 +1048,7 @@ class WalletClusterAnalyzer:
             "token_program":token_program,
             "program_id":program,
             "mint_authority":info.get("mintAuthority"),
+            "mint_close_authority_excluded":mint_close_authority_excluded,
             "freeze_authority":info.get("freezeAuthority"),
             "decimals":info.get("decimals"),
             "supply_raw":str(info.get("supply")) if info.get("supply") is not None else None,
@@ -1222,28 +1235,48 @@ class WalletClusterAnalyzer:
         except RPCJobBudgetExceeded:raise
         except Exception:return None
 
-    def _supply_recheck(self):
+    def _supply_recheck(self,decimals):
         try:value=self.rpc.call("getTokenSupply",[self.mint,{"commitment":"finalized"}])
         except RPCJobBudgetExceeded:raise
         except Exception:return None
-        try:return int(value["value"]["amount"]),value["context"]["slot"]
-        except (KeyError,TypeError,ValueError):return None
+        try:
+            amount=value["value"]["amount"]
+            precision=value["value"]["decimals"]
+            slot=value["context"]["slot"]
+        except (KeyError,TypeError):return None
+        if (not isinstance(amount,str) or not re.fullmatch(r"(?:0|[1-9][0-9]{0,19})",amount)
+                or int(amount)>=2**64 or type(precision) is not int or precision!=decimals):
+            return None
+        return int(amount),slot
 
     def _holder_ranks(self,profile,supply,decimals):
         if not self.enumerate_holder_ranks:return {"requested":False,"status":"NOT_REQUESTED"}
         base={"requested":True,"status":"UNAVAILABLE","owners":[],"metrics":{}}
         if profile.get("program_id") not in TOKEN_PROGRAMS or profile.get("is_initialized") is not True or not valid_pubkey(self.mint):
             return {**base,"reason":"MINT_IDENTITY_UNVERIFIED"}
+        supply_slot=self._snapshot_slots.get("supply")
+        authority_slot=None
+        profile_slot=profile.get("slot")
+        if profile.get("status")=="OK" and type(profile_slot) is int and profile_slot>0:
+            if profile.get("supply_raw")==str(supply) and profile.get("decimals")==decimals:
+                if type(supply_slot) is not int or profile_slot>supply_slot:
+                    supply_slot=profile_slot
+                if ("mint_authority" in profile and profile["mint_authority"] is None
+                        and profile.get("mint_close_authority_excluded") is True):
+                    authority_slot=profile_slot
+            elif profile_slot==supply_slot:
+                return {**base,"status":"INCOMPLETE_EVIDENCE","reason":"MINT_SUPPLY_SAME_SLOT_CONFLICT",
+                        "supply_slot":supply_slot}
         cfg=(self.registry.get("tokens") or {}).get(self.mint) or {}
         normalized=cfg.get("normalization_complete",self.registry.get("normalization_complete",False)) is True
         try:
             self._progress("HOLDER_ENUMERATION",scanned=0)
             result=collect_mint_holder_ranks(self.mint,profile["program_id"],supply,decimals,
-                self._snapshot_slots.get("supply"),self.rpc,self._role,
+                supply_slot,self.rpc,self._role,
                 normalization_declared=normalized,special_roles=SPECIAL_ROLES,
                 expected_top_accounts=getattr(self,"_largest_account_snapshot",None),
                 largest_slot=self._snapshot_slots.get("largest_accounts"),owner_reader=self._rank_owner_accounts,
-                supply_recheck=self._supply_recheck,supply_fixed_above=profile.get("mint_authority") is None)
+                supply_recheck=lambda:self._supply_recheck(decimals),mint_authority_slot=authority_slot)
             if self.audit_holder_binary:
                 self._progress("HOLDER_BINARY",scanned=0)
                 try:
@@ -2043,11 +2076,16 @@ def report_completeness(report:dict)->dict:
     compared=(market.get("comparison") or {}).get("status") in {"INDEXER_SNAPSHOTS_COMPARED","PARTIAL_INDEXER_SNAPSHOTS"}
     role_evidence=report.get("pool_holder_roles") or {}
     pool_holder_conflict=role_evidence.get("status")=="SAME_SLOT_CONTRADICTION"
-    ranked=ranks.get("requested") is True and ranks.get("status")=="COMPLETE_SNAPSHOT"
+    rank_slot,supply_slot=ranks.get("snapshot_slot"),ranks.get("supply_slot")
+    same_slot=type(rank_slot) is int and rank_slot>0 and type(supply_slot) is int and rank_slot==supply_slot
     bracket=ranks.get("supply_bracket")
+    bracketed=(isinstance(bracket,dict) and bracket.get("method")=="NO_MINT_AUTHORITY_MONOTONIC_SUPPLY_BRACKET"
+        and all(type(s) is int for s in (rank_slot,supply_slot,bracket.get("mint_authority_slot"),
+                                         bracket.get("before_slot"),bracket.get("after_slot")))
+        and 0<bracket["mint_authority_slot"]<=bracket["before_slot"]==supply_slot<rank_slot<=bracket["after_slot"])
+    ranked=ranks.get("requested") is True and ranks.get("status")=="COMPLETE_SNAPSHOT" and (same_slot or bracketed)
     supply_reconciliation=("NO_MINT_AUTHORITY_MONOTONIC_SUPPLY_BRACKET"
-        if isinstance(bracket,dict) and bracket.get("method")=="NO_MINT_AUTHORITY_MONOTONIC_SUPPLY_BRACKET"
-        else "SAME_SLOT_SUPPLY_RECONCILED")
+        if bracketed else "SAME_SLOT_SUPPLY_RECONCILED")
     from .holder_binary import verified_holder_mass
     binary_check=ranks.get("raw_balance_check") or {}
     binary_mass=verified_holder_mass(binary_check,report.get("mint")) and binary_check.get("enumeration_response_sha256")==ranks.get("response_sha256")
@@ -2083,7 +2121,7 @@ def report_completeness(report:dict)->dict:
         ["assessment.cluster_status","unresolved_relation_edges","probable_control_clusters"])
     row("market","NOT_COLLECTED" if not market_requested else "PARTIAL" if market.get("status")=="OK" else "UNAVAILABLE",
         "MARKET_SOURCE_NOT_REQUESTED" if not market_requested else "POOL_HOLDER_SAME_SLOT_CONTRADICTION" if pool_holder_conflict else "DOCUMENTED_RESERVES_WITHOUT_USD_OR_SNAPSHOT_PARITY" if reserve_model_read else "RAW_VAULT_BALANCES_WITHOUT_NET_RESERVE_OR_PRICE_RECONCILIATION" if raw_pool_read else "INDEXED_MARKETS_WITHOUT_RAW_POOL_RECONCILIATION" if compared else "SINGLE_MARKET_REFERENCE_WITHOUT_POOL_RECONCILIATION",
-        (["DexScreener market reference"] if market_requested else ["No market reference requested"])+(["GeckoTerminal exact-pool indexer"] if independent.get("attempted") is True else [])+(["Selected PumpSwap raw vault/Mint accounts in one finalized batch; documented signed virtual reserve arithmetic" if reserve_model_read else "Selected PumpSwap raw vault/Mint accounts in one finalized batch; not net reserves"] if raw_pool_read else []),
+        (["DexScreener market reference"] if market_requested else ["No market reference requested"])+(["GeckoTerminal exact-pool indexer"] if independent.get("attempted") is True else [])+(["Selected pool raw vault/Mint accounts in one finalized batch; protocol reserve arithmetic recorded separately"] if raw_pool_read else []),
         "Reconcile dated selected-pool reserves and market definitions with an independent permitted source.",
         ["market","pool_vaults","pool_holder_roles"])
     row("independent_sources","PARTIAL" if compared or unit_compared else "UNAVAILABLE" if independent.get("attempted") is True else "NOT_COLLECTED",

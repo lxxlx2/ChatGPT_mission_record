@@ -73,7 +73,7 @@ def test_pool_discovered_from_holder_owner_is_audited_when_market_is_unavailable
     assert out['rankings']['metrics']['known_ex_lp']['owners']==[{'owner':POOL,'raw':'400'}]
     assert out['rankings']['metrics']['known_ex_lp']['top10_pct_of_mint_supply']=='40.0000'
     assert out['rankings']['metrics']['known_ex_lp']['top10_pct_of_remaining']=='100.0000'
-    assert out['discovery_scope']=='BOUNDED_INDEXER_OWNER_AND_PROGRAM_HINTS_NOT_ALL_POOLS'
+    assert out['discovery_scope']=='OBSERVED_INDEXER_OWNER_AND_PROGRAM_HINTS_NOT_ALL_POOLS'
     assert rpc.calls[0][1][1]['minContextSlot']==101
 
 @pytest.mark.parametrize('bad',['hash','mint','owner','vault','slot'])
@@ -121,7 +121,7 @@ def test_global_authority_pool_state_does_not_turn_authority_into_a_reverse_pool
     assert discover_owner_pool_hint(MINT,POOL,metadata,101,100,'a'*64,'b'*64,{BASE_VAULT:POOL}) is None
 
 
-def test_more_than8_owner_pool_hints_keep_highest_balances_deterministically_without_more_reads():
+def test_more_than_eight_owner_pool_hints_all_retained_without_more_reads():
     from mission_agent.meme.pool_programs import pubkey_bytes
     records=[];metadata={}
     for i in range(12):
@@ -134,10 +134,10 @@ def test_more_than8_owner_pool_hints_keep_highest_balances_deterministically_wit
             self.count+=1
             return {'context':{'slot':100},'value':records if method=='getProgramAccounts' else [metadata[a] for a in params[0]]}
     rpc=RPC();out=collect_mint_holder_ranks(MINT,P,78,0,100,rpc,lambda *args:('PROGRAM_OWNED_UNRESOLVED','fixture'))
-    assert rpc.count==2 and len(out['owner_pool_hints'])==8
+    assert rpc.count==2 and len(out['owner_pool_hints'])==12
     assert out['owner_pool_hints'][0]['pair_address']==key(3011)
-    assert out['owner_pool_hints'][-1]['pair_address']==key(3004)
-    assert out['owner_pool_discovery']['hints_not_selected']==4
+    assert out['owner_pool_hints'][-1]['pair_address']==key(3000)
+    assert out['owner_pool_discovery']['hints_not_selected']==0
 
 
 def test_changed_discovered_pool_cannot_reuse_a_prior_owner_vault_hint():
@@ -157,7 +157,7 @@ def test_malformed_owner_account_program_or_unparsed_layout_never_crashes_extrac
         assert discover_owner_pool_hint(MINT,POOL,metadata,101,100,'a'*64,'b'*64,{BASE_VAULT:POOL}) is None
 
 
-def test_many_indexer_hints_cannot_starve_owner_pool_candidate_within8_key_cap():
+def test_all_indexer_hints_and_owner_pool_candidate_are_checked():
     from mission_agent.meme.special_roles import collect_special_roles
     s,_,metadata=source_with_owner_pool();base_rpc=cohort_rpc(s,metadata);calls=[]
     hints=[{'pair_address':key(6000+i),'base_address':MINT,'quote_address':QUOTE} for i in range(12)]
@@ -167,8 +167,8 @@ def test_many_indexer_hints_cannot_starve_owner_pool_candidate_within8_key_cap()
             if len(calls)==1:return {'context':{'slot':102},'value':[metadata if a==POOL else None for a in params[0]]}
             return base_rpc.call(method,params,ttl=ttl)
     out=collect_special_roles(MINT,s,{'status':'OK','source':'DEXSCREENER_API','mint':MINT,'main_pair':hints[0],'pool_candidates':hints},RPC())
-    assert len(calls[0][0])==8 and calls[0][0][0]==key(6000) and calls[0][0][1]==POOL
-    assert out['not_selected_pool_hints']==5 and out['candidate_count']==13
+    assert len(calls[0][0])==13 and calls[0][0][0]==key(6000) and calls[0][0][1]==POOL
+    assert out['not_selected_pool_hints']==0 and out['candidate_count']==13
     assert out['rankings']['metrics']['known_ex_lp']['deducted_raw']=='600'
 
 

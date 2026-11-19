@@ -1101,7 +1101,7 @@ function specialRoleReportForUi() {
 
 test('multi-pool known-exclusion arithmetic retains unknown balance and both denominators',()=>{
   const h=harness(),r=specialRoleReportForUi();h.context.renderClusterReport(r);const html=h.element('cluster-rankings').innerHTML;
-  assert.match(html,/cluster-special-roles/);assert.match(html,/已知排除口径已复算/);assert.match(html,/未知角色余额/);assert.match(html,/40%/);assert.match(html,/未穷尽全部池/);
+  assert.match(html,/cluster-special-roles/);assert.match(html,/已知排除口径已复算/);assert.match(html,/未知角色余额/);assert.match(html,/40%/);assert.match(html,/覆盖范围有限/);
 });
 
 test('multi-pool forged mass, deduction, slot or exhaustive flag cannot retain exact filtered ranks',()=>{
@@ -1129,7 +1129,7 @@ test('Owner-derived pool discovery is visible without implying a complete revers
   a.owner_pool_hints_available=1;a.rejected_owner_pool_hints=2;a.pools[0].candidate_sources=['HOLDER_OWNER_ACCOUNT'];
   h.context.renderClusterReport(r);const html=h.element('cluster-rankings').innerHTML;
   assert.match(html,/已读 Owner 账户/);assert.match(html,/有效 Owner 池线索 1/);assert.match(html,/拒绝的 Owner 线索 2/);
-  assert.match(html,/共享全局 authority/);assert.match(html,/已知排除口径已复算/);
+  assert.match(html,/合并池候选 1 个/);assert.match(html,/已知排除口径已复算/);
 });
 
 test('unknown pool candidate source never echoes arbitrary provider text',()=>{
@@ -1143,7 +1143,7 @@ test('shared authority filtered program discovery shows bounded query coverage a
   a.pools[0].candidate_sources=['MINT_FILTERED_PROGRAM_QUERY'];
   a.program_pool_discovery={version:1,logical_queries:2,attempts:[{program:'CPMMoo8L3F4NbTegBCKVNunggL7H1ZpdTHKxQB5qKP1C',mint_side:'BASE',status:'OBSERVED_QUERY_RESULT',matching_rows:2,eligible_rows:1,snapshot_slot:101},{program:'CPMMoo8L3F4NbTegBCKVNunggL7H1ZpdTHKxQB5qKP1C',mint_side:'QUOTE',status:'UNAVAILABLE',reason:'https://private.invalid/SECRET'}]};
   h.context.renderClusterReport(r);const html=h.element('cluster-rankings').innerHTML;
-  assert.match(html,/Mint 过滤程序查询/);assert.match(html,/本轮 2 个过滤查询/);assert.match(html,/最多4个/);assert.match(html,/128账户/);assert.match(html,/来源仍有缺口/);assert.doesNotMatch(html,/private.invalid|SECRET/);
+  assert.match(html,/Mint 过滤程序查询/);assert.match(html,/本轮 2 个过滤查询/);assert.match(html,/最多4个/);assert.match(html,/256 KiB/);assert.match(html,/来源仍有缺口/);assert.doesNotMatch(html,/private.invalid|SECRET/);
 });
 
 test('legacy role report does not invent a program-query count',()=>{
@@ -1537,10 +1537,11 @@ for(const secondsBeforeReport of [1,300,86400]) test('browser narrative retains 
 test('holder rankings describe a supply bracket without claiming a same-slot snapshot',()=>{
   const h=harness();
   h.context.renderHolderRankings({holder_rankings:{requested:true,status:'COMPLETE_SNAPSHOT',
-    snapshot_slot:20,supply_slot:10,supply_bracket:{before_slot:10,after_slot:30,method:'NO_MINT_AUTHORITY_MONOTONIC_SUPPLY_BRACKET'},
+    snapshot_slot:20,supply_slot:10,supply_bracket:{before_slot:10,after_slot:30,mint_authority_slot:9,method:'NO_MINT_AUTHORITY_MONOTONIC_SUPPLY_BRACKET'},
     metrics:{GLOBAL_OWNER_TOP10_PCT:'58.9540'},owners:[]}});
   const html=h.element('cluster-rankings').innerHTML;
   assert.match(html,/跨 slot 供给夹逼/);
+  assert.match(html,/权限 slot 9/);
   assert.match(html,/前 10.*账户 20.*后 30/);
   assert.doesNotMatch(html,/账户余额总和与同 slot 供给已核对/);
   assert.match(html,/58.954%/);
@@ -1549,10 +1550,13 @@ test('holder rankings describe a supply bracket without claiming a same-slot sna
 test('holder rankings only use same-slot wording for recorded equal slots',()=>{
   const h=harness();
   for(const slots of [{snapshot_slot:20,supply_slot:10},{snapshot_slot:null,supply_slot:null},
-    {snapshot_slot:20,supply_slot:10,supply_bracket:{before_slot:10,after_slot:15,method:'NO_MINT_AUTHORITY_MONOTONIC_SUPPLY_BRACKET'}}]) {
-    h.context.renderHolderRankings({holder_rankings:{requested:true,status:'COMPLETE_SNAPSHOT',...slots,metrics:{},owners:[]}});
+    {snapshot_slot:20,supply_slot:10,supply_bracket:{before_slot:10,after_slot:15,mint_authority_slot:9,method:'NO_MINT_AUTHORITY_MONOTONIC_SUPPLY_BRACKET'}},
+    {snapshot_slot:20,supply_slot:10,supply_bracket:{before_slot:10,after_slot:30,method:'NO_MINT_AUTHORITY_MONOTONIC_SUPPLY_BRACKET'}},
+    {snapshot_slot:20,supply_slot:10,supply_bracket:{before_slot:10,after_slot:30,mint_authority_slot:11,method:'NO_MINT_AUTHORITY_MONOTONIC_SUPPLY_BRACKET'}}]) {
+    h.context.renderHolderRankings({holder_rankings:{requested:true,status:'COMPLETE_SNAPSHOT',...slots,metrics:{GLOBAL_OWNER_TOP10_PCT:'58.9540'},owners:[]}});
     assert.doesNotMatch(h.element('cluster-rankings').innerHTML,/账户余额总和与同 slot 供给已核对/);
     assert.match(h.element('cluster-rankings').innerHTML,/slot 关系未记录或未核实/);
+    assert.doesNotMatch(h.element('cluster-rankings').innerHTML,/58.954%/);
   }
   h.context.renderHolderRankings({holder_rankings:{requested:true,status:'COMPLETE_SNAPSHOT',snapshot_slot:20,supply_slot:20,metrics:{},owners:[]}});
   assert.match(h.element('cluster-rankings').innerHTML,/账户余额总和与同 slot 供给已核对/);
