@@ -132,3 +132,96 @@ Other platforms queried: Predict.fun, OPINION, Limitless, Kalshi, but no verifie
 Current priority for further review: `Printr $50M NO` (visible 89.5c), `Linera $100M NO` (recent web result 84c; not live), then short-dated `StandX/Ventuals` (lower total return may be offset by shorter hold period). All remain WATCH pending real executed ask sizes, $100/$500/$1000 VWAP, chain/book data and exact fee/collateral verification.
 
 Mandatory operational caution: **no trades, automatic monitors, emails or production automation authorized**. No live quote or order execution proven.
+
+
+## F. Second-pass evidence-based catalog expansion from user screenshot and connected browser (2026-11-21)
+
+**Not an exhaustive verified all-platform scan.** The user specifically requests all liquid venues and all crypto token launch + FDV markets before screening stopped projects. Data-source audit: connected browser Polymarket `/zh/crypto/pre-market/token-launch` yielded precisely **39 unique event slugs** after removing nested expiry links; this is only loaded initial page (not all pages, all times, or all categories). Polymarket public Gamma REST supports pagination and CLOB book-level sizes but was inaccessible through current network/web tools. The container cannot DNS resolve Gamma. Do not claim that all markets or full orderbook sizes were retrieved. FDV names and all previous candidates are separate additions; a verified exhaustive coverage count across venues is currently UNAVAILABLE.
+
+### F1. 39 distinct Polymarket Token Launch event URLs extracted from browser
+
+1. Predict.fun会在___前推出代币吗？ | https://polymarket.com/event/will-predictfun-launch-a-token-by
+2. Jumper会在___之前启动令牌吗？ | https://polymarket.com/event/will-jumper-launch-a-token-by
+3. Exponent会在___之前启动令牌吗？ | https://polymarket.com/event/will-exponent-launch-a-token-by
+4. Revolut会在2026年推出美元稳定币吗？ | https://polymarket.com/event/will-revolut-launch-a-usd-stablecoin-in-2026
+5. Tuyo会在___之前推出代币吗？ | https://polymarket.com/event/will-tuyo-launch-a-token-by
+6. Hibachi会在___之前发行代币吗？ | https://polymarket.com/event/will-hibachi-launch-a-token-by
+7. Betmoar会在___之前推出代币吗？ | https://polymarket.com/event/will-betmoar-launch-a-token-by
+8. Phantom会在___前推出代币吗？ | https://polymarket.com/event/will-phantom-launch-a-token-by
+9. Arc会在___前发放代币吗？ | https://polymarket.com/event/will-arc-launch-a-token-by
+10. Spark会在___前推出代币吗？ | https://polymarket.com/event/will-spark-launch-a-token-by
+11. Base会在___之前启动令牌吗？ | https://polymarket.com/event/will-base-launch-a-token-in-2025-341
+12. Hylo会在___之前推出代币吗？ | https://polymarket.com/event/will-hylo-launch-a-token-by
+13. Prjx会在___之前启动代币吗？ | https://polymarket.com/event/will-prjx-launch-a-token-in-2025
+14. Rabby会在___之前推出代币吗？ | https://polymarket.com/event/will-rabby-launch-a-token-by
+15. Canza会在___前推出代币吗？ | https://polymarket.com/event/will-canza-launch-a-token-by
+16. 滑翔机会在___之前启动代币吗？ | https://polymarket.com/event/will-glider-launch-a-token-by
+17. Opensea会在___之前推出代币吗？ | https://polymarket.com/event/will-opensea-launch-a-token-by-142
+18. Pacifica会在___前推出代币吗？ | https://polymarket.com/event/will-pacifica-launch-a-token-by
+19. Cashmere会在___前推出代币吗？ | https://polymarket.com/event/will-cashmere-launch-a-token-by
+20. 庭院会在___之前推出代币吗？ | https://polymarket.com/event/will-courtyard-launch-a-token-by-20260727145836884
+21. Axiom会在___之前推出代币吗？ | https://polymarket.com/event/will-axiom-launch-a-token-in-2025
+22. Dreamcash会在___前推出代币吗？ | https://polymarket.com/event/will-dreamcash-launch-a-token-by
+23. Soneium会在___之前推出代币吗？ | https://polymarket.com/event/will-soneium-launch-a-token-by
+24. N1会在___之前推出代币吗？ | https://polymarket.com/event/will-n1-launch-a-token-by
+25. 霸王龙会在___前推出代币吗？ | https://polymarket.com/event/will-t-rex-launch-a-token-by
+26. Miracle会在___前推出代币吗？ | https://polymarket.com/event/will-miracle-launch-a-token-by
+27. Axis会在___之前启动代币吗？ | https://polymarket.com/event/will-axis-launch-a-token-by-20260729144519159
+28. Robinhood Chain会在___之前推出代币吗？ | https://polymarket.com/event/will-robinhood-chain-launch-a-token-by-20260727172111377
+29. Beezie会在___之前推出代币吗？ | https://polymarket.com/event/will-beezie-launch-a-token-by-20260727145435056
+30. 怪物会在___前发动代币吗？ | https://polymarket.com/event/will-monster-launch-a-token-by-20260727145113739
+31. Phygitals会在___之前推出代币吗？ | https://polymarket.com/event/will-phygitals-launch-a-token-by-20260727144541111
+32. 土星会在___之前发射代币吗？ | https://polymarket.com/event/will-saturn-launch-a-token-by
+33. Will 3Jane launch a token by ___? | https://polymarket.com/event/will-3jane-launch-a-token-by
+34. Fuse Energy会在___前推出代币吗？ | https://polymarket.com/event/will-fuse-energy-launch-a-token-by
+35. QFEX会在___之前推出代币吗？ | https://polymarket.com/event/will-qfex-launch-a-token-by
+36. Meta会在2026年推出美元稳定币吗？ | https://polymarket.com/event/will-meta-launch-a-usd-stablecoin-in-2026
+37. 特朗普会在12月31日前发行一种加密货币吗？ | https://polymarket.com/event/will-trump-launch-a-coin-by-january-31
+38. X会在2026年发行美元稳定币吗？ | https://polymarket.com/event/will-x-launch-their-own-stablecoin-in-2026
+39. Perena会在___之前发行代币吗？ | https://polymarket.com/event/will-perena-launch-a-token-by
+
+### F2. Additional FDV, TGE, related listing markets not covered by page above
+
+Already listed in earlier sections: StandX, Abstract, Ventuals, Printr, Linera, Neutrl; also target market names via public category indexes:
+Predict.fun, Variational, Extended, Ink, Base, OpenSea, GenLayer, MetaMask, Surf, Puffpaw, MagicBlock, Theo, Hyperbeat, Relay, Probable, QFEX, TownSquare, Apyx, Felix, Linera, Printr, Ventuals, Pacifica, Unit, StripChain, Cambria, Neutrl, Fomo.family, Perena, Tally (market not verified), Polynomial (market not verified), Veera, Ostium, Papertrade, 3Jane, Canza, Exponent, Nansen, Loopscale.
+Category pages: https://polymarket.com/crypto/pre-market/fdv ; https://polymarket.com/crypto/pre-market/token-launch ; https://polymarket.com/predictions/fdv ; https://polymarket.com/predictions/token-launch
+Other market families to check include *listing within N days after TGE*, e.g. https://polymarket.com/event/linera-listed-on-within-30-days-of-tge with an explicit no-token => NO clause; do not miss non-FDV outcome families.
+
+### F3. Cross-venue category listing (recorded scope, incomplete due Load More and access restrictions)
+
+- OPINION https://app.opinion.trade/pre-tge initial page rendered Metamask FDV, StandX FDV, OpenSea FDV, Predict.fun FDV, fomo.family token launch, Nansen token launch, Polymarket FDV, Loopscale token launch, Probable token launch/FDV, Polymarket token launch, Pacifica token launch, Exponent token launch, Puffpaw FDV, Hyperbeat FDV, Perena token launch. **Load more markets** not enumerated, OPINION live L2/API authentication not available. Percentages are midpoint / displayed probabilities and NO fill quantity UNVERIFIED.
+- Limitless https://limitless.exchange/crypto/type page rendered 64 Crypto total category, ~32 Pre-TGE tag (page snapshot old and not a live 2026-11-21 guarantee), initial rows list Theo, Pacifica, Veera FDV, StandX FDV, Puffpaw FDV, Metamask FDV, OpenSea FDV, Ostium TGE. **Loading more markets** remains, current L2 size UNVERIFIED. Earlier spotty cached Limitless 50/50 StandX is NOT a demonstrated executable ask.
+- Predict.fun https://predict.fun/ and explicit https://predict.fun/market/standx-fdv-above-one-day-after-launch and /market/ventuals-fdv-above-one-day-after-launch confirm both groups; logged-out index does not expose verifiable L2 fillable No ASK and depth. Found no authoritative proof of current $100/$500/$1000 fills.
+- Kalshi public historical searches include Ventuals launch legacy series; no matching live confirmed FDV book in this investigation. Absence from search ≠ no market exists. Polymarket US and Myriad have different rules and should not be conflated with international Polymarket.
+- Myriad https://myriad.markets/events/when-will-poly-tge confirmed separate token launch contract family but no verified shutdown-project matched current market.
+
+### F4. Correct screenshot interpretation and migration vs closure
+
+- **Hylo: ACTIVE**, not proven merged/cancelled. As of Nov 20 DefiLlama reports ~$41.03M TVL, ~$394,517 fees/30d and ~$181,552 revenue/30d. https://defillama.com/protocol/hylo ; 2026-10-20 new investment and 2026-11-03 new leverage product. No eligible governance token announced, but absence of token ≠ shutdown.
+- **Axiom: ACTIVE**, not proven closed. Official https://axiom.trade still advertises active multi-chain trading and dated new blog 2026-11-10 https://axiom.trade/blog/token-scanner . Team's historical "no current plans to launch a native token" is not permanent cancellation; 2026/2027 token launch markets remain conditional.
+- **Dreamcash: PARTIAL PRODUCT SUNSET**. HIP-3 CASH perp markets closed June/July; non-custodial trading app continues, not evidence of full issuer shutdown.
+- **Beezie: CHAIN MIGRATION**. 2026-10-16 official https://beezie.com/blog/beezie-is-making-solana-its-home states ending Base operation, moving to Solana, not token cancellation.
+- **Jumper: corporate spin-off**, still active and marketed JUMP public sale, not a canceled project. https://li.fi/knowledge-hub/li.fi-update-august-2026 .
+- **Cashmere: ACTIVE** latest 2026-11-20 Terms; 2026-10 docs mention planned $CSM, exclude.
+- **Perena: ACTIVE** with DefiLlama TVL November 2026; exclude.
+- **QFEX: ACTIVE market data November 2026; exclude shutdown assumption.
+- **Felix: PARTIAL product shutdown**, HIP-3 only, cannot infer all token plans.
+- **Neutrl: LIQUIDITY/RESERVE INCIDENT**, issuance/redemption incident does not by itself prove cancellation of qualifying governance token.
+- **Apyx: TOKEN DELAY**, official still developing; not eligible.
+- **Printr: OFFICIAL PROJECT SHUTDOWN & TOKEN CANCELLED**, Aug 2026; stronger evidence than merely no news.
+- **Linera: OFFICIAL SHUTDOWN / POSSIBLE REBOOT**, https://linera.io/ says ceased operations but team hopes to resume.
+- **StandX / Ventuals / Abstract** official cancellation or sunset; corresponding rule/date separately checked above.
+
+### F5. Oracle precedent and rule adjudication
+
+- Polymarket's official rules: https://help.polymarket.com/en/articles/13364518-how-are-prediction-markets-resolved ; proposal needs bond; unsuccessful/too-early proposal can lose $750 bond. Disputes: https://help.polymarket.com/en/articles/13364551-how-are-markets-disputed ; the oracle can rule **Too Early**, **Unknown/50-50**, or a valid Yes/No. The presence of a formal explicit **'no qualifying token by deadline => No'** term is materially different from a general canceled-event contract.
+- Real concluded FDV threshold markets available for studying the mechanics: https://polymarket.com/event/paradex-fdv-above-one-day-after-launch/paradex-fdv-above-1pt5b-one-day-after-launch-362-245-215-336-786-573-581-399-713 (Final outcome NO), https://polymarket.com/event/zama-fdv-above-one-day-after-launch (some Final outcome YES), https://polymarket.com/event/octra-fdv-above-one-day-after-launch (some Final NO). These prove threshold No/Yes outcomes are possible, **not a confirmed precedent of early No on a cancelled issuer more than 1y before deadline**.
+- Distinguish cancellation, renamed governance token, moved token issuer, stablecoin/memecoin exclusions, delayed TGE and time-zone dependent observation. If the exact original wording says 'by Dec 31' and the TGE is before that date, a revived project can still turn a confident No into zero.
+- Practical payoff: with verified executable weighted No price `p`, binary gross ROI `1/p-1`; share count `budget/VWAP` only if the orderbook shows sufficient size. Historical volume or index-level platform liquidity does not establish capacity. $100/$500/$1000 actual buying capacity is **UNVERIFIED for every candidate** due missing token IDs / CLOB depth via current access. Do NOT invent numbers.
+- Do not promote 50/50 placeholder prices, stale index percentages, bid/midpoint prices or reward-farmed high notional volume to executable arbitrage.
+
+### F6. Next actionable checks **remain incomplete**
+
+For each of Printr, Linera, StandX, Ventuals, Abstract, fetch fresh market token IDs and raw CLOB No asks from the platform; evaluate all strikes/dates, cumulative size, $100/$500/$1000 weighted price and fees. Project official no-token statements strongly support expiry No but do not guarantee early resolution. Trade state WATCH / NO_GO unless specific executable price+size and account jurisdiction/settlement venue restrictions are verified.
+
+Audit: correction only, no production monitor, scheduled automation, real wallet/venue order or position change.
