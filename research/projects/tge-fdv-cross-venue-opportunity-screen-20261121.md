@@ -225,3 +225,31 @@ Other market families to check include *listing within N days after TGE*, e.g. h
 For each of Printr, Linera, StandX, Ventuals, Abstract, fetch fresh market token IDs and raw CLOB No asks from the platform; evaluate all strikes/dates, cumulative size, $100/$500/$1000 weighted price and fees. Project official no-token statements strongly support expiry No but do not guarantee early resolution. Trade state WATCH / NO_GO unless specific executable price+size and account jurisdiction/settlement venue restrictions are verified.
 
 Audit: correction only, no production monitor, scheduled automation, real wallet/venue order or position change.
+
+## G. Direct official API execution attempt and reproducible one-shot scanner (2026-11-21)
+
+### Work actually executed
+
+- Verified official API specifications for Polymarket Gamma /events offset pagination (max limit 500) and CLOB /book, Kalshi open /markets cursor pagination, Myriad public /markets page pagination, Predict.fun /v1/markets and /markets/{id}/orderbook (mainnet API key required), OPINION /openapi/market and /token/orderbook (API key required), and Limitless /markets/active /markets/{slug}/orderbook (public read in SDK docs but latest academy documentation may require API signed requests).
+- Created a **one-shot, read-only** source file and offline tests on the existing research branch:
+  - `research/tools/crypto_tge_fdv_scan.py` at Git commit `9b94631e2f8a0c6c0ad1b7f0c4128d3a583af2a4`
+  - `research/tools/test_crypto_tge_fdv_scan.py` at Git commit `ed4a65459b93ec9db9310d08411a98ba00d7084d`
+- Local test run: `python -m unittest -v test_crypto_tge_fdv_scan.py` => **7 tests passed**; verified calculations for share-based No asks, VWAP/slippage/no-depth guards and Gamma parsing with synthetic data. This is an **offline unit test**, not live provider acceptance.
+- Executed once against official internet hosts using `python crypto_tge_fdv_scan.py --out current_attempt --timeout 2 --max-pages 1 --max-books 10`. Exit code **2 (INCOMPLETE)**, exactly:
+  - Polymarket Gamma: DNS/network resolution failure, pages read 0.
+  - Kalshi: DNS/network resolution failure, pages read 0.
+  - Myriad: DNS/network resolution failure, pages read 0.
+  - Limitless: DNS/network resolution failure, pages read 0.
+  - Predict.fun: `PREDICT_API_KEY` not connected, pages read 0.
+  - OPINION: `OPINION_API_KEY` not connected, pages read 0.
+  - Total relevant contracts from THIS LIVE API RUN: 0 **due to provider unavailability**, not zero actual markets. Executable orderbooks: 0. Not an all-venue scan.
+- Browser source from user's connected Polymarket tab separately yielded 39 unique visible Token Launch event slugs in Section F. These are not direct API results and were not converted into false live market coverage.
+- No requests for wallet balances, private user positions or authenticated trade execution; no orders, no production runtime changes, no scheduled jobs.
+
+### Current completion gate
+
+**MARKET_UNIVERSE_INCOMPLETE / NO_LIVE_BOOK_CAPACITY / RESEARCH_ONLY.**
+
+No full-coverage verified market list has been obtained. The official API scanner is now available in Git with test evidence but it is not a substitute for successfully executing an actual network scan. It prints per-venue coverage/errors and writes `audit.json`, `markets.csv`, `coverage.json`; a failure or missing credential stays explicit and never turns into a claim of no markets.
+
+The first-pass claim of a comprehensive all-platform review remains **withdrawn**. Verified issuer-status shortlist remains Printr / StandX / Ventuals / Abstract / Linera subject to exact venue contract deadlines, terms, and executable No ask liquidity; no candidate is authorized for trade from these results.
