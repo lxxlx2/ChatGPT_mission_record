@@ -1,26 +1,26 @@
 # Current TGE monitor state
-- last_run: 2026-11-21T02:56:14+07:00
-- schedule: Asia/Bangkok HH:00 hourly (unchanged; this invocation occurred at 23:59)
-- latest_final: airdrop-tge-monitor/runs/2026-11-21/025614-final.md
+- last_run: 2026-11-21T04:04:04+07:00
+- schedule: Asia/Bangkok HH:00 hourly (unchanged)
+- latest_final: airdrop-tge-monitor/runs/2026-11-21/040404-final.md
 - run_status: PARTIAL_ONLY
-- scheduled_shard: 2
-- executed_shard: 2
+- scheduled_shard: 0
+- executed_shard: 0
 - candidate_count: 0 new qualifying ACTION
 - action_gate_pass: 0
 - triggered_events: 0
 - gmail_sent: false
 - app_notification: false
 - code_gate: CODE_NOT_EXECUTED
-- source_attempted_slots: urgent 5/5; shard2 10/10 (batched discovery only; no full source coverage)
-- event_bound_new_rights_verified: 0/13
-- current_rights_complete: 0/13
-- source_failures: current-rights SOURCE_GAP for majority; see latest final
+- source_attempted_slots: urgent 5/5; shard0 10/10 (batched discovery only; no full original-source coverage)
+- event_bound_new_rights_verified: 0/15
+- current_rights_complete: 0/15
+- source_failures: current-rights SOURCE_GAP for majority; see 040404-final.md
 - identity_failures: 0 proven
 - browser_session: BROWSER_SESSION_UNAVAILABLE
 - last_verified_complete_at: 2026-10-10T07:52:16+07:00 (unchanged)
 
 ## Last meaningful attempts
-- shard0: 2026-11-20 20:00:00 Asia/Bangkok (PARTIAL_ONLY)
+- shard0: 2026-11-21 04:04:04 Asia/Bangkok (PARTIAL_ONLY)
 - shard1: 2026-11-21 01:04:32 Asia/Bangkok (PARTIAL_ONLY)
 - shard2: 2026-11-21 02:56:14 Asia/Bangkok (PARTIAL_ONLY)
 - shard3: 2026-11-20 23:59:33 Asia/Bangkok (PARTIAL_ONLY)
