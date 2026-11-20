@@ -1,24 +1,24 @@
 # Current TGE monitor state
-- last_run: 2026-11-20T11:56:29+07:00
+- last_run: 2026-11-20T13:04:17+07:00
 - schedule: Asia/Bangkok HH:00 hourly
-- latest_final: airdrop-tge-monitor/runs/2026-11-20/115629-final.md
+- latest_final: airdrop-tge-monitor/runs/2026-11-20/130417-final.md
 - run_status: PARTIAL_ONLY
-- scheduled_shard: 3
-- executed_shard: 3
-- candidate_count: 0 verified new ACTION
+- scheduled_shard: 1
+- executed_shard: 1
+- candidate_count: 1 VERIFYING (StandX old unresolved DUSD claim)
 - action_gate_pass: 0
 - triggered_events: 0
 - gmail_sent: false
 - app_notification: false
 - code_gate: CODE_NOT_EXECUTED
-- source_coverage: urgent 0/5 event-bound original receipts; shard3 0/9
-- source_failures: 11 unresolved unique project event-bound source gaps (urgent/shard overlap)
+- source_coverage: urgent 0/5 event-bound original current rights receipts; shard1 0/9
+- source_failures: 11 unresolved unique project rights source gaps (urgent/shard overlap)
 - identity_failures: 0 proven
 - last_verified_complete_at: 2026-10-10T07:52:16+07:00 (unchanged)
 
 ## Last meaningful attempts
 - shard0: 2026-11-20 04:00:06 Asia/Bangkok (PARTIAL_ONLY)
-- shard1: 2026-11-20 09:56:47 Asia/Bangkok (PARTIAL_ONLY)
+- shard1: 2026-11-20 13:04:17 Asia/Bangkok (PARTIAL_ONLY)
 - shard2: 2026-11-20 10:56:02 Asia/Bangkok (PARTIAL_ONLY)
 - shard3: 2026-11-20 11:56:29 Asia/Bangkok (PARTIAL_ONLY)
 
