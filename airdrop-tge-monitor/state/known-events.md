@@ -279,3 +279,27 @@ Hard scope rule: do not create a new monitor/task/file for a user-specific futur
 - separate_fact_families: earlier Aug24 tokenomics/allocation announcement 1a034f0f1a9a3f8a; launch pool mechanics/preflight 1a0344cdbb8d9b89, may overlap in timing but are distinct stage details, do not automatically label them identical.
 - no_new_email: historical reminder already expired; no fresh actionable state. Future email gate must include event family and material version comparison before any new dispatch, never allow repetition solely because another official account repeats a schedule.
 - past_sent_bodies: immutable Gmail evidence; don't delete/alter old messages or pretend duplicates were never sent.
+
+### Galxe / Gravity legacy Quest shutdown and campaign reward claim cutoff — 2026-11-09
+- project_id: galxe (legacy user-facing quest platform, specifically authorized to dynamic urgent lifecycle 2026-11-20; fixed urgent5 and four shards unchanged)
+- event_key: galxe:legacy-quest-sunset:2026-11-09
+- family_key: galxe:legacy-quest-sunset
+- material_version: galxe-official-2026-11-09-deadlines-dec05-dec15
+- canonical_issuer: Galxe / @Galxe / galxe.com; Gravity/G continues
+- official_first_party: https://help.galxe.com/en/articles/18361711-galxe-is-integrating-into-gravity-what-you-need-to-know
+- official_original_x: https://x.com/Galxe/status/2119681030609105175
+- original_announced: 2026-11-09
+- last_campaign_participation: 2026-12-05 (issuer-confirmed calendar day; precise hour not stated)
+- last_earned_campaign_reward_claim: 2026-12-15 (issuer-confirmed calendar day; precise hour not stated)
+- separate_asset_redemption: official Help Center says forthcoming for Smart Balance, unwithdrawn staked G and Gravity Alpha G; public https://app.galxe.com/claim-center displays distinct G-holder/staking/Latch panels, wallet-specific eligibility unverified; no general Dec15 assumption for asset redemption
+- user_account_eligibility: UNKNOWN
+- user_G_allocation_amount: UNKNOWN; third-party screenshot 85.0099298 G is NOT user's entitlement
+- detection: MISSED original Nov9 announcement by existing Crypto Daily and TGE; first verified manual catch-up 2026-11-20
+- alert_delivery: DELIVERED_MANUAL_CATCHUP (one conditional rights-preservation email, no duplicated future alert without material delta)
+- gmail_sent_id: 1a1f9a770fcb1c29
+- gmail_recipient: lxx.run688@gmail.com
+- mail_sent_verified: SENT + full body readback + recipient verified 2026-11-20
+- git_canonical: airdrop-tge-monitor/reports/events/2026/2026-11/2026-11-20/galxe-platform-sunset-legacy-rewards.md
+- canonical_blob_sha: 87c842a94e1e6761f6abf2422eb10316a4807d81
+- future_alert: only issuer-confirmed NEW separate asset claim route or deadline, material public rights change or verified account-specific entitlement; do not re-send unchanged Dec5/Dec15
+- do_not_confuse: Gravity L1/G token remain running; platform Quest/ID/Passport services wind down; no private key needed
