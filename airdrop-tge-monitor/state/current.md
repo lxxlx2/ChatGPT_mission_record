@@ -1,26 +1,26 @@
 # Current TGE monitor state
-- last_run: 2026-11-20T20:00:00+07:00
+- last_run: 2026-11-20T21:02:55+07:00
 - schedule: Asia/Bangkok HH:00 hourly
-- latest_final: airdrop-tge-monitor/runs/2026-11-20/200000-final.md
+- latest_final: airdrop-tge-monitor/runs/2026-11-20/210255-final.md
 - run_status: PARTIAL_ONLY
-- scheduled_shard: 0
-- executed_shard: 0
-- candidate_count: 0 verified new ACTION; StandX DUSD remains VERIFYING
+- scheduled_shard: 1
+- executed_shard: 1
+- candidate_count: 0 verified new ACTION
 - action_gate_pass: 0
 - triggered_events: 0
 - gmail_sent: false
 - app_notification: false
 - code_gate: CODE_NOT_EXECUTED
-- source_coverage: urgent 0/5 event-bound current rights complete; shard0 0/10
-- source_attempted_slots: urgent 5/5, shard0 10/10 (bounded public search, PARTIAL_ONLY)
-- source_failures: unresolved current issuer rights sources across urgent and shard0; no full-coverage proof
+- source_coverage: urgent 0/5 event-bound current rights complete; shard1 0/9
+- source_attempted_slots: urgent 5/5; shard1 9/9 (bounded public English search, PARTIAL_ONLY)
+- source_failures: 14 unresolved current issuer-rights receipts
 - identity_failures: 0 proven
 - browser_session: BROWSER_SESSION_UNAVAILABLE
 - last_verified_complete_at: 2026-10-10T07:52:16+07:00 (unchanged)
 
 ## Last meaningful attempts
 - shard0: 2026-11-20 20:00:00 Asia/Bangkok (PARTIAL_ONLY)
-- shard1: 2026-11-20 13:58:26 Asia/Bangkok (PARTIAL_ONLY)
+- shard1: 2026-11-20 21:02:55 Asia/Bangkok (PARTIAL_ONLY)
 - shard2: 2026-11-20 10:56:02 Asia/Bangkok (PARTIAL_ONLY)
 - shard3: 2026-11-20 19:01:34 Asia/Bangkok (PARTIAL_ONLY)
 
