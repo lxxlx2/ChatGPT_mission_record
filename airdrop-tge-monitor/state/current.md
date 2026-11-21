@@ -89,3 +89,11 @@ The earlier historical run's unresolved right snapshots below were recorded befo
 - candidate_count: 1 (ByteDance secondary buyback report, Tier C, rejected); action_count: 0; gmail_attempted: false; app_notification: false
 - source_identity_failure: Thalassa Robotics issuer primary inaccessible, 1 source gap; Thalassa Holdings collision rejected; investor-rights gaps 7/7; code_gate: CODE_NOT_EXECUTED
 - last_meaningful_attempt_at_shard3: 2026-11-21T15:00:41+07:00; last_verified_complete_at: unchanged
+
+## Hourly execution 2026-11-21 16:01:50 Asia/Bangkok
+- schedule: HOURLY HH:00; scheduled_shard: 0; executed_shard: 0; registry_active: 28; fixed_urgent: 0
+- run_path: airdrop-tge-monitor/runs/2026-11-21/160150-final.md
+- run_status: PARTIAL_ONLY; attempted: 8/8; direct_current_original_readback: 6/8; full_user_rights_verified: 0/8
+- candidate_count: 0; action_count: 0; gmail_attempted: false; app_notification: false
+- source_gaps: 2 (Block Stranding current announcement unreadable; Rho user account/migration inaccessible); identity_failures: 0; code_gate: CODE_NOT_EXECUTED
+- last_meaningful_attempt_at_shard0: 2026-11-21T16:01:50+07:00; last_verified_complete_at: 2026-10-10T07:52:16+07:00 unchanged
