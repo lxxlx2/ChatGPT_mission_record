@@ -2,13 +2,13 @@
 
 Active schedule remains hourly HH:00 Asia/Bangkok with original hour % 4 shard rotation. **2026-11-21 user-scope override: the former five fixed urgent projects are ALL REMOVED, including every active shard entry.** Earlier claim-only classifications are historical and superseded by the user's confirmed zero remaining actionable rights or ineligibility; no automatic return to active scope.
 
-Updated: 2026-11-21, user-confirmed rights cleanup and permanent Urgent-five retirement.
+Updated: 2026-11-21, user-confirmed rights cleanup, fixed Urgent-five retirement and Neutrl reserve-impairment exclusion.
 
 Grass 与 Backpack 明确排除。
 
 ## Dynamic urgent queue, NOT a fixed five-project whitelist
 
-The old permanent Concrete, MetaMask, Claynosaurz, HEEBOO and Space urgent checks are **retired and removed from active scope**, including all shard entries. They are excluded from current discovery and user notifications by explicit request, regardless of issuer news; only the user can explicitly reactivate a personally relevant entitlement. Do not automatically re-add them on a generic new TGE or campaign.
+The old permanent Concrete, MetaMask, Claynosaurz, HEEBOO and Space urgent checks are **retired and removed from active scope**, including all shard entries; Neutrl is also removed from active Shard1 by user instruction. They are excluded from current discovery and user notifications by explicit request, regardless of issuer news; only the user can explicitly reactivate a personally relevant entitlement. Do not automatically re-add them on a generic new TGE or campaign.
 
 Urgent may be **zero** on any run. For the remaining registered projects, promote an item only if there is a currently actionable user entitlement or at-risk deposit plus credible official deadline within 7 days, new claim/withdrawal/KYC requirement, deadline change or urgent loss-of-funds event. Check issuer source and user's eligibility before making a user-specific claim; unknown entitlement is UNKNOWN, not an invented allocation. Already-notified, claimed, ineligible, refunded or user-closed items cannot be auto-promoted. Galxe previously authorized platform-sunset exception remains separate, and must pass event freshness/dedupe rules. Shard cadence, task ID, recipient and original EMAIL-ONLY policy are unchanged.
 
@@ -29,7 +29,6 @@ Urgent may be **zero** on any run. For the remaining registered projects, promot
 - Reflect / @reflectmoney — **INDEPENDENT_ACTIVE, RECOVERY_RIGHTS_ONLY**; USDC+ / Drift-related recovery changes; no verified Reflect governance TGE
 - Tydro / @tydrohq
 - Theo / @Theo_Network
-- Neutrl / @neutrl_labs
 
 ## Shard 2
 - Relay / @RelayProtocol
@@ -65,7 +64,7 @@ Asia/Bangkok hour modulo 4:
 
 The user confirms there are no remaining actionable entitlements in **Concrete, MetaMask, Claynosaurz, HEEBOO, Space, StandX and Cambria**, because the old items were already claimed or the user was ineligible. Specific items' claimed-versus-ineligible breakdown and individual transaction hashes are not independently verified. Status is `USER_SUPPRESSED_NO_REMAINING_ACTION`, not a fabricated chain payout. All seven are absent from active shards and all urgent queues. Historical emails and evidence remain for audit. Only an explicit new instruction from the user can reactivate any of them.
 
-**Active fixed Shards after cleanup: 8 / 7 / 7 / 7 = 29 entries. Fixed Urgent set: 0.** Dynamically urgent eligible projects can be zero and must be selected by a real actionable rights event.
+**Active fixed Shards after cleanup: 8 / 6 / 7 / 7 = 28 entries. Fixed Urgent set: 0.** Dynamically urgent eligible projects can be zero and must be selected by a real actionable rights event.
 
 ## 2026-11-21 historical issuer lifecycle reconciliation (NOT active monitoring authorization)
 
@@ -80,7 +79,7 @@ This is a correction of *existing* monitored projects, not an addition to scope,
 | StandX (@StandX_Official) | Original StandX token TGE cancelled 2026-10-15 and prior DUSD/compensation notices archived | **USER_SUPPRESSED_NO_REMAINING_ACTION**; no DUSD or partner-rights polling, no future alerts absent fresh explicit user consent. |
 | Cambria (@playcambria) | RSGP TGE completed 2026-10-29; prior claim and cross-chain reports archived | **USER_SUPPRESSED_NO_REMAINING_ACTION**; remove active RSGP/old-stake polling and alerts unless user specifically reopens. |
 
-**Scope guard:** all five prior permanent urgent entries were removed by explicit user request. After user-closed rights exclusions, Shard 0/1/2/3 have 8/7/7/7 active entries. No new task, alert or monitoring category.
+**Scope guard:** all five prior permanent urgent entries were removed by explicit user request. After user-closed rights exclusions, Shard 0/1/2/3 have 8/6/7/7 active entries. No new task, alert or monitoring category.
 
 ## Identity
 
@@ -129,6 +128,8 @@ Do not require a public project announcement to recognize a direct platform enti
 - first_party_governance: https://forums.orca.so/t/tokenholder-proposal-resourcing-orca-for-its-next-phase/1281
 
 ## Closed / excluded deals
+
+- **Neutrl / @neutrl_labs / @Neutrl — USER_SUPPRESSED, RESERVES_IMPAIRED / OPERATIONS_PAUSED / RECOVERY_REDEMPTION**, 2026-11-21: user explicitly asks to remove Neutrl from active TGE scanning. Original issuer announced protocol reserve/liquidity impairment and paused core functions in Aug 2026, and **explicitly denied a smart-contract hack** (official account https://x.com/Neutrl/status/2093390526582010348 ; announcements https://t.me/s/NeutrlOfficial). Partial-value redemption of NUSD/sNUSD opened Sep17 (https://x.com/Neutrl/status/2100614848241414280) and issuer said Nov16 it extended deadline to **2026-12-13 23:59 UTC** (official @neutrl_labs statement, original X URL not independently obtained). Nexus Mutual documented an approximately **51% redemption rate and 49% shortfall**, https://docs.nexusmutual.io/overview/claims-history/neutrl-2026/ . Therefore **DO NOT** record that all holders were fully repaid, that money was onchain stolen or that token TGE was officially cancelled; those are unverified. Latest token launch plan: UNKNOWN / TGE_NOT_CONFIRMED. Exclude from Shard1, dynamic urgent, points/TGE/claim notifications by user's explicit request; retain history for audit. Other users' redemption option is outside this user's authorized active watch.
 
 - **User-suppressed closed/ineligible 2026-11-21:** Concrete (CT), MetaMask, Claynosaurz / Clay Shares, HEEBOO, Space (@intodotspace / SPC), StandX and Cambria (RSGP / Duel Arena). User reports old rights already claimed or ineligible, and wants no monitoring of any of these; exact per-project disposition is NOT chain-verified. Removed from both active shards and every urgent route. Do not poll or notify, even on generic new official announcements; historical event records remain. Reactivation requires user's explicit new request.
 
