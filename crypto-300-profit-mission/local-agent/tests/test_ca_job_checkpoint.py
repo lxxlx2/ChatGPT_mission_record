@@ -165,6 +165,33 @@ def test_changed_read_sequence_remains_fail_closed_even_if_a_caller_catches_the_
     second.close()
 
 
+def test_checkpoint_replays_early_stop_before_recorded_cutoff_block_read(tmp_path):
+    from mission_agent.meme.transaction_batch import OPTIONS
+
+    create_checkpoint(tmp_path)
+    first = JobCheckpoint(tmp_path, JOB)
+    first.begin('fixture-binding')
+    slot_args = [90, cluster.CA_BLOCK_SIGNATURE_OPTIONS]
+    first.invoke('rpc', 'getTransaction', [['first', OPTIONS]], {'ttl': 30}, lambda: {'name': 'first'})
+    first.invoke('rpc', 'getBlock', [slot_args], {'ttl': 30}, lambda: {'signatures': ['first']})
+    first.close()
+
+    second = JobCheckpoint(tmp_path, JOB)
+    second.begin('fixture-binding')
+    try:
+        def denied(*args, **kwargs):
+            pytest.fail('RECORDED_CUTOFF_MUST_NOT_CONTACT_TRANSPORT')
+
+        rpc = wrapped(second, denied)
+        rpc.prefetch_transactions(['first', 'speculative'], ttl=30)
+        assert rpc.call('getTransaction', ['first', OPTIONS], ttl=30) == {'name': 'first'}
+        assert rpc.call('getBlock', slot_args, ttl=30) == {'signatures': ['first']}
+        assert second.provenance()['replayed_logical_reads'] == 2
+        rpc.assert_can_publish()
+    finally:
+        second.close()
+
+
 def test_restart_cannot_reset_cumulative_wire_limit(tmp_path):
     budget = {'max_wire_attempts': 2, 'max_elapsed_seconds': 60}
     create_checkpoint(tmp_path, budget=budget)

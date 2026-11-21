@@ -36,6 +36,14 @@ DEFAULT_RPC_FALLBACKS = (
     "https://api.mainnet-beta.solana.com",
     "https://rpc.ankr.com/solana",
 )
+# CA research uses this only to order candidate signatures in the cutoff slot.
+CA_BLOCK_SIGNATURE_OPTIONS = {
+    "commitment": "finalized",
+    "encoding": "json",
+    "transactionDetails": "signatures",
+    "maxSupportedTransactionVersion": 0,
+    "rewards": False,
+}
 SYSTEM_PROGRAM = "11111111111111111111111111111111"
 TOKEN_PROGRAMS = {
     "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
@@ -260,7 +268,7 @@ class RpcCache:
 
 
 class SolanaReadOnlyRPC:
-    ALLOWED={"getTokenSupply","getTokenLargestAccounts","getMultipleAccounts","getAccountInfo","getSignaturesForAddress","getTransaction","getProgramAccounts"}
+    ALLOWED={"getTokenSupply","getTokenLargestAccounts","getMultipleAccounts","getAccountInfo","getSignaturesForAddress","getTransaction","getProgramAccounts","getBlock"}
     RETRYABLE_HTTP={403,429,500,502,503,504}
 
     def __init__(
@@ -408,6 +416,12 @@ class SolanaReadOnlyRPC:
 
     def call(self, method, params, *, ttl=0):
         if method not in self.ALLOWED:raise ValueError("READ_ONLY_METHOD_ALLOWLIST")
+        if method=="getBlock":
+            if (not isinstance(params,list) or len(params)!=2 or type(params[0]) is not int
+                    or not 0<=params[0]<2**64 or not isinstance(params[1],dict)
+                    or params[1]!=CA_BLOCK_SIGNATURE_OPTIONS or params[1]["rewards"] is not False
+                    or type(params[1]["maxSupportedTransactionVersion"]) is not int):
+                raise ValueError("CA_FINALIZED_BLOCK_SIGNATURE_QUERY_INVALID")
         pool_discovery_query=False
         if method=="getProgramAccounts":
             from .pool_discovery import valid_pool_discovery_query

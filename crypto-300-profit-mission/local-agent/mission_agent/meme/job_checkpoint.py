@@ -466,8 +466,10 @@ class CheckpointRPC:
             if index<len(self.checkpoint.entries):
                 expected={'channel':'rpc','operation':'getTransaction','args':[[signature,OPTIONS]],'kwargs':{'ttl':ttl}}
                 if self.checkpoint.entries[index]['request']!=expected:
-                    self.checkpoint.fault='CA_CHECKPOINT_READ_SEQUENCE_CHANGED'
-                    raise CheckpointError(self.checkpoint.fault)
+                    # Scheduling may extend past the actual transaction window
+                    # into a different operation, such as the cutoff block read.
+                    # Only invoked reads are validated against the exact log.
+                    return
             else:remaining.append(signature)
         # Scheduling sends no wire. Each uncaptured read invokes transport from
         # inside the ordinary checkpoint invocation/reservation/error boundary.

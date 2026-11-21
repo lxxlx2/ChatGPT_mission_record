@@ -1,10 +1,11 @@
 """Opening-market evidence from a chain-verified Pump bonding curve."""
 
-from collections import Counter
+from collections import Counter, defaultdict
 from decimal import Decimal
 import hashlib
 
-from .cluster import RPCJobBudgetExceeded
+from .cluster import CA_BLOCK_SIGNATURE_OPTIONS, RPCJobBudgetExceeded
+from .holder_ranks import valid_pubkey
 from .launch_identity import PUMP_PROGRAM
 from .transaction_batch import OPTIONS as TX_OPTIONS
 
@@ -23,6 +24,7 @@ PUMP_ACTIONS = {
         "CREATE": ("create", "create_v2"),
         "BUY": ("buy", "buy_exact_sol_in", "buy_v2", "buy_exact_quote_in_v2"),
         "SELL": ("sell", "sell_v2"),
+        "NON_TRADE": ("migrate_bonding_curve_creator", "distribute_creator_fees_v2"),
     }.items()
     for name in names
 }
@@ -89,6 +91,8 @@ def _action(instruction, names, mint, curve):
 
 def _token_accounts(meta, names, mint):
     owners = {}
+    observed = set()
+    complete_indexes = True
     for k in ("preTokenBalances", "postTokenBalances"):
         balances = meta.get(k)
         if not isinstance(balances, list):
@@ -97,24 +101,86 @@ def _token_accounts(meta, names, mint):
         for row in balances:
             if not isinstance(row, dict):
                 raise OpeningEvidenceError("TRANSACTION_EVIDENCE_INCOMPLETE")
+            index, owner = row.get("accountIndex"), row.get("owner")
+            valid_index = type(index) is int and 0 <= index < len(names)
+            if valid_index:
+                observed.add(names[index])
+            else:
+                complete_indexes = False
             if row.get("mint") != mint:
                 continue
-            index, owner = row.get("accountIndex"), row.get("owner")
-            if (type(index) is not int or not 0 <= index < len(names)
-                    or index in seen or not isinstance(owner, str) or not owner):
+            if not valid_index or index in seen or not isinstance(owner, str) or not owner:
                 raise OpeningEvidenceError("TRANSACTION_EVIDENCE_INCOMPLETE")
             address = names[index]
             if address in owners and owners[address] != owner:
                 raise OpeningEvidenceError("TRANSACTION_EVIDENCE_INCOMPLETE")
             seen.add(index)
             owners[address] = owner
-    return owners
+    return owners, observed if complete_indexes else None
 
 
-def _bound_transfers(instructions, names, token_owners, users, mint, curve, direction):
+def _transient_sell_sources(instructions, grouped, names, mint, observed):
+    """Prove the lifetime of a token account absent from both balance snapshots."""
+    if observed is None:
+        return {}
+    starts = defaultdict(list)
+    closes = defaultdict(list)
+    ambiguous = set()
+    for index, top in enumerate(instructions):
+        for offset, ix in enumerate((top, *grouped.get(index, ()))):
+            if not isinstance(ix, dict):
+                return {}
+            program = _program(ix, names)
+            if program not in TOKEN_PROGRAMS:
+                continue
+            parsed = ix.get("parsed")
+            if not isinstance(parsed, dict):
+                accounts = ix.get("accounts")
+                if not isinstance(accounts, list) or any(not isinstance(a, str) for a in accounts):
+                    return {}
+                ambiguous.update(accounts)
+                continue
+            kind = parsed.get("type")
+            initializes = kind in ("initializeAccount", "initializeAccount2", "initializeAccount3")
+            if not initializes and kind not in ("closeAccount", "setAuthority"):
+                continue
+            info = parsed.get("info")
+            if not isinstance(info, dict):
+                return {}
+            account = info.get("account")
+            if kind == "setAuthority":
+                account = account or info.get("mint")
+                if not isinstance(account, str):
+                    return {}
+                ambiguous.add(account)
+                continue
+            if not isinstance(account, str):
+                return {}
+            if account in observed:
+                continue
+            position = (index, offset)
+            if initializes:
+                starts[account].append((position, program, info.get("owner"), info.get("mint")))
+            else:
+                closes[account].append((position, program, info.get("owner")))
+    sources = {}
+    for account, records in starts.items():
+        ended = closes.get(account, [])
+        if account in ambiguous or account not in names or len(records) != 1 or len(ended) != 1:
+            continue
+        opened, program, owner, initialized_mint = records[0]
+        closed, close_program, close_owner = ended[0]
+        if (initialized_mint == mint and isinstance(owner, str) and owner in names
+                and program == close_program and owner == close_owner and opened < closed):
+            sources[account] = (owner, program, opened, closed)
+    return sources
+
+
+def _bound_transfers(instructions, names, token_owners, users, mint, curve, direction, transient_sources):
     matched = Counter()
-    for ix in instructions:
-        if _program(ix, names) not in TOKEN_PROGRAMS:
+    for position, ix in instructions:
+        program = _program(ix, names)
+        if program not in TOKEN_PROGRAMS:
             continue
         parsed = ix.get("parsed")
         if not isinstance(parsed, dict) or parsed.get("type") not in {"transfer", "transferChecked"}:
@@ -131,6 +197,10 @@ def _bound_transfers(instructions, names, token_owners, users, mint, curve, dire
             owner = dest
         if direction == "SELL" and dest == curve:
             owner = source
+            if owner is None and source_address in transient_sources:
+                seller, token_program, opened, closed = transient_sources[source_address]
+                if token_program == program and opened < position < closed and info.get("authority") == seller:
+                    owner = seller
         if owner not in users:
             continue
         if parsed["type"] == "transferChecked":
@@ -186,7 +256,7 @@ def _opening_actions(tx, row, mint, curve):
         grouped[index] = members
 
     actions = []
-    token_owners = None
+    token_owners = transient_sources = None
     for index, top in enumerate(instructions):
         nested = grouped.get(index, [])
         if any(not isinstance(ix, dict) for ix in [top, *nested]):
@@ -196,14 +266,17 @@ def _opening_actions(tx, row, mint, curve):
             if action == "CREATE":
                 actions.append(("CREATE", None, None))
                 continue
-            if action is None:
+            if action in (None, "NON_TRADE"):
                 continue
             if action == "OTHER":
                 raise OpeningEvidenceError("TRANSACTION_EVIDENCE_INCOMPLETE")
             if token_owners is None:
-                token_owners = _token_accounts(meta, names, mint)
+                token_owners, observed = _token_accounts(meta, names, mint)
+            if action == "SELL" and transient_sources is None:
+                transient_sources = _transient_sell_sources(instructions, grouped, names, mint, observed)
             if offset == 0:
-                children = nested
+                children = [((index, child_offset), child)
+                            for child_offset, child in enumerate(nested, start=1)]
                 # A nested market invocation is not evidence for the parent's own fill.
                 if any(other in {"BUY", "SELL"} for _, other in group_actions[1:]):
                     raise OpeningEvidenceError("TRANSACTION_EVIDENCE_INCOMPLETE")
@@ -212,18 +285,60 @@ def _opening_actions(tx, row, mint, curve):
                 if type(height) is not int or height < 2:
                     raise OpeningEvidenceError("TRANSACTION_EVIDENCE_INCOMPLETE")
                 children = []
-                for child in nested[offset:]:
+                for child_offset, child in enumerate(nested[offset:], start=offset + 1):
                     child_height = child.get("stackHeight")
                     if type(child_height) is not int:
                         raise OpeningEvidenceError("TRANSACTION_EVIDENCE_INCOMPLETE")
                     if child_height <= height:
                         break
                     if child_height == height + 1:
-                        children.append(child)
+                        children.append(((index, child_offset), child))
             users = signers.intersection(ix["accounts"]) - {curve}
-            owner, raw = _bound_transfers(children, names, token_owners, users, mint, curve, action)
+            owner, raw = _bound_transfers(children, names, token_owners, users, mint, curve, action,
+                                          transient_sources or {})
             actions.append((action, owner, raw))
     return actions
+
+
+def _valid_block_signature(value):
+    if not isinstance(value, str) or not 64 <= len(value) <= 88:
+        return False
+    number = 0
+    try:
+        for char in value:
+            number = number * 58 + BASE58.index(char)
+    except ValueError:
+        return False
+    leading_zeros = len(value) - len(value.lstrip("1"))
+    return leading_zeros + (number.bit_length() + 7) // 8 == 64
+
+
+def _finalized_cutoff_order(rpc, slot, curve_signatures):
+    evidence = {"basis": "FINALIZED_BLOCK_SIGNATURE_ORDER", "slot": slot}
+    try:
+        block = rpc.call("getBlock", [slot, CA_BLOCK_SIGNATURE_OPTIONS.copy()], ttl=TX_TTL)
+    except RPCJobBudgetExceeded:
+        raise
+    except Exception:
+        return {**evidence, "status": "SOURCE_UNAVAILABLE"}, {}
+    if block is None:
+        return {**evidence, "status": "SOURCE_UNAVAILABLE"}, {}
+    if not isinstance(block, dict):
+        return {**evidence, "status": "BLOCK_EVIDENCE_INVALID"}, {}
+    signatures, blockhash, parent = block.get("signatures"), block.get("blockhash"), block.get("parentSlot")
+    if (not valid_pubkey(blockhash) or type(parent) is not int or not 0 <= parent < slot
+            or not isinstance(signatures, list) or not signatures
+            or any(not _valid_block_signature(signature) for signature in signatures)
+            or len(set(signatures)) != len(signatures)):
+        return {**evidence, "status": "BLOCK_EVIDENCE_INVALID"}, {}
+    positions = {signature: index for index, signature in enumerate(signatures) if signature in curve_signatures}
+    if len(positions) != len(curve_signatures):
+        return {**evidence, "status": "CURVE_SIGNATURES_MISSING", "blockhash": blockhash,
+                "parent_slot": parent, "matched_signature_count": len(positions),
+                "expected_signature_count": len(curve_signatures)}, {}
+    return {**evidence, "status": "VERIFIED", "blockhash": blockhash, "parent_slot": parent,
+            "curve_signature_positions": [{"signature": signature, "block_index": index}
+                                          for signature, index in positions.items()]}, positions
 
 
 def holding_status(bought_raw, current_raw):
@@ -374,13 +489,45 @@ def collect_launch_flow(mint, rpc, *, launch=None, current_balances=None, supply
     for slot in sorted(slot_counts):
         rank_by_slot[slot] = rank if slot_counts[slot] == 1 else None
         rank += slot_counts[slot]
-    result, tied = [], []
-    for owner, evidence in buy_evidence.items():
+    ranked_cutoff = {}
+    outside_cutoff = set()
+    positions = {}
+    ordered_buyers = list(buy_evidence.items())
+    if tie_overflow and not transaction_errors:
+        cutoff_signatures = {row["signature"] for page in pages for row in page if row["slot"] == cutoff}
+        order_evidence, positions = _finalized_cutoff_order(rpc, cutoff, cutoff_signatures)
+        out["cutoff_order"] = order_evidence
+        if positions:
+            previous = [(owner, evidence) for owner, evidence in ordered_buyers if evidence["slot"] != cutoff]
+            cutoff_buyers = [(owner, evidence) for owner, evidence in ordered_buyers if evidence["slot"] == cutoff]
+            first_indexes = {owner: min(positions[signature] for signature, _, _ in evidence["purchases"])
+                             for owner, evidence in cutoff_buyers}
+            cutoff_buyers.sort(key=lambda item: first_indexes[item[0]])
+            seats = MAX_BUYERS - len(previous)
+            if first_indexes[cutoff_buyers[seats - 1][0]] != first_indexes[cutoff_buyers[seats][0]]:
+                counts = Counter(first_indexes.values())
+                for index, (owner, _) in enumerate(cutoff_buyers, start=len(previous) + 1):
+                    ranked_cutoff[owner] = index if counts[first_indexes[owner]] == 1 else None
+                    if index > MAX_BUYERS:
+                        outside_cutoff.add(owner)
+                ordered_buyers = previous + cutoff_buyers
+                tie_overflow = False
+            else:
+                order_evidence["status"] = "BOUNDARY_WITHIN_ONE_TRANSACTION"
+
+    result, tied, excluded_at_cutoff = [], [], []
+    for owner, evidence in ordered_buyers:
         slot, purchases = evidence["slot"], evidence["purchases"]
-        signature, first_amount, block_time = purchases[0] if len(purchases) == 1 else (None, None, None)
+        if positions and slot == cutoff:
+            purchases = sorted(purchases, key=lambda purchase: positions[purchase[0]])
+        # A finalized transaction index can order multiple buys by the same
+        # wallet. Buys in unresolved slots still have no established first tx.
+        signature, first_amount, block_time = (
+            purchases[0] if len(purchases) == 1 or (positions and slot == cutoff) else (None, None, None))
         current = current_balances.get(owner, 0) if known_balance else None
-        rows = tied if tie_overflow and slot == cutoff else result
-        rows.append({"owner": owner, "rank": rank_by_slot[slot] if not transaction_errors else None,
+        rows = tied if tie_overflow and slot == cutoff else excluded_at_cutoff if owner in outside_cutoff else result
+        buyer_rank = ranked_cutoff.get(owner, rank_by_slot[slot]) if not transaction_errors else None
+        rows.append({"owner": owner, "rank": buyer_rank,
                        "first_signature": signature, "first_signatures": [s for s, _, _ in purchases],
                        "first_slot": slot, "first_block_time": block_time, "buy_count": len(purchases),
                        "bought_raw": None if first_amount is None else str(first_amount),
@@ -397,6 +544,9 @@ def collect_launch_flow(mint, rpc, *, launch=None, current_balances=None, supply
                 dev["early_bought_raw"] = creator_buy["bought_raw"]
                 dev["status"] = creator_buy["status"]
     out["buyers"] = result
+    if excluded_at_cutoff:
+        out["cutoff_slot"] = cutoff
+        out["verified_after_cutoff_buyers"] = excluded_at_cutoff
     if tied:
         out["cutoff_slot"] = cutoff
         out["unranked_cutoff_buyers"] = tied
