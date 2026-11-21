@@ -54,8 +54,6 @@ These are existing user-relevant projects or investments, **not a new watchlist*
 
 ## Shard cadence
 
-## Shard cadence
-
 Asia/Bangkok hour modulo 4:
 - hour % 4 == 0 → Shard 0
 - hour % 4 == 1 → Shard 1
@@ -93,52 +91,17 @@ Asia/Bangkok hour modulo 4:
 | Apptronik | 2026-11-17 official expanded GXO partnership; 2026-02-11 over $935M Series A https://apptronik.com/company/press-releases | Credible IPO/liquidity/valuation or user rights changes, not routine PR |
 | Aalo Atomics | Issuer milestone July4 reactor criticality, updates https://www.aalo.com/news ; no IPO verified | Material financing and public listing/exit/settlement |
 | Republic rTTOK | **Security token already issued**; issuer RepublicX contingent note payoff conditional on ByteDance qualifying IPO/M&A/liquidity or maturity, not ByteDance equity itself: https://republic.com/rttok ; maturity Nov 3, 2035 under offering docs | ByteDance qualified liquidity event, RepublicX real payout, lockup/rights |
-| Remaining original projects | Block Stranding, Perena, TurboFlow, Surf, Hylo, Tydro, Theo, Titan, Reya, 01/N1 via Echo, Pond, OhBabyGames, Thalassa Robotics, Fortytwo, 1X. Their stage/detail is **SOURCE_INCOMPLETE** for this batch, NOT verified no change. | Each item's original issuer/connected investment-host stage must be read in its own shard; no invented date/claim |
+| Block Stranding | Official presale https://presale.blockstranding.com/ and https://presale.blockstranding.com/terms.pdf states STRAND 100% at TGE conditional, but no dated realized launch confirmed | Confirm TGE, wallet claim and first liquid trade |
+| Reya | CoinList original terms https://coinlist.co/reya state 50% at TGE + 6-month linear release, listing remains **TBA** on original page; no payout date assumed | Confirm actual listing, token delivery and vesting |
+| Surf | Issuer blog https://asksurf.ai/blog has Oct15 SurfBoard NFT program, previous claim deadline was handled; independent new eligible token/IPO settlement not confirmed | Fresh genuinely material investor/reward event only; no duplicate SurfBoard |
+| Tydro | Issuer community https://forum.tydro.com/t/tydroinkpoints-season-2-introducing-boost-multipliers/22 documents 2026 Season2 Ink points, not guaranteed Tydro native TGE | Verify source of reward, eligibility and conversion distribution |
+| Other remaining projects | Perena, TurboFlow, Hylo, Theo, Titan, 01 Exchange/N1 via Echo, Pond, OhBabyGames, Thalassa Robotics, Fortytwo, 1X: current exact individual issuer-stage receipts **INCOMPLETE** in this pass, NOT confirmed no update | Each issuer and mapped investment-host stage must be audited in its normal shard, no fabricated events |
 
 **Quality gate:** this is a real official-source checkpoint for the cited examples, NOT a blanket statement that all 28 were fully checked, nor that any user owns the listed assets in a particular quantity. Existing accounts and allocation eligibility remain UNVERIFIED until authenticated original evidence. New information without an actual user-relevant material change stays silent.
 
-## 2026-11-21 HISTORICAL TGE-ONLY ROLLBACK (SUPERSEDED; not active authority)
+## 2026-11-21 abandoned restrictive TGE-only classification (HISTORY)
 
-**User directive and scope:** Watch **when the token TGE happens**. Echo is merely an entry/participation channel used for many existing projects. Do not turn Echo into a separate project, or follow private-stock/IPO/SPV contract/refund events in this TGE task. Only issuer-native **first token generation and listing/first token distribution directly tied to TGE** count. A company equity financing round, existing stable/yield-bearing token, non-token points, old claim window, legacy asset recovery, ordinary app launch or IPO does not by itself count as a new TGE.
-
-**Historical user-known incident rule:** When the user reports an event, supplies a screenshot showing they discovered it or says they already tried a claim, set `USER_AWARE_ASSUMED_HANDLED` for active notification/discovery scope, without claiming cryptographically verified successful claim. At most send a corrected missed notice if previously required and not already SENT, without adding the project/asset to Urgent, Shard, lifecycle queue, or a new task. Galxe 2026-11-20 qualifies and is **removed from all active scanning**.
-
-**Four active TGE Shards: 7 / 2 / 5 / 1 = 15 unique project candidates. Permanent urgent 0; no active Galxe exception.** An unconfirmed native-token program is only a **speculative existing watch**, not official token issuance or a promised airdrop. Do not assert dates, personal eligibility or points. If a source confirms issuer will not issue a token, exclude and archive on next review, but never create a fresh watch entry without the user's approval.
-
-### Reviewed complete prior 28-entry list, each with a disposition and evidence standard
-
-| Old project | Scope audit at 2026-11-21 | Decision |
-|---|---|---|
-| Block Stranding | Presale terms describe conditional future TGE; no confirmed token-launch date, https://presale.blockstranding.com/terms.pdf | KEEP / PRE_TGE_UNDATED |
-| Base | Official 2025 issuer post explores a potential network token, but **not definitive plans**, https://www.base.org/blog/the-state-of-base-at-basecamp-2025 | KEEP / EXPLORE_UNCONFIRMED |
-| OpenSea | SEA TGE postponed March 2026, not cancelled; no replacement date in available issuer statement, https://x.com/openseafdn | KEEP / TGE_POSTPONED |
-| Polymarket | No official native POLY token, allocation or TGE announced; prior user participation justifies existing speculative watch, official Help Center / https://polymarket.com | KEEP / SPECULATIVE_NO_ANNOUNCEMENT |
-| Perena | USD* yield asset already live; public founder statement in Aug 2026 reported no native token planned in foreseeable future, corroboration https://solanacompass.com/projects/perena ; https://perena.org | REMOVE / NO_PROSPECTIVE_NATIVE_TGE_EVIDENCE |
-| TurboFlow | Points and prospective token speculation, no verified issuer TGE date, https://tf.xyz | KEEP / TOKEN_UNCONFIRMED |
-| Makina | Official multi-season point program; Machine Tokens are strategy vouchers, **not Makina governance TGE**, https://makina.finance/points ; https://makina.finance | KEEP / TOKEN_UNCONFIRMED (do not treat Machine Tokens as platform TGE) |
-| Rho Labs | Old Rho Protocol shutdown/migration to Rho X, old points carried over; issuer promises future point redemption for RHO tokens subject to eligibility, https://app.rho.trading/ ; https://rho.trading/blog/pre-season-points-campaign | KEEP AS Rho X / RHO_TGE_PENDING_UNDATED |
-| Surf | Surf is AI intelligence/research product with Surfboard NFT program; no authentic native-token TGE plan found, https://asksurf.ai/ | REMOVE / NO_VALID_TGE_PATH |
-| Hylo | hyUSD/eHYUSD/yield tokens already live, separate governance native token not announced; XP points program exists, https://hylo.so | KEEP / SPECULATIVE_NATIVE_TOKEN_UNCONFIRMED (do not equate xSOL/hyUSD TGE) |
-| OnRe | ONyc yield-bearing insurance exposure token already circulating, not future governance token; issuer https://docs.onre.finance/introduction/onre-tokenized-reinsurance-onyc | REMOVE / EXISTING_PRODUCT_TOKEN_ONLY |
-| Reflect | Reflect yield and USDC+ recovery are old product/incident rights, no official distinct governance TGE evidenced, https://reflect.money/ | REMOVE / RECOVERY_NOT_TGE |
-| Tydro | Official Ink Aave-compatible lending; earns **Ink points** related to **Ink Foundation** token, no separate Tydro token announcement, https://app.tydro.com/markets/ | REMOVE / DIFFERENT_ISSUER_POINTS |
-| Theo Network | thBILL/thUSD existing RWA products, separate prospective governance TGE unconfirmed, https://theo.xyz ; **NOT Autheo THEO** already trading Aug 2026 | KEEP / TOKEN_UNCONFIRMED |
-| Relay | Issuer's own token FAQ says no official Relay token, no credible fresh native TGE, https://support.relay.link/en/articles/9261056-when-will-you-have-a-token | REMOVE / NO_NATIVE_TGE_PLAN |
-| Titan Exchange | Solana exchange/router active; no confirmed TGE date/token program in current issuer site, https://titan.exchange ; https://about.titan.exchange | KEEP / SPECULATIVE_ONLY |
-| Reya | Prior token sale investment and pending launch/distribution, specific TGE date/claim must be rechecked against official issuer and CoinList; no date assumed, https://reya.xyz | KEEP / INVESTOR_TGE_UNCONFIRMED |
-| 01 Exchange / N1 | N1 acquired 01 and sunset old app July 2026, https://www.nullstudios.com/blog/n1-01 ; user has NO 01/N1 points and previously made an Echo investment into 01. | KEEP ONE PROJECT as **01 Exchange (acquired by N1)** / FIRST_RELEVANT_TOKEN_TGE_ONLY, no Echo deal-term/IPO/refund activity or points claims |
-| Figure AI | Robotics company, conventional preferred/common shares, firm warns unauthorized secondary stock transfers, https://www.figure.ai/news/notice-regarding-unauthorized-attempts-to-sell-figure-stock | REMOVE / PRIVATE_EQUITY_NOT_TGE |
-| Pond (JoinPond) | AI marketplace/bounty business, platform supports external creators' third-party tokens; *own Pond governance TGE not verified*; https://joinpond.ai/blog | KEEP / SPECULATIVE_ONLY due user prior points participation; no invented token |
-| OhBabyGames | Active game platform; press has token speculation, issuer has no verified TGE date, https://www.ohbabygames.com/news | KEEP / SPECULATIVE_ONLY |
-| Crusoe | Corporate AI/cloud infrastructure venture funding, no issuer native crypto token path shown, https://www.crusoe.ai/resources/newsroom/crusoe-announces-series-f-funding | REMOVE / CORPORATE_EQUITY_NOT_TGE |
-| Apptronik | Robotics hardware company raising Series A financing, no native TGE, https://apptronik.com/company/press-releases | REMOVE / CORPORATE_EQUITY_NOT_TGE |
-| Thalassa Robotics | Underwater robotics company, not unrelated 'Thalassa Coin'; https://www.thalassainc.com ; https://f.inc/portfolio/thalassa-robotics/ | REMOVE / WRONG_TOKEN_IDENTITY |
-| Fortytwo | Distributed AI project token/TGE schedule unverified; distinguish platform points/product from token issuance, https://fortytwo.network | KEEP / SPECULATIVE_ONLY |
-| 1X Technologies | Robotics manufacturer, NEO product preorder, no own crypto TGE, https://www.1x.tech/discover/neo-home-robot | REMOVE / CORPORATE_EQUITY_NOT_TGE |
-| Aalo Atomics | Nuclear reactor startup, no native crypto TGE, https://www.aalo.com | REMOVE / CORPORATE_EQUITY_NOT_TGE |
-| rTTOK / RepublicX | Existing tokenized ByteDance-linked structured note already sold in 2025; issuer describes payout tied to stock IPO/liquidity and note maturity, not a new platform token TGE, https://republic.com/rttok | REMOVE / ALREADY_ISSUED_SECURITY_TOKEN_NOT_PROSPECTIVE_TGE |
-
-**Proof categories:** `CONFIRMED` only for facts stated by the original issuer/exchange or chain; `SPECULATIVE_ONLY` means no issuer-confirmed TGE and should not produce launch date claims or emails; `REMOVED` means no more hourly polling for that project. Old historical notification receipts are immutable. The 15 retained candidates do **not** claim 15 issuer-approved TGE launches.
+Earlier on 2026-11-21, a mistaken project-type filter cut the list to 15. This was **REVERSED** after the user clarified that existing Echo/private-equity/RepublicX investments, financial liquidity events, token initial distributions and expected proceeds all belong in the same existing monitor. The false 15-entry disposition table is available in the historical Git commit `2fed24b3393ca3dec87c32bf49969ff83c026fe9`, and is not reproduced as an actionable registry. No issuer or investment is excluded merely because it is not a crypto token.
 
 ## 2026-11-21 historical user-rights cleanup (SUPERSEDED FOR ACTIVE TGE SCOPE)
 
