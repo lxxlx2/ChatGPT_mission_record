@@ -105,3 +105,10 @@ The earlier historical run's unresolved right snapshots below were recorded befo
 - candidate_count: 0; action_count: 0; gmail_attempted: false; app_notification: false
 - source_gaps: 2 primary (Hylo, Theo); Tydro after Nov18 not verified; identity_conflicts: 1 excluded Autheo/THEO collision; code_gate: CODE_NOT_EXECUTED
 - last_meaningful_attempt_at_shard1: 2026-11-21T16:59:53+07:00; last_verified_complete_at unchanged
+
+## Actual run 2026-11-21 17:57:26 Asia/Bangkok
+- run_path: airdrop-tge-monitor/runs/2026-11-21/175726-final.md
+- run_status: PARTIAL_ONLY; schedule: HH:00 Asia/Bangkok; scheduled_shard: 1; executed_shard: 1
+- active_registry: 28; shard_denominator: 6; checked_public_no_update: 3; issuer_source_gaps: 3; additional_authenticated_rights_gap: 1
+- candidate_count: 0; action_count: 0; gmail_sent: false; app_notification: false; code_gate: CODE_NOT_EXECUTED
+- last_meaningful_attempt_shard1: 2026-11-21T17:57:26+07:00; last_verified_complete_at: unchanged
