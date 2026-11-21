@@ -56,3 +56,11 @@ The earlier historical run's unresolved right snapshots below were recorded befo
 - Galxe Nov9 sunset + Dec5/Dec15 campaign deadlines already emailed; separate G/Smart Balance/staking asset recovery process NOT YET ANNOUNCED in Nov9 issuer Help Center; claim-center authenticated eligibility SOURCE_GAP
 - Exclusions: Forecast, Abstract, Grass, Backpack, Loopscale, humans&, UNICRED; plus Concrete, MetaMask, Claynosaurz, HEEBOO, Space, StandX, Cambria, Neutrl USER_SUPPRESSED
 - Space/Spacecoin and Theo/Autheo collision guard
+
+## Latest actual run 2026-11-21 11:59:56 Asia/Bangkok
+- run_path: airdrop-tge-monitor/runs/2026-11-21/115956-final.md
+- run_status: PARTIAL_ONLY; schedule: HH:00; scheduled_shard: 3; executed_shard: 3
+- active_projects: 28; shard_attempted: 7/7; original_source_readback: 5/7; current_rights_verified: 0/7
+- candidate_count: 0; action_count: 0; gmail_attempted: false; app_notification: false
+- source_failures: 2 (Thalassa, Fortytwo); identity_failures: 0; code_gate: CODE_NOT_EXECUTED
+- previous complete verification date remains 2026-10-10; no full-coverage claim
