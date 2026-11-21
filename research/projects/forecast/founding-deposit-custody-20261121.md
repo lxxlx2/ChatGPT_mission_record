@@ -1,10 +1,24 @@
 # Forecast Founding 100 USDC 存款收款合约、资金控制权和提现可行性核查（2026-11-21）
 
-Status: CHAIN_VERIFIED_DEPOSIT / SAFE_4_OF_5 / NO_PERMISSIONLESS_REFUND / REFUND_NOT_OBSERVED
-Last checked: 2026-11-21 Asia/Bangkok
+Status: **REFUND_CONFIRMED_ONCHAIN / PRINCIPAL_RETURNED_100_USDC / CLOSED**
+Last checked: 2026-11-21 10:51+07:00 (Asia/Bangkok), live Base RPC read-only verification
 Production: NO_GO; read-only analysis, no signing or transaction submission.
 Authority: `crypto-300-profit-mission/PROJECT_ANALYSIS_FRAMEWORK.md`, `PROJECT_ANALYSIS_EVIDENCE_WORKFLOW.md`, `MISSION_SPEC.md`.
 Privacy: user's original wallet and transaction hash are deliberately truncated in this public-facing repository record. Keep exact private linking material in user-held Founding receipt and own wallet history.
+
+## Latest outcome (2026-11-21): FULL 100 USDC PRINCIPAL REFUND CONFIRMED
+
+**FINAL STATE: CLOSED / REFUNDED / NO ACTION REQUIRED.**
+
+- The participant reported receipt and the official Base network was checked independently using Alchemy `getAssetTransfers` in both directions, filtered by the **canonical Base native USDC** contract and by the original Founding Safe/recipient pair.
+- Confirmed transaction `0xff0dee7e…0ad6a` from `0xf605…2378` (same 4/5 Safe that received the original deposit) to `0x3df4…ea7c` (same founding depositor).
+- Exact ERC-20 transfer amount **100.000000 USDC**; onchain UTC timestamp **2026-11-20 22:51:59Z**, Bangkok local timestamp **2026-11-21 05:51:59+07:00**; Base block `0x3956a49`; transaction receipt reports success `status=0x1`.
+- Historical original deposit **100.000000 USDC** on 2026-05-29, so the onchain return matched the original principal **100%**. No extra Founding proceeds/reward is claimed.
+- Transaction was executed by the **existing Safe custodian**, consistent with earlier finding that ordinary depositors could not self-withdraw from its v1.3.0 4/5 multisig.
+- At verification time, the original recipient wallet's **current** USDC `balanceOf` was `0`. This does **not** contradict receipt: ERC-20 incoming transfer history proves the 100 USDC reached the wallet; current spendable balance may subsequently have changed. No assumptions about subsequent wallet use are recorded here.
+- Note that the September Founding receipt's old `returnedMicroUsdc=0` field is a **historical** pre-refund snapshot, not a present-day outstanding principal figure. Do not cite it as current truth.
+- Prior snapshots and `REFUND_NOT_OBSERVED` wording below refer solely to the earlier audit moment; **superseded** for the refund status by this verified later event. No need to re-request refund, further deposit, trading or signature.
+- Independent original data sources: Alchemy read-only Base RPC (`getAssetTransfers` both `toAddress=recipient` and `fromAddress=Safe,toAddress=recipient`) and transaction receipt. No transactions were initiated.
 
 ## Deposit proof and matching
 
@@ -29,9 +43,9 @@ Privacy: user's original wallet and transaction hash are deliberately truncated 
 - `eth_call` from the Founding wallet simulating a Safe `execTransaction` without valid owner signatures reverted **GS020** (signature bytes too short for threshold). No transaction was broadcast.
 - `eth_call(USDC.balanceOf(Safe))` at time of check = **865,573.162890 USDC**.
 - The Safe had historical successful outgoing USDC transfers to third-party addresses; last observed 2026-11-20 transfer `5,256.678730` USDC, another 2026-11-16 `70,000` USDC, etc. These are real wallet transfers, but recipient identity and economic use have NOT been established. Do not infer misappropriation or solvency from this alone.
-- Alchemy `getAssetTransfers` with filters `fromAddress=Safe`, `toAddress=user`, `contractAddresses=[USDC]` returned **zero direct USDC refunds** from this Safe to the user as of check. This does not rule out every indirect refund mechanism or out-of-band payment.
+- Alchemy `getAssetTransfers` with filters `fromAddress=Safe`, `toAddress=user`, `contractAddresses=[USDC]` returned **zero direct USDC refunds at the initial check**. This is historical only: the subsequent 100 USDC Safe-to-user refund on 2026-11-20 22:51:59Z is now independently confirmed above.
 
-## Technical conclusion
+## Technical conclusion (historical access assessment before the later refund)
 
 **This is a custodial Safe holding pooled USDC, not a user-withdrawable permissionless vault.** The customer's Founding receipt is a campaign/accounting record rather than a transferable onchain vault share, based on observed evidence. No verified Forecast-specific public core contract repository or direct self-service Founding refund function was found in this pass. This is narrower than claiming the project will never offer a refund interface in the future.
 
@@ -48,11 +62,11 @@ One user's wallet cannot force a withdrawal from this Safe; a valid standard Saf
 
 ## Final classification
 
-- Deposit: CONFIRMED ON CHAIN.
+- Deposit: CONFIRMED ON CHAIN; corresponding principal repayment ALSO CONFIRMED ON CHAIN.
 - Custody: CONFIRMED SAFE 4/5.
 - Contract's user-controlled refund function: NO STANDARD SAFE PATH; NO MODULE ENABLED.
-- Founding reimbursement by issuer: UNCONFIRMED/NOT OBSERVED.
-- Original trading-account withdraw button returning the Founding principal: NOT DEMONSTRATED.
-- Best next evidence: any official release of funds/migration rule, Safe-signed repayment tx, or new onchain vault/account credit.
+- Founding reimbursement by issuer: **CONFIRMED 100 USDC returned by the original multisig to the original depositor on Base at 2026-11-20T22:51:59Z**.
+- Original trading-account withdraw button returning the Founding principal: NOT USED; original Safe made a direct 100 USDC repayment.
+- Refund status: **CLOSED / PRINCIPAL REFUNDED IN FULL**. Historical optional Founding rewards or other entitlements were not investigated as part of this refund close-out.
 
 No sensitive keys, credentials, monitor changes, onchain writes, production deployment, or wallet operations were undertaken.
