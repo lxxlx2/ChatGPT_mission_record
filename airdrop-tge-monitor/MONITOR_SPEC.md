@@ -1,5 +1,18 @@
 # Airdrop / TGE Monitor Spec
 
+## 2026-11-21 LATEST OPERATING CONTRACT: investment outcome milestone monitor, retains TGE title
+
+The user explicitly restored the original **28** registered issuer/project records (four Shards **8,6,7,7**), including AI/robotics/company equity and RepublicX tokenized investment, because IPO/liquidity/listing/distribution, private-company acquisition/exit, crypto native TGE and investor refunds are the same decision-oriented user goal. The earlier 15-only crypto token selection was a factual misunderstanding and was reverted. The task is still the single original hourly HH:00 Asia/Bangkok TGE monitor, same ID, original recipient, hourly shard rotation and EMAIL-ONLY channel.
+
+Every project is monitored for **issuer stage changes and corresponding real investor cash-out opportunities**, not only token tickers: funded predeposit -> funding/round completion -> production/launch -> listing filing/approved schedule -> first tradability -> allocation/distribution/lockup -> settlement/refund/exit, plus security/insolvency risks. For company equities, evidence may be issuer, SEC/regulator or known intermediary; no unverified IPO date. For a crypto project, tokenomics/TGE/claim are stage markers. For rTTOK, RepublicX Contingent Payout Note is the instrument; qualified ByteDance IPO/M&A and RepublicX payout are the triggers. For Echo 01 investment, issuer label 01/N1, Echo merely the channel; no 01/N1 user points. Keep a project in the scope even if it has no native token when a known existing investment needs a liquidity/IPO distribution outcome.
+
+Each hourly run: 1) read current Registry/known-events/policies, 2) filter user CLOSED/CLAIMED/INELIGIBLE and event USER_AWARE_ASSUMED_HANDLED, 3) current shard + dynamically urgent established project events, 4) original issuers/registered investor platform + regulatory/chain evidence actually read, 5) compare to last verified milestone with source date, 6) emit one mail only for **NEW MATERIAL DECISION STAGE** after SENT dedupe, 7) save truthful final evidence and current-state cache. No permanent urgent five; urgent may be zero. Continue meaningful stage tracking in Git even when no email is warranted. Failed X/browser/JS access remains SOURCE_GAP, not 'no change'. A user's first mention of an event indicates it was missed, and an attempted claim is user handled **for monitoring** unless they explicitly request more; no new watching without consent.
+
+Galxe: Nov20 user shared shutdown and attempted to claim; prior corrected email already Sent. **CLOSED, no follow-up watch**; the former dynamic Galxe platform exception is superseded. Preserve past evidence/receipts only. Do not create backup alerts/new tasks or change notification recipient/timing.
+
+Latest authority overrides any older paragraph below claiming scope limited to TGE tokens, no corporate funding, that 15 is the active count, or Galxe remains dynamic urgent. Past audit facts remain historical and immutable.
+
+
 ## 2026-11-21 newest project eligibility and scheduling override
 
 Original single hourly HH:00 task and one-shard-by-hour%4 plan remain; fixed forever-urgent project list is **abolished**. User explicitly removed Concrete, MetaMask, Claynosaurz/Clay Shares, HEEBOO and Space, plus already-completed/ineligible StandX and Cambria. These are not active monitoring candidates, urgent candidates or source gaps; old delivered alert history remains. Dynamic urgent entries must be based on **actual open user rights / confirmed current deadlines and risk**; an empty urgent queue is normal.
