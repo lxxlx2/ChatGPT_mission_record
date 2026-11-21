@@ -1,8 +1,8 @@
 # Airdrop / TGE Canonical Registry
 
-Active scheduled minutes (2026-10-10 user-approved): hourly HH:00 Asia/Bangkok. Existing urgent set and hour % 4 shard mapping remain unchanged. Historic HH:50 logs are legitimate past records; no new/closed/removed monitored projects.
+Active scheduled minutes (2026-10-10 user-approved): hourly HH:00 Asia/Bangkok. Existing urgent set and hour % 4 shard mapping remain unchanged. Historic HH:50 logs are legitimate past records; on 2026-11-21 ForecastFDN was explicitly closed and removed from active Shard 1 after confirmed full principal refund. No other project, urgent set, schedule, or shard mapping was changed.
 
-Updated: 2026-10-08
+Updated: 2026-11-21 (Forecast/ForecastFDN TGE-monitor closure; all other monitored entries preserved)
 
 Grass 与 Backpack 明确排除。
 
@@ -32,7 +32,6 @@ Clay Shares 作为 Claynosaurz/HEEBOO 相关权益子项持续检查。
 
 ## Shard 1
 - Surf
-- ForecastFDN / @ForecastFDN
 - Hylo / @hylo_so
 - OnRe / @onrefinance
 - Reflect / @reflectmoney
@@ -121,6 +120,8 @@ Do not require a public project announcement to recognize a direct platform enti
 - first_party_governance: https://forums.orca.so/t/tokenholder-proposal-resourcing-orca-for-its-next-phase/1281
 
 ## Closed / excluded deals
+
+- Forecast / ForecastFDN / @ForecastFDN — **USER_SUPPRESSED / FOUNDING_PRINCIPAL_FULLY_REFUNDED** on 2026-11-21. The original 100 USDC Founding deposit was returned in full by the original Base Safe to the user's original wallet, verified onchain at 2026-11-20 22:51:59 UTC (2026-11-21 05:51:59 Bangkok), tx `0xff0dee7e…0ad6a`. Remove Forecast from Shard 1 and exclude it from independent TGE/airdrop scanning, dynamic urgent inclusion, refund/claim notifications, and deal-rights alerts. **Do not infer from principal refund that no separate token/rewards ever exist; suppression is the user's explicit request.** Preserve old audit records and the chain evidence in `research/projects/forecast/founding-deposit-custody-20261121.md` on the separate research branch; do not reactivate unless user explicitly requests it. All other project monitoring remains unchanged.
 
 - Abstract / @AbstractChain — **USER_SUPPRESSED** on 2026-10-07. Remove Abstract/ABS from active TGE/airdrop monitoring, including hourly urgent checks, shard discovery and rights monitoring. Historical records remain for audit only. Reactivate only if the user explicitly asks to monitor Abstract/ABS again.
 
