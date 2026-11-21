@@ -21,6 +21,37 @@ Hard scope rule: do not create a new monitor/task/file for a user-specific futur
 - source_checkpoint_2026-11-21: OpenSea official FAQ confirms SEA postponed, not cancelled (https://support.opensea.io/en/articles/14324219-optional-fee-refund-faq); CoinList Reya sale terms TGE 50% / remaining 6 months but listing TBA (https://coinlist.co/reya); Crusoe Series F Sept17 valuation reported by issuer (https://www.crusoe.ai/resources/newsroom/crusoe-announces-series-f-funding); RepublicX rTTOK is contingent note tied to ByteDance qualifying liquidity event, no unconditional principal return (https://republic.com/rttok); Apptronik Nov17 GXO partnership issuer source https://apptronik.com/company/press-releases (general PR not independently an investor action); Base exploration remains noncommittal (https://www.base.org/blog/the-state-of-base-at-basecamp-2025); Polymarket Jun24 FAQ still says no token announced (https://help.polymarket.com/en/articles/13364250-does-polymarket-have-a-token). Remaining project original stage verification is PARTIAL/SOURCE_GAP until separately inspected; no new Gmail triggered by this reconciliation alone.
 - authority: this top section and latest REGISTRY project lists supersede older paragraphs below that say `TGE_ONLY`, `Echo deal-rights only`, fixed urgent5 or Galxe dynamic urgent. Historical old notes remain archival evidence, not a current list.
 
+## 2026-11-21 readback from original investment-platform emails (do not re-alert old correspondence)
+
+### 01 Exchange / N1 investor equity and warrant
+- last_direct_echo_support: 2026-10-29 UTC, original connected work Gmail message `1a18a194d58ed2fa`
+- status: `INVESTMENT_OPEN_DOCUMENTATION_UNRESOLVED` according to last support reply, which merely promised to consult another team member
+- original_issuer: `01XYZ CC Ltd` (legacy 01 Exchange; acquisition by N1 documented separately)
+- user_original_subscription_amount: USD 1,000 (USER_CONFIRMED)
+- initial_instruments: SAFE plus Token Warrant, user provided original terms in July correspondence; definitive issuer-conversion docs and liquidity not evidenced as completed
+- user_01_points: 0; user_N1_points: 0
+- old_support_on_2026-07-14: draft SAFE-holder documents not yet sent; transaction subject to final legal documentation at that date
+- triggered_new_mail: NO; correspondence user already knows, no newer confirmed distribution, conversion, refund or listing
+- next_delta: first official definitive SAFE/warrant conversion terms, verified equity/token deliverables, investor consent required, firm unlock/IPO/distribution, refund or liquidity
+
+### Reya CoinList investor allocation
+- verified_original_platform_reply: CoinList, 2026-11-06 UTC, connected life Gmail message `1a1b328b4a25111a`
+- reported_successful_commitment: **5000 USDC**, successful participation and allocation preserved, per CoinList team
+- reported_platform_migration: historical sale order/allocation not yet migrated into new self-service UI, so blank UI does not prove user allocation gone
+- TGE_at_reply: NOT_OCCURRED
+- distribution_date_at_reply: UNKNOWN; issuer confirmation still awaited
+- original_sale_terms: https://coinlist.co/reya; price 0.01875 USDC/REYA, 50% released at TGE and 50% linear 6 months post TGE; reported user's EXACT unit amount NOT provided in support reply
+- refund_if_never_delivered: UNCONFIRMED; platform support did not answer contractual remedies in the specific reply
+- triggered_new_mail: NO; user previously received the original response and already discussed it, not a newly discovered event
+- next_delta: issuer's definitive TGE date, first actual distribution, custody/wallet routing, complete contract terms, cancellation or legal recovery notice
+
+### Pond reward-points legal qualification
+- verified_issuer_terms: https://docs.joinpond.ai/docs/terms-of-use, effective 2026-08-27
+- issuer_claim: bounty/task points are symbolic, have no monetary value, are nontransferable and do not confer future claim/redemption rights **unless issuer expressly declares otherwise in writing**
+- monitored_status: existing Pond project remains in original 28 per user scope; points value or TGE entitlement NOT GUARANTEED
+- next_delta: first dated issuer written token/value conversion terms or actual capital/exit milestone
+- action: background legal qualification, not a fresh user-rights notice
+
 ## Latest user-directed exclusion: Neutrl (2026-11-21)
 
 - project_id: neutrl
