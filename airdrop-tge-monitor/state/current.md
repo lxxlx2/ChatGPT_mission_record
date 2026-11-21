@@ -1,3 +1,10 @@
+## Actual hourly run 2026-11-21 21:02:36 Asia/Bangkok
+- schedule: HOURLY HH:00; scheduled_shard: 1; executed_shard: 1; active_registry: 28; fixed_urgent: 0
+- run_path: airdrop-tge-monitor/runs/2026-11-21/210236-final.md
+- run_status: PARTIAL_ONLY; issuer_original_readback: 4/6; personal_rights_verified: 0/6; source_gaps: 2; identity_failures: 0 proven
+- candidate_count: 0; action_count: 0; notification: NONE; gmail_attempted: false; code_gate: CODE_NOT_EXECUTED
+- last_meaningful_attempt_shard1: 2026-11-21T21:02:36+07:00; last_verified_complete_shard1: UNCHANGED
+
 ## Latest actual run, 2026-11-21 19:57 Asia/Bangkok
 - last_run: 2026-11-21T19:57:14+07:00
 - schedule: HH:00 Asia/Bangkok
