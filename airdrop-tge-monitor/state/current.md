@@ -97,3 +97,11 @@ The earlier historical run's unresolved right snapshots below were recorded befo
 - candidate_count: 0; action_count: 0; gmail_attempted: false; app_notification: false
 - source_gaps: 1 (Block Stranding current announcement unreadable); Rho personal account/migration SOURCE_GAP; identity_failures: 0; code_gate: CODE_NOT_EXECUTED
 - last_meaningful_attempt_at_shard0: 2026-11-21T16:01:50+07:00; last_verified_complete_at: 2026-10-10T07:52:16+07:00 unchanged
+
+## Latest execution 2026-11-21 16:59:53 Asia/Bangkok (imminent 17:00 shard 1)
+- run_path: airdrop-tge-monitor/runs/2026-11-21/165953-final.md
+- run_status: PARTIAL_ONLY; schedule: HOURLY HH:00; scheduled_shard: 1; executed_shard: 1
+- active_projects: 28; fixed_urgent: 0; shard_attempted: 6/6; useful_original_readback: 4/6; personal_rights_verified: 0/6
+- candidate_count: 0; action_count: 0; gmail_attempted: false; app_notification: false
+- source_gaps: 2 primary (Hylo, Theo); Tydro after Nov18 not verified; identity_conflicts: 1 excluded Autheo/THEO collision; code_gate: CODE_NOT_EXECUTED
+- last_meaningful_attempt_at_shard1: 2026-11-21T16:59:53+07:00; last_verified_complete_at unchanged
