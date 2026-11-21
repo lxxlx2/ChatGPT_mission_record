@@ -1,3 +1,23 @@
+## Latest actual run 2026-11-21 23:57:25 Asia/Bangkok
+- last_run: 2026-11-21T23:57:25+07:00
+- schedule: HH:00 Asia/Bangkok
+- run_path: airdrop-tge-monitor/runs/2026-11-21/235725-final.md
+- run_status: PARTIAL_ONLY
+- scheduled_shard: 3
+- executed_shard: 3
+- active_registry: 28
+- fixed_urgent: 0
+- issuer_original_or_mapped_readback: 5/7
+- current_personal_rights_verified: 0/7
+- candidate_count: 1 (ByteDance secondary buyback, Tier C, rejected)
+- action_count: 0
+- notification: NONE
+- source_gaps: Thalassa and Fortytwo current original, seven authenticated investor-rights checks
+- identity_failures: 0 proven
+- code_gate: CODE_NOT_EXECUTED
+- last_meaningful_attempt_shard3: 2026-11-21T23:57:25+07:00
+- last_verified_complete_shard3: UNCHANGED
+
 ## Latest actual run 2026-11-21 23:03:10 Asia/Bangkok
 - last_run: 2026-11-21T23:03:10+07:00
 - schedule: HH:00 Asia/Bangkok
