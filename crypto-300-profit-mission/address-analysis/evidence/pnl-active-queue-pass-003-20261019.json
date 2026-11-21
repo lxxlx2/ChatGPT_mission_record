@@ -1,0 +1,388 @@
+{
+  "schema": "mission-address-analysis-active-pnl-queue-041-060-v1",
+  "as_of": "2026-10-19",
+  "source_blob_sha": "954f3aba66be21911dd627fa40dd3dd0a9fd1d26",
+  "pr": "97",
+  "base_sha": "258d44dcfa5ee2c299ed1e082d91ca7a49bb9a1e",
+  "purpose": "Profitability research evidence, not production nor whole-wallet PnL",
+  "start_end_blocks": {
+    "bnb": [
+      "0x74cf256",
+      "0x7a4ca36"
+    ],
+    "ethereum": [
+      "0x18cb9c8",
+      "0x19001e3"
+    ],
+    "base": [
+      "0x310fd64",
+      "0x324c3e5"
+    ]
+  },
+  "first_pages": {
+    "query": "authenticated Alchemy getAssetTransfers, fromAddress; erc20+external, ascending, maxCount=5",
+    "active_queue_positions": [
+      41,
+      60
+    ],
+    "wallets": [
+      {
+        "queue_position": 41,
+        "source_row": 69,
+        "wallet": "0xe28601398a5448d1147e6e8b0e0c6d686f0d216d",
+        "network": "bnb-mainnet",
+        "reported_events_first_page": 5,
+        "pagekey_present": true,
+        "first_tx_hash": "0xef88856f4d486d92bdf3f4830300595cb8a825792d8aba90711725161fe14249",
+        "classification": "POSSIBLE_OUTFLOW_ONLY_PNL_UNRESOLVED"
+      },
+      {
+        "queue_position": 42,
+        "source_row": 70,
+        "wallet": "0xd5ff53f48f14e9409b581e41a4cddfe0e97dc724",
+        "network": "bnb-mainnet",
+        "reported_events_first_page": 5,
+        "pagekey_present": true,
+        "first_tx_hash": "0xbdff5911dcace3234a6f9033b5dbeeb71d2555270474b3087f882945ecd5776b",
+        "classification": "POSSIBLE_OUTFLOW_ONLY_PNL_UNRESOLVED"
+      },
+      {
+        "queue_position": 43,
+        "source_row": 71,
+        "wallet": "0x04b436555dc69ea4bf8ba50d8c591e60443b3ff9",
+        "network": "bnb-mainnet",
+        "reported_events_first_page": 5,
+        "pagekey_present": true,
+        "first_tx_hash": "0x9ca21a4253fdc198fc522be569ba0c417fd354e4abb320428e7e8a7a714b87ed",
+        "classification": "POSSIBLE_OUTFLOW_ONLY_PNL_UNRESOLVED"
+      },
+      {
+        "queue_position": 44,
+        "source_row": 72,
+        "wallet": "0x5fa57fcaf86e137cb8185c4cb2c01ea7b5b14cfb",
+        "network": "bnb-mainnet",
+        "reported_events_first_page": 1,
+        "pagekey_present": false,
+        "first_tx_hash": "0x6aa88d62bb291fc06129e9b21fd2e55df9e5525ccef46035e4a9e5cf0e427b7a",
+        "classification": "POSSIBLE_OUTFLOW_ONLY_PNL_UNRESOLVED"
+      },
+      {
+        "queue_position": 45,
+        "source_row": 73,
+        "wallet": "0x86b9ad8fc7bec77c85913b0f80f69c2cfa129c3e",
+        "network": "bnb-mainnet",
+        "reported_events_first_page": 5,
+        "pagekey_present": false,
+        "first_tx_hash": "0xee104d98a25875fc779e5c1b14c75f93e1087b04b9fb5ef8fd8e6ae6ebf31a16",
+        "classification": "POSSIBLE_OUTFLOW_ONLY_PNL_UNRESOLVED"
+      },
+      {
+        "queue_position": 46,
+        "source_row": 74,
+        "wallet": "0xbd6b8d8fa94f7307840252548549b56a33c98054",
+        "network": "bnb-mainnet",
+        "reported_events_first_page": 4,
+        "pagekey_present": false,
+        "first_tx_hash": "0x2414801f5418ca6340d8416621e447062f880e6f5335c8fb83a14e4cde920171",
+        "classification": "POSSIBLE_OUTFLOW_ONLY_PNL_UNRESOLVED"
+      },
+      {
+        "queue_position": 47,
+        "source_row": 75,
+        "wallet": "0xca1a2fb7f3179d887504966b25d1606978adcd42",
+        "network": "bnb-mainnet",
+        "reported_events_first_page": 5,
+        "pagekey_present": true,
+        "first_tx_hash": "0x666a0ab2ea557491c17e4193047772f151201001701b2a33ab7e6c7dc3459638",
+        "classification": "POSSIBLE_OUTFLOW_ONLY_PNL_UNRESOLVED"
+      },
+      {
+        "queue_position": 48,
+        "source_row": 76,
+        "wallet": "0x54d209d9d224a615e0e5f0476644886897b75e45",
+        "network": "bnb-mainnet",
+        "reported_events_first_page": 5,
+        "pagekey_present": true,
+        "first_tx_hash": "0x0f3f1c8b06b2fe1aad5882d53988f6f719bc392296b14a04a355fa42730b7e73",
+        "classification": "POSSIBLE_OUTFLOW_ONLY_PNL_UNRESOLVED"
+      },
+      {
+        "queue_position": 49,
+        "source_row": 77,
+        "wallet": "0x1e8ae0385f8a8fcc96008fdbc25fa31049e52af0",
+        "network": "bnb-mainnet",
+        "reported_events_first_page": 2,
+        "pagekey_present": false,
+        "first_tx_hash": "0x1a4f3ccef9969a340a287a3e8c220f96736f3714536b922af5eed5f11e9d88d8",
+        "classification": "POSSIBLE_OUTFLOW_ONLY_PNL_UNRESOLVED"
+      },
+      {
+        "queue_position": 50,
+        "source_row": 78,
+        "wallet": "0x1e59145625236d3663fc63d000a31d42d3393cee",
+        "network": "bnb-mainnet",
+        "reported_events_first_page": 4,
+        "pagekey_present": false,
+        "first_tx_hash": "0x0e65e45de8f025b785ca18262b1a1920f244aae27d0ba9bb439607fb046c113e",
+        "classification": "POSSIBLE_OUTFLOW_ONLY_PNL_UNRESOLVED"
+      },
+      {
+        "queue_position": 51,
+        "source_row": 79,
+        "wallet": "0xf41e3186861afb9840ea3c87f00366440a648320",
+        "network": "bnb-mainnet",
+        "reported_events_first_page": 5,
+        "pagekey_present": true,
+        "first_tx_hash": "0x3d1d595f1c9c35a4dfba725ac41ecfdf4115c7dcbf1bc91931037df6d74e422c",
+        "classification": "POSSIBLE_OUTFLOW_ONLY_PNL_UNRESOLVED"
+      },
+      {
+        "queue_position": 52,
+        "source_row": 80,
+        "wallet": "0x000461a73d3985eef4923655782aa5d0de75c111",
+        "network": "bnb-mainnet",
+        "reported_events_first_page": 5,
+        "pagekey_present": true,
+        "first_tx_hash": "0x296d729fba65a0c450a2ae95214abbce831c8722819fe2ab822b305612807259",
+        "classification": "POSSIBLE_OUTFLOW_ONLY_PNL_UNRESOLVED"
+      },
+      {
+        "queue_position": 53,
+        "source_row": 81,
+        "wallet": "0xce370ebcbc655f845df7dfb8c079e75b5ea17d93",
+        "network": "eth-mainnet",
+        "reported_events_first_page": 5,
+        "pagekey_present": true,
+        "first_tx_hash": "0x9224f1579c3ba49e1f943f581bcb09354b5800154a6fb156c74db1b0a8634841",
+        "classification": "POSSIBLE_OUTFLOW_ONLY_PNL_UNRESOLVED"
+      },
+      {
+        "queue_position": 54,
+        "source_row": 82,
+        "wallet": "0x2631736631a133a56af3f035fbb5ca25e210a325",
+        "network": "bnb-mainnet",
+        "reported_events_first_page": 5,
+        "pagekey_present": true,
+        "first_tx_hash": "0x99cbfb5a7602d6982b75c9ede2841918710879c0e28f56bec72ee873d450b948",
+        "classification": "POSSIBLE_OUTFLOW_ONLY_PNL_UNRESOLVED"
+      },
+      {
+        "queue_position": 55,
+        "source_row": 83,
+        "wallet": "0x756e1d965114fdb4759abc914521f9f4fb1db369",
+        "network": "eth-mainnet",
+        "reported_events_first_page": 3,
+        "pagekey_present": false,
+        "first_tx_hash": "0x98f525921e368186879c122d54964bc83dcf5aec66e640b43c1e2561d90d614f",
+        "classification": "POSSIBLE_OUTFLOW_ONLY_PNL_UNRESOLVED"
+      },
+      {
+        "queue_position": 56,
+        "source_row": 86,
+        "wallet": "0xc222624e3da4e98dc6fdf5703b9e7d7253b24eda",
+        "network": "bnb-mainnet",
+        "reported_events_first_page": 5,
+        "pagekey_present": true,
+        "first_tx_hash": "0x4c1e64b2c488bf59279cb11a461dae90df33256812ef71bfcf9fa09f5c22f2d2",
+        "classification": "POSSIBLE_OUTFLOW_ONLY_PNL_UNRESOLVED"
+      },
+      {
+        "queue_position": 57,
+        "source_row": 91,
+        "wallet": "0x42607b2e4fde22e83822d4a86ddac58d847dc289",
+        "network": "bnb-mainnet",
+        "reported_events_first_page": 5,
+        "pagekey_present": true,
+        "first_tx_hash": "0xd1dacb8a40ae938546eed4a63f29b46b6fa214b64a489607b426361317598969",
+        "classification": "POSSIBLE_OUTFLOW_ONLY_PNL_UNRESOLVED"
+      },
+      {
+        "queue_position": 58,
+        "source_row": 94,
+        "wallet": "0xd8da6bf26964af9d7eed9e03e53415d37aa96045",
+        "network": "eth-mainnet",
+        "reported_events_first_page": 5,
+        "pagekey_present": true,
+        "first_tx_hash": "0x43273aba0b69d02e177b1b9372d219a1256e61e6be329a489f2b16274bad55a7",
+        "classification": "POSSIBLE_OUTFLOW_ONLY_PNL_UNRESOLVED"
+      },
+      {
+        "queue_position": 59,
+        "source_row": 101,
+        "wallet": "0xbad1772ffff47b87915d88124d20ba44364acd0f",
+        "network": "bnb-mainnet",
+        "reported_events_first_page": 5,
+        "pagekey_present": true,
+        "first_tx_hash": "0xfa44b2188e331322ff3abed514fde3e3024ebe6f3847a5a4bc6a23a7545dad7d",
+        "classification": "POSSIBLE_OUTFLOW_ONLY_PNL_UNRESOLVED"
+      },
+      {
+        "queue_position": 60,
+        "source_row": 102,
+        "wallet": "0x853db6381533d9cb63663e1587f925dd17a523cc",
+        "network": "bnb-mainnet",
+        "reported_events_first_page": 2,
+        "pagekey_present": false,
+        "first_tx_hash": "0xd2d43c4c58bbf759d3f72bb7c61094633877b598133bba017e172854a1274299",
+        "classification": "POSSIBLE_OUTFLOW_ONLY_PNL_UNRESOLVED"
+      }
+    ],
+    "total_wallets": 20,
+    "requires_more_pages": 13,
+    "rpc_errors": 0
+  },
+  "additional_asset_checks": {
+    "rows": [
+      72,
+      74,
+      78,
+      83
+    ],
+    "directions": [
+      "toAddress",
+      "fromAddress"
+    ],
+    "contract_ca_scoped": true,
+    "history_coverage": "all heights for #74 LAB, fixed-window for #83 USDC and #78 S3B, post-buy window for #72 ABTC",
+    "paging": "#74 exact LAB directions exhausted; #83 fixed USDC directions exhausted; #72 ABTC outbound exhausted, #78 S3B incoming checked fixed window only"
+  },
+  "verified_cases": [
+    {
+      "source_row": 72,
+      "chain": "bnb-mainnet",
+      "token_symbol_untrusted": "ABTC",
+      "token_contract": "0xe2ce2c84182c0f567d8659b25779ca280d347777",
+      "decimals": 18,
+      "router": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "signed_buy_tx": "0x6aa88d62bb291fc06129e9b21fd2e55df9e5525ccef46035e4a9e5cf0e427b7a",
+      "block": "0x780ea39",
+      "tx_value_wei": "250000000000000000",
+      "bnb_block_delta_wei": "-250050971320000000",
+      "receipt_status": "0x1",
+      "inbound_raw": "9940098575295283362966420",
+      "balance_before_raw": "0",
+      "balance_at_frozen_end_raw": "9940098575295283362966420",
+      "erc20_outbound_after_buy_count": 0,
+      "closed": false,
+      "pnl": "UNRESOLVED",
+      "limitation": "ABTC held to frozen block; executable exit value and post-window sell not audited; receipt full logs truncated; no unrealized quote."
+    },
+    {
+      "source_row": 74,
+      "chain": "bnb-mainnet",
+      "token_symbol_untrusted": "LAB",
+      "token_contract": "0x7ec43cf65f1663f820427c62a5780b8f2e25593a",
+      "decimals": 18,
+      "original_incoming_transfer_txs": [
+        "0x736e04aab6a4c4d65ad806988e288a4b2049c1843a3853a5d0fbc71474e7e003",
+        "0xc02a5768a4ecb69552a1e5c62118c936000a46962fcfda960e264539c02f2b09",
+        "0xf033b0a2a3ea77a8182815b0c893ce0d29a867b9b24945c35590be9bbbf9aa39",
+        "0x313d1a0d3bf37a82335945130af2ad7af552c2045056251e1a6dc65d6ffa9917"
+      ],
+      "incoming_raw_components": [
+        "0x3782dace9d900000",
+        "0x1f0ba138138b67ea8090",
+        "0x1f0b9f479f293d39a844",
+        "0x1f0b9f479f293d39a844"
+      ],
+      "original_outgoing_transfer_txs": [
+        "0x2566bcb482a6cdfcea31dce9ee96f7708322e207394ef7b6995629c6f42ee857",
+        "0xa549afd8ad746795a982982b2489fb970d2e25b9f63e664cfe32827510b99bb7",
+        "0x5a9cfde4e9527d73971230417a3ceaea017398f0c6173f6c4b0004dbc194a6de"
+      ],
+      "outgoing_raw_components": [
+        "0x1f0bd8baee5a05423180",
+        "0x1f0b9f479f293d71f754",
+        "0x1f0b9f479f293d39a844"
+      ],
+      "opening_balance_before_first_inbound_raw": "0",
+      "frozen_end_balance_raw": "0",
+      "first_outgoing_original_tx_selector": "0xa9059cbb",
+      "first_outgoing_classification": "ERC20_TRANSFER_NOT_PROVEN_SWAP",
+      "last_outgoing_receipt_status": "0x1",
+      "acquisition_origin": "THIRD_PARTY_ERC20_TRANSFERS",
+      "realized_pnl": "UNRESOLVED",
+      "limit": "Token inventory zero does not establish paid buy/sell or attributable quote. Full wallet gas/other-chain inventory not audited."
+    },
+    {
+      "source_row": 83,
+      "chain": "eth-mainnet",
+      "asset": "USDC",
+      "contract": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+      "decimals": 6,
+      "incoming_tx": "0x4907b49016fab33f0a13941c02b1a8ef8214865ea5d7eea1623d14e91cd56cdc",
+      "incoming_raw": "13631310041",
+      "outgoing_txs": [
+        "0xb0ae59c25820a96675d25eefcf86fbb24b77e268af46e9dc47b7bfb2365dc554",
+        "0x3c4025b40016be6a9f7325a6a08813e12d23e97bbbefe48dc4a3fcbaa2be334e"
+      ],
+      "outgoing_raw_components": [
+        "0x18b0b8e7f",
+        "0x1a171ba5a"
+      ],
+      "opening_balance_frozen_start_raw": "0",
+      "ending_balance_frozen_end_raw": "0",
+      "pnl": "UNRESOLVED",
+      "meaning": "Window incoming and outgoing exact-USDC values reconcile. Could be fund movement or settlement; no acquisition/underlying purchase evidence for profit.",
+      "limits": "Does not prove whole-wallet PnL, cross-network owner identity, or classify all transfers as trades."
+    }
+  ],
+  "other_classifications": [
+    {
+      "row": 77,
+      "observation": "Two native BNB transfer-like signed actions, no funded DEX sale demonstrated."
+    },
+    {
+      "row": 78,
+      "observation": "One signed S3B transfer and no S3B incoming in 30d window, so pre-window inventory origin unknown. Do not infer sale PnL."
+    },
+    {
+      "row": 102,
+      "observation": "Two signed ERC20 transfer functions 0xa9059cbb for RIVER and MAME; token outflow is not necessarily sale."
+    }
+  ],
+  "audit_status": "20 candidates first-page discovery + 3 targeted token-ledger fact checks, 0 audited full-wallet PnL, 0 newly verified profit/loss closes",
+  "remaining": [
+    {
+      "type": "HIGH_FREQUENCY_PAGINATION",
+      "count": 13,
+      "action": "DEFERRED for bounded future pagination"
+    },
+    {
+      "type": "REALIZED_LOSSES_AND_GAINS",
+      "status": "UNRESOLVED",
+      "action": "Obtain executed exchange quote, acquisition basis, fees and full receipt provenance before positive/negative labels."
+    }
+  ],
+  "next_active_queue_source_rows": [
+    103,
+    106,
+    107,
+    108,
+    109,
+    110,
+    111,
+    112,
+    114,
+    116,
+    117,
+    118,
+    119,
+    120,
+    121,
+    125,
+    126,
+    127,
+    130,
+    132
+  ],
+  "disclaimer": "Partial Alchemy MCP observations, not persisted raw JSON RPC frames; some full transaction/receipt responses truncated. Contract symbols are treated as untrusted text; zero token balance is not a zero-cost profit.",
+  "gates": [
+    "RESEARCH_ONLY",
+    "NO_MERGE",
+    "NO_DEPLOY",
+    "NO_GMAIL",
+    "NO_TRADE",
+    "NO_NEW_AUTOMATION"
+  ]
+}

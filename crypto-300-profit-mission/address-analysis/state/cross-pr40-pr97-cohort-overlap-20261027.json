@@ -1,0 +1,61 @@
+{
+  "schema": "address-model-frozen-pr40-pr97-exact-wallet-overlap-v1",
+  "as_of": "2026-10-27",
+  "source_mode": "GITHUB_FROZEN_BLOBS_ONLY_NO_RPC",
+  "pr40_source": {
+    "pr": 40,
+    "code_sha": "62d9578d474cdd7c2c8f70e500d0c1e618470169",
+    "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-baseline-2026-10-13.json",
+    "blob_sha1": "e3c8815630878dddc03b7a6e11b8f0d2d89cbf6a",
+    "wallet_count": 23,
+    "exact_token_CA_count": 19,
+    "wallet_token_cells": 437,
+    "transfer_present_cells": 148,
+    "transfer_absent_cells": 289,
+    "present_cells_with_null_complete_event_counts": 8
+  },
+  "pr97_source": {
+    "pr": 97,
+    "source_code_sha": "adfeaf083004b41ebd077b006b845ca4738f38bd",
+    "path": "crypto-300-profit-mission/address-analysis/evidence/activity-candidates-001-449.json",
+    "blob_sha1": "4727b8b53dcd63b350d9e5f27922cd06db8a2a14",
+    "wallet_count": 449,
+    "signed_active_on_checked_chains": 237,
+    "signed_zero_on_checked_chains": 212
+  },
+  "exact_address_match": {
+    "algorithm": "lowercase 0x40hex EVM addresses exact equality; not alias, nickname, trader cluster or token similarity",
+    "overlap_count": 2,
+    "overlapping_wallets": [
+      {
+        "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+        "pr97_source_row": 167,
+        "pr97_historical_status": "ACTIVE",
+        "pr97_first_positive_chain": "bsc",
+        "pr40_present_of_19_transfer_tokens": 17,
+        "profitability_verified": false
+      },
+      {
+        "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+        "pr97_source_row": 283,
+        "pr97_historical_status": "ACTIVE",
+        "pr97_first_positive_chain": "bsc",
+        "pr40_present_of_19_transfer_tokens": 6,
+        "profitability_verified": false
+      }
+    ],
+    "pr40_only_wallets": 21,
+    "pr97_only_wallets": 447,
+    "unique_wallet_union": 470,
+    "wallet_union_arithmetic": "23+449-2=470",
+    "pr40_wallet_token_cells_not_distinct_wallets": true
+  },
+  "scope_limits": [
+    "PR40 and PR97 are two independent Draft research strata; this audit does NOT merge source files, labels, ranking or permission.",
+    "19-CA ERC20 transfer presence or first-positive signed nonce is not profitability or executable trading evidence.",
+    "2 overlapping EOA identifiers do not prove a trader identity or link any other addresses.",
+    "PR97 only screened 3 EVM networks in its frozen window, not the entire EVM ecosystem.",
+    "Any forward-follow cohort must control for these duplicates before performance-blind selection; previous 20 main/10 backup F0 preselection remains unapproved for live runtime."
+  ],
+  "production": "NO_GO"
+}

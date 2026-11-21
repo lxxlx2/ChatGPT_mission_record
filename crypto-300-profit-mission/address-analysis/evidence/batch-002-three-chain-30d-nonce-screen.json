@@ -1,0 +1,502 @@
+{
+  "schema": "mission-address-analysis-batch-002-three-chain-nonce-v1",
+  "source_blob_sha": "954f3aba66be21911dd627fa40dd3dd0a9fd1d26",
+  "source_rows": [
+    21,
+    40
+  ],
+  "research_only": true,
+  "as_of_date": "2026-10-18",
+  "source": "Authenticated Alchemy eth_getTransactionCount historical RPC; block hashes via eth_getBlockByNumber",
+  "windows": {
+    "bsc": {
+      "network": "bnb-mainnet",
+      "chain_id": 56,
+      "from": {
+        "height": "0x74cf256",
+        "hash": "0x77cbf3d8a37e5995f27cc48fffe9a1df3bfc48808e64a769e940caec3cecfc1d",
+        "utc": "2026-09-17T21:12:12Z"
+      },
+      "to": {
+        "height": "0x7a4ca36",
+        "hash": "0x17d7dd95285a23d69c726943ac985f8deff2d987ee559ce5ec97ea1f2f513311",
+        "utc": "2026-10-17T21:12:13Z"
+      }
+    },
+    "ethereum": {
+      "network": "eth-mainnet",
+      "chain_id": 1,
+      "from": {
+        "height": "0x18cb9c8",
+        "hash": "0xc1c05110c8c372d5aae38462af53f2f6da78e078d5410f785ee3c5b6bbf7ac0b",
+        "utc": "2026-09-17T21:12:11Z"
+      },
+      "to": {
+        "height": "0x19001e3",
+        "hash": "0xa91aed9ba16471265db54a53db4b4946b48a4a171eb1bdd7e1c65c1b3f6c3e67",
+        "utc": "2026-10-17T21:12:11Z"
+      }
+    },
+    "base": {
+      "network": "base-mainnet",
+      "chain_id": 8453,
+      "from": {
+        "height": "0x310fd64",
+        "hash": "0x87c67d4f90a11a75a68c685418de161b0231734a0098200aee0c103193c28abf",
+        "utc": "2026-09-17T21:12:11Z"
+      },
+      "to": {
+        "height": "0x324c3e5",
+        "hash": "0x9d641df1460ba9c2108e8c38f16c8f19222ccc63a93d54f7abb9b269769affe5",
+        "utc": "2026-10-17T21:12:13Z"
+      }
+    }
+  },
+  "summary": {
+    "wallets": 20,
+    "bsc_active": 12,
+    "ethereum_active": 12,
+    "base_active": 12,
+    "union_active": 13,
+    "all_three_zero": [
+      24,
+      26,
+      28,
+      33,
+      35,
+      36,
+      40
+    ],
+    "bsc_signed_transactions": 18766,
+    "ethereum_signed_transactions": 2884,
+    "base_signed_transactions": 3411
+  },
+  "rows": [
+    {
+      "source_row": 21,
+      "address": "0x9d56610c9fdabd06a19486ced80cccca00a2866a",
+      "source_label_unverified": "Reljoo 小号",
+      "bsc": {
+        "nonce_start": 8239,
+        "nonce_end": 8850,
+        "signed_delta": 611
+      },
+      "ethereum": {
+        "nonce_start": 247,
+        "nonce_end": 342,
+        "signed_delta": 95
+      },
+      "base": {
+        "nonce_start": 284,
+        "nonce_end": 304,
+        "signed_delta": 20
+      },
+      "any_of_three_signed": true
+    },
+    {
+      "source_row": 22,
+      "address": "0xead3f93ff737a1be0c8a11529f3c034b44549bb1",
+      "source_label_unverified": "keyng小号",
+      "bsc": {
+        "nonce_start": 6156,
+        "nonce_end": 11494,
+        "signed_delta": 5338
+      },
+      "ethereum": {
+        "nonce_start": 361,
+        "nonce_end": 838,
+        "signed_delta": 477
+      },
+      "base": {
+        "nonce_start": 839,
+        "nonce_end": 1267,
+        "signed_delta": 428
+      },
+      "any_of_three_signed": true
+    },
+    {
+      "source_row": 23,
+      "address": "0xf60633d02690e2a15a54ab919925f3d038df163e",
+      "source_label_unverified": "banker创始人1",
+      "bsc": {
+        "nonce_start": 0,
+        "nonce_end": 0,
+        "signed_delta": 0
+      },
+      "ethereum": {
+        "nonce_start": 16,
+        "nonce_end": 19,
+        "signed_delta": 3
+      },
+      "base": {
+        "nonce_start": 44875,
+        "nonce_end": 45149,
+        "signed_delta": 274
+      },
+      "any_of_three_signed": true
+    },
+    {
+      "source_row": 24,
+      "address": "0x237c79c93c3eb8c61a2a2a7465a851b0381b8ba3",
+      "source_label_unverified": "banker关联地址",
+      "bsc": {
+        "nonce_start": 0,
+        "nonce_end": 0,
+        "signed_delta": 0
+      },
+      "ethereum": {
+        "nonce_start": 0,
+        "nonce_end": 0,
+        "signed_delta": 0
+      },
+      "base": {
+        "nonce_start": 0,
+        "nonce_end": 0,
+        "signed_delta": 0
+      },
+      "any_of_three_signed": false
+    },
+    {
+      "source_row": 25,
+      "address": "0xcc475ea8d95bf43f25473640b1f901de2a7f2d8c",
+      "source_label_unverified": "早期背景埋伏9",
+      "bsc": {
+        "nonce_start": 4755,
+        "nonce_end": 4761,
+        "signed_delta": 6
+      },
+      "ethereum": {
+        "nonce_start": 531,
+        "nonce_end": 531,
+        "signed_delta": 0
+      },
+      "base": {
+        "nonce_start": 4822,
+        "nonce_end": 4851,
+        "signed_delta": 29
+      },
+      "any_of_three_signed": true
+    },
+    {
+      "source_row": 26,
+      "address": "0x699d731048f2f1b40af3a3736a33c11288237512",
+      "source_label_unverified": "keyNG 小号",
+      "bsc": {
+        "nonce_start": 3868,
+        "nonce_end": 3868,
+        "signed_delta": 0
+      },
+      "ethereum": {
+        "nonce_start": 83,
+        "nonce_end": 83,
+        "signed_delta": 0
+      },
+      "base": {
+        "nonce_start": 299,
+        "nonce_end": 299,
+        "signed_delta": 0
+      },
+      "any_of_three_signed": false
+    },
+    {
+      "source_row": 27,
+      "address": "0x45fd36c9cdd500c1b372d99ba3bd79da0d358504",
+      "source_label_unverified": "",
+      "bsc": {
+        "nonce_start": 6741,
+        "nonce_end": 12369,
+        "signed_delta": 5628
+      },
+      "ethereum": {
+        "nonce_start": 458,
+        "nonce_end": 1058,
+        "signed_delta": 600
+      },
+      "base": {
+        "nonce_start": 1632,
+        "nonce_end": 2092,
+        "signed_delta": 460
+      },
+      "any_of_three_signed": true
+    },
+    {
+      "source_row": 28,
+      "address": "0xcb1cffdce993397b03c439c68f93c1ad6463cf8d",
+      "source_label_unverified": "keyNG 小号",
+      "bsc": {
+        "nonce_start": 3805,
+        "nonce_end": 3805,
+        "signed_delta": 0
+      },
+      "ethereum": {
+        "nonce_start": 87,
+        "nonce_end": 87,
+        "signed_delta": 0
+      },
+      "base": {
+        "nonce_start": 281,
+        "nonce_end": 281,
+        "signed_delta": 0
+      },
+      "any_of_three_signed": false
+    },
+    {
+      "source_row": 29,
+      "address": "0xb0b8a1ec009684a5739f94b7378aaeb55be09698",
+      "source_label_unverified": "keyNG 小号",
+      "bsc": {
+        "nonce_start": 6424,
+        "nonce_end": 11807,
+        "signed_delta": 5383
+      },
+      "ethereum": {
+        "nonce_start": 355,
+        "nonce_end": 834,
+        "signed_delta": 479
+      },
+      "base": {
+        "nonce_start": 841,
+        "nonce_end": 1270,
+        "signed_delta": 429
+      },
+      "any_of_three_signed": true
+    },
+    {
+      "source_row": 30,
+      "address": "0x29909b9c97845d5eb998b4aa41664a46c5dc35c6",
+      "source_label_unverified": "",
+      "bsc": {
+        "nonce_start": 2187,
+        "nonce_end": 2241,
+        "signed_delta": 54
+      },
+      "ethereum": {
+        "nonce_start": 4590,
+        "nonce_end": 4671,
+        "signed_delta": 81
+      },
+      "base": {
+        "nonce_start": 7445,
+        "nonce_end": 7522,
+        "signed_delta": 77
+      },
+      "any_of_three_signed": true
+    },
+    {
+      "source_row": 31,
+      "address": "0x2a6a385cb65e85031ba62b12f5bef2b6a1130737",
+      "source_label_unverified": "早期背景埋伏5",
+      "bsc": {
+        "nonce_start": 2298,
+        "nonce_end": 2552,
+        "signed_delta": 254
+      },
+      "ethereum": {
+        "nonce_start": 425,
+        "nonce_end": 443,
+        "signed_delta": 18
+      },
+      "base": {
+        "nonce_start": 1081,
+        "nonce_end": 1100,
+        "signed_delta": 19
+      },
+      "any_of_three_signed": true
+    },
+    {
+      "source_row": 32,
+      "address": "0x8797a47a9200b52ee90b4c5b5fa5a0ded56dd5f5",
+      "source_label_unverified": "早期背景埋伏3",
+      "bsc": {
+        "nonce_start": 134,
+        "nonce_end": 169,
+        "signed_delta": 35
+      },
+      "ethereum": {
+        "nonce_start": 48,
+        "nonce_end": 58,
+        "signed_delta": 10
+      },
+      "base": {
+        "nonce_start": 103,
+        "nonce_end": 109,
+        "signed_delta": 6
+      },
+      "any_of_three_signed": true
+    },
+    {
+      "source_row": 33,
+      "address": "0x6b00720a39013bd19cc1f8ba32cde21c1ea727da",
+      "source_label_unverified": "早期背景埋伏2",
+      "bsc": {
+        "nonce_start": 0,
+        "nonce_end": 0,
+        "signed_delta": 0
+      },
+      "ethereum": {
+        "nonce_start": 12,
+        "nonce_end": 12,
+        "signed_delta": 0
+      },
+      "base": {
+        "nonce_start": 0,
+        "nonce_end": 0,
+        "signed_delta": 0
+      },
+      "any_of_three_signed": false
+    },
+    {
+      "source_row": 34,
+      "address": "0x54bca12bed24db253e47db098a91b787ac57a990",
+      "source_label_unverified": "早期背景埋伏1",
+      "bsc": {
+        "nonce_start": 203,
+        "nonce_end": 208,
+        "signed_delta": 5
+      },
+      "ethereum": {
+        "nonce_start": 362,
+        "nonce_end": 367,
+        "signed_delta": 5
+      },
+      "base": {
+        "nonce_start": 3,
+        "nonce_end": 3,
+        "signed_delta": 0
+      },
+      "any_of_three_signed": true
+    },
+    {
+      "source_row": 35,
+      "address": "0x977347bc6020db1e0bec0d52b8e7bbfed5bc6f5f",
+      "source_label_unverified": "阴谋早期",
+      "bsc": {
+        "nonce_start": 0,
+        "nonce_end": 0,
+        "signed_delta": 0
+      },
+      "ethereum": {
+        "nonce_start": 0,
+        "nonce_end": 0,
+        "signed_delta": 0
+      },
+      "base": {
+        "nonce_start": 0,
+        "nonce_end": 0,
+        "signed_delta": 0
+      },
+      "any_of_three_signed": false
+    },
+    {
+      "source_row": 36,
+      "address": "0x6c03f1c2940c2949b370b6d5db65575f8329202a",
+      "source_label_unverified": "早期埋伏5",
+      "bsc": {
+        "nonce_start": 0,
+        "nonce_end": 0,
+        "signed_delta": 0
+      },
+      "ethereum": {
+        "nonce_start": 4,
+        "nonce_end": 4,
+        "signed_delta": 0
+      },
+      "base": {
+        "nonce_start": 56,
+        "nonce_end": 56,
+        "signed_delta": 0
+      },
+      "any_of_three_signed": false
+    },
+    {
+      "source_row": 37,
+      "address": "0xa6849a40f57c26b48069146105f7da9e024f62b6",
+      "source_label_unverified": "早期埋伏3",
+      "bsc": {
+        "nonce_start": 1210,
+        "nonce_end": 1224,
+        "signed_delta": 14
+      },
+      "ethereum": {
+        "nonce_start": 154,
+        "nonce_end": 178,
+        "signed_delta": 24
+      },
+      "base": {
+        "nonce_start": 1566,
+        "nonce_end": 1671,
+        "signed_delta": 105
+      },
+      "any_of_three_signed": true
+    },
+    {
+      "source_row": 38,
+      "address": "0x02b0c14d2c03852ccebd1b2e66ab3c075a57711d",
+      "source_label_unverified": "早期埋伏2",
+      "bsc": {
+        "nonce_start": 1954,
+        "nonce_end": 2502,
+        "signed_delta": 548
+      },
+      "ethereum": {
+        "nonce_start": 2603,
+        "nonce_end": 3603,
+        "signed_delta": 1000
+      },
+      "base": {
+        "nonce_start": 21340,
+        "nonce_end": 22742,
+        "signed_delta": 1402
+      },
+      "any_of_three_signed": true
+    },
+    {
+      "source_row": 39,
+      "address": "0x97060ace26a732a255d7fca4658837be047ccf07",
+      "source_label_unverified": "",
+      "bsc": {
+        "nonce_start": 8442,
+        "nonce_end": 9332,
+        "signed_delta": 890
+      },
+      "ethereum": {
+        "nonce_start": 820,
+        "nonce_end": 912,
+        "signed_delta": 92
+      },
+      "base": {
+        "nonce_start": 6493,
+        "nonce_end": 6655,
+        "signed_delta": 162
+      },
+      "any_of_three_signed": true
+    },
+    {
+      "source_row": 40,
+      "address": "0x5a0d8fcbdba47c78772dcf27753e7614cfd35e52",
+      "source_label_unverified": "早期埋伏1",
+      "bsc": {
+        "nonce_start": 3,
+        "nonce_end": 3,
+        "signed_delta": 0
+      },
+      "ethereum": {
+        "nonce_start": 102,
+        "nonce_end": 102,
+        "signed_delta": 0
+      },
+      "base": {
+        "nonce_start": 94,
+        "nonce_end": 94,
+        "signed_delta": 0
+      },
+      "any_of_three_signed": false
+    }
+  ],
+  "limits": [
+    "Nonce count is not a DEX trade count",
+    "No signed transactions across three chains does not imply EVM-wide inactivity",
+    "No whole-wallet or token PnL was audited in Batch 002",
+    "Provider-fetched fixed historical block states, not a current rolling window"
+  ]
+}

@@ -1,0 +1,462 @@
+{
+  "schema": "mission-address-analysis-active-pnl-queue-081-100-v1",
+  "observed_at_date": "2026-10-19",
+  "repository": "lxxlx2/ChatGPT_mission_record",
+  "pr_number": 97,
+  "baseline_commit": "a395e6d5eb6e4147ad2875932a5e6dfc4502845d",
+  "source_manifest_blob": "954f3aba66be21911dd627fa40dd3dd0a9fd1d26",
+  "provider": "Authenticated Alchemy EVM read-only APIs. getAssetTransfers returns transfer events only; original signed contract calls with no ERC20/native outgoing event can be omitted. No paid trace. Full raw provider responses not archived.",
+  "research_scope": "Research only / historical fixed 30-day source / cannot trade or rank wallets",
+  "first_outgoing_page": {
+    "candidate_positions": [
+      81,
+      100
+    ],
+    "network_windows": {
+      "bnb-mainnet": [
+        "0x74cf256",
+        "0x7a4ca36"
+      ],
+      "eth-mainnet": [
+        "0x18cb9c8",
+        "0x19001e3"
+      ]
+    },
+    "category": [
+      "erc20",
+      "external"
+    ],
+    "sort": "asc",
+    "max_count": 5,
+    "wallets": [
+      {
+        "queue_position": 81,
+        "source_row": 133,
+        "address": "0xd7e004cbda24e079aa3a657ba7f8e2915192a966",
+        "network": "bnb-mainnet",
+        "returned_first_page_events": 5,
+        "next_page_exists": true,
+        "first_event_tx_hash": "0x2b7e1c2ccf19d3e12a7632740082ce0f56280f4a4a1f04e90b378a0b67128b97",
+        "class": "FIRST_PAGE_EVENT_DISCOVERY_NOT_FULL_TRANSACTION_OR_PNL_AUDIT"
+      },
+      {
+        "queue_position": 82,
+        "source_row": 137,
+        "address": "0x9de06f2233cbde595ba3fede7bd070a3c6df0960",
+        "network": "bnb-mainnet",
+        "returned_first_page_events": 4,
+        "next_page_exists": false,
+        "first_event_tx_hash": "0xbc9006cf55667dbf679bb62053416bfd8304fa7497865a4d5246522431679284",
+        "class": "FIRST_PAGE_EVENT_DISCOVERY_NOT_FULL_TRANSACTION_OR_PNL_AUDIT"
+      },
+      {
+        "queue_position": 83,
+        "source_row": 139,
+        "address": "0x8b3658b1c8aff533c037836174972e503d2fb946",
+        "network": "bnb-mainnet",
+        "returned_first_page_events": 5,
+        "next_page_exists": true,
+        "first_event_tx_hash": "0xf8ac84e1b9954c26da659d41acc79f72aec8b3acc71417f9ac8fafb0aa139408",
+        "class": "FIRST_PAGE_EVENT_DISCOVERY_NOT_FULL_TRANSACTION_OR_PNL_AUDIT"
+      },
+      {
+        "queue_position": 84,
+        "source_row": 142,
+        "address": "0x9d703cdc89c9934d9e90a52c31d632775c9838c6",
+        "network": "eth-mainnet",
+        "returned_first_page_events": 3,
+        "next_page_exists": false,
+        "first_event_tx_hash": "0xa2e23c37d90e47558ad0c927692fa4c1796e7b214f3feacc952b5b4ac1dabd9f",
+        "class": "FIRST_PAGE_EVENT_DISCOVERY_NOT_FULL_TRANSACTION_OR_PNL_AUDIT"
+      },
+      {
+        "queue_position": 85,
+        "source_row": 143,
+        "address": "0x53a9f47eeddbfbae527d259a742f1ecfd0592844",
+        "network": "bnb-mainnet",
+        "returned_first_page_events": 5,
+        "next_page_exists": true,
+        "first_event_tx_hash": "0x44a473078c49f77f9e829c897e61a7fcce0285a6d0032725899a7696336af39a",
+        "class": "FIRST_PAGE_EVENT_DISCOVERY_NOT_FULL_TRANSACTION_OR_PNL_AUDIT"
+      },
+      {
+        "queue_position": 86,
+        "source_row": 144,
+        "address": "0x102f56db39b388640a2c9f3e9bf4a43791c649bf",
+        "network": "bnb-mainnet",
+        "returned_first_page_events": 5,
+        "next_page_exists": true,
+        "first_event_tx_hash": "0x6c3b7bea00fcfa878a9aa4669e1b1c9f3d74a96222ed09ae5f07dde20bb3bc5f",
+        "class": "FIRST_PAGE_EVENT_DISCOVERY_NOT_FULL_TRANSACTION_OR_PNL_AUDIT"
+      },
+      {
+        "queue_position": 87,
+        "source_row": 145,
+        "address": "0x7420416a0893575eac9ab7443e9ee5717fe804da",
+        "network": "bnb-mainnet",
+        "returned_first_page_events": 5,
+        "next_page_exists": true,
+        "first_event_tx_hash": "0xe4fb4fd7a7128e560ec69e420665ff21b29b9435e5e0478cc7a9a97f4c4dd3f6",
+        "class": "FIRST_PAGE_EVENT_DISCOVERY_NOT_FULL_TRANSACTION_OR_PNL_AUDIT"
+      },
+      {
+        "queue_position": 88,
+        "source_row": 146,
+        "address": "0xe14f5204244593df7d07e615590411baf3816ec4",
+        "network": "bnb-mainnet",
+        "returned_first_page_events": 5,
+        "next_page_exists": true,
+        "first_event_tx_hash": "0xf987a8fea63a60de5117c18a056c054ace99e05eb96a5831b7a3a849693339d2",
+        "class": "FIRST_PAGE_EVENT_DISCOVERY_NOT_FULL_TRANSACTION_OR_PNL_AUDIT"
+      },
+      {
+        "queue_position": 89,
+        "source_row": 147,
+        "address": "0x17412b2b513584c382e4e8dc34fc776a41395636",
+        "network": "bnb-mainnet",
+        "returned_first_page_events": 5,
+        "next_page_exists": true,
+        "first_event_tx_hash": "0x2894bbb256b1d336829e1f5ce55501ec09b8a3dab5061db20951fdf16cfb7f60",
+        "class": "FIRST_PAGE_EVENT_DISCOVERY_NOT_FULL_TRANSACTION_OR_PNL_AUDIT"
+      },
+      {
+        "queue_position": 90,
+        "source_row": 148,
+        "address": "0x2f84ebb2f7f8edcf8e83a75a12f32bd8d99de3e0",
+        "network": "bnb-mainnet",
+        "returned_first_page_events": 5,
+        "next_page_exists": true,
+        "first_event_tx_hash": "0xc8966d689b818c292ff07db9cdca4bc8ce829a1f703ff778452894643bb7df72",
+        "class": "FIRST_PAGE_EVENT_DISCOVERY_NOT_FULL_TRANSACTION_OR_PNL_AUDIT"
+      },
+      {
+        "queue_position": 91,
+        "source_row": 149,
+        "address": "0x44a5630ed91fcb1832c7274d04d777aa73708847",
+        "network": "bnb-mainnet",
+        "returned_first_page_events": 5,
+        "next_page_exists": true,
+        "first_event_tx_hash": "0xaa8ebf7076d060c5cd2eee5392f3961657f1b1160192ba24ebeb3b7586dbd314",
+        "class": "FIRST_PAGE_EVENT_DISCOVERY_NOT_FULL_TRANSACTION_OR_PNL_AUDIT"
+      },
+      {
+        "queue_position": 92,
+        "source_row": 151,
+        "address": "0x9c82a038e4571654c5576099f45e5dfc3f64cdb0",
+        "network": "eth-mainnet",
+        "returned_first_page_events": 5,
+        "next_page_exists": true,
+        "first_event_tx_hash": "0x88472bd502b2e57da75d2f22519d75d1f0c5b3b8f3e166a7789cbc3c5bd24af9",
+        "class": "FIRST_PAGE_EVENT_DISCOVERY_NOT_FULL_TRANSACTION_OR_PNL_AUDIT"
+      },
+      {
+        "queue_position": 93,
+        "source_row": 153,
+        "address": "0x363eaf696cff6cf1dd566a30eb321a8b30eb961c",
+        "network": "bnb-mainnet",
+        "returned_first_page_events": 5,
+        "next_page_exists": true,
+        "first_event_tx_hash": "0xb401d059de4bd5caf50a9a581d5b1bde5076c706b31629e1c79eeba623b9ebc0",
+        "class": "FIRST_PAGE_EVENT_DISCOVERY_NOT_FULL_TRANSACTION_OR_PNL_AUDIT"
+      },
+      {
+        "queue_position": 94,
+        "source_row": 156,
+        "address": "0x5619446496bc551554dfa0cd0f5ce9387589b9cf",
+        "network": "eth-mainnet",
+        "returned_first_page_events": 5,
+        "next_page_exists": true,
+        "first_event_tx_hash": "0x6e7b8ad0eb838e53f8f399984decd0a25c617382c9045e7cf20016745a868750",
+        "class": "FIRST_PAGE_EVENT_DISCOVERY_NOT_FULL_TRANSACTION_OR_PNL_AUDIT"
+      },
+      {
+        "queue_position": 95,
+        "source_row": 157,
+        "address": "0xbc74a2332c3c5eb950d911e50176256170e5df23",
+        "network": "eth-mainnet",
+        "returned_first_page_events": 5,
+        "next_page_exists": true,
+        "first_event_tx_hash": "0x0e6e1868ada16839a21f23a4c081fa1c31b276cd71d2ed925bb98c6bfa82c470",
+        "class": "FIRST_PAGE_EVENT_DISCOVERY_NOT_FULL_TRANSACTION_OR_PNL_AUDIT"
+      },
+      {
+        "queue_position": 96,
+        "source_row": 158,
+        "address": "0x1c06c36a559bbe99adece16eb7a63c5e997b2ef3",
+        "network": "eth-mainnet",
+        "returned_first_page_events": 5,
+        "next_page_exists": true,
+        "first_event_tx_hash": "0x42c36cd77d186c10e358ee4c95c5e0bc8c46a26e5a150bc41730ca27d0c6feed",
+        "class": "FIRST_PAGE_EVENT_DISCOVERY_NOT_FULL_TRANSACTION_OR_PNL_AUDIT"
+      },
+      {
+        "queue_position": 97,
+        "source_row": 159,
+        "address": "0xf91573e5e3450a1d245c19104d18107ddc6cbe6f",
+        "network": "bnb-mainnet",
+        "returned_first_page_events": 5,
+        "next_page_exists": true,
+        "first_event_tx_hash": "0x4526ac61c1b6e4331e58b9eea158be92994978583fdba367d19b34dba0e96d52",
+        "class": "FIRST_PAGE_EVENT_DISCOVERY_NOT_FULL_TRANSACTION_OR_PNL_AUDIT"
+      },
+      {
+        "queue_position": 98,
+        "source_row": 161,
+        "address": "0x5dbce812228bd08bfd4f08a2b6a1dbb613046afe",
+        "network": "bnb-mainnet",
+        "returned_first_page_events": 5,
+        "next_page_exists": true,
+        "first_event_tx_hash": "0xac305e570608eabdc11d46b6f579cd3b505badb62f6090e371526523af379833",
+        "class": "FIRST_PAGE_EVENT_DISCOVERY_NOT_FULL_TRANSACTION_OR_PNL_AUDIT"
+      },
+      {
+        "queue_position": 99,
+        "source_row": 165,
+        "address": "0x40074ed3469873dfa95edbb8c28ee72c572c6815",
+        "network": "bnb-mainnet",
+        "returned_first_page_events": 0,
+        "next_page_exists": false,
+        "first_event_tx_hash": null,
+        "class": "FIRST_PAGE_EVENT_DISCOVERY_NOT_FULL_TRANSACTION_OR_PNL_AUDIT"
+      },
+      {
+        "queue_position": 100,
+        "source_row": 166,
+        "address": "0xd7f2f5c91a1a81ed9cd890413f31d6dd12975dba",
+        "network": "bnb-mainnet",
+        "returned_first_page_events": 4,
+        "next_page_exists": false,
+        "first_event_tx_hash": "0x475ec714ee31c2d6446e9963f5b78242ef8c82136a741ab07a782c124c9503c4",
+        "class": "FIRST_PAGE_EVENT_DISCOVERY_NOT_FULL_TRANSACTION_OR_PNL_AUDIT"
+      }
+    ],
+    "total": 20,
+    "paginated": 16,
+    "zero_matching_events": 1
+  },
+  "case_studies": [
+    {
+      "source_row": 148,
+      "wallet": "0x2f84ebb2f7f8edcf8e83a75a12f32bd8d99de3e0",
+      "ca": "0x2c3b1ac7440b4b26e89ef8744bde15dd152d7777",
+      "token_symbol_untrusted": "MEMEBANK",
+      "decimals": 18,
+      "opening_token_balance_raw": "0",
+      "bought_token_raw": "29612057189146872120479019",
+      "sale_token_out_raw": "29612057189146872120479019",
+      "sale_token_out_events": 10,
+      "unique_signed_sale_txs": 5,
+      "pagination_exhausted_for_exact_ca": true,
+      "ending_token_balance_frozen_raw": "0",
+      "all_tx_from_wallet_to_router": true,
+      "all_router_txs_receipt_status": "0x1",
+      "trades": [
+        {
+          "phase": "buy",
+          "block": "0x74e221a",
+          "tx": "0xc5be4cecce0eaf8c82ca7b887ab53b39efadcab08ff5ddce60e900db2b97c6f4",
+          "nonce": "0x1cf9",
+          "wallet_signed_in_block": 1,
+          "tx_native_value_wei": "300000000000000000",
+          "native_block_balance_before_wei": "34625063885989003922",
+          "native_block_balance_after_wei": "34324998936806239586",
+          "block_native_delta_wei": "-300064949182764336",
+          "token_delta_raw": "29612057189146872120479019",
+          "receipt_status": "0x1"
+        },
+        {
+          "phase": "sell1",
+          "block": "0x74e29f4",
+          "tx": "0xce9ed3642192ba6ca9fc129914de6ef38009fbe4e289b1684eaff2d1346c379f",
+          "nonce": "0x1cfd",
+          "approval_tx": "0xdbec92531eda06a68928fcfe1feb415fa0dde941ec6f8d42854a467e4c234563",
+          "approval_selector": "0x095ea7b3",
+          "approval_to_token": "0x2c3b1ac7440b4b26e89ef8744bde15dd152d7777",
+          "router": "0x1de460f363af910f51726def188f9004276bf4bc",
+          "router_selector": "0x4d819a2a",
+          "receipt_status": "0x1",
+          "wallet_signed_in_block": 2,
+          "raw_out_to_token_contract": "74030142972867180301197",
+          "raw_out_to_pair": "7328984154313850849818557",
+          "native_block_balance_before_wei": "34333448891099169740",
+          "native_block_balance_after_wei": "34718709468768279339",
+          "block_native_delta_wei": "385260577669109599"
+        },
+        {
+          "phase": "sell2",
+          "block": "0x74e2b50",
+          "tx": "0xfa9cba5089c5b6804187ae6fade127fbd3991ad8187b9a8eb90b7e1e2752463c",
+          "nonce": "0x1cff",
+          "approval_tx": "0xa1ccca697bd01d51678046e97f0ac13156ecf25e299c41b2687a60fc130369c4",
+          "approval_selector": "0x095ea7b3",
+          "approval_to_token": "0x2c3b1ac7440b4b26e89ef8744bde15dd152d7777",
+          "router": "0x1de460f363af910f51726def188f9004276bf4bc",
+          "router_selector": "0x4d819a2a",
+          "receipt_status": "0x1",
+          "wallet_signed_in_block": 2,
+          "raw_out_to_token_contract": "33313564337790231135538",
+          "raw_out_to_pair": "3298042869441232882418351",
+          "native_block_balance_before_wei": "34718709468768279339",
+          "native_block_balance_after_wei": "35051963897721310713",
+          "block_native_delta_wei": "333254428953031374"
+        },
+        {
+          "phase": "sell3",
+          "block": "0x74e2e03",
+          "tx": "0x23b4c9425fc46cb818a9df689f71e1d65bbfe9309275ae71734014250adbebba",
+          "nonce": "0x1d01",
+          "approval_tx": "0xde126f05db4d02ceb4dde1aaeed96dbe97b16271cc95ac8556fb3afa3ccdf814",
+          "approval_selector": "0x095ea7b3",
+          "approval_to_token": "0x2c3b1ac7440b4b26e89ef8744bde15dd152d7777",
+          "router": "0x1de460f363af910f51726def188f9004276bf4bc",
+          "router_selector": "0x4d819a2a",
+          "receipt_status": "0x1",
+          "wallet_signed_in_block": 2,
+          "raw_out_to_token_contract": "28316529687121696465208",
+          "raw_out_to_pair": "2803336439025047950055598",
+          "native_block_balance_before_wei": "35051963897721310713",
+          "native_block_balance_after_wei": "35617481237733960415",
+          "block_native_delta_wei": "565517340012649702"
+        },
+        {
+          "phase": "sell4",
+          "block": "0x74e3b41",
+          "tx": "0x6e79310ede1c43f424574c328661715948e457b0ea28178e9d86312d62fe3d67",
+          "nonce": "0x1d03",
+          "approval_tx": "0xfec5853d62176d489e2588fe5c634b2c8b181b227b8ac95cddb128bafd9c2882",
+          "approval_selector": "0x095ea7b3",
+          "approval_to_token": "0x2c3b1ac7440b4b26e89ef8744bde15dd152d7777",
+          "router": "0x1de460f363af910f51726def188f9004276bf4bc",
+          "router_selector": "0x4d819a2a",
+          "receipt_status": "0x1",
+          "wallet_signed_in_block": 2,
+          "raw_out_to_token_contract": "24069050234053441995426",
+          "raw_out_to_pair": "2382835973171290757547259",
+          "native_block_balance_before_wei": "35617481237733960415",
+          "native_block_balance_after_wei": "36015780983080735802",
+          "block_native_delta_wei": "398299745346775387"
+        },
+        {
+          "phase": "sell5",
+          "block": "0x74f3cc4",
+          "tx": "0xd7ef8f13dba667b5f797937bf91494059253c0e9fb74c59374180c697f497b00",
+          "nonce": "0x1d44",
+          "approval_tx": "0xeb685b2e3a1b0673467f1e1016c34c3a2af067570af3cc7bfd4e012e0a2da473",
+          "approval_selector": "0x095ea7b3",
+          "approval_to_token": "0x2c3b1ac7440b4b26e89ef8744bde15dd152d7777",
+          "router": "0x1de460f363af910f51726def188f9004276bf4bc",
+          "router_selector": "0x4d819a2a",
+          "receipt_status": "0x1",
+          "wallet_signed_in_block": 4,
+          "raw_out_to_token_contract": "136391284659636171307418",
+          "raw_out_to_pair": "13502737181303980959434467",
+          "native_block_balance_before_wei": "2339657293175866996",
+          "native_block_balance_after_wei": "2486499963961650102",
+          "block_native_delta_wei": "146842670785783106"
+        }
+      ],
+      "from_block": "0x74cf256",
+      "to_block": "0x7a4ca36",
+      "direct_native_external_inbound_in_each_6_execution_blocks": 0,
+      "first_four_sale_blocks_only_wallet_signed_tx_types": [
+        "token approval",
+        "Router sale"
+      ],
+      "first_four_sell_and_buy_block_native_net_wei": "1382267142798801726",
+      "all_five_sell_and_buy_block_native_net_wei": "1529109813584584832",
+      "provisional_profit_in_bnb": "1.529109813584584832",
+      "status": "HIGH_CONFIDENCE_POSITIVE_CLOSED_TOKEN_CANDIDATE_NOT_INDEPENDENTLY_SETTLED",
+      "basis": "Signed 1 buy + signed 5 Router sells. Exact CA transfer integer inventory conserved from 0 to 0; gas-included wallet native delta across the six execution blocks is positive.",
+      "limitations": [
+        "Alchemy BNB free tier rejects trace_transaction/debug_traceTransaction and does not permit getAssetTransfers internal category, so native settlement attribution cannot be independently proven.",
+        "The 5th sale block included 4 wallet-signed txs, unlike other sale blocks (2 approvals+sale); its net block balance change cannot be isolated to MEMEBANK alone.",
+        "Even the first 4 sale blocks' native changes are block-level, not verified independently sourced internal Router payouts. Do not label 1.529... BNB as verified realized PnL or quote a realized ROI.",
+        "Complete account-level 30d and lifetime losses/cost basis, other assets and chains not audited."
+      ]
+    },
+    {
+      "source_row": 137,
+      "wallet": "0x9de06f2233cbde595ba3fede7bd070a3c6df0960",
+      "ca": "0xba2ae424d960c26247dd6c32edc70b295c744c43",
+      "token": "DOGE",
+      "decimals": 8,
+      "in_txs": [
+        "0x73ed375342d8003d99c89bf38659fbd0484fd6ff0fc67259a34970eede02ae2a",
+        "0xc8e834877ddf161e742f06a84a790a946acb8ecb4ed026cc88cbfc3fcf359ae4"
+      ],
+      "incoming_raw_components": [
+        "0x918d32867",
+        "0x94eeba79"
+      ],
+      "out_tx": "0xbc9006cf55667dbf679bb62053416bfd8304fa7497865a4d5246522431679284",
+      "out_to": "0xac109c8025f272414fd9d2faa805a583708a017f",
+      "out_tx_real_to_router": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "out_signed_selector": "0x4d819a2a",
+      "receipt_status": "0x1",
+      "out_raw": "41569870560",
+      "in_total_raw": "41569870560",
+      "ending_balance_raw": "0",
+      "cost_origin": "TWO_THIRD_PARTY_ERC20_TRANSFERS",
+      "status": "INVENTORY_CLOSED_ACQUISITION_BASIS_UNRESOLVED",
+      "pnl": "UNRESOLVED"
+    },
+    {
+      "source_row": 165,
+      "wallet": "0x40074ed3469873dfa95edbb8c28ee72c572c6815",
+      "nonce_start": 2133,
+      "nonce_end": 3135,
+      "signed_transactions_delta": 1002,
+      "bsc_outgoing_external_erc20_events_in_window": 0,
+      "incoming_erc20_first_page_count": 10,
+      "incoming_first_page_has_more": true,
+      "status": "NONCE_ACTIVE_WITH_NO_SAMPLED_OUTGOING_EVENTS",
+      "importance": "Shows ERC20/external event sampling misses signed contract calls and cannot be interpreted as zero transactions."
+    },
+    {
+      "source_row": 166,
+      "wallet": "0xd7f2f5c91a1a81ed9cd890413f31d6dd12975dba",
+      "signed_token_transfer": "0x475ec714ee31c2d6446e9963f5b78242ef8c82136a741ab07a782c124c9503c4",
+      "transfer_selector": "0xa9059cbb",
+      "real_WBNB_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "imitation_WBNB_CA": "0xca7ae231f9b5a3c202e94e9c05d817775c52f35b",
+      "status": "CANONICAL_AND_MIMIC_TOKEN_SPLIT_NO_VERIFIED_PNL"
+    }
+  ],
+  "new_verified_full_wallet_pnl": 0,
+  "new_positive_token_candidates": 1,
+  "new_negative_token_proved": 0,
+  "cumulative_active_candidate_first_pass": 100,
+  "active_candidate_total": 237,
+  "first_five_groups_pages_deferred": 73,
+  "next_candidate_source_rows": [
+    167,
+    168,
+    169,
+    170,
+    171,
+    173,
+    174,
+    175,
+    177,
+    178,
+    179,
+    180,
+    181,
+    183,
+    185,
+    186,
+    190,
+    191,
+    192,
+    193
+  ],
+  "restrictions": [
+    "PR_DRAFT",
+    "RESEARCH_ONLY",
+    "NO_MERGE",
+    "NO_DEPLOY",
+    "NO_GMAIL",
+    "NO_TRADE",
+    "NO_NEW_AUTOMATION"
+  ]
+}

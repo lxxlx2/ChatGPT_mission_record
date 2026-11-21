@@ -1,0 +1,134 @@
+{
+  "schema": "mission-address-analysis-two-sauce-closed-token-roundtrips-v1",
+  "source_blob_sha": "954f3aba66be21911dd627fa40dd3dd0a9fd1d26",
+  "research_only": true,
+  "as_of_date": "2026-10-18",
+  "network": "bnb-mainnet",
+  "token": {
+    "symbol": "sauce",
+    "name": "saucecoin",
+    "address": "0xd7ccd29b6fd1464edb425f24b01115556e737777",
+    "decimals": 18
+  },
+  "router": "0x1de460f363af910f51726def188f9004276bf4bc",
+  "selector": "0x4d819a2a",
+  "execution_window": {
+    "buys": "2026-08-20",
+    "sells": "2026-10-16",
+    "note": "Pre-window purchases are historical basis for recent-window exits"
+  },
+  "historical_binance_spot_bnbusdt": {
+    "interval": "1m",
+    "buy_minute_utc": "2026-08-20T12:29:00Z",
+    "buy_close": "642.07",
+    "sell_minute_utc": "2026-10-16T12:58:00Z",
+    "sell_close": "728.09",
+    "usd_marks_are_indicative": true
+  },
+  "roundtrips": [
+    {
+      "row": 2,
+      "wallet": "0x0d8d6c105629e472691f9a970a6f70899195b5e0",
+      "token": "0xd7ccd29b6fd1464edb425f24b01115556e737777",
+      "decimals": 18,
+      "tx_status": "SUCCESS for two purchases and final exit",
+      "buy_tx_hashes": [
+        "0x0642b8ec018ca67763d89964b3f48e0bd923ff41261e081fdc9d8f380aaf7dbf",
+        "0xb7e3e18bd21ca862edb1ac72d95292064d5c3033dc3f3b15d36bf42f62d06ab0"
+      ],
+      "buy_blocks": [
+        "0x6f9e4df",
+        "0x6f9e4e1"
+      ],
+      "buy_utc": [
+        "2026-08-20T12:29:30Z",
+        "2026-08-20T12:29:31Z"
+      ],
+      "buy_tx_value_each_wei": "25000000000000000",
+      "buy_native_net_wallet_deltas_wei": [
+        "-27290390000000000",
+        "-27023585000000000"
+      ],
+      "sell_tx": "0x8f4e9a6da569698e9c6c28d59bf39cf600d1bdbb3f497db915e18b9f8677885a",
+      "sell_approval_same_block_tx": "0x56d745f5ac3d7458b107be7e3d3be2b7ca8c3e24f143a389222521d7e9b2f70f",
+      "sell_utc": "2026-10-16T12:58:56Z",
+      "sell_block": "0x7a0db98",
+      "native_sale_net_wallet_delta_wei": "211142080278687674",
+      "net_cost_wei": "54313975000000000",
+      "net_gain_wei": "156828105278687674",
+      "native_gain_bnb": 0.15682810527868768,
+      "roi_bnb_percent": 288.74356052689507,
+      "usd_gain_indicative": 118.86,
+      "balance_of_raw": {
+        "before_buy": "0",
+        "after_buy1": "31708285150519965576422",
+        "after_buy2": "63699915473588833872341",
+        "before_sale": "63699915473588833872341",
+        "after_sale": "0"
+      },
+      "verified_signed_nonce_delta_in_buy_blocks": [
+        1,
+        1
+      ],
+      "sell_block_signed_nonce_delta": 2,
+      "sell_block_second_tx": "approve(0x095ea7b3)",
+      "wallet_monthly_and_lifetime_pnl": "UNRESOLVED"
+    },
+    {
+      "row": 4,
+      "wallet": "0x00077705952c90b728c6d7dc450beb4429331111",
+      "token": "0xd7ccd29b6fd1464edb425f24b01115556e737777",
+      "decimals": 18,
+      "tx_status": "SUCCESS for two purchases and final exit",
+      "buy_tx_hashes": [
+        "0x743f86e1c26c5e6cb909eb1095f98dfafb4ea10517c108e9b5c5ee8c70b13e7d",
+        "0x7c83aa6fc4d857fd8be82bb016e312cf56795ed63c0a7d33112d06b8c4dac6a2"
+      ],
+      "buy_blocks": [
+        "0x6f9e4df",
+        "0x6f9e4e1"
+      ],
+      "buy_utc": [
+        "2026-08-20T12:29:30Z",
+        "2026-08-20T12:29:31Z"
+      ],
+      "buy_tx_value_each_wei": "25000000000000000",
+      "buy_native_net_wallet_deltas_wei": [
+        "-27290390000000000",
+        "-27023585000000000"
+      ],
+      "sell_tx": "0x08a0bd46524f758306d4127b61a5d4c9e498a0da1e6f82feaef898724fa858e1",
+      "sell_approval_same_block_tx": "0xc9a6b5b1c3510fa10316ccbdbd13e451f195f52f6bf35bf22e8751dd3d3a3750",
+      "sell_utc": "2026-10-16T12:58:56Z",
+      "sell_block": "0x7a0db98",
+      "native_sale_net_wallet_delta_wei": "208529773043203099",
+      "net_cost_wei": "54313975000000000",
+      "net_gain_wei": "154215798043203099",
+      "native_gain_bnb": 0.1542157980432031,
+      "roi_bnb_percent": 283.9339194805814,
+      "usd_gain_indicative": 116.96,
+      "balance_of_raw": {
+        "before_buy": "0",
+        "after_buy1": "31620974866769398681553",
+        "after_buy2": "63523412284240094966004",
+        "before_sale": "63523412284240094966004",
+        "after_sale": "0"
+      },
+      "verified_signed_nonce_delta_in_buy_blocks": [
+        1,
+        1
+      ],
+      "sell_block_signed_nonce_delta": 2,
+      "sell_block_second_tx": "approve(0x095ea7b3)",
+      "wallet_monthly_and_lifetime_pnl": "UNRESOLVED"
+    }
+  ],
+  "validation": [
+    "Raw sauce balanceOf equals zero before purchase and after exit for each wallet",
+    "Both intermediates were read from historical onchain block states",
+    "All six router swaps successful; buyer historical BNB paid 0.025 per buy plus gas; seller block includes approval gas",
+    "No other wallet-signed activity in buy blocks; exactly approval and sale signed in sell block",
+    "Native balance height-1 to height captures sale proceeds and gas but cannot entirely rule out unsolicited same-block credits without full internal trace",
+    "Only completed sauce token position verified; wallet total PnL and losses elsewhere unresolved"
+  ]
+}

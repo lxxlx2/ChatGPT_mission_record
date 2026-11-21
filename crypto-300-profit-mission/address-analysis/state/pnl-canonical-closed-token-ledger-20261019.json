@@ -1,0 +1,182 @@
+{
+  "schema": "mission-address-analysis-canonical-realized-pnl-candidates-v1",
+  "date": "2026-10-19",
+  "pr": 97,
+  "branch": "research/address-analysis-oooooyoung-20261018",
+  "created_from_commit": "d6cc118b9776846a351fb5678b72d33079715ccc",
+  "total_closed_token_roundtrips": 5,
+  "unique_original_source_wallets": 4,
+  "positives_native_execution_block": 3,
+  "negatives_native_execution_block": 2,
+  "with_hash_matched_wbnb_event": 3,
+  "approved_token_net_pnl": 0,
+  "approved_wallet_30d_pnl": 0,
+  "approved_wallet_lifetime_pnl": 0,
+  "records": [
+    {
+      "source_row": 2,
+      "wallet": "0x0d8d6c105629e472691f9a970a6f70899195b5e0",
+      "network": "bnb-mainnet",
+      "token": "sauce",
+      "contract_ca": "0xd7ccd29b6fd1464edb425f24b01115556e737777",
+      "token_raw_received": "63699915473588833872341",
+      "token_raw_sold": "63699915473588833872341",
+      "buy_tx_hashes": [
+        "0x0642b8ec018ca67763d89964b3f48e0bd923ff41261e081fdc9d8f380aaf7dbf",
+        "0xb7e3e18bd21ca862edb1ac72d95292064d5c3033dc3f3b15d36bf42f62d06ab0"
+      ],
+      "sell_tx_hash": "0x8f4e9a6da569698e9c6c28d59bf39cf600d1bdbb3f497db915e18b9f8677885a",
+      "combined_native_execution_block_delta_wei": "156828105278687674",
+      "closed": true,
+      "token_inventory_closed": true,
+      "quote_wbnb_contract": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "gross_wbnb_input_buy_wei": null,
+      "gross_wbnb_output_sell_wei": null,
+      "gross_wbnb_event_spread_wei": null,
+      "gross_wbnb_event_spread_BNB": null,
+      "execution_block_native_delta_BNB": "0.156828105278687674",
+      "observed_direction": "POSITIVE",
+      "wallet_trade_settlement_pnl": "UNRESOLVED",
+      "whole_wallet_30d_pnl": "UNRESOLVED",
+      "whole_wallet_lifetime_pnl": "UNRESOLVED",
+      "evidence_status": "CLOSED_TOKEN_AND_EXECUTION_BLOCK_NATIVE_DELTA_ONLY",
+      "source_evidence_paths": [
+        "evidence/pnl-mainline-first-signed-roundtrips-20261019.json"
+      ],
+      "next_action": "LOOK_FOR_HASH_MATCHED_QUOTE_ASSET_LOGS_WITHIN_QUERY_BUDGET"
+    },
+    {
+      "source_row": 4,
+      "wallet": "0x00077705952c90b728c6d7dc450beb4429331111",
+      "network": "bnb-mainnet",
+      "token": "sauce",
+      "contract_ca": "0xd7ccd29b6fd1464edb425f24b01115556e737777",
+      "token_raw_received": "63523412284240094966004",
+      "token_raw_sold": "63523412284240094966004",
+      "buy_tx_hashes": [
+        "0x743f86e1c26c5e6cb909eb1095f98dfafb4ea10517c108e9b5c5ee8c70b13e7d",
+        "0x7c83aa6fc4d857fd8be82bb016e312cf56795ed63c0a7d33112d06b8c4dac6a2"
+      ],
+      "sell_tx_hash": "0x08a0bd46524f758306d4127b61a5d4c9e498a0da1e6f82feaef898724fa858e1",
+      "combined_native_execution_block_delta_wei": "154215798043203099",
+      "closed": true,
+      "token_inventory_closed": true,
+      "quote_wbnb_contract": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "gross_wbnb_input_buy_wei": null,
+      "gross_wbnb_output_sell_wei": null,
+      "gross_wbnb_event_spread_wei": null,
+      "gross_wbnb_event_spread_BNB": null,
+      "execution_block_native_delta_BNB": "0.154215798043203099",
+      "observed_direction": "POSITIVE",
+      "wallet_trade_settlement_pnl": "UNRESOLVED",
+      "whole_wallet_30d_pnl": "UNRESOLVED",
+      "whole_wallet_lifetime_pnl": "UNRESOLVED",
+      "evidence_status": "CLOSED_TOKEN_AND_EXECUTION_BLOCK_NATIVE_DELTA_ONLY",
+      "source_evidence_paths": [
+        "evidence/pnl-mainline-first-signed-roundtrips-20261019.json"
+      ],
+      "next_action": "LOOK_FOR_HASH_MATCHED_QUOTE_ASSET_LOGS_WITHIN_QUERY_BUDGET"
+    },
+    {
+      "source_row": 400,
+      "wallet": "0xbac453b9b7f53b35ac906b641925b2f5f2567a89",
+      "network": "bnb-mainnet",
+      "token": "BOARDSEAT",
+      "contract_ca": "0x1dfbfd0adec46b824a959cb7936625be0cb76711",
+      "token_raw_received": "29871175301577255802404783",
+      "token_raw_sold": "29871175301577255802404783",
+      "buy_tx_hashes": [
+        "0x099de44e8175bdb1bd25ec08c223c5d10cccc4d53752b95d2a2e62e0beadf5db"
+      ],
+      "sell_tx_hash": "0x4a6c126269c92cef7a2fd2397e70bbe72011d1a399229a3baa877b471f7d4d2e",
+      "combined_native_execution_block_delta_wei": "-337858120186780058",
+      "closed": true,
+      "token_inventory_closed": true,
+      "quote_wbnb_contract": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "gross_wbnb_input_buy_wei": "990000000000000000",
+      "gross_wbnb_output_sell_wei": "668967157750727214",
+      "gross_wbnb_event_spread_wei": "-321032842249272786",
+      "gross_wbnb_event_spread_BNB": "-0.321032842249272786",
+      "execution_block_native_delta_BNB": "-0.337858120186780058",
+      "observed_direction": "NEGATIVE",
+      "wallet_trade_settlement_pnl": "UNRESOLVED",
+      "whole_wallet_30d_pnl": "UNRESOLVED",
+      "whole_wallet_lifetime_pnl": "UNRESOLVED",
+      "evidence_status": "HASH_MATCHED_WBNB_QUOTE_EVENTS_AND_CLOSED_TOKEN",
+      "source_evidence_paths": [
+        "evidence/pnl-mainline-first-signed-roundtrips-20261019.json",
+        "evidence/pnl-mainline-row227-two-token-replay-20261019.json",
+        "evidence/pnl-mainline-wbnb-event-quotes-20261019.json"
+      ],
+      "next_action": "DEFER_NATIVE_INTERNAL_TRACE; MOVE_TO_DIRECT_TOKEN_QUOTE_PROCEEDS"
+    },
+    {
+      "source_row": 227,
+      "wallet": "0x664d6645a04be9e27a8b33088f85025f29d45dc1",
+      "network": "bnb-mainnet",
+      "token": "BOARDSEAT",
+      "contract_ca": "0x1dfbfd0adec46b824a959cb7936625be0cb76711",
+      "token_raw_received": "35144723500648011394907217",
+      "token_raw_sold": "35144723500648011394907217",
+      "buy_tx_hashes": [
+        "0x83166b427a3b57463e1a3de9f8162ae8b1e9a68b9211ce339f72ab982e0e4e02"
+      ],
+      "sell_tx_hash": "0x9349a04cf35c7846c77dfd1c28e0e64f761747b5686adec5d47318fbf30d96cc",
+      "combined_native_execution_block_delta_wei": "139871398530549414",
+      "closed": true,
+      "token_inventory_closed": true,
+      "quote_wbnb_contract": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "gross_wbnb_input_buy_wei": "330000000000000000",
+      "gross_wbnb_output_sell_wei": "483663976630184592",
+      "gross_wbnb_event_spread_wei": "153663976630184592",
+      "gross_wbnb_event_spread_BNB": "0.153663976630184592",
+      "execution_block_native_delta_BNB": "0.139871398530549414",
+      "observed_direction": "POSITIVE",
+      "wallet_trade_settlement_pnl": "UNRESOLVED",
+      "whole_wallet_30d_pnl": "UNRESOLVED",
+      "whole_wallet_lifetime_pnl": "UNRESOLVED",
+      "evidence_status": "HASH_MATCHED_WBNB_QUOTE_EVENTS_AND_CLOSED_TOKEN",
+      "source_evidence_paths": [
+        "evidence/pnl-mainline-first-signed-roundtrips-20261019.json",
+        "evidence/pnl-mainline-row227-two-token-replay-20261019.json",
+        "evidence/pnl-mainline-wbnb-event-quotes-20261019.json"
+      ],
+      "next_action": "DEFER_NATIVE_INTERNAL_TRACE; MOVE_TO_DIRECT_TOKEN_QUOTE_PROCEEDS"
+    },
+    {
+      "source_row": 227,
+      "wallet": "0x664d6645a04be9e27a8b33088f85025f29d45dc1",
+      "network": "bnb-mainnet",
+      "token": "BTCLIFE",
+      "contract_ca": "0xe8034dcde23a869027893c90e483c5e065700d3c",
+      "token_raw_received": "16217062283892380440511923",
+      "token_raw_sold": "16217062283892380440511923",
+      "buy_tx_hashes": [
+        "0x9db45eb50fd726266111d3f6903dfe85d63799f973d746faf37289c697e65766"
+      ],
+      "sell_tx_hash": "0xf8ad3230681af452306ee6219e92c724bd935d347b4d9740f68cafb8e1bdb394",
+      "combined_native_execution_block_delta_wei": "-190058157929590970",
+      "closed": true,
+      "token_inventory_closed": true,
+      "quote_wbnb_contract": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "gross_wbnb_input_buy_wei": "330000000000000000",
+      "gross_wbnb_output_sell_wei": "149944555963376124",
+      "gross_wbnb_event_spread_wei": "-180055444036623876",
+      "gross_wbnb_event_spread_BNB": "-0.180055444036623876",
+      "execution_block_native_delta_BNB": "-0.190058157929590970",
+      "observed_direction": "NEGATIVE",
+      "wallet_trade_settlement_pnl": "UNRESOLVED",
+      "whole_wallet_30d_pnl": "UNRESOLVED",
+      "whole_wallet_lifetime_pnl": "UNRESOLVED",
+      "evidence_status": "HASH_MATCHED_WBNB_QUOTE_EVENTS_AND_CLOSED_TOKEN",
+      "source_evidence_paths": [
+        "evidence/pnl-mainline-first-signed-roundtrips-20261019.json",
+        "evidence/pnl-mainline-row227-two-token-replay-20261019.json",
+        "evidence/pnl-mainline-wbnb-event-quotes-20261019.json"
+      ],
+      "next_action": "DEFER_NATIVE_INTERNAL_TRACE; MOVE_TO_DIRECT_TOKEN_QUOTE_PROCEEDS"
+    }
+  ],
+  "warning": "The three WBNB gross price records are ROUTER QUOTE EVENTS, not exact proceeds delivered to wallet. Neither gross WBNB spread nor wallet before/after block balance is independent, fully audited realized net PnL. Do not treat 5 cycles as 5 independent wallets/strategies. #002/#004 are correlated same-block sauce transactions, #227 has 2 tokens.",
+  "next_priority": "Seek transfer-proven ERC20 quote asset entering/leaving wallet within same signed buy/sell hashes, else stop after bounded evidence checks."
+}

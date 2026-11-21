@@ -1,0 +1,305 @@
+{
+  "schema": "mission-address-analysis-active-queue-second20-20261019-v1",
+  "authority": "AUTHENTICATED_ALCHEMY_READONLY",
+  "source_blob_sha": "954f3aba66be21911dd627fa40dd3dd0a9fd1d26",
+  "source_first_stage": "449/449 activity screened, 237 active candidates frozen source order",
+  "queue_positions": [
+    21,
+    40
+  ],
+  "baseline_commit": "a62bcb93103514f92887cdb3bcfbc4da8828ee61",
+  "frozen_chains": {
+    "bnb": [
+      "0x74cf256",
+      "0x7a4ca36"
+    ],
+    "ethereum": [
+      "0x18cb9c8",
+      "0x19001e3"
+    ],
+    "base": [
+      "0x310fd64",
+      "0x324c3e5"
+    ]
+  },
+  "read_method": "getAssetTransfers direction fromAddress, categories erc20+external, order asc, maxCount 5 for ordinary first-page, 6 for six low-frequency both-way checks; additional toAddress first-page for selected rows 34,44,45,50,51,60.",
+  "sample_first_pages": [
+    {
+      "candidate_position": 21,
+      "source_row": 29,
+      "network": "bnb-mainnet",
+      "returned_count": 5,
+      "has_more": true,
+      "first_tx_hash": "0x55fe2c8ccd3a15284f4ea600aabccac702ca6c883b3411ee23ffbdb997e62ceb",
+      "status": "OUTBOUND_TRANSFER_DISCOVERY_ONLY_NOT_CONFIRMED_SWAP_OR_PNL"
+    },
+    {
+      "candidate_position": 22,
+      "source_row": 30,
+      "network": "bnb-mainnet",
+      "returned_count": 5,
+      "has_more": true,
+      "first_tx_hash": "0xb85a4d4eabe56e29491448b87938d5c15288af119b7f8c8b037aca5eaa185084",
+      "status": "OUTBOUND_TRANSFER_DISCOVERY_ONLY_NOT_CONFIRMED_SWAP_OR_PNL"
+    },
+    {
+      "candidate_position": 23,
+      "source_row": 31,
+      "network": "bnb-mainnet",
+      "returned_count": 5,
+      "has_more": true,
+      "first_tx_hash": "0x478b772d81c8dcee8d0826d7ef8a81d2c879490617e2f55049de92f95a962166",
+      "status": "OUTBOUND_TRANSFER_DISCOVERY_ONLY_NOT_CONFIRMED_SWAP_OR_PNL"
+    },
+    {
+      "candidate_position": 24,
+      "source_row": 32,
+      "network": "bnb-mainnet",
+      "returned_count": 5,
+      "has_more": true,
+      "first_tx_hash": "0x757ff16d45b18922616fed6e9769c5a5cca3ff724d0e89dc8637f801be0a65dc",
+      "status": "OUTBOUND_TRANSFER_DISCOVERY_ONLY_NOT_CONFIRMED_SWAP_OR_PNL"
+    },
+    {
+      "candidate_position": 25,
+      "source_row": 34,
+      "network": "bnb-mainnet",
+      "returned_count": 6,
+      "has_more": true,
+      "first_tx_hash": "0x5bdb2d2fba2d487afc8f36648c644a1f1ce7a0c7c4b02b14b8a6b570b227ef42",
+      "status": "OUTBOUND_TRANSFER_DISCOVERY_ONLY_NOT_CONFIRMED_SWAP_OR_PNL"
+    },
+    {
+      "candidate_position": 26,
+      "source_row": 37,
+      "network": "bnb-mainnet",
+      "returned_count": 5,
+      "has_more": true,
+      "first_tx_hash": "0xf23275f8aadba57e9d4b444b64dfbb304d187ed20061f0aedebee44263528b9e",
+      "status": "OUTBOUND_TRANSFER_DISCOVERY_ONLY_NOT_CONFIRMED_SWAP_OR_PNL"
+    },
+    {
+      "candidate_position": 27,
+      "source_row": 38,
+      "network": "bnb-mainnet",
+      "returned_count": 5,
+      "has_more": true,
+      "first_tx_hash": "0x330aace5795fdab5df251a9c8cb185faf821f07d166c5232d5a5dcd73c8bf602",
+      "status": "OUTBOUND_TRANSFER_DISCOVERY_ONLY_NOT_CONFIRMED_SWAP_OR_PNL"
+    },
+    {
+      "candidate_position": 28,
+      "source_row": 39,
+      "network": "bnb-mainnet",
+      "returned_count": 5,
+      "has_more": true,
+      "first_tx_hash": "0x021e1dc3d124e304173d84942d6a7be565a1100fcb6b46f15faf5b5fe4febdcd",
+      "status": "OUTBOUND_TRANSFER_DISCOVERY_ONLY_NOT_CONFIRMED_SWAP_OR_PNL"
+    },
+    {
+      "candidate_position": 29,
+      "source_row": 43,
+      "network": "bnb-mainnet",
+      "returned_count": 5,
+      "has_more": true,
+      "first_tx_hash": "0x10fbf6c8855983176c4b9749e364fb6077ddb34f64a4b289ca4f95a3c278514e",
+      "status": "OUTBOUND_TRANSFER_DISCOVERY_ONLY_NOT_CONFIRMED_SWAP_OR_PNL"
+    },
+    {
+      "candidate_position": 30,
+      "source_row": 44,
+      "network": "bnb-mainnet",
+      "returned_count": 2,
+      "has_more": false,
+      "first_tx_hash": "0x9fe8b9c857bf9e2c28f64c8a21b06eabdf9357977974984885cba4beeea02e6d",
+      "status": "OUTBOUND_TRANSFER_DISCOVERY_ONLY_NOT_CONFIRMED_SWAP_OR_PNL"
+    },
+    {
+      "candidate_position": 31,
+      "source_row": 45,
+      "network": "base-mainnet",
+      "returned_count": 6,
+      "has_more": true,
+      "first_tx_hash": "0x44965de6b382eeb673e9f3c42eb74b644d2f8cdb1c2dca223fd04e39a3309f6a",
+      "status": "OUTBOUND_TRANSFER_DISCOVERY_ONLY_NOT_CONFIRMED_SWAP_OR_PNL"
+    },
+    {
+      "candidate_position": 32,
+      "source_row": 50,
+      "network": "eth-mainnet",
+      "returned_count": 1,
+      "has_more": false,
+      "first_tx_hash": "0x92854f297b49b842329ccdf602845b21e8aaa99aba84607afcf6102340fd69d6",
+      "status": "OUTBOUND_TRANSFER_DISCOVERY_ONLY_NOT_CONFIRMED_SWAP_OR_PNL"
+    },
+    {
+      "candidate_position": 33,
+      "source_row": 51,
+      "network": "base-mainnet",
+      "returned_count": 4,
+      "has_more": false,
+      "first_tx_hash": "0x990907b41f68a0020ce7856c7ce01c0f748b7362a47f0d86e1c5e3796c1234dc",
+      "status": "OUTBOUND_TRANSFER_DISCOVERY_ONLY_NOT_CONFIRMED_SWAP_OR_PNL"
+    },
+    {
+      "candidate_position": 34,
+      "source_row": 60,
+      "network": "bnb-mainnet",
+      "returned_count": 4,
+      "has_more": false,
+      "first_tx_hash": "0x8c1b75fb7f48e52cef7809c14df1be308fafce1951e41bcdf032c556faa465f7",
+      "status": "OUTBOUND_TRANSFER_DISCOVERY_ONLY_NOT_CONFIRMED_SWAP_OR_PNL"
+    },
+    {
+      "candidate_position": 35,
+      "source_row": 63,
+      "network": "bnb-mainnet",
+      "returned_count": 5,
+      "has_more": true,
+      "first_tx_hash": "0x41d10068772255ab2ef4f129eac93cd347a8762cefdbe5396cd751af2abfad0b",
+      "status": "OUTBOUND_TRANSFER_DISCOVERY_ONLY_NOT_CONFIRMED_SWAP_OR_PNL"
+    },
+    {
+      "candidate_position": 36,
+      "source_row": 64,
+      "network": "bnb-mainnet",
+      "returned_count": 5,
+      "has_more": true,
+      "first_tx_hash": "0x37d4c893b2621ead59291229019994599bfd1b018e67ad20ee1f887992924a29",
+      "status": "OUTBOUND_TRANSFER_DISCOVERY_ONLY_NOT_CONFIRMED_SWAP_OR_PNL"
+    },
+    {
+      "candidate_position": 37,
+      "source_row": 65,
+      "network": "bnb-mainnet",
+      "returned_count": 5,
+      "has_more": true,
+      "first_tx_hash": "0x4c31150de17aaff023723511da8df5a53f0a7be6487fdbe9954ef8ca999a8a73",
+      "status": "OUTBOUND_TRANSFER_DISCOVERY_ONLY_NOT_CONFIRMED_SWAP_OR_PNL"
+    },
+    {
+      "candidate_position": 38,
+      "source_row": 66,
+      "network": "bnb-mainnet",
+      "returned_count": 5,
+      "has_more": false,
+      "first_tx_hash": "0x97d316206ca969ba8af16a219f87f9bd99ef3985ee404bb16ccd7cd59700f318",
+      "status": "OUTBOUND_TRANSFER_DISCOVERY_ONLY_NOT_CONFIRMED_SWAP_OR_PNL"
+    },
+    {
+      "candidate_position": 39,
+      "source_row": 67,
+      "network": "bnb-mainnet",
+      "returned_count": 5,
+      "has_more": true,
+      "first_tx_hash": "0x52fa81b67e3fc94c2adbb748bb27e112a3665cba9ccbf1ddf40b8bf7ae827265",
+      "status": "OUTBOUND_TRANSFER_DISCOVERY_ONLY_NOT_CONFIRMED_SWAP_OR_PNL"
+    },
+    {
+      "candidate_position": 40,
+      "source_row": 68,
+      "network": "bnb-mainnet",
+      "returned_count": 5,
+      "has_more": true,
+      "first_tx_hash": "0x9580069cd5682ccfebaa3866df77a19019acb180e57e091e88818787a585a97d",
+      "status": "OUTBOUND_TRANSFER_DISCOVERY_ONLY_NOT_CONFIRMED_SWAP_OR_PNL"
+    }
+  ],
+  "bounded_bilateral_selected_cases": [
+    {
+      "row": 34,
+      "network": "bnb-mainnet",
+      "out_count": 6,
+      "out_has_more": true,
+      "in_count": 3,
+      "in_has_more": false,
+      "observation": "Repeated token symbols resembling USDC use noncanonical contract addresses. No verified sale PnL."
+    },
+    {
+      "row": 44,
+      "network": "bnb-mainnet",
+      "out_count": 2,
+      "out_has_more": false,
+      "in_count": 6,
+      "in_has_more": true,
+      "observation": "Canonical WBNB and visually similar WBnB occur at same raw amount; distinct contract identities, original signer/quote not proven."
+    },
+    {
+      "row": 45,
+      "network": "base-mainnet",
+      "out_count": 6,
+      "out_has_more": true,
+      "in_count": 6,
+      "in_has_more": true,
+      "observation": "Canonical Base USDC contract 0x833589... seen along with noncanonical USDC lookalikes; only ERC20 movements, PnL unknown."
+    },
+    {
+      "row": 50,
+      "network": "eth-mainnet",
+      "out_count": 1,
+      "out_has_more": false,
+      "in_count": 0,
+      "in_has_more": false,
+      "observation": "One observed ETH external output in window, historical opening ETH funding and all-chain accounting unknown."
+    },
+    {
+      "row": 51,
+      "network": "base-mainnet",
+      "out_count": 4,
+      "out_has_more": false,
+      "in_count": 5,
+      "in_has_more": false,
+      "observation": "USDC/aBasUSDC supply/withdraw and AERO payment observed; lending leg must not be classified as swap loss, matches archived earlier Aave evidence."
+    },
+    {
+      "row": 60,
+      "network": "bnb-mainnet",
+      "out_count": 4,
+      "out_has_more": false,
+      "in_count": 6,
+      "in_has_more": true,
+      "observation": "short token one transaction with two transfer log outputs, contract 0x7c46508f0937a0c8fb4c34fa20fef70ec9a6bbbb; unknown acquisition/settlement."
+    }
+  ],
+  "specific_transfer_relation": {
+    "source_rows": [
+      27,
+      29,
+      22
+    ],
+    "token_ca": "0xf2db6decf8c7fed1173b3fba49bd014b7e5eca0a",
+    "token_symbol_untrusted": "GENIUSCZ",
+    "note": "Cross-source-wallet receiver address relationship only; no shared owner or net profit claim."
+  },
+  "limits": [
+    "Page samples do not establish all signed transactions, complete ledger or pnl.",
+    "Asset symbol is untrusted; noncanonical stablecoin or WBNB lookalikes should be excluded from denomination unless proven.",
+    "Original signed tx and receipt economic reconciliation unavailable for most samples.",
+    "All full-wallet 30d/lifetime profit/loss totals remain UNRESOLVED."
+  ],
+  "whole_wallet_pnl_verified_new": 0,
+  "verified_new_profitable_or_loss_token_roundtrips": 0,
+  "next_active_queue_source_rows": [
+    69,
+    70,
+    71,
+    72,
+    73,
+    74,
+    75,
+    76,
+    77,
+    78,
+    79,
+    80,
+    81,
+    82,
+    83,
+    86,
+    91,
+    94,
+    101,
+    102
+  ],
+  "production": "NO_GO"
+}
