@@ -1,3 +1,21 @@
+## Latest actual run, 2026-11-21 19:57 Asia/Bangkok
+- last_run: 2026-11-21T19:57:14+07:00
+- schedule: HH:00 Asia/Bangkok
+- run_path: airdrop-tge-monitor/runs/2026-11-21/195714-final.md
+- run_status: PARTIAL_ONLY
+- scheduled_shard: 3
+- executed_shard: 3
+- shard_denominator: 7
+- original_issuer_readback: 4/7
+- full_investor_rights_verified: 0/7
+- candidate_count: 0
+- action_count: 0
+- notification: NONE
+- source_rights_gaps: 7
+- identity_failures: 0 proven
+- last_meaningful_attempt_shard3: 2026-11-21T19:57:14+07:00
+- last_verified_complete_shard3: UNCHANGED
+
 ## Latest actual hourly run, 2026-11-21 18:59 Asia/Bangkok
 - last_run: 2026-11-21T18:59:28+07:00
 - schedule: HH:00 Asia/Bangkok
