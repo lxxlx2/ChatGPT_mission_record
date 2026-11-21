@@ -73,3 +73,11 @@ The earlier historical run's unresolved right snapshots below were recorded befo
 - source_failures: 6 incomplete current-stage slots; identity_failures: 0 observed; code_gate: CODE_NOT_EXECUTED
 - last_meaningful_attempt_at_shard0: 2026-11-21T12:56:01+07:00
 - last_verified_complete_at remains 2026-10-10T07:52:16+07:00; no full-coverage claim
+
+## Latest actual run 2026-11-21 14:03:06 Asia/Bangkok
+- run_path: airdrop-tge-monitor/runs/2026-11-21/140306-final.md
+- run_status: PARTIAL_ONLY; scheduled_shard: 2; executed_shard: 2
+- active_projects: 28; fixed_urgent: 0; shard_attempted: 7/7; original_page_readback: 7/7; fully_verified_issuer_and_user_rights: 0/7
+- candidate_count: 0; action_count: 0; gmail_attempted: false; app_notification: false
+- code_gate: CODE_NOT_EXECUTED; last_meaningful_attempt_at_shard2: 2026-11-21T14:03:06+07:00
+- last_verified_complete_at: unchanged; source gaps remain; no full coverage claim
