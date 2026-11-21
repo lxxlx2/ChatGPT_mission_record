@@ -1617,7 +1617,7 @@ function clusterErrorMessage(error) {
     return '分析未完成：本次任务已达到 RPC 请求或耗时上限，系统已停止追加请求。历史缓存不是本次完整分析结果；请勿直接据此交易。';
   }
   if (raw.includes('429') || raw.includes('RATE_LIMIT')) {
-    return '免费 Solana RPC 触发限流（HTTP 429）。系统已经自动降速并切换备用免费节点；如果仍失败，稍后重试，或先用“快速”档。';
+    return '免费 Solana RPC 触发限流（HTTP 429）。可稍后恢复原查询，已保存的结果仍可读取。';
   }
   if (raw.includes('403')) {
     return '当前免费 RPC 拒绝了请求（HTTP 403）。系统会尝试备用节点；持续出现时可在本机配置其他免费 RPC。';
