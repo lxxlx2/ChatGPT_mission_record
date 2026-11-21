@@ -1,5 +1,14 @@
 # Airdrop / TGE Monitor Spec
 
+## 2026-11-21 newest project eligibility and scheduling override
+
+Original single hourly HH:00 task and one-shard-by-hour%4 plan remain; fixed forever-urgent project list is **abolished**. User explicitly removed Concrete, MetaMask, Claynosaurz/Clay Shares, HEEBOO and Space, plus already-completed/ineligible StandX and Cambria. These are not active monitoring candidates, urgent candidates or source gaps; old delivered alert history remains. Dynamic urgent entries must be based on **actual open user rights / confirmed current deadlines and risk**; an empty urgent queue is normal.
+
+Active four Shards contain **8 / 7 / 7 / 7** entries after the correction. Shard 2 contains only one **Echo legacy 01 USD 1,000 investment** rights item, with outcome unknown, instead of any 01/N1 points/TGE entry. User confirmed NO 01 points and NO N1 points. Galxe sunset rights event exception remains subject to new action and dedupe, not a justification to restore obsolete five-urgent entries.
+
+Each sent email is `NOTIFIED`, not automatically a successful claim. Before every scan, check explicit user state in latest Registry+known-events, skip user-closed/ineligible/refunded projects before any network work, and on real user completion reconcile latest scopes and gate. Do not preserve false UNKNOWN points balances merely because old archived events say so. Historic audit files are immutable and must not be misinterpreted as live state.
+
+
 Latest delivery authority (2026-11-11): **EMAIL-ONLY** new verified ACTION notifications via the one existing authorized Gmail recipient; never ChatGPT/App status or routine emails. Any historical "Gmail + ChatGPT" language below is superseded. A passed Gate 0–6 action should be sent after real Gmail Sent-prefix dedupe and independent source QA even if optional Git staging is unavailable; then archive exact Sent body or mark SENT_ARCHIVE_PENDING, never silently suppress actionable alerts due solely to Git write failure. A bulk discovery batch or JS-only account shell is PARTIAL_ONLY, never checked_no_update. See ACTION_GATE.md final 2026-11-11 override. No new schedule, monitor or backup.
 
 Active schedule authority: existing task runs HOURLY at minute 00 Asia/Bangkok, starting 2026-10-10 00-minute cadence (future invocations). Older :14/:50 history is not active. Existing urgent+one-shard, ACTION_GATE, scope and alert dedupe unchanged.
