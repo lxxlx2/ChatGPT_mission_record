@@ -486,3 +486,15 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:#d7dce3}
 .frank-watch-footnote{font-size:11px;color:#98a5b2;padding:10px 14px}
 .watch-tx{margin-top:5px;font-size:11px;color:#8da0b2}
 @media(max-width:680px){.frank-watch-controls input{min-width:100%}}
+
+
+.cluster-story{padding:12px 15px;display:grid;gap:10px}
+.cluster-story h3,.cluster-story p{margin:0}
+.cluster-story p{line-height:1.55;overflow-wrap:anywhere}
+.cluster-story-source,.cluster-story-claim{color:var(--muted,#a8b9cb);font-size:12px}
+.cluster-story-claim{padding-top:8px;border-top:1px solid var(--line)}
+.cluster-story a{margin-left:5px}
+.cluster-preview .cluster-story{padding:0 0 10px}
+.cluster-detail-actions{display:flex;justify-content:flex-start}
+.cluster-detail-actions[hidden],.cluster-wallet-report[hidden],#cluster-launch-buyers-details[hidden]{display:none}
+.cluster-preview-items .fact-card strong{overflow-wrap:anywhere}

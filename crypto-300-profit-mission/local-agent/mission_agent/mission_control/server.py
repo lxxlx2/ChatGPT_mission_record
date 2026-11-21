@@ -1,6 +1,7 @@
 """Localhost-only Mission Meme V1 dashboard server."""
 from __future__ import annotations
 
+from copy import deepcopy
 import ipaddress
 import hashlib
 import json
@@ -131,6 +132,11 @@ def _atomic_write_text(path: Path, text_value: str):
 
 
 SOLANA_PUBKEY_RE = re.compile(r"^[1-9A-HJ-NP-Za-km-z]{32,44}$")
+CA_QUERY_FIELDS = ("query_scope", "focus_owner", "base_job_id", "base_report_sha256")
+
+
+def _ca_query_fields(record):
+    return {key: record[key] for key in CA_QUERY_FIELDS if key in record}
 # The manual standard query has no aggregate request/time quota, per the user's
 # explicit free-source authorization. Transport timeouts, cooldowns, durable
 # accounting and source-failure handling still apply. Finite legacy presets stay
@@ -205,7 +211,7 @@ class ClusterJobManager:
 
     @staticmethod
     def validate_mint(mint: str) -> str:
-        value = (mint or "").strip()
+        value = mint.strip() if isinstance(mint, str) else ""
         if not SOLANA_PUBKEY_RE.fullmatch(value):
             raise ValueError("INVALID_SOLANA_CA")
         return value
@@ -232,11 +238,12 @@ class ClusterJobManager:
             if job_id not in keep and job_id not in active:
                 self.jobs.pop(job_id,None)
 
-    def _checkpoint_binding(self, preset):
+    def _checkpoint_binding(self, preset, query=None):
         def client_kind(value):
             return None if value is None else type(value).__module__ + "." + type(value).__qualname__
         return digest(canonical({
             "source": source_fingerprint(), "preset": preset, "options": CLUSTER_PRESETS[preset],
+            **({"query": query} if query else {}),
             "budget": CLUSTER_RPC_JOB_BUDGETS[preset],
             "registry": hashlib.sha256(self.registry_path.read_bytes()).hexdigest(),
             "endpoints": hashlib.sha256(canonical(self.rpc_endpoints).encode()).hexdigest(),
@@ -255,7 +262,12 @@ class ClusterJobManager:
             preset = checkpoint.meta["preset"]
             if preset not in CLUSTER_PRESETS:return None
             public = checkpoint.public_job()
-            try: checkpoint.check_binding(self._checkpoint_binding(preset), CLUSTER_RPC_JOB_BUDGETS[preset])
+            query = _ca_query_fields(checkpoint.meta)
+            public.update(query)
+            try:
+                checkpoint.check_binding(self._checkpoint_binding(preset, query), CLUSTER_RPC_JOB_BUDGETS[preset])
+                if query.get("query_scope") == "wallet":
+                    self._wallet_base(public)
             except CheckpointError as exc:
                 public.update(resume_available=False, resume_unavailable_reason=str(exc))
             return public
@@ -298,20 +310,48 @@ class ClusterJobManager:
             except ValueError:return None
         return create
 
-    def submit(self, mint: str, preset: str = "standard") -> dict:
+    def _wallet_base(self, query):
+        saved = self._saved_job_report_with_digest(query["base_job_id"])
+        if saved is None or saved[1] != query["base_report_sha256"] or saved[0]["mint"] != query["mint"]:
+            raise CheckpointError("CA_WALLET_BASE_CHANGED")
+        return saved[0]
+
+    def submit(self, mint: str, preset: str = "standard", *, scope="full", owner=None, base_job_id=None) -> dict:
         mint = self.validate_mint(mint)
-        if preset not in CLUSTER_PRESETS:
+        if not isinstance(preset, str) or preset not in CLUSTER_PRESETS:
             raise ValueError("INVALID_CLUSTER_PRESET")
+        if scope not in ("full", "overview", "wallet") or (scope != "full" and preset != "standard"):
+            raise ValueError("INVALID_CA_QUERY_SCOPE")
+        query = {}
+        if scope == "overview":
+            query["query_scope"] = scope
+        if scope == "wallet":
+            owner = self.validate_mint(owner)
+            saved = self._saved_job_report_with_digest(base_job_id)
+            if saved is None or saved[0]["mint"] != mint or saved[0].get("query_scope", "full") not in ("overview", "full"):
+                raise ValueError("INVALID_CA_WALLET_BASE")
+            base, base_sha = saved
+            ranked = (base.get("holder_rankings") or {}).get("owners") or []
+            holders = base.get("holders") or []
+            if not any(isinstance(row, dict) and row.get("owner") == owner for row in (*holders, *ranked)):
+                raise ValueError("CA_WALLET_NOT_IN_BASE_REPORT")
+            query.update(query_scope=scope, focus_owner=owner, base_job_id=base_job_id,
+                         base_report_sha256=base_sha)
+        elif owner is not None or base_job_id is not None:
+            raise ValueError("UNEXPECTED_CA_WALLET_QUERY_FIELDS")
         with self.lock:
             self._prune_jobs_locked()
             for job in self.jobs.values():
-                if job["mint"] == mint and job["preset"] == preset and job["status"] in {"QUEUED", "RUNNING"}:
+                if (job["mint"] == mint and job["preset"] == preset and _ca_query_fields(job) == query
+                        and (job["status"] in {"QUEUED", "RUNNING"}
+                             or (scope == "wallet" and job["status"] == "DONE"))):
                     return self._public_job(job)
             job_id = uuid.uuid4().hex
             job = {
                 "job_id": job_id,
                 "mint": mint,
                 "preset": preset,
+                **query,
                 "status": "QUEUED",
                 "created_at": time.time(),
                 "started_at": None,
@@ -322,7 +362,7 @@ class ClusterJobManager:
             # Persist before acknowledging the POST or queuing any source work.
             if getattr(self, "checkpoint_root", None):
                 job["checkpoint_version"] = 1
-                JobCheckpoint.create(self.checkpoint_root, job, self._checkpoint_binding(preset),
+                JobCheckpoint.create(self.checkpoint_root, job, self._checkpoint_binding(preset, query),
                                      CLUSTER_RPC_JOB_BUDGETS[preset])
             self.jobs[job_id] = job
             job["future"] = self.executor.submit(self._run, job_id)
@@ -376,8 +416,13 @@ class ClusterJobManager:
                         "market_status":market.get("status"),
                         "price_usd":market.get("price_usd"),
                         "market_cap_usd":market.get("market_cap_usd"),
+                        "fdv_usd":market.get("fdv_usd"),
                         "liquidity_usd":pair.get("liquidity_usd"),
+                        "pair_address":pair.get("pair_address"),
                         "volume_h24_usd":(pair.get("volume") or {}).get("h24"),
+                        "market_source":market.get("source"),
+                        "market_observed_at":market.get("observed_at"),
+                        "launch_identity":deepcopy(details.get("launch_identity")),
                         "token_status":profile.get("status"),
                         "mint_authority":profile.get("mint_authority"),
                         "freeze_authority":profile.get("freeze_authority"),
@@ -386,9 +431,15 @@ class ClusterJobManager:
                         "raw_top10_resolved_pct":None,
                         "top_accounts_resolved":None,
                     }
-                elif stage=="HOLDERS_READY" and isinstance(job.get("preview"),dict):
-                    job["preview"]["raw_top10_resolved_pct"]=details.get("raw_top10_resolved_pct")
-                    job["preview"]["top_accounts_resolved"]=details.get("top_accounts_resolved")
+                elif isinstance(job.get("preview"), dict):
+                    preview_fields = {
+                        "NARRATIVE_READY": ("narrative",),
+                        "HOLDERS_READY": ("raw_top10_resolved_pct", "top_accounts_resolved", "adjusted_top10_pct", "holder_count"),
+                        "LAUNCH_FLOW_READY": ("launch_flow", "quick_check"),
+                    }
+                    for key in preview_fields.get(stage, ()):
+                        if key in details:
+                            job["preview"][key] = deepcopy(details[key])
     @staticmethod
     def _extension_semantic_config(value):
         accounting_only={"withheldamount"}
@@ -593,16 +644,20 @@ class ClusterJobManager:
             job["started_at"] = job.get("started_at") or time.time()
             mint = job["mint"]
             preset = job["preset"]
+            query = _ca_query_fields(job)
+            scope = query.get("query_scope", "full")
             checkpoint_enabled = job.get("checkpoint_version") == 1
         cache = RpcCache(self.cache_path)
         checkpoint = None
         try:
             opts = CLUSTER_PRESETS[preset]
             wire_budget = CLUSTER_RPC_JOB_BUDGETS[preset]
+            binding = self._checkpoint_binding(preset, query) if checkpoint_enabled else None
+            wallet_base = self._wallet_base(job) if scope == "wallet" else None
             active_budget = wire_budget
             if checkpoint_enabled:
                 checkpoint = JobCheckpoint(self.checkpoint_root, job_id)
-                checkpoint.begin(self._checkpoint_binding(preset), wire_budget)
+                checkpoint.begin(binding, wire_budget)
                 active_budget = checkpoint.transport_budget()
             rpc = SolanaReadOnlyRPC(
                 self.rpc_endpoint,
@@ -614,7 +669,7 @@ class ClusterJobManager:
             def source_client(name, enabled=True):
                 client = getattr(self, name, None) if enabled else None
                 return CheckpointClient(checkpoint, client, name) if checkpoint is not None and client is not None else client
-            secondary_factory=self._independent_rpc() if opts.get("audit_holder_binary") else None
+            secondary_factory=self._independent_rpc() if opts.get("audit_holder_binary") and scope != "wallet" else None
             def secondary_rpc():
                 if secondary_factory is None:return None
                 client=secondary_factory() if callable(secondary_factory) else secondary_factory
@@ -643,9 +698,13 @@ class ClusterJobManager:
                 read_launch_identity=opts.get("read_launch_identity",False),
                 independent_rpc=secondary_rpc if secondary_factory is not None else None,
                 progress_callback=lambda stage,details:self._set_progress(job_id,stage,details),
+                **({"query_scope": scope, "focus_owner": query.get("focus_owner"), "wallet_base": wallet_base}
+                   if query else {}),
             ).analyze()
+            if query:
+                report.update(query)
             if checkpoint is not None:
-                checkpoint.check_binding(self._checkpoint_binding(preset), wire_budget)
+                checkpoint.check_binding(self._checkpoint_binding(preset, query), wire_budget)
                 checkpoint.assert_can_publish()
                 report["collection_checkpoint"] = checkpoint.provenance()
                 report.setdefault("coverage", {})["rpc_call_count_scope"] = "JOB_RESERVED_ATTEMPTS_INCLUDING_UNCERTAIN_CRASH_OUTCOMES"
@@ -666,14 +725,17 @@ class ClusterJobManager:
             stamp = time.strftime("%Y%m%dT%H%M%SZ", time.gmtime())
             out = self.report_root / mint
             out.mkdir(parents=True, exist_ok=True)
-            self._attach_assessment_history(out,report,preset)
+            if scope == "full":
+                self._attach_assessment_history(out,report,preset)
             payload = json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True)
-            _atomic_write_text(out / f"{stamp}.json", payload)
-            _atomic_write_text(out / f"{stamp}.md", markdown(report))
+            if scope == "full":
+                _atomic_write_text(out / f"{stamp}.json", payload)
+                _atomic_write_text(out / f"{stamp}.md", markdown(report))
             by_job = self.report_root / "_jobs"
             by_job.mkdir(parents=True, exist_ok=True)
             _atomic_write_text(by_job / f"{job_id}.json", payload)
-            _atomic_write_text(out / "latest.json", payload)
+            if scope == "full":
+                _atomic_write_text(out / "latest.json", payload)
             # Only a separately committed terminal marker authorizes later
             # recovery. Orphan reports from failed writes are never DONE.
             with self.lock:
@@ -685,6 +747,8 @@ class ClusterJobManager:
             }
             _atomic_write_text(by_job / f"{job_id}.done.json",
                                json.dumps(marker, sort_keys=True))
+            if scope == "overview":
+                _atomic_write_text(out / "latest-overview-job.txt", job_id)
             if checkpoint is not None:checkpoint.finish("DONE")
             # Marker is the irreversible success boundary. No later failure
             # may turn a committed result into a persisted ERROR.
@@ -693,7 +757,7 @@ class ClusterJobManager:
                 job["status"] = "DONE"
                 job["finished_at"] = time.time()
                 job["progress"] = {"stage":"DONE","updated_at":job["finished_at"]}
-            if self.evidence_enabled:
+            if self.evidence_enabled and scope == "full":
                 try:
                     self.evidence_spool.ca_done(mint=mint, job_id=job_id, report=report)
                     self.evidence_executor.submit(GitEvidencePublisher(self.evidence_spool).sync)
@@ -836,6 +900,7 @@ class ClusterJobManager:
             "error": None,
             "progress": {"stage": "DONE", "source": "SAVED_CA_REPORT"},
             "restored_from_saved_report": True,
+            **_ca_query_fields(report),
         }
 
     def latest(self, mint: str, job_id: str | None = None) -> dict | None:
@@ -847,6 +912,15 @@ class ClusterJobManager:
             if saved is not None:
                 return saved if saved["mint"] == mint else None
         path = self.report_root / mint / "latest.json"
+        if job_id is None and not path.is_file():
+            try:
+                overview_id = path.with_name("latest-overview-job.txt").read_text()
+                saved = self._saved_job_report(overview_id)
+                if saved is not None and saved["mint"] == mint and saved.get("query_scope") == "overview":
+                    return saved
+            except OSError:
+                pass
+            return None
         if not path.is_file():
             return None
         try:
@@ -1754,7 +1828,8 @@ class Handler(BaseHTTPRequestHandler):
             if "resume_job_id" in body:
                 job = self.state.cluster_jobs.resume(body["resume_job_id"], body.get("mint", ""))
             else:
-                job = self.state.cluster_jobs.submit(body.get("mint",""), body.get("preset","standard"))
+                scoped = {key: body[key] for key in ("scope", "owner", "base_job_id") if key in body}
+                job = self.state.cluster_jobs.submit(body.get("mint",""), body.get("preset","standard"), **scoped)
         except ValueError as exc:
             # Preserve only the known public CA validation code; never reflect
             # arbitrary exception text, RPC details or internal paths.

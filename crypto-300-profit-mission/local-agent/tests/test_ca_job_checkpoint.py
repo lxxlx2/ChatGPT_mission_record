@@ -415,3 +415,89 @@ def test_sequence_integrity_stop_remains_unavailable_after_another_restart(tmp_p
     third = JobCheckpoint(tmp_path, JOB, readonly=True)
     assert third.public_job()['resume_available'] is False
     third.close()
+
+
+def test_scoped_ca_jobs_use_bound_report_and_recover_without_overwriting_full(tmp_path, monkeypatch):
+    from mission_agent.mission_control import server
+
+    owner = 'A' * 44
+    seen = []
+
+    class Analyzer:
+        def __init__(self, mint, **kwargs):
+            self.mint = mint
+            self.query = kwargs
+
+        def analyze(self):
+            scope = self.query.get('query_scope', 'full')
+            base = self.query.get('wallet_base')
+            seen.append((scope, self.query.get('focus_owner'), base and base['ca_job_id']))
+            return {
+                'schema_version': 2, 'source': 'SOLANA_FINALIZED_JSON_RPC', 'mint': self.mint,
+                'observed_at': 20, 'coverage': {}, 'holders': [{'owner': owner}],
+                'metrics': {}, 'assessment': {}, 'token_profile': {}, 'limitations': [],
+            }
+
+    monkeypatch.setattr(server, 'WalletClusterAnalyzer', Analyzer)
+    manager = ClusterJobManager(tmp_path)
+    manager.executor.shutdown()
+    manager.executor = HoldingExecutor()
+
+    overview = manager.submit(MINT, scope='overview')
+    full = manager.submit(MINT)
+    assert manager.submit(MINT, scope='overview')['job_id'] == overview['job_id']
+    assert overview['job_id'] != full['job_id']
+    manager._run(overview['job_id'])
+    assert manager.get(overview['job_id'])['status'] == 'DONE'
+    assert manager.latest(MINT)['ca_job_id'] == overview['job_id']
+    manager._run(full['job_id'])
+    assert manager.get(full['job_id'])['status'] == 'DONE'
+    assert manager.latest(MINT)['ca_job_id'] == full['job_id']
+    assert manager.latest(MINT, overview['job_id'])['query_scope'] == 'overview'
+    with pytest.raises(ValueError, match='NOT_IN_BASE'):
+        manager.submit(MINT, scope='wallet', owner='B' * 44, base_job_id=overview['job_id'])
+    with pytest.raises(ValueError, match='INVALID_CA_WALLET_BASE'):
+        manager.submit('C' * 44, scope='wallet', owner=owner, base_job_id=overview['job_id'])
+
+    wallet = manager.submit(MINT, scope='wallet', owner=owner, base_job_id=overview['job_id'])
+    assert manager.submit(MINT, scope='wallet', owner=owner, base_job_id=overview['job_id']) == wallet
+    manager.jobs.clear()
+    paused = manager.get(wallet['job_id'])
+    assert paused['resume_available'] is True
+    assert paused['query_scope'] == 'wallet'
+    assert paused['focus_owner'] == owner
+    assert paused['base_job_id'] == overview['job_id']
+    manager.resume(wallet['job_id'], MINT)
+    manager._run(wallet['job_id'])
+    assert seen == [('overview', None, None), ('full', None, None),
+                    ('wallet', owner, overview['job_id'])]
+    assert manager.latest(MINT)['ca_job_id'] == full['job_id']
+    assert manager.latest(MINT, wallet['job_id'])['base_job_id'] == overview['job_id']
+    manager.jobs.clear()
+    assert manager.get(wallet['job_id'])['focus_owner'] == owner
+    assert manager.get(wallet['job_id'])['base_job_id'] == overview['job_id']
+
+
+def test_ca_preview_delivers_narrative_and_claim_separately_before_details(tmp_path):
+    manager = ClusterJobManager(tmp_path)
+    job_id = 'a' * 32
+    manager.jobs[job_id] = {'job_id': job_id, 'mint': MINT, 'status': 'RUNNING'}
+    manager._set_progress(job_id, 'BASE_READY', {
+        'market': {'source': 'SOURCE', 'observed_at': 42, 'status': 'OK', 'fdv_usd': 500},
+        'launch_identity': {'pump': {'status': 'VERIFIED_CHAIN_STATE'}},
+    })
+    preview = manager.get(job_id)['preview']
+    assert preview['market_observed_at'] == 42
+    assert preview['fdv_usd'] == 500
+    assert preview['launch_identity']['pump']['status'] == 'VERIFIED_CHAIN_STATE'
+    narrative = {'evidence': [{'summary': 'Story'}], 'origin': {'exact_ca_recognition': []}}
+    manager._set_progress(job_id, 'NARRATIVE_READY', {'narrative': narrative})
+    narrative['evidence'].clear()
+    manager._set_progress(job_id, 'HOLDERS_READY', {'adjusted_top10_pct': '12.34', 'holder_count': 21})
+    manager._set_progress(job_id, 'OWNER_SCAN', {'scanned': 1})
+    preview = manager.get(job_id)['preview']
+    assert preview['narrative']['origin']['exact_ca_recognition'] == []
+    assert preview['narrative']['evidence'][0]['summary'] == 'Story'
+    assert preview['adjusted_top10_pct'] == '12.34'
+    assert preview['holder_count'] == 21
+    manager.executor.shutdown()

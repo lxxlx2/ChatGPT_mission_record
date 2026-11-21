@@ -16,6 +16,7 @@ import time
 import urllib.error
 import urllib.request
 from collections import Counter, defaultdict
+from copy import deepcopy
 from dataclasses import dataclass
 from decimal import Decimal, InvalidOperation
 from pathlib import Path
@@ -644,7 +645,18 @@ class WalletClusterAnalyzer:
         enumerate_holder_ranks=False,independent_market_client=None,compare_market_sources=None,narrative_client=None,collect_narrative=None,read_pool_vaults=False,audit_holder_binary=False,
         history_max_pages=1,funding_max_pages=1,independent_rpc=None,read_launch_identity=False,
         adaptive_history_max_pages=1,adaptive_funding_max_pages=1,exhaust_history=False,
+        query_scope="full",focus_owner=None,wallet_base=None,
     ):
+        if query_scope not in ("full", "overview", "wallet"):
+            raise ValueError("INVALID_CA_QUERY_SCOPE")
+        if query_scope=="wallet":
+            if not valid_pubkey(focus_owner) or not isinstance(wallet_base,dict) or wallet_base.get("mint")!=mint:
+                raise ValueError("WALLET_SCOPE_REQUIRES_BOUND_REPORT")
+        elif focus_owner is not None or wallet_base is not None:
+            raise ValueError("UNEXPECTED_WALLET_SCOPE_INPUT")
+        self.query_scope=query_scope
+        self.focus_owner=focus_owner
+        self.wallet_base=wallet_base
         self.mint=mint;self.rpc=rpc;self.registry=special_registry or {};self.history_per_holder=int(history_per_holder);self.deep_holders=int(deep_holders);self.funding_lookback=int(funding_lookback);self.material_pct=Decimal(material_pct)
         self.audit_holder_binary=audit_holder_binary is True
         self.independent_rpc=independent_rpc
@@ -1144,7 +1156,7 @@ class WalletClusterAnalyzer:
             return {"status":"UNAVAILABLE","source":"DEXSCREENER_API","reason":"MARKET_CLIENT_DISABLED"}
         try:
             primary=self.market_client.token_snapshot(self.mint)
-            if self.independent_market_client is not None:
+            if self.query_scope=="full" and self.independent_market_client is not None:
                 return attach_market_comparison(self.mint,primary,self.independent_market_client)
             return primary
         except RPCJobBudgetExceeded:raise
@@ -1305,6 +1317,7 @@ class WalletClusterAnalyzer:
         return supply,decimals,result
     def _edge(self,a,b,kind,signature,**extra):
         if not a or not b or a==b:return
+        if self.query_scope=="wallet" and self.focus_owner not in (a,b):return
         x,y=sorted([a,b]);record={"a":x,"b":y,"type":kind,"signature":signature,**extra}
         key=_hash(record)
         if key not in {e["_key"] for e in self.edges}:self.edges.append({**record,"_key":key})
@@ -1714,7 +1727,7 @@ class WalletClusterAnalyzer:
     @staticmethod
     def _pct(raw,supply):
         return None if supply<=0 else str((Decimal(raw)*Decimal(100)/Decimal(supply)).quantize(Decimal("0.0001")))
-    def analyze(self):
+    def _identity_and_narrative(self):
         token_profile=self.token_profile()
         self._expected_mint_program=(token_profile.get("program_id")
             if token_profile.get("status")=="OK" and token_profile.get("is_initialized") is True
@@ -1723,9 +1736,22 @@ class WalletClusterAnalyzer:
         launch=self.launch_snapshot(token_profile)
         market=self.market_snapshot()
         self._launch_metadata=launch.get("metadata")
-        narrative=self.narrative_snapshot(market)
-        self._progress("BASE_READY",token_profile=token_profile,market=market)
+        if self.query_scope=="overview":
+            self._progress("BASE_READY",token_profile=token_profile,market=market,launch_identity=launch)
+            try:
+                narrative=self.narrative_snapshot(market)
+            except RPCJobBudgetExceeded:
+                raise
+            except Exception:
+                narrative={"version":1,"status":"UNAVAILABLE","reason":"NARRATIVE_SOURCE_UNAVAILABLE",
+                           "official_recognition":"UNVERIFIED","evidence":[]}
+            self._progress("NARRATIVE_READY",narrative=narrative)
+        else:
+            narrative=self.narrative_snapshot(market)
+            self._progress("BASE_READY",token_profile=token_profile,market=market)
+        return token_profile,launch,market,narrative
 
+    def _holder_snapshot(self,token_profile,market):
         supply,decimals,holders=self.holders()
         self._history_decimals=decimals
         holder_rankings=self._holder_ranks(token_profile,supply,decimals)
@@ -1745,20 +1771,81 @@ class WalletClusterAnalyzer:
         from .pool_holder_roles import attach_pool_holder_roles
         pool_holder_roles=attach_pool_holder_roles(self.mint,holder_rankings,pool_vaults)
         special_address_roles=self.special_role_snapshot(holder_rankings,market)
-        if self.exhaust_history:
-            # Only a verified per-account protocol role can make personal
-            # acquisition history inapplicable. A program-owned/unknown address
-            # or a legacy registry name is never enough to skip its history.
-            self._protocol_history_exclusions=[r for r in special_address_roles.get('rankings',{}).get('records',[])
-                if r.get('classification')=='CHAIN_ACCOUNT_ROLE'
-                and r.get('role') in {'LP','AMM_POOL','PROTOCOL_VAULT'}]
-            self._protocol_pool_accounts={(r.get('owner'),r.get('token_account')) for r in self._protocol_history_exclusions}
-        from .special_roles import withhold_legacy_normalization
+        from .special_roles import apply_sufficient_top10,withhold_legacy_normalization
         withhold_legacy_normalization(holder_rankings,special_address_roles)
-        from .special_roles import apply_sufficient_top10
         apply_sufficient_top10(holder_rankings)
+        return supply,decimals,holders,holder_rankings,pool_vaults,pool_holder_roles,special_address_roles
+
+    def _apply_protocol_history_exclusions(self,special_address_roles):
+        if not self.exhaust_history:
+            return
+        # Exclude only verified protocol facilities from personal acquisition
+        # history. Their original balances stay in the snapshot and report.
+        self._protocol_history_exclusions=[r for r in special_address_roles.get("rankings",{}).get("records",[])
+            if r.get("classification")=="CHAIN_ACCOUNT_ROLE"
+            and r.get("role") in {"LP","AMM_POOL","PROTOCOL_VAULT"}]
+        self._protocol_pool_accounts={(r.get("owner"),r.get("token_account")) for r in self._protocol_history_exclusions}
+
+    def _wallet_snapshot(self):
+        base=self.wallet_base
+        evidence=deepcopy({key:base.get(key) or {} for key in (
+            "token_profile","launch_identity","market","narrative","holder_rankings",
+            "pool_vaults","pool_holder_roles","special_address_roles",
+        )})
+        supply=int(base.get("supply_raw") or 0)
+        decimals=int(base.get("decimals") or 0)
+        self._history_decimals=decimals
+        coverage=base.get("coverage") or {}
+        self._snapshot_slots=deepcopy(coverage.get("snapshot_slots") or {})
+        self._top_account_context_errors=deepcopy(coverage.get("top_account_context_errors") or [])
+        self._raw_top10_snapshot_pct=(base.get("metrics") or {}).get("RAW_TOP10_PCT")
+        holders=[Holder(r["token_account"],r["owner"],int(r["raw"]),decimals,r.get("role","UNRESOLVED"),
+                        r.get("role_source","BOUND_REPORT"),r.get("account_program"))
+                 for r in base.get("holders") or []]
+        self._top_accounts_requested=coverage.get("top_accounts_requested",len(holders))
+        token_profile=evidence["token_profile"]
+        self._expected_mint_program=token_profile.get("program_id") if token_profile.get("status")=="OK" else None
+        return (token_profile,evidence["launch_identity"],evidence["market"],evidence["narrative"],
+                supply,decimals,holders,evidence["holder_rankings"],evidence["pool_vaults"],
+                evidence["pool_holder_roles"],evidence["special_address_roles"])
+
+    def _usable_holder_snapshot(self,holder_rankings,pool_holder_roles):
+        return (holder_rankings.get("status")=="COMPLETE_SNAPSHOT"
+                and pool_holder_roles.get("status")!="SAME_SLOT_CONTRADICTION"
+                and not self._top_account_context_errors)
+
+    def _opening_overview(self,launch,holder_rankings,pool_holder_roles,supply):
+        from .launch_flow import collect_launch_flow
+        verified=self._usable_holder_snapshot(holder_rankings,pool_holder_roles)
+        owners=holder_rankings.get("owners") or []
+        balances={r["owner"]:int(r["raw"]) for r in owners} if verified else None
+        excluded=set(holder_rankings.get("verified_pool_authorities") or [])
+        excluded.update(r["owner"] for r in self._protocol_history_exclusions if r.get("owner"))
+        self._progress("LAUNCH_FLOW",parsed=0)
+        flow=collect_launch_flow(self.mint,self.rpc,launch=launch,current_balances=balances,supply_raw=supply,
+                                 excluded_owners=excluded,progress=lambda parsed:self._progress("LAUNCH_FLOW",parsed=parsed))
+        summary=flow.get("summary") or {}
+        adjusted=(holder_rankings.get("metrics") or {}).get("GLOBAL_EX_LP_OWNER_TOP10_PCT")
+        quick_check={
+            "version":1,"dev":flow.get("dev"),"launch_flow_status":flow.get("status"),
+            "first_buyers":summary.get("first_buyers"),"snipers":summary.get("snipers"),"bundles":summary.get("bundles"),
+            "top10_ex_pool_program_pct":adjusted if verified else "UNRESOLVED",
+            "top10_raw_pct":(holder_rankings.get("metrics") or {}).get("GLOBAL_OWNER_TOP10_PCT") if verified else None,
+            "pool_like_owners_excluded":sorted(excluded),
+        }
+        return flow,quick_check
+
+    def analyze(self):
+        if self.query_scope=="wallet":
+            (token_profile,launch,market,narrative,supply,decimals,holders,holder_rankings,
+             pool_vaults,pool_holder_roles,special_address_roles)=self._wallet_snapshot()
+        else:
+            token_profile,launch,market,narrative=self._identity_and_narrative()
+            (supply,decimals,holders,holder_rankings,pool_vaults,
+             pool_holder_roles,special_address_roles)=self._holder_snapshot(token_profile,market)
+        self._apply_protocol_history_exclusions(special_address_roles)
         independent_balance_check={"version":1,"status":"NOT_REQUESTED"}
-        if self.independent_rpc is not None:
+        if self.query_scope=="full" and self.independent_rpc is not None:
             from .independent_check import collect_independent_balance_check
             enumerated=holder_rankings.get("accounts")
             addresses=([r["token_account"] for r in sorted(enumerated,key=lambda r:-int(r["raw"]))]
@@ -1768,24 +1855,47 @@ class WalletClusterAnalyzer:
                 progress=lambda completed,total:self._progress('INDEPENDENT_BALANCE_BATCH',completed=completed,total=total))
             except RPCJobBudgetExceeded:raise
             except Exception as exc:independent_balance_check={"version":1,"status":"UNAVAILABLE","reason":type(exc).__name__}
-        self._prepare_owner_account_history(holders,holder_rankings)
+        if self.query_scope!="overview":
+            self._prepare_owner_account_history(holders,holder_rankings)
         preview_top10_pct=getattr(self,"_raw_top10_snapshot_pct",None)
+        holder_details={}
+        if self.query_scope=="overview":
+            verified=self._usable_holder_snapshot(holder_rankings,pool_holder_roles)
+            holder_details={
+                "holder_count":holder_rankings.get("nonzero_owner_count") if verified else None,
+                "adjusted_top10_pct":(holder_rankings.get("metrics") or {}).get("GLOBAL_EX_LP_OWNER_TOP10_PCT") if verified else None,
+            }
         self._progress(
             "HOLDERS_READY",top_accounts_resolved=len(holders),
             supply_raw=str(supply),decimals=decimals,
             raw_top10_resolved_pct=preview_top10_pct,
-            holder_snapshot_status="BOUNDED_RESOLVED_ONLY",
+            holder_snapshot_status=holder_rankings.get("status","BOUNDED_RESOLVED_ONLY") if holder_details else "BOUNDED_RESOLVED_ONLY",
+            **holder_details,
         )
+        launch_flow=quick_check=None
+        if self.query_scope=="overview" and self.read_launch_identity:
+            launch_flow,quick_check=self._opening_overview(launch,holder_rankings,pool_holder_roles,supply)
+            self._progress("LAUNCH_FLOW_READY",launch_flow=launch_flow,quick_check=quick_check)
         account_to_owner={h.token_account:h.owner for h in holders}
         firsts={};deep=[];deep_seen=set()
-        for h in holders:
-            if h.owner in deep_seen:continue
-            deep_seen.add(h.owner);deep.append(h)
-            if not self.exhaust_history and len(deep)>=self.deep_holders:break
         top_owners=set(account_to_owner.values())
-        material_holders=self._additional_material_holders(supply,top_owners)
-        deep.extend(material_holders)
-        deep_seen.update(h.owner for h in material_holders)
+        material_holders=[]
+        if self.query_scope=="full":
+            for h in holders:
+                if h.owner in deep_seen:continue
+                deep_seen.add(h.owner);deep.append(h)
+                if not self.exhaust_history and len(deep)>=self.deep_holders:break
+            material_holders=self._additional_material_holders(supply,top_owners)
+            deep.extend(material_holders)
+            deep_seen.update(h.owner for h in material_holders)
+        elif self.query_scope=="wallet":
+            selected=self._owner_history_candidates.get(self.focus_owner) or {}
+            if selected:
+                target=min(selected.values(),key=lambda h:(-h.raw,h.token_account))
+                deep=[target]
+                deep_seen={target.owner}
+                top_owners.add(target.owner)
+                account_to_owner.update({h.token_account:h.owner for h in selected.values()})
         # Keep the sampled-balance relationship graph expressible on the
         # Top20 account scope even when history expands to more Owners.
         self._relation_owner_scope=top_owners
@@ -1794,14 +1904,15 @@ class WalletClusterAnalyzer:
             self._progress("OWNER_SCAN",scanned=idx-1,target=len(deep),owner=h.owner,mode="SHALLOW")
             firsts[h.owner]=self._scan_owner_history(h,account_to_owner,top_owners,self.history_per_holder)
             self._progress("OWNER_SCAN",scanned=idx,target=len(deep),owner=h.owner,mode="SHALLOW")
-        for idx,h in enumerate(deep,1):
+        shallow_funding=deep if self.query_scope=="full" or not self.exhaust_history else []
+        for idx,h in enumerate(shallow_funding,1):
             self._progress("FUNDING_SCAN",scanned=idx-1,target=len(deep),owner=h.owner,mode="SHALLOW")
             self._scan_funding_bounded(h,firsts.get(h.owner),top_owners,self.funding_lookback)
         self._derive_pair_edges()
 
         adaptive_history=self.adaptive_history_per_holder or self.history_per_holder
         adaptive_funding=self.adaptive_funding_lookback or self.funding_lookback
-        if adaptive_history>self.history_per_holder or adaptive_funding>self.funding_lookback:
+        if self.query_scope=="full" and (adaptive_history>self.history_per_holder or adaptive_funding>self.funding_lookback):
             history_targets=set()
             for edge in self.edges:
                 if edge.get("type") not in {"SHARED_INFRA","COMMON_FUNDER_CEX"}:
@@ -1834,9 +1945,11 @@ class WalletClusterAnalyzer:
                     self._scan_funding_bounded(h,firsts.get(h.owner),top_owners,adaptive_funding,self.adaptive_funding_max_pages)
                     self._progress("ADAPTIVE_DEEPEN",scanned=idx,target=len(targets),owner=h.owner)
                 self._derive_pair_edges()
-        if self.enumerate_holder_ranks:
-            representatives={h.owner:h for h in holders}
-            representatives.update({h.owner:h for h in material_holders})
+        if self.enumerate_holder_ranks and self.query_scope!="overview":
+            representatives={h.owner:h for h in deep}
+            if self.query_scope=="full":
+                representatives={h.owner:h for h in holders}
+                representatives.update({h.owner:h for h in material_holders})
             self._scan_historical_account_frontier(firsts,account_to_owner,top_owners,representatives)
             self._derive_pair_edges()
         self._progress("FINALIZING",deep_holders_scanned=len(deep),adaptive_deepened=len(self.adaptive_deepened_owners))
@@ -2002,6 +2115,13 @@ class WalletClusterAnalyzer:
         owners_not_scanned=sorted(set(owners)-scanned_owners-self._protocol_history_owners)
         owner_account_history=self._owner_account_history_coverage()
         coverage_gaps=[]
+        if self.query_scope=="overview":
+            coverage_gaps.append("WALLET_HISTORY_ON_DEMAND")
+            if self.independent_rpc is not None:coverage_gaps.append("INDEPENDENT_HOLDER_CHECK_ON_DEMAND")
+            if launch_flow and launch_flow.get("status")!="OK":coverage_gaps.append("LAUNCH_FLOW_INCOMPLETE")
+        elif self.query_scope=="wallet":
+            coverage_gaps.append("SINGLE_WALLET_HISTORY_SCOPE")
+            if not deep:coverage_gaps.append("FOCUS_WALLET_NOT_IN_BOUND_SNAPSHOT")
         if self._top_account_context_errors:coverage_gaps.append("TOP_ACCOUNT_CONTEXT_CONFLICT")
         if pool_holder_roles.get("status")=="SAME_SLOT_CONTRADICTION":
             snapshot_consistent=False
@@ -2049,6 +2169,11 @@ class WalletClusterAnalyzer:
         }
 
         metrics.update(holder_rankings.get("metrics") or {})
+        if self.query_scope!="full":
+            for key in ("LARGEST_CONFIRMED_RELATION_GROUP_PCT","LARGEST_PROBABLE_CONTROL_CLUSTER_PCT",
+                        "LARGEST_PROBABLE_EXECUTION_CLUSTER_PCT","DEV_LINKED_CLUSTER_PCT",
+                        "CLUSTER_ADJUSTED_TOP10_PCT","KNOWN_CLUSTER_ADJUSTED_TOP10_PCT"):
+                metrics[key]="UNRESOLVED"
         holder_rows=[]
         for i,h in enumerate(holders):
             holder_rows.append({
@@ -2075,7 +2200,9 @@ class WalletClusterAnalyzer:
             active_authorities=[];sensitive_extensions=[];active_extension_risks=[];unresolved_extension_risks=[];chain_status="UNRESOLVED"
 
         unresolved_pct=Decimal(str(metrics["UNRESOLVED_MATERIAL_HOLDER_PCT"] or "0"))
-        if control_groups:
+        if self.query_scope!="full":
+            cluster_status="WALLET_CLUSTER_UNRESOLVED"
+        elif control_groups:
             cluster_status="PROBABLE_CONTROL_CLUSTER_PRESENT"
         elif (coverage_gaps or unresolved_pct>0 or
               any(edge.get("type") in {
@@ -2198,6 +2325,25 @@ class WalletClusterAnalyzer:
                 "Narrative ownership, social endorsement and creator identity are not automatically inferred from token name or social links.",
             ],
         }
+        report["query_scope"]=self.query_scope
+        if self.query_scope=="overview":
+            report["coverage"].update(scope="CA_OVERVIEW_ONLY",history_scan_mode="ON_DEMAND",scan_mode="ON_DEMAND")
+            if launch_flow is not None:
+                report.update(launch_flow=launch_flow,quick_check=quick_check)
+        elif self.query_scope=="wallet":
+            owner=self.focus_owner
+            known_rank=next((row for row in holder_rankings.get("owners") or [] if row["owner"]==owner),None)
+            source_complete=self._usable_holder_snapshot(holder_rankings,pool_holder_roles)
+            report["focus_owner"]=owner
+            report["coverage"].update(scope="SINGLE_WALLET_ON_BOUND_CA",snapshot_observed_at=self.wallet_base.get("observed_at"))
+            first=acquisition(owner)
+            detail_status="PARTIAL_EVIDENCE" if deep else "OWNER_NOT_IN_BOUND_SNAPSHOT"
+            if first["status"]=="NOT_APPLICABLE_PROTOCOL_POOL":detail_status="NOT_APPLICABLE_PROTOCOL_POOL"
+            report["wallet_detail"]={"status":detail_status,"owner":owner,"first_acquisition":first,
+                                     "deep_scanned":owner in scanned_owners,"funding":funding_record(owner),
+                                     "balance_observed_at":self.wallet_base.get("observed_at"),
+                                     "raw":known_rank.get("raw") if source_complete and known_rank else None,
+                                     "supply_pct":known_rank.get("supply_pct") if source_complete and known_rank else None}
         if self._top_account_context_errors:
             report["coverage"]["top_account_context_errors"]=self._top_account_context_errors
         if self._history_classification_resolutions:
@@ -2277,12 +2423,15 @@ def report_completeness(report:dict)->dict:
         ["Owner account metadata, dated role evidence registry and bounded multi-program pool identities"],
         "Verify pool/vault/CEX/treasury roles with dated program/account/transaction evidence.",
         ["holder_rankings.normalization_complete","holders","pool_holder_roles","special_address_roles"])
-    row("wallet_history","PARTIAL","BOUNDED_HISTORY_NOT_ALL_OWNER_ACCOUNTS",
-        ["Selected observed token-account history and owner prefunding signature windows; per-account coverage in coverage.owner_account_history"],
+    overview=report.get("query_scope")=="overview"
+    row("wallet_history","NOT_COLLECTED" if overview else "PARTIAL",
+        "WALLET_HISTORY_ON_DEMAND" if overview else "BOUNDED_HISTORY_NOT_ALL_OWNER_ACCOUNTS",
+        [] if overview else ["Selected observed token-account history and owner prefunding signature windows; per-account coverage in coverage.owner_account_history"],
         "Enumerate all material Owner token accounts and reconcile complete acquisition/sale/funding movements.",
         ["historical_account_evidence","coverage.historical_account_history","coverage.owner_account_history","coverage.history_windows","coverage.owners_not_scanned","trade_evidence","funding_evidence"])
-    row("control_attribution","PARTIAL","BOUNDED_RELATIONS_NOT_COMPLETE_BENEFICIAL_CONTROL",
-        ["Sampled transfers/funders/signers/consolidations with public-infrastructure exclusions"],
+    row("control_attribution","NOT_COLLECTED" if overview else "PARTIAL",
+        "WALLET_RELATIONSHIPS_ON_DEMAND" if overview else "BOUNDED_RELATIONS_NOT_COMPLETE_BENEFICIAL_CONTROL",
+        [] if overview else ["Sampled transfers/funders/signers/consolidations with public-infrastructure exclusions"],
         "Resolve material unknown relationships using independent non-public evidence; keep inherent uncertainty explicit.",
         ["assessment.cluster_status","unresolved_relation_edges","probable_control_clusters"])
     row("market","NOT_COLLECTED" if not market_requested else "PARTIAL" if market.get("status")=="OK" else "UNAVAILABLE",

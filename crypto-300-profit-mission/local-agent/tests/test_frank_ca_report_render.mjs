@@ -400,14 +400,14 @@ for (const control of ['cluster-read-cached','cluster-read-report']) {
     const ack=deferred();
     h.setResponse(async(url,options)=>options.method==='POST' ? ack.promise :
       {ok:true,status:200,json:async()=>url.startsWith('/api/cluster-analysis?') ?
-        {job_id:secondJob,mint:pendingMint,status:'RUNNING'} : {...fixture,ca_job_id:jobId}});
+        {job_id:secondJob,mint:pendingMint,status:'RUNNING',query_scope:'overview'} : {...fixture,ca_job_id:jobId}});
     h.element('cluster-mint').value=pendingMint;h.element('cluster-preset').value='quick';
     h.element('cluster-reports').value=jobId;
     const submitting=h.element('cluster-form').listeners.get('submit')({preventDefault(){}});
     const requestCount=h.requests.length;
     await h.element(control).listeners.get('click')();
     assert.equal(h.requests.length,requestCount,'no history GET while POST receipt is pending');
-    ack.resolve({ok:true,status:202,json:async()=>({job_id:secondJob,mint:pendingMint})});
+    ack.resolve({ok:true,status:202,json:async()=>({job_id:secondJob,mint:pendingMint,query_scope:'overview'})});
     await submitting;await new Promise(resolve=>setImmediate(resolve));
     assert.equal(JSON.parse(h.store.get(pendingKey)).id,secondJob);
     assert.equal(h.element('cluster-mint').value,pendingMint);
@@ -468,7 +468,7 @@ test('a failed optional last-CA write cannot discard an acknowledged POST job',a
   const h=harness({storageWriteError:true});
   h.element('cluster-mint').value=mint;h.element('cluster-preset').value='quick';
   h.setResponse(async(url,options)=>({ok:true,status:options.method==='POST'?202:200,json:async()=>
-    options.method==='POST'?{job_id:jobId,mint}:{job_id:jobId,mint,status:'RUNNING'}}));
+    options.method==='POST'?{job_id:jobId,mint,query_scope:'overview'}:{job_id:jobId,mint,status:'RUNNING',query_scope:'overview'}}));
   await h.element('cluster-form').listeners.get('submit')({preventDefault(){}});
   await new Promise(resolve=>setImmediate(resolve));
   assert.equal(JSON.parse(h.store.get(pendingKey)).id,jobId);
@@ -490,11 +490,11 @@ test('an optional storage write failure after DONE keeps the received report suc
 test('editing CA while POST awaits receipt cannot mislabel its acknowledged job',async()=>{
   const h=harness(),ack=deferred();
   h.setResponse(async(url,options)=>options.method==='POST'?ack.promise:
-    {ok:true,status:200,json:async()=>({job_id:jobId,mint,status:'RUNNING'})});
+    {ok:true,status:200,json:async()=>({job_id:jobId,mint,status:'RUNNING',query_scope:'overview'})});
   h.element('cluster-mint').value=mint;h.element('cluster-preset').value='quick';
   const submitting=h.element('cluster-form').listeners.get('submit')({preventDefault(){}});
   h.element('cluster-mint').value=pendingMint;
-  ack.resolve({ok:true,status:202,json:async()=>({job_id:jobId,mint})});
+  ack.resolve({ok:true,status:202,json:async()=>({job_id:jobId,mint,query_scope:'overview'})});
   await submitting;await new Promise(resolve=>setImmediate(resolve));
   assert.equal(h.element('cluster-mint').value,mint);
   assert.equal(JSON.parse(h.store.get(pendingKey)).mint,mint);
@@ -764,7 +764,7 @@ test('CA has one visible query entry and no accuracy preset selector',()=>{
   assert.match(html,/统一查询/);
 });
 
-test('CA submit uses fixed bounded standard without reading a mode control',async()=>{
+test('CA submit requests an overview without reading a mode control',async()=>{
   let posted;
   const h=harness({responseFor:async(url,options)=>{
     if(options.method==='POST'){
@@ -776,7 +776,7 @@ test('CA submit uses fixed bounded standard without reading a mode control',asyn
   h.element('cluster-mint').value=mint;
   h.element('cluster-preset').value='unsupported-stale-dom';
   await h.element('cluster-form').listeners.get('submit')({preventDefault(){}});
-  assert.deepEqual(posted,{mint,preset:'standard'});
+  assert.deepEqual(posted,{mint,preset:'standard',scope:'overview'});
   assert.equal(h.requests.filter(x=>x.method==='POST').length,1);
 });
 
@@ -1659,4 +1659,83 @@ test('nonstandard token exchange first-buy amount is explicitly a net boundary o
   const html=h.context.acquisitionCell({first_acquisition:{status:'CONFIRMED_ACCOUNT_COMPLETE',quote_quantity:'12',quote_asset:mint,
     quote_amount_semantics:'NET_WALLET_PAIR_NOT_EXACT_FINAL_TARGET_COST'}});
   assert.match(html,/账户净交换量/);assert.match(html,/不等于精确买入成本/);
+});
+
+
+test('the first view shows a sourced story independently of exact CA recognition',()=>{
+  const h=harness(), report=storyReport();
+  report.narrative.origin={version:1,recognition:{status:'NO_VERIFIABLE_CLAIM',mint}};
+  h.context.renderClusterPreview({mint,query_scope:'overview',status:'RUNNING',preview:{
+    narrative:report.narrative, token_status:'OK', market_status:'OK', market_cap_usd:123456,
+  }});
+  const view=h.element('cluster-preview').innerHTML;
+  assert.match(view,/A crawler trains an AI model/);
+  assert.match(view,/href="https:\/\/project\.example\.org\/"/);
+  assert.match(view,/CA 认领[\s\S]*已读来源中未找到可验证认领/);
+  assert.doesNotMatch(view,/已核实链上资料关联账号/);
+});
+
+test('first view shows source-bound interaction and requires exact Mint and source-bound evidence for claim',()=>{
+  const h=harness(), report=storyReport();
+  const source='a'.repeat(64), metadata='b'.repeat(64);
+  const from='https://x.com/elonmusk/status/456',to='https://x.com/example/status/123';
+  report.narrative.origin={
+    version:1,creator_metadata:{uri:'https://project.example.org/metadata',description:'A cat in space <script>alert(1)</script>',response_sha256:metadata},
+    posts:[{id:'456',url:from,author:'elonmusk',text:'Interesting',response_sha256:source,created_at:1792683606},
+      {id:'123',url:to,author:'example',author_id:'999',text:'CA: '+mint,response_sha256:source,exact_ca_mentioned:true,relation:'LINKED_BY_CREATOR_METADATA'}],
+    interactions:[{status:'API_REPORTED_STRUCTURAL_RELATION',from,to,type:'REPLY',author:'elonmusk'}],
+    recognition:{mint,basis:'CHAIN_LINKED_POST_AUTHOR_EXPLICIT_EXACT_MINT_CLAIM',status:'EXACT_CA_CLAIM_VERIFIED',
+      source_url:to,author:'example',author_id:'999',post_response_sha256:source,metadata_response_sha256:metadata},
+  };
+  h.context.renderClusterReport(report);
+  const view=h.element('cluster-story').innerHTML;
+  assert.match(view,/cat in space &lt;script&gt;/);
+  assert.match(view,/@elonmusk 回复了 @example/);
+  assert.match(view,/CA 认领[\s\S]*已核实链上资料关联账号/);
+  assert.match(view,/href="https:\/\/x\.com\/example\/status\/123"/);
+  report.narrative.origin.recognition.mint=pendingMint;
+  h.context.renderClusterReport(report);
+  assert.match(h.element('cluster-story').innerHTML,/尚未核实准确 CA/);
+  assert.doesNotMatch(h.element('cluster-story').innerHTML,/认领原帖/);
+});
+
+test('overview and wallet are explicitly separate jobs and wallet details preserve the overview',async()=>{
+  const owner='44444444444444444444444444444444';
+  const fullId='cccccccccccccccccccccccccccccccc';
+  const posts=[];
+  const h=harness({responseFor:async(url,options)=>{
+    if (options.method==='POST') {
+      const body=JSON.parse(options.body);posts.push(body);
+      const binding=body.scope==='wallet' ? {focus_owner:owner,base_job_id:jobId} : {};
+      return {ok:true,status:202,json:async()=>({mint,job_id:body.scope==='wallet'?secondJob:fullId,query_scope:body.scope,...binding})};
+    }
+    if (url.endsWith('job_id='+secondJob)) {
+      const fields={mint,query_scope:'wallet',focus_owner:owner,base_job_id:jobId};
+      return {ok:true,status:200,json:async()=>url.startsWith('/api/cluster-analysis') ?
+        {...fields,job_id:secondJob,status:'DONE'} : {...fields,ca_job_id:secondJob,observed_at:1792683606,wallet_detail:{owner,raw:'191',supply_pct:'1.5'},decimals:2}};
+    }
+    return new Promise(()=>{});
+  }});
+  h.element('cluster-mint').value=mint;
+  h.context.renderClusterReport({...fixture,ca_job_id:jobId,query_scope:'overview'});
+  const summary=h.element('cluster-summary').innerHTML;
+  const click=h.element('cluster-result').listeners.get('click');
+  await click({target:{closest:()=>({dataset:{clusterOwner:owner}})}});
+  await new Promise(resolve=>setImmediate(resolve));
+  assert.deepEqual(posts,[{mint,preset:'standard',scope:'wallet',owner,base_job_id:jobId}]);
+  assert.equal(h.element('cluster-wallet-panel').hidden,false);
+  assert.match(h.element('cluster-wallet-detail').innerHTML,/1\.91/);
+  assert.equal(h.element('cluster-summary').innerHTML,summary);
+  await h.element('cluster-full-query').listeners.get('click')();
+  assert.deepEqual(posts[1],{mint,preset:'standard',scope:'full'});
+});
+
+test('missing launch evidence does not hide the chain-proven Pump creator',()=>{
+  const h=harness();
+  h.context.renderClusterReport({...fixture,launch_identity:{pump:{status:'VERIFIED_CHAIN_STATE',creator:mint}},
+    launch_flow:{status:'PARTIAL',reason:'MALFORMED_SIGNATURE_PAGE'},quick_check:{dev:null}});
+  const view=h.element('cluster-quick-check').innerHTML;
+  assert.match(view,/当前持仓未核实.*卖出未核实/);
+  assert.match(view,/开盘覆盖不完整/);
+  assert.doesNotMatch(view,/非 Pump.fun/);
 });
