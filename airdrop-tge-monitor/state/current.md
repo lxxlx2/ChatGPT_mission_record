@@ -1,3 +1,21 @@
+## Latest actual run, 2026-11-21 21:57 Asia/Bangkok
+- last_run: 2026-11-21T21:57:32+07:00
+- schedule: HH:00 Asia/Bangkok
+- run_path: airdrop-tge-monitor/runs/2026-11-21/215732-final.md
+- run_status: PARTIAL_ONLY
+- scheduled_shard: 1
+- executed_shard: 1
+- shard_denominator: 6
+- original_source_readback: 4/6 (recent dated issuer publications 2/6)
+- full_investor_rights_verified: 0/6
+- candidate_count: 0
+- action_count: 0
+- notification: NONE
+- source_rights_gaps: 6
+- identity_failures: 0
+- last_meaningful_attempt_shard1: 2026-11-21T21:57:32+07:00
+- last_verified_complete_shard1: UNCHANGED
+
 ## Actual hourly run 2026-11-21 21:02:36 Asia/Bangkok
 - schedule: HOURLY HH:00; scheduled_shard: 1; executed_shard: 1; active_registry: 28; fixed_urgent: 0
 - run_path: airdrop-tge-monitor/runs/2026-11-21/210236-final.md
