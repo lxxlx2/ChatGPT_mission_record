@@ -81,3 +81,11 @@ The earlier historical run's unresolved right snapshots below were recorded befo
 - candidate_count: 0; action_count: 0; gmail_attempted: false; app_notification: false
 - code_gate: CODE_NOT_EXECUTED; last_meaningful_attempt_at_shard2: 2026-11-21T14:03:06+07:00
 - last_verified_complete_at: unchanged; source gaps remain; no full coverage claim
+
+## Latest actual run 2026-11-21 15:00:41 Asia/Bangkok
+- run_path: airdrop-tge-monitor/runs/2026-11-21/150041-final.md
+- run_status: PARTIAL_ONLY; schedule: HH:00; scheduled_shard: 3; executed_shard: 3
+- active_projects: 28; fixed_urgent: 0; shard_attempted: 7/7; original issuer/partner source readback: 6/7; issuer+personal rights fully verified: 0/7
+- candidate_count: 1 (ByteDance secondary buyback report, Tier C, rejected); action_count: 0; gmail_attempted: false; app_notification: false
+- source_identity_failure: Thalassa Robotics issuer primary inaccessible, 1 source gap; Thalassa Holdings collision rejected; investor-rights gaps 7/7; code_gate: CODE_NOT_EXECUTED
+- last_meaningful_attempt_at_shard3: 2026-11-21T15:00:41+07:00; last_verified_complete_at: unchanged
