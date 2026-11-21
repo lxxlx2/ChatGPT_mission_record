@@ -1706,7 +1706,7 @@ test('overview and wallet are explicitly separate jobs and wallet details preser
   const h=harness({responseFor:async(url,options)=>{
     if (options.method==='POST') {
       const body=JSON.parse(options.body);posts.push(body);
-      const binding=body.scope==='wallet' ? {focus_owner:owner,base_job_id:jobId} : {};
+      const binding=body.scope==='wallet' ? {focus_owner:owner,base_job_id:jobId} : {base_job_id:jobId};
       return {ok:true,status:202,json:async()=>({mint,job_id:body.scope==='wallet'?secondJob:fullId,query_scope:body.scope,...binding})};
     }
     if (url.endsWith('job_id='+secondJob)) {
@@ -1727,7 +1727,7 @@ test('overview and wallet are explicitly separate jobs and wallet details preser
   assert.match(h.element('cluster-wallet-detail').innerHTML,/1\.91/);
   assert.equal(h.element('cluster-summary').innerHTML,summary);
   await h.element('cluster-full-query').listeners.get('click')();
-  assert.deepEqual(posts[1],{mint,preset:'standard',scope:'full'});
+  assert.deepEqual(posts[1],{mint,preset:'standard',scope:'full',base_job_id:jobId});
 });
 
 test('missing launch evidence does not hide the chain-proven Pump creator',()=>{

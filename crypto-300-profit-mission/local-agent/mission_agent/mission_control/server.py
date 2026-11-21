@@ -266,8 +266,8 @@ class ClusterJobManager:
             public.update(query)
             try:
                 checkpoint.check_binding(self._checkpoint_binding(preset, query), CLUSTER_RPC_JOB_BUDGETS[preset])
-                if query.get("query_scope") == "wallet":
-                    self._wallet_base(public)
+                if "base_job_id" in query:
+                    self._query_base(public)
             except CheckpointError as exc:
                 public.update(resume_available=False, resume_unavailable_reason=str(exc))
             return public
@@ -310,34 +310,37 @@ class ClusterJobManager:
             except ValueError:return None
         return create
 
-    def _wallet_base(self, query):
+    def _query_base(self, query):
         saved = self._saved_job_report_with_digest(query["base_job_id"])
         if saved is None or saved[1] != query["base_report_sha256"] or saved[0]["mint"] != query["mint"]:
-            raise CheckpointError("CA_WALLET_BASE_CHANGED")
+            raise CheckpointError("CA_BASE_REPORT_CHANGED")
         return saved[0]
 
-    def submit(self, mint: str, preset: str = "standard", *, scope="full", owner=None, base_job_id=None) -> dict:
+    def submit(self, mint: str, preset: str = "standard", *, scope=None, owner=None, base_job_id=None) -> dict:
         mint = self.validate_mint(mint)
         if not isinstance(preset, str) or preset not in CLUSTER_PRESETS:
             raise ValueError("INVALID_CLUSTER_PRESET")
+        query = {} if scope is None else {"query_scope": scope}
+        scope = "full" if scope is None else scope
         if scope not in ("full", "overview", "wallet") or (scope != "full" and preset != "standard"):
             raise ValueError("INVALID_CA_QUERY_SCOPE")
-        query = {}
-        if scope == "overview":
-            query["query_scope"] = scope
-        if scope == "wallet":
-            owner = self.validate_mint(owner)
+        if scope == "wallet" or base_job_id is not None:
+            if scope == "overview" or (scope == "full" and owner is not None):
+                raise ValueError("INVALID_CA_BASE_SCOPE")
             saved = self._saved_job_report_with_digest(base_job_id)
-            if saved is None or saved[0]["mint"] != mint or saved[0].get("query_scope", "full") not in ("overview", "full"):
-                raise ValueError("INVALID_CA_WALLET_BASE")
+            allowed = ("overview", "full") if scope == "wallet" else ("overview",)
+            if saved is None or saved[0]["mint"] != mint or saved[0].get("query_scope", "full") not in allowed:
+                raise ValueError("INVALID_CA_WALLET_BASE" if scope == "wallet" else "INVALID_CA_OVERVIEW_BASE")
             base, base_sha = saved
-            ranked = (base.get("holder_rankings") or {}).get("owners") or []
-            holders = base.get("holders") or []
-            if not any(isinstance(row, dict) and row.get("owner") == owner for row in (*holders, *ranked)):
-                raise ValueError("CA_WALLET_NOT_IN_BASE_REPORT")
-            query.update(query_scope=scope, focus_owner=owner, base_job_id=base_job_id,
-                         base_report_sha256=base_sha)
-        elif owner is not None or base_job_id is not None:
+            query.update(query_scope=scope, base_job_id=base_job_id, base_report_sha256=base_sha)
+            if scope == "wallet":
+                owner = self.validate_mint(owner)
+                ranked = (base.get("holder_rankings") or {}).get("owners") or []
+                holders = base.get("holders") or []
+                if not any(isinstance(row, dict) and row.get("owner") == owner for row in (*holders, *ranked)):
+                    raise ValueError("CA_WALLET_NOT_IN_BASE_REPORT")
+                query["focus_owner"] = owner
+        elif owner is not None:
             raise ValueError("UNEXPECTED_CA_WALLET_QUERY_FIELDS")
         with self.lock:
             self._prune_jobs_locked()
@@ -653,7 +656,7 @@ class ClusterJobManager:
             opts = CLUSTER_PRESETS[preset]
             wire_budget = CLUSTER_RPC_JOB_BUDGETS[preset]
             binding = self._checkpoint_binding(preset, query) if checkpoint_enabled else None
-            wallet_base = self._wallet_base(job) if scope == "wallet" else None
+            base_report = self._query_base(job) if "base_job_id" in query else None
             active_budget = wire_budget
             if checkpoint_enabled:
                 checkpoint = JobCheckpoint(self.checkpoint_root, job_id)
@@ -698,11 +701,19 @@ class ClusterJobManager:
                 read_launch_identity=opts.get("read_launch_identity",False),
                 independent_rpc=secondary_rpc if secondary_factory is not None else None,
                 progress_callback=lambda stage,details:self._set_progress(job_id,stage,details),
-                **({"query_scope": scope, "focus_owner": query.get("focus_owner"), "wallet_base": wallet_base}
+                **({"query_scope": scope, "focus_owner": query.get("focus_owner"),
+                    "wallet_base": base_report if scope == "wallet" else None}
                    if query else {}),
             ).analyze()
             if query:
                 report.update(query)
+            if scope == "full" and base_report is not None and isinstance(base_report.get("launch_flow"), dict):
+                # Keep the opening evidence tied to its original observation.
+                # The full query's ranks and balances keep their own snapshot.
+                report["overview_opening"] = {
+                    "ca_job_id": base_report["ca_job_id"], "observed_at": base_report["observed_at"],
+                    "launch_flow": base_report["launch_flow"], "quick_check": base_report.get("quick_check"),
+                }
             if checkpoint is not None:
                 checkpoint.check_binding(self._checkpoint_binding(preset, query), wire_budget)
                 checkpoint.assert_can_publish()

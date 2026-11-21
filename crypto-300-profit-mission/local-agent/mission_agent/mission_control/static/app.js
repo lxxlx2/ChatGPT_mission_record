@@ -1341,8 +1341,9 @@ function clusterRefreshDetailActions() {
 
 function clusterQueryMatches(payload, request) {
   if (!request?.scope) return true; // Sessions saved by the older unscoped client.
-  return payload.query_scope===request.scope && (request.scope!=='wallet' ||
-    (payload.focus_owner===request.owner && payload.base_job_id===request.baseJobId));
+  return payload.query_scope===request.scope &&
+    (!request.baseJobId || payload.base_job_id===request.baseJobId) &&
+    (request.scope!=='wallet' || payload.focus_owner===request.owner);
 }
 
 function clusterPresentReport(report) {
@@ -2407,11 +2408,14 @@ function renderClusterOpening(report) {
   const r=report.holder_rankings || {};
   const safeTop10=holderRankSupplyBasis(r) && !independentSlotConflict(report,r.snapshot_slot) ?
     r.metrics?.GLOBAL_EX_VERIFIED_POOLS_OWNER_TOP10_PCT : null;
-  const view={...report.quick_check};
-  if (independentSlotConflict(report,r.snapshot_slot)) view.top10_ex_pool_program_pct=null;
+  const prior=report.query_scope==='full' && report.overview_opening?.ca_job_id===report.base_job_id
+    ? report.overview_opening : null;
+  const view={...(report.quick_check || prior?.quick_check)};
+  if (prior || independentSlotConflict(report,r.snapshot_slot)) view.top10_ex_pool_program_pct=safeTop10;
   else if (safeTop10!=null) view.top10_ex_pool_program_pct=safeTop10;
-  $('cluster-quick-check').innerHTML=renderClusterOpeningSummary(view,report.launch_flow,report.launch_identity);
-  const flow=report.launch_flow;
+  const flow=report.launch_flow || prior?.launch_flow;
+  const priorNote=prior ? '<p class="cluster-quick-note">开盘及买家余额保留摘要的观测时间 '+esc(clusterMarketFreshness(null,prior.observed_at))+'。</p>' : '';
+  $('cluster-quick-check').innerHTML=priorNote+renderClusterOpeningSummary(view,flow,report.launch_identity);
   const rows=Array.isArray(flow?.buyers) ? flow.buyers : [];
   $('cluster-launch-buyers-details').hidden=!flow || flow.status==='NOT_REQUESTED';
   const states={HOLDING:'持有',ADDED:'当前余额更多',PARTIAL_REDUCED:'当前余额减少',CLEARED:'当前余额为 0'};
@@ -2876,6 +2880,7 @@ function clusterSetJob(jobId,mint,{scope,owner,baseJobId}={}) {
   clusterPollVersion += 1;
   clusterActiveJob = {id:jobId,mint};
   if (scope==='overview' || scope==='full') clusterActiveJob.scope=scope;
+  if (scope==='full' && baseJobId) clusterActiveJob.baseJobId=baseJobId;
   if (scope==='wallet') Object.assign(clusterActiveJob,{scope,owner,baseJobId});
   clusterRefreshDetailActions();
   $('cluster-continuation').hidden=true;
@@ -3116,7 +3121,8 @@ async function clusterStartQuery({mint,scope,owner,baseJobId}) {
   $('cluster-preview').hidden=true;
   clusterStatus('running','准备'+clusterScopeLabel(scope),'只读链上查询');
   const request={mint,preset:'standard',scope};
-  if (scope==='wallet') Object.assign(request,{owner,base_job_id:baseJobId});
+  if (baseJobId) request.base_job_id=baseJobId;
+  if (scope==='wallet') request.owner=owner;
   try {
     const r=await fetch('/api/cluster-analysis',{
       method:'POST',cache:'no-store',headers:{'Content-Type':'application/json'},body:JSON.stringify(request),
@@ -3145,7 +3151,7 @@ async function clusterStartQuery({mint,scope,owner,baseJobId}) {
 $('cluster-full-query').addEventListener('click',()=>{
   const report=clusterVisibleReport;
   if (report?.query_scope==='overview' && report.mint===$('cluster-mint').value.trim()) {
-    return clusterStartQuery({mint:report.mint,scope:'full'});
+    return clusterStartQuery({mint:report.mint,scope:'full',baseJobId:report.ca_job_id});
   }
 });
 

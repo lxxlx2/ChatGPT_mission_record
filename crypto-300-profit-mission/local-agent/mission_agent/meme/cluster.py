@@ -1825,7 +1825,7 @@ class WalletClusterAnalyzer:
         flow=collect_launch_flow(self.mint,self.rpc,launch=launch,current_balances=balances,supply_raw=supply,
                                  excluded_owners=excluded,progress=lambda parsed:self._progress("LAUNCH_FLOW",parsed=parsed))
         summary=flow.get("summary") or {}
-        adjusted=(holder_rankings.get("metrics") or {}).get("GLOBAL_EX_LP_OWNER_TOP10_PCT")
+        adjusted=(holder_rankings.get("metrics") or {}).get("GLOBAL_EX_VERIFIED_POOLS_OWNER_TOP10_PCT")
         quick_check={
             "version":1,"dev":flow.get("dev"),"launch_flow_status":flow.get("status"),
             "first_buyers":summary.get("first_buyers"),"snipers":summary.get("snipers"),"bundles":summary.get("bundles"),
@@ -1863,7 +1863,7 @@ class WalletClusterAnalyzer:
             verified=self._usable_holder_snapshot(holder_rankings,pool_holder_roles)
             holder_details={
                 "holder_count":holder_rankings.get("nonzero_owner_count") if verified else None,
-                "adjusted_top10_pct":(holder_rankings.get("metrics") or {}).get("GLOBAL_EX_LP_OWNER_TOP10_PCT") if verified else None,
+                "adjusted_top10_pct":(holder_rankings.get("metrics") or {}).get("GLOBAL_EX_VERIFIED_POOLS_OWNER_TOP10_PCT") if verified else None,
             }
         self._progress(
             "HOLDERS_READY",top_accounts_resolved=len(holders),

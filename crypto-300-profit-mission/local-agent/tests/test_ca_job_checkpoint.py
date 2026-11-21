@@ -436,6 +436,8 @@ def test_scoped_ca_jobs_use_bound_report_and_recover_without_overwriting_full(tm
                 'schema_version': 2, 'source': 'SOLANA_FINALIZED_JSON_RPC', 'mint': self.mint,
                 'observed_at': 20, 'coverage': {}, 'holders': [{'owner': owner}],
                 'metrics': {}, 'assessment': {}, 'token_profile': {}, 'limitations': [],
+                **({'launch_flow': {'status': 'PARTIAL'}, 'quick_check': {'snipers': None}}
+                   if scope == 'overview' else {}),
             }
 
     monkeypatch.setattr(server, 'WalletClusterAnalyzer', Analyzer)
@@ -476,6 +478,18 @@ def test_scoped_ca_jobs_use_bound_report_and_recover_without_overwriting_full(tm
     manager.jobs.clear()
     assert manager.get(wallet['job_id'])['focus_owner'] == owner
     assert manager.get(wallet['job_id'])['base_job_id'] == overview['job_id']
+    continued = manager.submit(MINT, scope='full', base_job_id=overview['job_id'])
+    assert continued['query_scope'] == 'full'
+    assert continued['base_job_id'] == overview['job_id']
+    manager._run(continued['job_id'])
+    continued_report = manager.latest(MINT, continued['job_id'])
+    assert continued_report['query_scope'] == 'full'
+    assert 'launch_flow' not in continued_report
+    assert continued_report['overview_opening'] == {
+        'ca_job_id': overview['job_id'], 'observed_at': 20,
+        'launch_flow': {'status': 'PARTIAL'}, 'quick_check': {'snipers': None},
+    }
+    assert manager.latest(MINT)['ca_job_id'] == continued['job_id']
 
 
 def test_ca_preview_delivers_narrative_and_claim_separately_before_details(tmp_path):
