@@ -1,5 +1,18 @@
 # Airdrop / TGE Automatic Runtime
 
+## 2026-11-21 highest-precedence runtime correction: retire permanent urgent five and close stale user rights
+
+The original task, hourly HH:00 Asia/Bangkok and hour % 4 shard rotation **remain unchanged**. Read latest REGISTRY.md, state/known-events.md and ACTION_GATE.md *before selecting candidates*. The previous always-hourly Concrete, MetaMask, Claynosaurz, HEEBOO and Space fixed-urgent lane is **RETIRED** and all five projects are removed from the active shards; it must not be restored from older sections of this file or old task prompts. StandX and Cambria are likewise user-closed, removed from active shards and may not consume discovery calls. All old run receipts remain immutable.
+
+The **new dynamic urgent queue can be empty**. It is calculated on each original hourly invocation solely from surviving active projects plus real fresh eligibility/deadline/capital-at-risk evidence; existing Galxe legacy-platform rights exception remains as previously authorized. `CLAIMED`, `INELIGIBLE`, `NO_POINTS`, `REFUNDED`, `CLOSED` and `USER_SUPPRESSED` must be filtered **before network requests**; these entries do not count toward denominator or missing-source tally. Fixed shard counts now 8/7/7/7 (29 total). Urgent denominator equals **actual qualifying dynamic urgent** entries, potentially 0. Zero does not mean missing urgent scans or unhealthy run.
+
+The 01/N1 points lane is gone: user has exactly zero 01/N1 points, and previous assertions of UNKNOWN balances are superseded. Keep **Echo legacy 01 USD 1,000 investment** as a distinct one-entry Shard-2 deal-rights check: actual contract, Echo deal status, refund, distributions and investor action only. Capital settlement has not been independently verified. Never turn it into N1 points/TGE without original contractual proof.
+
+**Required post-event reconciliation:** when a user explicitly states claimed, ineligible, refunded, exited or no further exposure, record their statement as `USER_CONFIRMED` in known-events and remove/deactivate the corresponding active scope in Registry and runtime promptly. Send/readback only establishes `NOTIFIED`, NEVER `CLAIMED`. A project TGE/listing/airdrop completion alone should cause stage downgrade, and active monitoring may remain ONLY if independently identified user-relevant rights remain. Suppressed projects need explicit user opt-in to return. Historical finals, source gaps and delivered email records must not be overwritten; only latest state is corrected.
+
+Prior fixed-urgent-five descriptions and historical example references in this runtime are superseded. No new task, timing change, monitor, email or production action is authorized by this correction.
+
+
 **Active execution override 2026-10-10:** Existing task now runs at HH:00 Asia/Bangkok, once each hour (24 per day), as expressly authorized. The legacy HH:50 and HH:14 references are superseded for future runs. Shard is still local hour % 4, urgent set every hour, exactly one shard per run and existing stale-shard recovery. Do not classify genuine historic HH:50 run artifacts as invalid merely due to the new schedule. Never change title, monitoring scope or notification gate.
 
 Updated: 2026-09-28 19:34 Asia/Bangkok
