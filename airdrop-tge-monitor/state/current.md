@@ -64,3 +64,12 @@ The earlier historical run's unresolved right snapshots below were recorded befo
 - candidate_count: 0; action_count: 0; gmail_attempted: false; app_notification: false
 - source_failures: 2 (Thalassa, Fortytwo); identity_failures: 0; code_gate: CODE_NOT_EXECUTED
 - previous complete verification date remains 2026-10-10; no full-coverage claim
+
+## Latest actual run 2026-11-21 12:56:01 Asia/Bangkok
+- run_path: airdrop-tge-monitor/runs/2026-11-21/125601-final.md
+- run_status: PARTIAL_ONLY; schedule: HH:00; scheduled_shard: 0; executed_shard: 0
+- active_projects: 28; fixed_urgent: 0; shard_attempted: 8/8; current original-stage readback: 2/8; historical original readback: 4/8; current personal-rights verified: 0/8
+- candidate_count: 0; action_count: 0; gmail_attempted: false; app_notification: false
+- source_failures: 6 incomplete current-stage slots; identity_failures: 0 observed; code_gate: CODE_NOT_EXECUTED
+- last_meaningful_attempt_at_shard0: 2026-11-21T12:56:01+07:00
+- last_verified_complete_at remains 2026-10-10T07:52:16+07:00; no full-coverage claim
