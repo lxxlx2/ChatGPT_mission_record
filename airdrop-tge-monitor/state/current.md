@@ -9,7 +9,7 @@
 - user_01_points: **0**; user_N1_points: **0**; no points/TGE scanning
 - user_suppressed_closed_rights: **Concrete, MetaMask, Claynosaurz/Clay Shares, HEEBOO, Space, StandX, Cambria, Neutrl**; retain historical audit only
 - original schedule: hourly HH:00 Asia/Bangkok, hour % 4 one shard, unchanged
-- neutrl: RESERVE_IMPAIRMENT / CORE_OPERATIONS_PAUSED / PARTIAL_REDEMPTION; USER_SUPPRESSED_NO_TGE_ACTION; issuer token cancellation and universal full refunds NOT VERIFIED
+- neutrl: **USER_DECISION_NO_TGE / PROJECT_COLLAPSED / TGE_CLOSED / PERMANENTLY_EXCLUDED_FROM_TGE_WATCH** (original user analysis dates back to Aug 2026); official incident reserves impaired, operations paused, partial-value redemption. No inference of full investor repayment or an official token-cancellation announcement.
 - runtime_reminder: the older last_run metrics below correspond to **before this config correction** and MUST NOT be used as current shard/urgent denominator or counted as a post-fix PASS
 - verification_status: **CONFIG_UPDATED_NOT_YET_RUNTIME_VALIDATED**, do not report full recovery until a new authoritative run final with original source receipts actually passes
 
