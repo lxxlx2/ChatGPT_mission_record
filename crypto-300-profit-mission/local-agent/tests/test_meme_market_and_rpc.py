@@ -83,11 +83,13 @@ def test_token_profile_reads_chain_authorities_without_market_guessing():
         endpoint="test";calls=0;cache_hits=0
         def call(self,method,params,ttl=0):
             assert method=="getAccountInfo"
-            return {"value":{
+            return {"context":{"slot":100}, "value":{
+                "executable":False,
                 "owner":"TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
-                "data":{"parsed":{"info":{
+                "data":{"parsed":{"type":"mint","info":{
                     "mintAuthority":None,"freezeAuthority":None,"decimals":6,"supply":"946242000000000",
-                    "extensions":[{"extension":"tokenMetadata","state":{"updateAuthority":None}}],
+                    "isInitialized":True,
+                    "extensions":[{"extension":"tokenMetadata","state":{"mint":"Mint","updateAuthority":None}}],
                 }}}
             }}
     a=WalletClusterAnalyzer("Mint",rpc=RPC())
@@ -146,10 +148,12 @@ def test_token_2022_sensitive_extension_without_state_stays_unresolved():
         endpoint="test";calls=0;cache_hits=0
         def call(self,method,params,ttl=0):
             assert method=="getAccountInfo"
-            return {"value":{
+            return {"context":{"slot":100}, "value":{
+                "executable":False,
                 "owner":"TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
-                "data":{"parsed":{"info":{
+                "data":{"parsed":{"type":"mint","info":{
                     "mintAuthority":None,"freezeAuthority":None,"decimals":6,"supply":"1000000",
+                    "isInitialized":True,
                     "extensions":[
                         {"extension":"transferFeeConfig"},
                         {"extension":"tokenMetadata","state":{"updateAuthority":None}},
@@ -162,6 +166,33 @@ def test_token_2022_sensitive_extension_without_state_stays_unresolved():
     assert out["active_extension_risks"]==[]
     assert out["unresolved_sensitive_extensions"][0]["name"]=="transferFeeConfig"
     assert out["unresolved_sensitive_extensions"][0]["status"]=="UNRESOLVED"
+
+
+def test_mint_identity_requires_valid_account_owner_type_and_initialized_state():
+    program = "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+    core = {"mintAuthority": None, "freezeAuthority": None, "decimals": 6,
+            "supply": "18446744073709551615", "isInitialized": True}
+    def read(value):
+        class RPC:
+            def call(self, method, params, ttl):
+                assert method == "getAccountInfo" and params[1]["commitment"] == "finalized"
+                return {"context": {"slot": 151}, "value": value}
+        return WalletClusterAnalyzer(program, rpc=RPC()).token_profile()
+    def account(parsed_type, info=core, owner=program):
+        return {"owner": owner, "executable": False,
+                "data": {"parsed": {"type": parsed_type, "info": info}}}
+    assert read(None)["reason"] == "MINT_ACCOUNT_UNAVAILABLE"
+    assert read(account("account"))["reason"] == "MINT_ACCOUNT_TYPE_UNVERIFIED"
+    assert read(account("mint", owner="11111111111111111111111111111111"))["reason"] == "MINT_ACCOUNT_TYPE_UNVERIFIED"
+    assert read(account("mint", {**core, "isInitialized": False}))["reason"] == "MINT_STATE_UNVERIFIED"
+    assert read(account("mint", {**core, "mintAuthority": "unverifiable"}))["reason"] == "MINT_STATE_UNVERIFIED"
+    valid = read(account("mint"))
+    assert valid["status"] == "OK" and valid["slot"] == 151
+    assert valid["supply_raw"] == core["supply"]
+    other = {"mint": "11111111111111111111111111111111", "uri": "https://example.test", "updateAuthority": None}
+    unsupported = read(account("mint", {**core, "extensions": [{"extension":"tokenMetadata","state":other}]},
+                               owner="TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"))
+    assert unsupported["token_metadata"] is None and unsupported["metadata_update_authority_status"] == "UNAVAILABLE"
 
 
 def test_dexscreener_alternative_social_type_url_fields_are_preserved_as_unverified_hints():

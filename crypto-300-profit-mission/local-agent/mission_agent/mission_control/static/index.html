@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Meme 研究控制台</title>
-  <link rel="stylesheet" href="/static/styles.css">
+  <link rel="stylesheet" href="/static/styles.css?v=ca-overview-v1">
 </head>
 <body>
   <header class="topbar">
@@ -24,23 +24,23 @@
     <div id="signals-view" class="view-pane active">
     <section class="panel priority-panel" id="follow-opportunities">
       <div class="panel-title">
-        <div><h2>Frank 近期来源信号（只读）</h2><p>仅展示近 10 分钟的本地已索引来源 BUY；不推断实时持仓或可执行价格。交易金额和买卖均由用户决定。</p></div>
+        <div><h2>Frank 近期来源信号（只读）</h2><p>仅展示近 10 分钟的本地已索引来源 BUY。WAIT / NO_BUY 保留在历史判断里。交易金额和买卖均由用户决定。</p></div>
         <span id="updated">未刷新</span>
       </div>
-      <p id="f01-source-status" class="frank-watch-footnote">F01 来源与执行资格尚未核实，不展示可跟结论。</p>
+      <p id="f01-source-status" class="frank-watch-footnote">近期来源信号尚未核实，不展示可跟结论。</p>
       <p id="f01-timing-status" class="frank-watch-footnote">本页尚无新事件观测样本；真实索引延迟尚未测量。</p>
       <div id="candidates" class="candidate-list"></div>
     </section>
     <details class="panel ended-panel" id="f01-history">
-      <summary><div><h2>历史和资格未核实候选 <span id="f01-history-count">0</span></h2>
-      <p>WAIT / NO_BUY 不是买入信号；含过期信号、卖出、模型仓位未核实及当前无法确认的候选，不作为跟单建议。</p></div><span class="summary-hint">展开</span></summary>
+      <summary><div><h2>Frank 历史判断 <span id="f01-history-count">0</span></h2>
+      <p>查看过去的模型判断及其依据。</p></div><span class="summary-hint">展开</span></summary>
       <p id="f01-history-cache-note" class="frank-watch-footnote"></p>
       <div id="f01-history-cards" class="candidate-list"></div>
     </details>
     <section class="panel" id="frank-intelligence-panel">
       <div class="panel-title">
         <div>
-          <h2>Frank 智能分析（只读）</h2>
+          <h2>Frank 智能分析（只读预览）</h2>
           <p>复用已有钱包信号与真实交易记录；风险提示依据已核实的动作。不预设交易金额、不发新通知，也不把历史价格或模型仓位当成实时链上事实。</p>
         </div>
         <span id="frank-intelligence-updated">等待本地数据</span>
@@ -54,6 +54,70 @@
       <div class="candidate-list" id="frank-intelligence-cards"></div>
       <p class="frank-watch-footnote">原 ACCUMULATION/MULTIPLE 提醒保持不变。本区所有风险词汇仅用于进一步调查；卖出可证明时才提示复核。当前市场参考价未采集就显示“无法核实”，不计算跟单盈亏或执行滑点。</p>
     </section>
+    <details class="panel" id="frank-risk-updates">
+      <summary>Frank 风险更新记录</summary>
+      <p>根据本机已有事实记录变化。可指定已有事实快照，或留空使用本机可用的事实与行情。</p>
+      <div class="frank-watch-controls">
+        <label for="frank-risk-manifest">事实快照 ID（可选）</label>
+        <input id="frank-risk-manifest" type="text" autocomplete="off" spellcheck="false">
+        <button class="link-btn" type="button" id="frank-risk-use-manifest">使用已选事实快照</button>
+        <button class="link-btn" type="button" id="frank-risk-refresh">计算并记录风险更新</button>
+      </div>
+      <div class="frank-watch-controls">
+        <label for="frank-risk-run">分析运行 ID</label>
+        <input id="frank-risk-run" type="text" autocomplete="off" spellcheck="false">
+        <button class="link-btn" type="button" id="frank-risk-read-run">读取这次分析</button>
+      </div>
+      <p id="frank-risk-run-status" role="status" aria-live="polite"></p>
+      <div id="frank-risk-run-details"></div>
+      <div class="frank-watch-controls">
+        <label for="frank-risk-mint">筛选 Mint（可选）</label>
+        <input id="frank-risk-mint" type="search" autocomplete="off" spellcheck="false">
+        <label for="frank-risk-kind">变化类型</label>
+        <select id="frank-risk-kind">
+          <option value="">全部</option>
+          <option value="SELL_OBSERVED">观察到卖出</option>
+          <option value="POSITION_REDUCTION_OBSERVED">观察到减仓</option>
+          <option value="REENTRY_OBSERVED">观察到重新买入</option>
+          <option value="PRICE_REFERENCE_STALE">参考行情过期</option>
+          <option value="ABOVE_VERIFIED_BUY_REFERENCE">参考价高于已核实买价</option>
+          <option value="EVIDENCE_GAP">证据缺口</option>
+        </select>
+        <button class="link-btn" type="button" id="frank-risk-read-updates">读取风险记录</button>
+      </div>
+      <p id="frank-risk-updates-status" role="status" aria-live="polite"></p>
+      <div id="frank-risk-rows" class="candidate-list"></div>
+      <button class="link-btn" type="button" id="frank-risk-next" disabled>下一页风险记录</button>
+    </details>
+    <details class="panel" id="frank-execution-quote">
+      <summary>执行资格与手动报价</summary>
+      <p id="f01-eligibility-status">执行资格尚未评估。手动报价只提供指定入参的临时路由参考。</p>
+      <div class="frank-watch-controls">
+        <label for="frank-quote-mint">输出 Mint</label>
+        <input id="frank-quote-mint" type="text" autocomplete="off" spellcheck="false">
+        <label for="frank-quote-input-mint">输入 Mint</label>
+        <input id="frank-quote-input-mint" type="text" autocomplete="off" spellcheck="false">
+        <label for="frank-quote-amount">输入金额（原始整数单位）</label>
+        <input id="frank-quote-amount" type="text" inputmode="numeric" autocomplete="off">
+        <label for="frank-quote-slippage">滑点（基点）</label>
+        <input id="frank-quote-slippage" type="text" inputmode="numeric" autocomplete="off">
+        <button class="link-btn" type="button" id="frank-quote-read">请求报价</button>
+      </div>
+      <p id="frank-quote-status" role="status" aria-live="polite"></p>
+      <div id="frank-quote-details"></div>
+    </details>
+    <details class="panel" id="frank-notification-panel">
+      <summary>Frank 通知审计</summary>
+      <p>核对通知入队、发送尝试、Gmail Sent 回读和归档标记。归档只改变本机备注状态。</p>
+      <div class="frank-watch-controls">
+        <label for="frank-notification-channel">通道</label>
+        <select id="frank-notification-channel"><option value="">全部</option><option value="gmail">Gmail</option><option value="local">本地</option></select>
+        <button class="link-btn" type="button" id="frank-notification-read">读取通知审计</button>
+      </div>
+      <p id="frank-notification-status" role="status" aria-live="polite"></p>
+      <div id="frank-notification-rows" class="candidate-list"></div>
+      <button class="link-btn" type="button" id="frank-notification-next" disabled>下一页通知</button>
+    </details>
     <section class="panel" id="frank-activity-panel">
       <div class="panel-title">
         <div>
@@ -105,9 +169,31 @@
           <tbody id="signed-activity-rows"><tr><td colspan="5">正在读取…</td></tr></tbody>
         </table>
       </div>
-      <p class="frank-watch-footnote">最多读取 5,000 条已索引签名，超过上限会报告不可用，绝不静默截断；为了页面性能，每次显示前 200 条筛选结果。全部数据均为本地历史证据，不是实时完整链史、当前持仓、收益或跟单指令。</p>
+      <p class="frank-watch-footnote">读取所选范围的全部已索引签名；为了页面性能，每次显示前 200 条筛选结果。全部数据均为本地历史证据，不是实时完整链史、当前持仓、收益或跟单指令。</p>
     </section>
     <section class="panel" id="frank-d2-panel">
+      <details id="frank-source-panel" open>
+        <summary>全钱包余额刷新与市场参考</summary>
+        <p>手动刷新读取已有来源；重新读取和翻页仅使用本机已捕获数据。两个 Token Program 的 finalized slot 分别保留。</p>
+        <div class="frank-watch-controls">
+          <button type="button" class="link-btn" id="frank-source-balance">刷新全钱包余额</button>
+          <button type="button" class="link-btn" id="frank-source-market">刷新非零持仓行情</button>
+          <button type="button" class="link-btn" id="frank-source-signals">刷新信号行情</button>
+          <button type="button" class="link-btn" id="frank-source-read">重新读取本机结果</button>
+          <button type="button" class="link-btn" id="frank-source-resume" disabled>恢复余额任务</button>
+          <input type="search" id="frank-source-mint" placeholder="完整 Mint，留空读取全部" aria-label="全钱包结果Mint筛选">
+          <button type="button" class="link-btn" id="frank-source-find">筛选</button>
+          <button type="button" class="link-btn" id="frank-source-next" disabled>下一页</button>
+        </div>
+        <div id="frank-source-status" role="status">尚未读取；不会自动发起来源请求。</div>
+        <div id="frank-source-summary"></div>
+        <div id="frank-source-age"></div>
+        <div class="frank-watch-table-wrap"><table class="frank-watch-table">
+          <thead><tr><th>Mint</th><th>捕获余额</th><th>账户数</th><th>市场参考（USD）</th><th>模型／链状态</th></tr></thead>
+          <tbody id="frank-source-rows"><tr><td colspan="5">尚未读取</td></tr></tbody>
+        </table></div>
+        <p>余额有效期300秒、市场参考60秒，来源时间保留；USD与USDC不默认等价。成本与盈亏不由市场参考价推算。下方D2保留历史导入证据。</p>
+      </details>
       <div class="panel-title">
         <div><h2>Frank 链上余额证据（D2，按采集时点）</h2>
           <p>单独使用经离线核验并手动导入的全钱包双程序余额来源，不改变原有交易信号、观察池或通知。</p>
@@ -144,6 +230,9 @@
           <option value="WATCH_NOW" selected>当前待观察（模型持有/仓位待核）</option>
           <option value="PRIMARY">全部交易及模型历史</option>
           <option value="ALL">全部本地账户活动</option>
+          <option value="USER_FOLLOW">用户关注</option>
+          <option value="USER_HIDDEN">用户隐藏</option>
+          <option value="USER_PINNED">用户收藏</option>
           <option value="PASSIVE_RECEIPT_ONLY">仅被动转入（不代表值得买入）</option>
           <option value="OTHER_ACCOUNT_ACTIVITY">其他账户活动（未核实）</option>
           <option value="SNAPSHOT_NONZERO">链上样本余额非零</option>
@@ -168,8 +257,85 @@
         </table>
       </div>
       <p class="frank-watch-footnote">数据来自 Frank 本地已索引的买卖、模型状态及钱包代币余额变化；这不等于完整链史。被动转入不等于 Frank 主动买入；未核实转出方、实时余额、美元价值与成本均不能自行推断。观察池不触发提醒或交易。</p>
+      <details id="frank-watch-metadata-editor">
+        <summary>收藏、备注与观察选择</summary>
+        <p>关注会加入默认观察，隐藏会从默认观察移除；“全部”和用户隐藏筛选仍可找回。收藏优先排列。备注只保存在本机，不改模型仓位或链上事实。</p>
+        <label for="frank-watch-meta-mint">Mint（留空读取全部保存记录）</label>
+        <input id="frank-watch-meta-mint" type="text" autocomplete="off" placeholder="完整 Solana Mint"/>
+        <button type="button" id="frank-watch-meta-load">读取观察记录</button>
+        <label><input id="frank-watch-meta-pinned" type="checkbox" disabled/>收藏</label>
+        <label for="frank-watch-meta-override">用户观察选择</label>
+        <select id="frank-watch-meta-override" disabled>
+          <option value="DEFAULT">默认观察</option><option value="FOLLOW">用户关注</option><option value="HIDE">用户隐藏</option>
+        </select>
+        <label for="frank-watch-meta-note">备注</label>
+        <textarea id="frank-watch-meta-note" rows="4" maxlength="4000" disabled></textarea>
+        <button type="button" id="frank-watch-meta-save" disabled>保存观察记录</button>
+        <p id="frank-watch-meta-status" role="status">先读取 Mint 后编辑；读取和重载不自动保存。</p>
+        <div class="frank-watch-table-wrap"><table class="frank-watch-table">
+          <thead><tr><th>Mint</th><th>收藏</th><th>备注</th><th>观察选择</th><th>版本</th><th>编辑</th></tr></thead>
+          <tbody id="frank-watch-meta-rows"></tbody>
+        </table></div>
+        <button type="button" id="frank-watch-meta-next" disabled>下一页保存记录</button>
+        <details><summary>该 Mint 变更审计</summary><div id="frank-watch-meta-history"></div></details>
+      </details>
     </section>
 
+    <details class="panel" id="frank-history-manifest">
+      <summary>固定历史证据快照</summary>
+      <p>固定交易事实时逐笔核对已有归档，保留原分类、按原文重算的分类和转账指令。账户初始注资与网络费分列，租金和每笔买卖成本仍待核实。</p>
+      <button type="button" id="frank-manifest-create">固定当前本地历史</button>
+      <button type="button" id="frank-manifest-create-facts">固定交易事实</button>
+      <label for="frank-manifest-parent">修订自快照 ID（可选）</label>
+      <input id="frank-manifest-parent" type="text" autocomplete="off"/>
+      <button type="button" id="frank-manifest-list">读取快照列表</button>
+      <button type="button" id="frank-manifest-more" disabled>下一页快照列表</button>
+      <label for="frank-manifest-id">manifest_id</label><input id="frank-manifest-id" type="text" autocomplete="off"/>
+      <button type="button" id="frank-manifest-read">读取固定历史</button>
+      <button type="button" id="frank-manifest-next" disabled>下一页固定历史</button>
+      <p id="frank-manifest-status" role="status">重载不自动创建或查询。每页容量不限制历史总量。</p>
+      <details><summary>固定版本列表及来源</summary><pre id="frank-manifest-list-data"></pre></details>
+      <details><summary>本页事实与原始交易腿</summary><pre id="frank-manifest-data"></pre></details>
+    </details>
+    <details class="panel" id="frank-wallet-cost">
+      <summary>Frank 钱包 FIFO 成本与盈亏</summary>
+      <p>按固定钱包事实和原始计价币种重建成本。参考估值使用本机已捕获的行情。</p>
+      <div class="frank-watch-controls">
+        <label for="frank-cost-manifest">事实快照 ID</label>
+        <input id="frank-cost-manifest" type="text" autocomplete="off" spellcheck="false"/>
+        <button type="button" id="frank-cost-use-manifest">使用上方快照</button>
+        <button type="button" id="frank-cost-rebuild">重建 FIFO 账本</button>
+      </div>
+      <div class="frank-watch-controls">
+        <label for="frank-cost-run">账本 ID（留空读取最新）</label>
+        <input id="frank-cost-run" type="text" autocomplete="off" spellcheck="false"/>
+        <label for="frank-cost-mint">按 Mint 筛选（可选）</label>
+        <input id="frank-cost-mint" type="search" autocomplete="off" spellcheck="false"/>
+        <button type="button" id="frank-cost-read">读取账本</button>
+      </div>
+      <p id="frank-cost-status" role="status">请选择事实快照，或读取已建账本。</p>
+      <div id="frank-cost-summary"></div>
+      <div class="frank-watch-table-wrap" id="frank-cost-table" hidden>
+        <table class="frank-watch-table">
+          <thead><tr><th>Mint</th><th>索引余额与成本覆盖</th><th>剩余原币成本</th><th>已实现盈亏</th><th>参考估值与未实现盈亏</th><th>批次与资金变动</th></tr></thead>
+          <tbody id="frank-cost-rows"></tbody>
+        </table>
+      </div>
+      <button type="button" id="frank-cost-next" disabled>下一页成本</button>
+    </details>
+    <details class="panel" id="frank-history-coverage">
+      <summary>Frank 钱包历史覆盖</summary>
+      <label for="frank-coverage-window">时间范围</label>
+      <select id="frank-coverage-window">
+        <option value="all">全部本地历史</option>
+        <option value="1">最近 24 小时</option>
+        <option value="7">最近 7 天</option>
+        <option value="30">最近 30 天</option>
+      </select>
+      <button type="button" id="frank-coverage-read">读取历史覆盖</button>
+      <p id="frank-coverage-status" role="status">选择时间范围后读取本地索引。</p>
+      <div id="frank-coverage-detail"></div>
+    </details>
     <details class="panel ended-panel" id="decision-history">
       <summary><div><h2>历史判断记录</h2></div><span class="summary-hint">展开</span></summary>
       <div id="decisions" class="feed"></div>
@@ -208,7 +374,7 @@
             <input id="cluster-mint" name="mint" autocomplete="off" spellcheck="false" placeholder="粘贴 token CA" />
             <button id="cluster-submit" class="primary-btn" type="submit">开始查询</button>
           </div>
-          <div class="cluster-preset-help" id="cluster-preset-help">统一查询：先核对 CA、合约权限和市场，再逐步分析主要持有人及资金关系。历史按来源结束推进，逐请求设有超时和错误恢复；缺失证据会明确列出，任务结束不代表完整尽调。</div>
+          <div class="cluster-preset-help" id="cluster-preset-help">统一查询：先看叙事、CA 认领、市场和链上要点。可以逐户查询，或继续完整尽调。完整历史按来源结束推进，报告会标明覆盖缺口。</div>
 
         </form>
       </section>
@@ -236,33 +402,44 @@
       <section id="cluster-preview" class="cluster-preview" hidden aria-live="polite"></section>
 
       <section id="cluster-result" class="cluster-result" hidden>
-        <section class="panel" aria-label="分析证据完整性"><div id="cluster-completeness"></div></section>
         <div class="cluster-summary" id="cluster-summary"></div>
-        <section class="panel conclusion-panel">
-          <div class="panel-title"><div><h2>快速判断</h2><p>合约风险、筹码集中与市场可交易性。未确认的数据保持未确认。</p></div></div>
-          <div id="cluster-conclusion" class="cluster-conclusion"></div>
+        <section class="panel cluster-overview-panel">
+          <div class="panel-title"><h2>叙事与 CA 认领</h2></div>
+          <div class="cluster-story" id="cluster-story"></div>
+          <details class="cluster-detail-fold">
+            <summary>查看原帖、引用链和来源证据</summary>
+            <div id="cluster-narrative" class="cluster-narrative"></div>
+          </details>
         </section>
         <section class="panel">
-          <div class="panel-title"><div><h2>叙事与事件</h2><p>先看项目讲什么、人物与事件有哪些来源证据；CA 认领单独核对。</p></div></div>
-          <div id="cluster-narrative" class="cluster-narrative"></div>
+          <div class="panel-title"><h2>快速体检</h2></div>
+          <div id="cluster-quick-check"></div>
+          <details id="cluster-launch-buyers-details" class="cluster-detail-fold" hidden>
+            <summary>查看前 70 个买家及开盘证据</summary>
+            <div class="holder-table-wrap">
+              <table class="holder-table">
+                <thead><tr><th>顺序</th><th>Owner</th><th>开盘买入</th><th>当前余额</th><th>余额变化</th><th>首笔证据</th></tr></thead>
+                <tbody id="cluster-launch-buyers"></tbody>
+              </table>
+            </div>
+          </details>
         </section>
-        <section class="panel">
-          <div class="panel-title"><div><h2>行情与交易条件</h2><p>市场参考行情与 Jupiter 可执行报价分开显示，点击 CA 可跳转交易。</p></div></div>
+        <div id="cluster-full-query-controls" class="cluster-detail-actions" hidden>
+          <button type="button" class="link-btn" id="cluster-full-query">继续完整尽调</button>
+        </div>
+        <details class="panel cluster-detail-fold">
+          <summary>查看行情来源和池子对照</summary>
           <div id="cluster-market" class="fact-grid"></div>
-        </section>
-        <section class="panel">
-          <div class="panel-title"><div><h2>筹码集中度</h2><p>优先看 Top10、开发者关联与未确认持仓。严格数据不足时不会显示安全结论。</p></div></div>
-          <div id="cluster-metrics" class="cluster-metrics"></div>
-        </section>
+        </details>
         <section class="panel" id="cluster-rankings-panel" hidden>
           <div class="panel-title"><div><h2>全量账户来源与 Owner 排名</h2><p>先合并同一 Owner 的账户余额，再计算排名；完整性与历史归因分开核实。</p></div></div>
           <div id="cluster-rankings"></div>
         </section>
         <section class="panel">
-          <div class="panel-title"><div><h2>原始 Top20 账户及 Owner</h2><p>账户已解析到 Owner；建仓记录来自有限历史采样，未扫描时明确标记。</p></div></div>
+          <div class="panel-title"><div><h2>主要持有人</h2><p>账户已解析到 Owner。可选择钱包继续核对首次取得与资金关系。</p></div></div>
           <div class="holder-table-wrap">
             <table class="holder-table">
-              <thead><tr><th>#</th><th>Owner</th><th>占比</th><th>角色</th><th>资金来源</th><th>首次买入记录</th></tr></thead>
+              <thead><tr><th>#</th><th>Owner</th><th>占比</th><th>角色</th><th>资金来源</th><th>首次买入记录</th><th>钱包明细</th></tr></thead>
               <tbody id="cluster-holders"></tbody>
             </table>
           </div>
@@ -270,6 +447,15 @@
         <details class="panel cluster-detail-fold">
           <summary>展开完整链上证据和技术细节</summary>
           <div class="cluster-detail-body">
+            <section class="panel" aria-label="分析证据完整性"><div id="cluster-completeness"></div></section>
+            <section class="panel conclusion-panel">
+              <div class="panel-title"><h2>链上结论依据</h2></div>
+              <div id="cluster-conclusion" class="cluster-conclusion"></div>
+            </section>
+            <section class="panel">
+              <div class="panel-title"><h2>筹码集中度明细</h2></div>
+              <div id="cluster-metrics" class="cluster-metrics"></div>
+            </section>
             <section class="panel">
               <div class="panel-title"><div><h2>代币合约与权限详情</h2><p>来自 finalized RPC，包含 Token-2022 敏感扩展。</p></div></div>
               <div id="cluster-token-profile" class="fact-grid"></div>
@@ -295,10 +481,21 @@
           </div>
         </details>
       </section>
+      <section class="panel cluster-wallet-report" id="cluster-wallet-panel" hidden aria-live="polite">
+        <div class="panel-title"><h2>钱包明细</h2></div>
+        <div class="cluster-detail-body" id="cluster-wallet-detail"></div>
+      </section>
     </div>
   </main>
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
-  <script src="/static/app.js"></script>
+  <script src="/static/app.js?v=ca-overview-v1"></script>
+  <script src="/static/frank_research.js?v=source-contract-v1"></script>
+  <script src="/static/frank_watch_metadata.js?v=watch-metadata-v1"></script>
+  <script src="/static/frank_evidence_manifests.js?v=manifest-v2"></script>
+  <script src="/static/frank_history_coverage.js?v=1"></script>
+  <script src="/static/frank_wallet_cost.js?v=1"></script>
+  <script src="/static/frank_risk_and_quote.js?v=1"></script>
+  <script src="/static/frank_notification_audit.js?v=1"></script>
 </body>
 </html>

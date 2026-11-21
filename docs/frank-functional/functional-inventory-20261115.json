@@ -1,0 +1,929 @@
+{
+  "date": "2026-11-15",
+  "scope": "All identified Frank non-frontend functional requirements; implementation and evidence are distinct",
+  "baseline_product_sha": "ee81a0f44c27eb539c3c874963d311d4e4d5761f",
+  "baseline_scanner_sha": "1f2c6afc28b9988eaacdc896562ff9a71b78f801",
+  "main_sha": "921ce04ed3eee3e215a459f6eca8e8add786e646",
+  "sources": {
+    "G1": {
+      "sha": "3072ebda80c98c1912447a704b3c29f227c3dd96",
+      "path": "docs/FRANK_V2_G1_ARCHITECTURE_CONTRACT_20261019.md"
+    },
+    "V3": {
+      "sha": "dd58cac9efba465bd173e19b206a7b11b6a1b25f",
+      "path": "crypto-300-profit-mission/meme/frank-wallet-monitor-dashboard-v2-design-2026-10-11.md"
+    },
+    "OPTION3": {
+      "sha": "72cf75c61fdb220a01b98df0abe81ebc5d248fd4",
+      "path": "docs/MONITORING/frank-release-20261020/FRANK_AMOUNT_INDEPENDENT_INTELLIGENCE_PLAN.md"
+    },
+    "TODO": {
+      "sha": "c8e9da00d5f111c7e79727f4cc8543a88bebced2",
+      "path": "crypto-300-profit-mission/meme/FRANK_CA_MULTI_PERSON_IMPLEMENTATION_TODO_20261013.md"
+    },
+    "CA": {
+      "sha": "ee81a0f44c27eb539c3c874963d311d4e4d5761f",
+      "path": "crypto-300-profit-mission/meme/ca-analysis-unified-accuracy-acceptance.md"
+    },
+    "STATUS": {
+      "sha": "15a782d841d2cf4d88cb27fa95654bdaefe2e4b9",
+      "path": "crypto-300-profit-mission/meme/STATUS.md"
+    }
+  },
+  "rows": [
+    {
+      "id": "SRC01",
+      "group": "来源事实",
+      "requirement": "已有RPC复用、超时及限流恢复",
+      "status": "IMPLEMENTED",
+      "code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/frank/rpc.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/cluster.py"
+      ],
+      "requirements_sources": [
+        "G1",
+        "TODO"
+      ],
+      "gap": "Scanner实际1f2c6af，Dashboard ee81；健康心跳不能证明长期无漏扫"
+    },
+    {
+      "id": "SRC02",
+      "group": "来源事实",
+      "requirement": "游标保留、追赶和重复签名幂等",
+      "status": "PARTIAL",
+      "code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/signals/scanner.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/frank/collector.py"
+      ],
+      "requirements_sources": [
+        "G1",
+        "TODO"
+      ],
+      "gap": "机制存在，当前持续完整性与真实漏扫率未整体验收"
+    },
+    {
+      "id": "SRC03",
+      "group": "来源事实",
+      "requirement": "原始响应/hash/slot/finality/索引时间",
+      "status": "IMPLEMENTED",
+      "code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/signals/store.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/frank/archive.py"
+      ],
+      "requirements_sources": [
+        "G1",
+        "V3"
+      ],
+      "gap": "原件可追溯，8697签名仍是本地索引集合"
+    },
+    {
+      "id": "SRC04",
+      "group": "来源事实",
+      "requirement": "主动买卖、被动收付、失败、ATA及未知分型",
+      "status": "PARTIAL",
+      "code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/signals/classifier.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/frank/parser.py"
+      ],
+      "requirements_sources": [
+        "G1",
+        "V3",
+        "TODO"
+      ],
+      "gap": "复杂多腿/委托/净余额不唯一仍有未知，需要协议代表样本"
+    },
+    {
+      "id": "SRC05",
+      "group": "来源事实",
+      "requirement": "多腿事实与版本化纠错/supersedes",
+      "status": "PARTIAL",
+      "code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/signals/classifier.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/wallet_history.py"
+      ],
+      "requirements_sources": [
+        "G1",
+        "V3"
+      ],
+      "gap": "通用多腿和可追踪纠错未完整接通；旧A04不得整栈移植"
+    },
+    {
+      "id": "SRC06",
+      "group": "来源事实",
+      "requirement": "SOL/WSOL/USDC原币、费用与租金分离",
+      "status": "PARTIAL",
+      "code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/frank/parser.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/frank.py"
+      ],
+      "requirements_sources": [
+        "G1",
+        "V3"
+      ],
+      "gap": "部分归一化已有；复杂路由/全部费用会计未完成"
+    },
+    {
+      "id": "ACT01",
+      "group": "交易流水",
+      "requirement": "流水独立于信号/决策，历史买卖持续存在",
+      "status": "IMPLEMENTED",
+      "code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/wallet_activity.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/frank_activity_watch.py"
+      ],
+      "requirements_sources": [
+        "G1",
+        "V3",
+        "OPTION3"
+      ],
+      "gap": "当前7日1850签名/34交易腿；24h无买卖不等于无历史"
+    },
+    {
+      "id": "ACT02",
+      "group": "交易流水",
+      "requirement": "24h/7d/30d/全部可用范围",
+      "status": "MISSING",
+      "code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/wallet_activity.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/server.py"
+      ],
+      "requirements_sources": [
+        "V3",
+        "TODO"
+      ],
+      "gap": "实际30/all均HTTP400，当前仅1/7天"
+    },
+    {
+      "id": "ACT03",
+      "group": "交易流水",
+      "requirement": "完整可继续分页，避免5000整窗失败及100封顶",
+      "status": "MISSING",
+      "code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/wallet_activity.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/frank_activity_watch.py"
+      ],
+      "requirements_sources": [
+        "V3",
+        "TODO"
+      ],
+      "gap": "30天5772/全部8697真实签名可复现容量缺口"
+    },
+    {
+      "id": "ACT04",
+      "group": "交易流水",
+      "requirement": "按类型/Mint筛选、全匹配计数、稳定游标",
+      "status": "MISSING",
+      "code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/server.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/wallet_activity.py"
+      ],
+      "requirements_sources": [
+        "V3",
+        "TODO"
+      ],
+      "gap": "旧API只有days，缺过滤和分页参数"
+    },
+    {
+      "id": "ACT05",
+      "group": "交易流水",
+      "requirement": "首次索引/raw hash/slot/解析来源字段",
+      "status": "PARTIAL",
+      "code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/signals/store.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/wallet_activity.py"
+      ],
+      "requirements_sources": [
+        "G1",
+        "V3"
+      ],
+      "gap": "源库有seen_at/raw_hash/slot，旧D1投影未完整输出"
+    },
+    {
+      "id": "ACT06",
+      "group": "交易流水",
+      "requirement": "所选时间窗完整性、回填和停止原因",
+      "status": "PARTIAL",
+      "code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/frank.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/wallet_watch.py"
+      ],
+      "requirements_sources": [
+        "G1",
+        "V3"
+      ],
+      "gap": "coverage为LOCAL_INDEX_ONLY，未证明全链历史"
+    },
+    {
+      "id": "POS01",
+      "group": "持仓观察",
+      "requirement": "钱包双Token Program全部账户的时效合格余额",
+      "status": "PARTIAL",
+      "code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/wallet_owner_at_slot.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/wallet_inventory.py"
+      ],
+      "requirements_sources": [
+        "G1",
+        "V3",
+        "TODO"
+      ],
+      "gap": "D2是11月1日4898账户；旧观察列表回退10月11日32Mint"
+    },
+    {
+      "id": "POS02",
+      "group": "持仓观察",
+      "requirement": "用户可用的手动刷新和来源失败恢复",
+      "status": "MISSING",
+      "code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/wallet_d2_ingress.py"
+      ],
+      "requirements_sources": [
+        "G1",
+        "V3",
+        "TODO"
+      ],
+      "gap": "当前GET仅投影手动导入工件；旧F02工具未接成完整刷新能力"
+    },
+    {
+      "id": "POS03",
+      "group": "持仓观察",
+      "requirement": "同Owner多账户整数合计及各程序slot/覆盖",
+      "status": "IMPLEMENTED",
+      "code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/wallet_owner_at_slot.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/wallet_reconciliation.py"
+      ],
+      "requirements_sources": [
+        "G1",
+        "V3"
+      ],
+      "gap": "已导入捕获能核对；不是实时或原子same-slot"
+    },
+    {
+      "id": "POS04",
+      "group": "持仓观察",
+      "requirement": "模型状态与链余额分离/差异核对",
+      "status": "PARTIAL",
+      "code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/wallet_reconciliation.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/wallet_watch.py"
+      ],
+      "requirements_sources": [
+        "G1",
+        "V3",
+        "TODO"
+      ],
+      "gap": "语义已分离，当前新鲜全钱包来源未接通"
+    },
+    {
+      "id": "POS05",
+      "group": "持仓观察",
+      "requirement": "观察对象独立提醒阈值，退出/再入保留",
+      "status": "IMPLEMENTED",
+      "code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/wallet_watch.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/signals/engine.py"
+      ],
+      "requirements_sources": [
+        "G1",
+        "V3"
+      ],
+      "gap": "实际3422观察Mint；被动和账户活动不当作买入"
+    },
+    {
+      "id": "POS06",
+      "group": "持仓观察",
+      "requirement": "收藏/备注/观察变更的持久化与审计",
+      "status": "MISSING",
+      "code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/wallet_watch.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/server.py"
+      ],
+      "requirements_sources": [
+        "V3",
+        "TODO"
+      ],
+      "gap": "目前主要只读派生，缺pin/notes持久API及变更账本"
+    },
+    {
+      "id": "POS07",
+      "group": "持仓观察",
+      "requirement": "lot成本、内部划转、费用、已实现/未实现PnL",
+      "status": "MISSING",
+      "code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/wallet_history.py"
+      ],
+      "requirements_sources": [
+        "V3",
+        "TODO"
+      ],
+      "gap": "当前pnl字段明确null；完整成本账本未实现，未知成本不填零"
+    },
+    {
+      "id": "POS08",
+      "group": "持仓观察",
+      "requirement": "当前估值、原币/USD转换和不可估值资产",
+      "status": "PARTIAL",
+      "code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/wallet_inventory.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/frank.py"
+      ],
+      "requirements_sources": [
+        "G1",
+        "V3"
+      ],
+      "gap": "D2 usd_value_verified=false，缺新鲜同口径组合估值"
+    },
+    {
+      "id": "INT01",
+      "group": "信号分析",
+      "requirement": "原ACC/MULT/HFT/再入源规则和身份保持",
+      "status": "IMPLEMENTED",
+      "code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/signals/engine.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/signals/policy.py"
+      ],
+      "requirements_sources": [
+        "G1",
+        "OPTION3"
+      ],
+      "gap": "冻结策略不改；源信号与用户执行决策独立"
+    },
+    {
+      "id": "INT02",
+      "group": "信号分析",
+      "requirement": "金额无关行为分析，无默认订单或询价",
+      "status": "IMPLEMENTED",
+      "code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/intelligence.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/service.py"
+      ],
+      "requirements_sources": [
+        "G1",
+        "OPTION3"
+      ],
+      "gap": "无金额执行评估NOT_ASSESSED，不等于无源BUY"
+    },
+    {
+      "id": "INT03",
+      "group": "信号分析",
+      "requirement": "当前源信号/历史决定/执行资格分离",
+      "status": "IMPLEMENTED",
+      "code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/f01_source_view.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/server.py"
+      ],
+      "requirements_sources": [
+        "G1",
+        "OPTION3"
+      ],
+      "gap": "当前source_recent=0/history=9，不能从0推断无历史交易"
+    },
+    {
+      "id": "INT04",
+      "group": "信号分析",
+      "requirement": "新鲜市场价及相对已核实买入价变化",
+      "status": "MISSING",
+      "code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/intelligence.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/server.py"
+      ],
+      "requirements_sources": [
+        "OPTION3",
+        "V3"
+      ],
+      "gap": "实际4条均PRICE_UNAVAILABLE；入口market_observations=None"
+    },
+    {
+      "id": "INT05",
+      "group": "信号分析",
+      "requirement": "减仓卖出/过期/追高/信息不足风险解释",
+      "status": "PARTIAL",
+      "code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/intelligence.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/intelligence_preview.py"
+      ],
+      "requirements_sources": [
+        "OPTION3"
+      ],
+      "gap": "纯函数规则已有，真实行情和重要状态变化全流程未完"
+    },
+    {
+      "id": "INT06",
+      "group": "信号分析",
+      "requirement": "分析风险更新的持久身份/去重/重启恢复",
+      "status": "MISSING",
+      "code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/intelligence_preview.py"
+      ],
+      "requirements_sources": [
+        "OPTION3"
+      ],
+      "gap": "仅fake预览和内存seen，不是持久风险队列"
+    },
+    {
+      "id": "INT07",
+      "group": "信号分析",
+      "requirement": "用户主动提供金额时独立即时报价与TTL",
+      "status": "PARTIAL",
+      "code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/jupiter.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/policy.py"
+      ],
+      "requirements_sources": [
+        "G1",
+        "OPTION3"
+      ],
+      "gap": "底层报价存在，端到端主动金额合同未完整验收，不恢复固定金额"
+    },
+    {
+      "id": "CA01",
+      "group": "CA分析",
+      "requirement": "exact CA/链/metadata/名称/币对身份",
+      "status": "IMPLEMENTED",
+      "code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/cluster.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/launch_identity.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/market.py"
+      ],
+      "requirements_sources": [
+        "CA",
+        "TODO"
+      ],
+      "gap": "已有身份反例，多真实CA/同名异币覆盖仍缺"
+    },
+    {
+      "id": "CA02",
+      "group": "CA分析",
+      "requirement": "Mint/freeze/update及Token-2022敏感扩展",
+      "status": "PARTIAL",
+      "code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/cluster.py"
+      ],
+      "requirements_sources": [
+        "CA",
+        "TODO"
+      ],
+      "gap": "主要解析存在，真实危险扩展样本矩阵未齐"
+    },
+    {
+      "id": "CA03",
+      "group": "CA分析",
+      "requirement": "全Mint枚举/Owner聚合/供给/有效Top10",
+      "status": "PARTIAL",
+      "code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/holder_ranks.py"
+      ],
+      "requirements_sources": [
+        "CA",
+        "TODO"
+      ],
+      "gap": "单例33593账户已核对，其他规模与独立枚举未证明"
+    },
+    {
+      "id": "CA04",
+      "group": "CA分析",
+      "requirement": "池/Vault/CEX/锁仓等特殊地址排除及分母",
+      "status": "PARTIAL",
+      "code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/special_roles.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/pool_discovery.py"
+      ],
+      "requirements_sources": [
+        "CA",
+        "TODO"
+      ],
+      "gap": "MAX_POOLS=8等限制尚在；全表身份normalization_complete=false"
+    },
+    {
+      "id": "CA05",
+      "group": "CA分析",
+      "requirement": "原始储备/费用/虚拟储备/LP锁定和协议布局",
+      "status": "PARTIAL",
+      "code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/pool_vaults.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/pool_programs.py"
+      ],
+      "requirements_sources": [
+        "CA",
+        "TODO"
+      ],
+      "gap": "6类池布局有代码，全部协议/经济调整与实源矩阵未验收"
+    },
+    {
+      "id": "CA06",
+      "group": "CA分析",
+      "requirement": "价格/MC/FDV/流动性/成交和第二市场对照",
+      "status": "PARTIAL",
+      "code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/market.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/market_parity.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/pool_market.py"
+      ],
+      "requirements_sources": [
+        "CA",
+        "TODO"
+      ],
+      "gap": "已有同池对照，非全部指标同快照或可成交报价"
+    },
+    {
+      "id": "CA07",
+      "group": "CA分析",
+      "requirement": "取得与市场首买分离/重要Owner历史来源结束",
+      "status": "PARTIAL",
+      "code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/cluster.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/historical_accounts.py"
+      ],
+      "requirements_sources": [
+        "CA",
+        "TODO"
+      ],
+      "gap": "深入所选Top20及可发现账户，非全部Owner或关闭账户全集"
+    },
+    {
+      "id": "CA08",
+      "group": "CA分析",
+      "requirement": "SOL/USDC/WSOL资金源与复杂路由对价",
+      "status": "PARTIAL",
+      "code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/cluster.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/history_classification.py"
+      ],
+      "requirements_sources": [
+        "CA",
+        "TODO"
+      ],
+      "gap": "部分来源可验，完整跨币种归属和路由仍缺；57仅单案例"
+    },
+    {
+      "id": "CA09",
+      "group": "CA分析",
+      "requirement": "关系/共同funder/归集/控制/执行及公共设施分离",
+      "status": "PARTIAL",
+      "code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/cluster.py"
+      ],
+      "requirements_sources": [
+        "CA",
+        "TODO"
+      ],
+      "gap": "265边仅验证关系证据；GOMO等真实逆向样本未整体验收"
+    },
+    {
+      "id": "CA10",
+      "group": "CA分析",
+      "requirement": "可信叙事/人物事件及原帖网站出处",
+      "status": "PARTIAL",
+      "code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/narrative.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/public_html.py"
+      ],
+      "requirements_sources": [
+        "CA",
+        "OPTION3"
+      ],
+      "gap": "当前最多3静态源、深度3/6帖，广泛覆盖和多CA未验"
+    },
+    {
+      "id": "CA11",
+      "group": "CA分析",
+      "requirement": "官方exact CA认领与可追溯起源分开",
+      "status": "PARTIAL",
+      "code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/narrative.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/launch_identity.py"
+      ],
+      "requirements_sources": [
+        "CA",
+        "TODO"
+      ],
+      "gap": "创建者链接可追踪，非作者背书或全网最早；认领检索不全"
+    },
+    {
+      "id": "CA12",
+      "group": "CA分析",
+      "requirement": "第二提供方余额核对/独立枚举/快照口径",
+      "status": "PARTIAL",
+      "code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/independent_check.py"
+      ],
+      "requirements_sources": [
+        "CA"
+      ],
+      "gap": "33594数值一致，地址集合仍主源，不是独立发现或same-slot"
+    },
+    {
+      "id": "CA13",
+      "group": "CA分析",
+      "requirement": "持久job/部分进度/DONE完整性分离/GET恢复",
+      "status": "IMPLEMENTED",
+      "code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/job_checkpoint.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/server.py"
+      ],
+      "requirements_sources": [
+        "CA",
+        "V3"
+      ],
+      "gap": "精确报告身份和续跑已验，旧10月故障归因按用户取消"
+    },
+    {
+      "id": "CA14",
+      "group": "CA分析",
+      "requirement": "缓存时效/首次复查性能/完整性保持",
+      "status": "PARTIAL",
+      "code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/transaction_batch.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/cluster.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/state.py"
+      ],
+      "requirements_sources": [
+        "CA",
+        "TODO"
+      ],
+      "gap": "46分28暖缓存单CA；双源账户35分31瓶颈，冷查未证明"
+    },
+    {
+      "id": "CA15",
+      "group": "CA分析",
+      "requirement": "多CA生命周期/协议/规模/风险代表场景实测",
+      "status": "MISSING",
+      "code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/cluster.py"
+      ],
+      "requirements_sources": [
+        "CA",
+        "TODO"
+      ],
+      "gap": "当前12份job报告全为CRAWL，五类真实场景未完成"
+    },
+    {
+      "id": "NT01",
+      "group": "通知可靠性",
+      "requirement": "原V1源身份/策略hash/去重/过期不复活",
+      "status": "IMPLEMENTED",
+      "code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/signals/delivery.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/delivery.py"
+      ],
+      "requirements_sources": [
+        "G1",
+        "OPTION3",
+        "TODO"
+      ],
+      "gap": "有机制与历史证据，本轮不真发或重写outbox"
+    },
+    {
+      "id": "NT02",
+      "group": "通知可靠性",
+      "requirement": "Gmail Sent回读/尝试和未知结果/通道分离",
+      "status": "PARTIAL",
+      "code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/signals/gmail_api.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/delivery.py"
+      ],
+      "requirements_sources": [
+        "G1",
+        "TODO"
+      ],
+      "gap": "历史有Sent和恢复证据；当前Loop关闭，无新投递验收"
+    },
+    {
+      "id": "NT03",
+      "group": "通知可靠性",
+      "requirement": "Option3独立风险消息策略与可靠持久队列",
+      "status": "MISSING",
+      "code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/intelligence_preview.py"
+      ],
+      "requirements_sources": [
+        "OPTION3"
+      ],
+      "gap": "fake部分历史证据不等于新通知启用，不借V1签名授权"
+    },
+    {
+      "id": "NT04",
+      "group": "通知可靠性",
+      "requirement": "历史通知审计归档/身份可查/不重发",
+      "status": "PARTIAL",
+      "code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/server.py"
+      ],
+      "requirements_sources": [
+        "V3",
+        "TODO"
+      ],
+      "gap": "旧15过期保留；显示收起不是后端归档，逐条对账和归档API未完成"
+    },
+    {
+      "id": "NT05",
+      "group": "通知可靠性",
+      "requirement": "事件到检测/信号/实际送达分段延迟",
+      "status": "PARTIAL",
+      "code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/signals/store.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/observations.py"
+      ],
+      "requirements_sources": [
+        "G1",
+        "TODO"
+      ],
+      "gap": "只有少量历史检测入账时点，缺真实达标通知长期分布"
+    },
+    {
+      "id": "NT06",
+      "group": "通知可靠性",
+      "requirement": "用户签名策略/安全启停与无默认金额",
+      "status": "DEFERRED",
+      "code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/release_approval.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/policy.py"
+      ],
+      "requirements_sources": [
+        "G1",
+        "OPTION3",
+        "STATUS"
+      ],
+      "gap": "Loop关闭且缺用户有效签名工件，本轮不代签或启动"
+    },
+    {
+      "id": "RL01",
+      "group": "后端集成",
+      "requirement": "输入/Host/Origin/只读/查询错误合同",
+      "status": "IMPLEMENTED",
+      "code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/server.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/db.py"
+      ],
+      "requirements_sources": [
+        "G1",
+        "V3"
+      ],
+      "gap": "D2无自定义头403、带头200是正确保护"
+    },
+    {
+      "id": "RL02",
+      "group": "后端集成",
+      "requirement": "超时/429/403恢复，来源失败不当零",
+      "status": "IMPLEMENTED",
+      "code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/cluster.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/job_checkpoint.py"
+      ],
+      "requirements_sources": [
+        "G1",
+        "CA",
+        "TODO"
+      ],
+      "gap": "有禁网及单例实证，多样本真实错误覆盖仍须注明"
+    },
+    {
+      "id": "RL03",
+      "group": "后端集成",
+      "requirement": "磁盘失败/检查点/终止恢复/游标完整性",
+      "status": "PARTIAL",
+      "code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/job_checkpoint.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/transaction_batch.py"
+      ],
+      "requirements_sources": [
+        "CA",
+        "TODO"
+      ],
+      "gap": "有崩溃恢复测试，跨模块长时整体可靠性未统一验收"
+    },
+    {
+      "id": "RL04",
+      "group": "后端集成",
+      "requirement": "固定版本/运行身份/保护库与可运行回退",
+      "status": "PARTIAL",
+      "code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/release_approval.py"
+      ],
+      "requirements_sources": [
+        "G1",
+        "TODO"
+      ],
+      "gap": "Dashboard/Scanner分版本；有备份预检，本次实际回滚未演练"
+    },
+    {
+      "id": "RL05",
+      "group": "后端集成",
+      "requirement": "敏感RPC URL/key/私有raw数据脱敏",
+      "status": "IMPLEMENTED",
+      "code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/cluster.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/transport.py"
+      ],
+      "requirements_sources": [
+        "G1",
+        "TODO"
+      ],
+      "gap": "单例配置URL/key不在报告，新样本仍需同样扫描"
+    },
+    {
+      "id": "RL06",
+      "group": "后端集成",
+      "requirement": "来源/缓存/报告/决定时点及TTL一致",
+      "status": "PARTIAL",
+      "code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/job_checkpoint.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/intelligence.py",
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/wallet_d2_ingress.py"
+      ],
+      "requirements_sources": [
+        "G1",
+        "V3",
+        "CA"
+      ],
+      "gap": "日期分离已实现，新鲜持仓和行情未接通；GET时间不刷新源年龄"
+    },
+    {
+      "id": "RL07",
+      "group": "后端集成",
+      "requirement": "main/其他分支/安装功能的选择性集成",
+      "status": "PARTIAL",
+      "code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/mission_control/server.py"
+      ],
+      "requirements_sources": [
+        "G1",
+        "TODO"
+      ],
+      "gap": "305 heads/244 PR/83目录树/71非前端源码配置组合；14旧缺模块多为延期，不能批量合并"
+    },
+    {
+      "id": "DF01",
+      "group": "延期范围",
+      "requirement": "多人物多钱包研究API/组合聚合",
+      "status": "DEFERRED",
+      "code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/signals/registry.py"
+      ],
+      "requirements_sources": [
+        "G1",
+        "TODO"
+      ],
+      "gap": "旧A02-A07分支有代码，G1后续明确仅启用Frank；不激活新人钱包"
+    },
+    {
+      "id": "DF02",
+      "group": "延期范围",
+      "requirement": "多链/Robinhood跨链订单完整归因",
+      "status": "DEFERRED",
+      "code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/fomo_crosschain.py"
+      ],
+      "requirements_sources": [
+        "G1"
+      ],
+      "gap": "有独立解码器，非通用多链运行产品，Solana first"
+    },
+    {
+      "id": "DF03",
+      "group": "延期范围",
+      "requirement": "跟单净收益/OOS/前向影子研究",
+      "status": "DEFERRED",
+      "code_paths": [
+        "crypto-300-profit-mission/local-agent/mission_agent/meme/followability.py"
+      ],
+      "requirements_sources": [
+        "G1",
+        "STATUS"
+      ],
+      "gap": "P1投入已结束，不自动重启研究；产品可用性独立验收"
+    },
+    {
+      "id": "DF04",
+      "group": "排除范围",
+      "requirement": "自动交易/钱包签名/预设金额/新增监控",
+      "status": "OUT_OF_SCOPE",
+      "code_paths": [],
+      "requirements_sources": [
+        "G1",
+        "STATUS"
+      ],
+      "gap": "不属于本轮补齐，不创建常驻服务/通知/周期任务"
+    }
+  ],
+  "definitions": {
+    "IMPLEMENTED": "Code mechanism exists; not universal runtime acceptance",
+    "PARTIAL": "Implemented subset or missing integration/representative acceptance",
+    "MISSING": "Required active capability absent from current product",
+    "DEFERRED": "Historical requested capability explicitly deferred by later authority",
+    "OUT_OF_SCOPE": "Explicit exclusion; not an active missing feature"
+  },
+  "implementation_increment": {
+    "source_sha": "7bc564b074aa1fe87d809883d0d1364194a92562",
+    "completed_backend_scope": [
+      "ACT02",
+      "ACT03",
+      "ACT04"
+    ],
+    "partially_completed": [
+      "ACT05"
+    ],
+    "note": "Baseline rows above remain the installed ee81 audit. New indexed-activity code has offline multi-mint acceptance and is not yet the installed runtime. No claim of whole product or CA acceptance."
+  }
+}

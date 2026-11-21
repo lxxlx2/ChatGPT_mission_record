@@ -1,6 +1,7 @@
 """Localhost-only Mission Meme V1 dashboard server."""
 from __future__ import annotations
 
+from copy import deepcopy
 import ipaddress
 import hashlib
 import json
@@ -35,8 +36,20 @@ from .wallet_watch import from_sqlite as read_frank_watchlist, annotate_known_at
 from .wallet_inventory import InventoryEvidenceError, reconcile_watchlist
 from .wallet_d2_ingress import D2IngressError, query_d2
 from .wallet_activity import activity as read_signed_activity
+from .wallet_activity_paging import activity_page, KINDS as ACTIVITY_KINDS, CURSOR_ERRORS
 from .evidence_sync import EvidenceSpool, GitEvidencePublisher
 from .jupiter import JupiterQuoteClient
+from .research_data import ResearchData, digest as research_digest
+from .wallet_refresh import OwnerRPC
+from .wallet_owner_at_slot import FRANK_WALLET
+from .watch_metadata import WatchMetadataStore, WatchMetadataError
+from .evidence_manifests import EvidenceManifests, ManifestError
+from .wallet_coverage import CoverageError, coverage_for_wallet
+from .wallet_cost_store import WalletCostStore, CostStoreError
+from .frank_risk_inputs import build_risk_inputs
+from .frank_risk_runs import FrankRiskRuns, RiskRunError
+from .frank_quote import ExplicitJupiterQuoteClient, FrankQuoteService, QuoteError
+from .frank_notification_audit import FrankNotificationAudit, NotificationAuditError
 
 
 def _host_is_loopback(host: str, port: int) -> bool:
@@ -119,6 +132,11 @@ def _atomic_write_text(path: Path, text_value: str):
 
 
 SOLANA_PUBKEY_RE = re.compile(r"^[1-9A-HJ-NP-Za-km-z]{32,44}$")
+CA_QUERY_FIELDS = ("query_scope", "focus_owner", "base_job_id", "base_report_sha256")
+
+
+def _ca_query_fields(record):
+    return {key: record[key] for key in CA_QUERY_FIELDS if key in record}
 # The manual standard query has no aggregate request/time quota, per the user's
 # explicit free-source authorization. Transport timeouts, cooldowns, durable
 # accounting and source-failure handling still apply. Finite legacy presets stay
@@ -193,7 +211,7 @@ class ClusterJobManager:
 
     @staticmethod
     def validate_mint(mint: str) -> str:
-        value = (mint or "").strip()
+        value = mint.strip() if isinstance(mint, str) else ""
         if not SOLANA_PUBKEY_RE.fullmatch(value):
             raise ValueError("INVALID_SOLANA_CA")
         return value
@@ -220,11 +238,12 @@ class ClusterJobManager:
             if job_id not in keep and job_id not in active:
                 self.jobs.pop(job_id,None)
 
-    def _checkpoint_binding(self, preset):
+    def _checkpoint_binding(self, preset, query=None):
         def client_kind(value):
             return None if value is None else type(value).__module__ + "." + type(value).__qualname__
         return digest(canonical({
             "source": source_fingerprint(), "preset": preset, "options": CLUSTER_PRESETS[preset],
+            **({"query": query} if query else {}),
             "budget": CLUSTER_RPC_JOB_BUDGETS[preset],
             "registry": hashlib.sha256(self.registry_path.read_bytes()).hexdigest(),
             "endpoints": hashlib.sha256(canonical(self.rpc_endpoints).encode()).hexdigest(),
@@ -243,7 +262,12 @@ class ClusterJobManager:
             preset = checkpoint.meta["preset"]
             if preset not in CLUSTER_PRESETS:return None
             public = checkpoint.public_job()
-            try: checkpoint.check_binding(self._checkpoint_binding(preset), CLUSTER_RPC_JOB_BUDGETS[preset])
+            query = _ca_query_fields(checkpoint.meta)
+            public.update(query)
+            try:
+                checkpoint.check_binding(self._checkpoint_binding(preset, query), CLUSTER_RPC_JOB_BUDGETS[preset])
+                if "base_job_id" in query:
+                    self._query_base(public)
             except CheckpointError as exc:
                 public.update(resume_available=False, resume_unavailable_reason=str(exc))
             return public
@@ -271,9 +295,14 @@ class ClusterJobManager:
             return self._public_job(job)
 
     def _independent_rpc(self):
-        # Second free provider for balance parity only (getMultipleAccounts).
+        # A primary fallback may have served the same observations. Avoid
+        # advertising a second provider if it shares any configured primary host.
         url=os.environ.get("SOLANA_RPC_SECONDARY","https://solana-rpc.publicnode.com")
-        if not url or url=="0" or url in self.rpc_endpoints[:1]:return None
+        try:
+            host=urlparse(url).hostname
+            primary_hosts={urlparse(endpoint).hostname for endpoint in self.rpc_endpoints}
+        except ValueError:return None
+        if not host or host in primary_hosts:return None
         # No separate aggregate quota: each logical transport read still has
         # finite retries and timeouts, so access failures terminate normally.
         def create():
@@ -281,20 +310,51 @@ class ClusterJobManager:
             except ValueError:return None
         return create
 
-    def submit(self, mint: str, preset: str = "standard") -> dict:
+    def _query_base(self, query):
+        saved = self._saved_job_report_with_digest(query["base_job_id"])
+        if saved is None or saved[1] != query["base_report_sha256"] or saved[0]["mint"] != query["mint"]:
+            raise CheckpointError("CA_BASE_REPORT_CHANGED")
+        return saved[0]
+
+    def submit(self, mint: str, preset: str = "standard", *, scope=None, owner=None, base_job_id=None) -> dict:
         mint = self.validate_mint(mint)
-        if preset not in CLUSTER_PRESETS:
+        if not isinstance(preset, str) or preset not in CLUSTER_PRESETS:
             raise ValueError("INVALID_CLUSTER_PRESET")
+        query = {} if scope is None else {"query_scope": scope}
+        scope = "full" if scope is None else scope
+        if scope not in ("full", "overview", "wallet") or (scope != "full" and preset != "standard"):
+            raise ValueError("INVALID_CA_QUERY_SCOPE")
+        if scope == "wallet" or base_job_id is not None:
+            if scope == "overview" or (scope == "full" and owner is not None):
+                raise ValueError("INVALID_CA_BASE_SCOPE")
+            saved = self._saved_job_report_with_digest(base_job_id)
+            allowed = ("overview", "full") if scope == "wallet" else ("overview",)
+            if saved is None or saved[0]["mint"] != mint or saved[0].get("query_scope", "full") not in allowed:
+                raise ValueError("INVALID_CA_WALLET_BASE" if scope == "wallet" else "INVALID_CA_OVERVIEW_BASE")
+            base, base_sha = saved
+            query.update(query_scope=scope, base_job_id=base_job_id, base_report_sha256=base_sha)
+            if scope == "wallet":
+                owner = self.validate_mint(owner)
+                ranked = (base.get("holder_rankings") or {}).get("owners") or []
+                holders = base.get("holders") or []
+                if not any(isinstance(row, dict) and row.get("owner") == owner for row in (*holders, *ranked)):
+                    raise ValueError("CA_WALLET_NOT_IN_BASE_REPORT")
+                query["focus_owner"] = owner
+        elif owner is not None:
+            raise ValueError("UNEXPECTED_CA_WALLET_QUERY_FIELDS")
         with self.lock:
             self._prune_jobs_locked()
             for job in self.jobs.values():
-                if job["mint"] == mint and job["preset"] == preset and job["status"] in {"QUEUED", "RUNNING"}:
+                if (job["mint"] == mint and job["preset"] == preset and _ca_query_fields(job) == query
+                        and (job["status"] in {"QUEUED", "RUNNING"}
+                             or (scope == "wallet" and job["status"] == "DONE"))):
                     return self._public_job(job)
             job_id = uuid.uuid4().hex
             job = {
                 "job_id": job_id,
                 "mint": mint,
                 "preset": preset,
+                **query,
                 "status": "QUEUED",
                 "created_at": time.time(),
                 "started_at": None,
@@ -305,7 +365,7 @@ class ClusterJobManager:
             # Persist before acknowledging the POST or queuing any source work.
             if getattr(self, "checkpoint_root", None):
                 job["checkpoint_version"] = 1
-                JobCheckpoint.create(self.checkpoint_root, job, self._checkpoint_binding(preset),
+                JobCheckpoint.create(self.checkpoint_root, job, self._checkpoint_binding(preset, query),
                                      CLUSTER_RPC_JOB_BUDGETS[preset])
             self.jobs[job_id] = job
             job["future"] = self.executor.submit(self._run, job_id)
@@ -359,8 +419,13 @@ class ClusterJobManager:
                         "market_status":market.get("status"),
                         "price_usd":market.get("price_usd"),
                         "market_cap_usd":market.get("market_cap_usd"),
+                        "fdv_usd":market.get("fdv_usd"),
                         "liquidity_usd":pair.get("liquidity_usd"),
+                        "pair_address":pair.get("pair_address"),
                         "volume_h24_usd":(pair.get("volume") or {}).get("h24"),
+                        "market_source":market.get("source"),
+                        "market_observed_at":market.get("observed_at"),
+                        "launch_identity":deepcopy(details.get("launch_identity")),
                         "token_status":profile.get("status"),
                         "mint_authority":profile.get("mint_authority"),
                         "freeze_authority":profile.get("freeze_authority"),
@@ -369,9 +434,15 @@ class ClusterJobManager:
                         "raw_top10_resolved_pct":None,
                         "top_accounts_resolved":None,
                     }
-                elif stage=="HOLDERS_READY" and isinstance(job.get("preview"),dict):
-                    job["preview"]["raw_top10_resolved_pct"]=details.get("raw_top10_resolved_pct")
-                    job["preview"]["top_accounts_resolved"]=details.get("top_accounts_resolved")
+                elif isinstance(job.get("preview"), dict):
+                    preview_fields = {
+                        "NARRATIVE_READY": ("narrative",),
+                        "HOLDERS_READY": ("raw_top10_resolved_pct", "top_accounts_resolved", "adjusted_top10_pct", "holder_count"),
+                        "LAUNCH_FLOW_READY": ("launch_flow", "quick_check"),
+                    }
+                    for key in preview_fields.get(stage, ()):
+                        if key in details:
+                            job["preview"][key] = deepcopy(details[key])
     @staticmethod
     def _extension_semantic_config(value):
         accounting_only={"withheldamount"}
@@ -576,16 +647,20 @@ class ClusterJobManager:
             job["started_at"] = job.get("started_at") or time.time()
             mint = job["mint"]
             preset = job["preset"]
+            query = _ca_query_fields(job)
+            scope = query.get("query_scope", "full")
             checkpoint_enabled = job.get("checkpoint_version") == 1
         cache = RpcCache(self.cache_path)
         checkpoint = None
         try:
             opts = CLUSTER_PRESETS[preset]
             wire_budget = CLUSTER_RPC_JOB_BUDGETS[preset]
+            binding = self._checkpoint_binding(preset, query) if checkpoint_enabled else None
+            base_report = self._query_base(job) if "base_job_id" in query else None
             active_budget = wire_budget
             if checkpoint_enabled:
                 checkpoint = JobCheckpoint(self.checkpoint_root, job_id)
-                checkpoint.begin(self._checkpoint_binding(preset), wire_budget)
+                checkpoint.begin(binding, wire_budget)
                 active_budget = checkpoint.transport_budget()
             rpc = SolanaReadOnlyRPC(
                 self.rpc_endpoint,
@@ -597,7 +672,7 @@ class ClusterJobManager:
             def source_client(name, enabled=True):
                 client = getattr(self, name, None) if enabled else None
                 return CheckpointClient(checkpoint, client, name) if checkpoint is not None and client is not None else client
-            secondary_factory=self._independent_rpc() if opts.get("audit_holder_binary") else None
+            secondary_factory=self._independent_rpc() if opts.get("audit_holder_binary") and scope != "wallet" else None
             def secondary_rpc():
                 if secondary_factory is None:return None
                 client=secondary_factory() if callable(secondary_factory) else secondary_factory
@@ -626,9 +701,21 @@ class ClusterJobManager:
                 read_launch_identity=opts.get("read_launch_identity",False),
                 independent_rpc=secondary_rpc if secondary_factory is not None else None,
                 progress_callback=lambda stage,details:self._set_progress(job_id,stage,details),
+                **({"query_scope": scope, "focus_owner": query.get("focus_owner"),
+                    "wallet_base": base_report if scope == "wallet" else None}
+                   if query else {}),
             ).analyze()
+            if query:
+                report.update(query)
+            if scope == "full" and base_report is not None and isinstance(base_report.get("launch_flow"), dict):
+                # Keep the opening evidence tied to its original observation.
+                # The full query's ranks and balances keep their own snapshot.
+                report["overview_opening"] = {
+                    "ca_job_id": base_report["ca_job_id"], "observed_at": base_report["observed_at"],
+                    "launch_flow": base_report["launch_flow"], "quick_check": base_report.get("quick_check"),
+                }
             if checkpoint is not None:
-                checkpoint.check_binding(self._checkpoint_binding(preset), wire_budget)
+                checkpoint.check_binding(self._checkpoint_binding(preset, query), wire_budget)
                 checkpoint.assert_can_publish()
                 report["collection_checkpoint"] = checkpoint.provenance()
                 report.setdefault("coverage", {})["rpc_call_count_scope"] = "JOB_RESERVED_ATTEMPTS_INCLUDING_UNCERTAIN_CRASH_OUTCOMES"
@@ -649,14 +736,17 @@ class ClusterJobManager:
             stamp = time.strftime("%Y%m%dT%H%M%SZ", time.gmtime())
             out = self.report_root / mint
             out.mkdir(parents=True, exist_ok=True)
-            self._attach_assessment_history(out,report,preset)
+            if scope == "full":
+                self._attach_assessment_history(out,report,preset)
             payload = json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True)
-            _atomic_write_text(out / f"{stamp}.json", payload)
-            _atomic_write_text(out / f"{stamp}.md", markdown(report))
+            if scope == "full":
+                _atomic_write_text(out / f"{stamp}.json", payload)
+                _atomic_write_text(out / f"{stamp}.md", markdown(report))
             by_job = self.report_root / "_jobs"
             by_job.mkdir(parents=True, exist_ok=True)
             _atomic_write_text(by_job / f"{job_id}.json", payload)
-            _atomic_write_text(out / "latest.json", payload)
+            if scope == "full":
+                _atomic_write_text(out / "latest.json", payload)
             # Only a separately committed terminal marker authorizes later
             # recovery. Orphan reports from failed writes are never DONE.
             with self.lock:
@@ -668,6 +758,8 @@ class ClusterJobManager:
             }
             _atomic_write_text(by_job / f"{job_id}.done.json",
                                json.dumps(marker, sort_keys=True))
+            if scope == "overview":
+                _atomic_write_text(out / "latest-overview-job.txt", job_id)
             if checkpoint is not None:checkpoint.finish("DONE")
             # Marker is the irreversible success boundary. No later failure
             # may turn a committed result into a persisted ERROR.
@@ -676,7 +768,7 @@ class ClusterJobManager:
                 job["status"] = "DONE"
                 job["finished_at"] = time.time()
                 job["progress"] = {"stage":"DONE","updated_at":job["finished_at"]}
-            if self.evidence_enabled:
+            if self.evidence_enabled and scope == "full":
                 try:
                     self.evidence_spool.ca_done(mint=mint, job_id=job_id, report=report)
                     self.evidence_executor.submit(GitEvidencePublisher(self.evidence_spool).sync)
@@ -819,6 +911,7 @@ class ClusterJobManager:
             "error": None,
             "progress": {"stage": "DONE", "source": "SAVED_CA_REPORT"},
             "restored_from_saved_report": True,
+            **_ca_query_fields(report),
         }
 
     def latest(self, mint: str, job_id: str | None = None) -> dict | None:
@@ -830,6 +923,15 @@ class ClusterJobManager:
             if saved is not None:
                 return saved if saved["mint"] == mint else None
         path = self.report_root / mint / "latest.json"
+        if job_id is None and not path.is_file():
+            try:
+                overview_id = path.with_name("latest-overview-job.txt").read_text()
+                saved = self._saved_job_report(overview_id)
+                if saved is not None and saved["mint"] == mint and saved.get("query_scope") == "overview":
+                    return saved
+            except OSError:
+                pass
+            return None
         if not path.is_file():
             return None
         try:
@@ -849,9 +951,50 @@ class DashboardState:
     def __init__(self, production_root: Path, control_root: Path):
         self.frank = FrankReader(production_root)
         self.control_root = Path(control_root)
+        self.watch_metadata = WatchMetadataStore(self.control_root)
         self.control_db = self.control_root / "mission-control.sqlite"
+        self.notification_audit = FrankNotificationAudit(self.frank.database, self.control_db, self.control_root)
         self.control_health = self.control_root / "mission-control-health.json"
         self.cluster_jobs = ClusterJobManager(self.control_root, production_root)
+        code_sha = os.environ.get("FRANK_DASHBOARD_SOURCE_SHA", "UNPINNED")
+        if not re.fullmatch(r"[a-f0-9]{40}", code_sha):
+            code_sha = "UNPINNED"
+        self.evidence_manifests = EvidenceManifests(self.control_root, self.frank.database,
+                                                   archive_root=self.frank.root / "raw",
+                                                   legacy_archive_root=os.environ.get("FRANK_DASHBOARD_LEGACY_ARCHIVE_DIR") or None,
+                                                   code_sha=code_sha)
+        # Reuse the already configured source; do not create a new provider/key.
+        endpoints = self.cluster_jobs.rpc_endpoints
+        self.research = ResearchData(
+            self.control_root, wallet=FRANK_WALLET,
+            rpc_factory=lambda: OwnerRPC(endpoints), market_client=self.cluster_jobs.market_client,
+            observed_mints=lambda: [r["mint"] for r in read_frank_watchlist(
+                self.frank.database, person_id=self.frank.person_id)["rows"]],
+            model_positions=lambda: {r["mint"]:r.get("position_state","UNKNOWN") for r in self.frank.candidates()},
+            signal_mints=lambda: [r["mint"] for r in self.frank.candidates()],
+            binding=research_digest({"wallet":FRANK_WALLET, "endpoints":endpoints,
+                "versions":{name:hashlib.sha256(Path(__file__).with_name(name).read_bytes()).hexdigest()
+                    for name in ("wallet_refresh.py","source_evidence.py","market_observations.py","research_data.py")},
+                "market_adapter":hashlib.sha256(Path(__file__).resolve().parents[1].joinpath("meme/market.py").read_bytes()).hexdigest()}),
+            code_sha=code_sha,
+        )
+        self.wallet_cost = WalletCostStore(self.control_root, self.evidence_manifests,
+                                          self.research.market_rows, code_sha=code_sha)
+        self.risk_runs = FrankRiskRuns(self.control_root, code_sha=code_sha)
+        self.frank_quote = FrankQuoteService(ExplicitJupiterQuoteClient(None))
+
+    def risk_input(self, manifest_id, request_key):
+        if manifest_id is None:
+            key = "frank-risk:" + hashlib.sha256(request_key.encode()).hexdigest()
+            manifest_id = self.evidence_manifests.create("facts", key)["manifest_id"]
+        metadata, rows = self.evidence_manifests.cost_input(manifest_id)
+        balances = self.research.latest("balance")
+        if (not balances or balances.get("status") != "COMPLETE_WITHIN_SCOPE"
+                or balances.get("wallet") != self.research.wallet
+                or balances.get("source_binding") != self.research.binding):
+            balances = None
+        return build_risk_inputs(metadata, rows, position_snapshot=balances,
+                                 market=self.research.market_rows(), as_of=time.time())
 
     def _control_query(self, sql: str, params=()):
         if not self.control_db.is_file():
@@ -1024,10 +1167,38 @@ class DashboardState:
             # Reuse existing read-only Frank candidate facts, never the MC
             # execution overlay, Jupiter or the provider-backed CA job.
             candidates = self.frank.candidates()
+            research = getattr(self, "research", None)
+            markets = research.market_rows() if research is not None else {}
+            from .market_observations import comparable_usdc_market
+            comparable={}
+            for candidate in candidates:
+                if not isinstance(candidate,dict):raise ValueError("INVALID_CANDIDATE")
+                value=comparable_usdc_market(candidate.get("mint"),markets,as_of=observed_at,max_age_seconds=60)
+                if value is not None:comparable[candidate["mint"]]=value
             rows = analyze_rows(
                 candidates, as_of=observed_at,
-                max_market_age_seconds=1, market_observations=None,
+                max_market_age_seconds=60, market_observations=comparable,
             )
+            for row in rows:
+                reference = markets.get(row["mint"])
+                if reference is not None:
+                    row["market_reference"] = reference
+                    # Display the original USD reference separately. Comparisons
+                    # require the independently captured USDC/USD reference too.
+                    row["price"]["reference_currency"] = reference.get("currency")
+                    row["price"]["market_price_usd"] = reference.get("price_usd")
+                    converted=comparable.get(row["mint"])
+                    row["price"]["comparison_status"] = "SOURCED_REFERENCE_CONVERSION" if converted else "USD_USDC_CONVERSION_UNAVAILABLE"
+                    row["price"]["conversion_evidence"] = converted.get("conversion_evidence") if converted else None
+                    row["price"]["reference_observed_at"] = reference.get("observed_at")
+                    row["price"]["reference_source"] = reference.get("source")
+                    try:
+                        age=observed_at-float(reference["observed_at"])
+                        row["price"]["reference_status"] = "FRESH_CAPTURE" if 0<=age<=60 and reference.get("status")=="OK" else "STALE_OR_UNAVAILABLE"
+                    except (KeyError,TypeError,ValueError):
+                        row["price"]["reference_status"] = "UNAVAILABLE"
+                    row["missing"] = [x for x in row["missing"] if x != "MARKET_REFERENCE_MISSING"]
+                    if not converted:row["missing"].append("COMPARABLE_CURRENCY_CONVERSION_UNAVAILABLE")
         except (OSError, ValueError, TypeError, sqlite3.DatabaseError):
             return {
                 "status": "SOURCE_UNAVAILABLE", "rows": [],
@@ -1041,7 +1212,7 @@ class DashboardState:
             "as_of": observed_at,
             "scope": "FRANK_INDEX_ONLY_NOT_COMPLETE_CHAIN_OR_CURRENT_BALANCE",
             "source": "EXISTING_FRANK_READONLY_CANDIDATES",
-            "market_reference": "NOT_REQUESTED",
+            "market_reference": "CAPTURED_LOCAL_REFERENCES" if markets else "NOT_REQUESTED",
             "live_notification_authorized": False,
             "rows": rows,
         }
@@ -1066,16 +1237,19 @@ class DashboardState:
                 "notification_authorized": False,
             }
 
-    def frank_signed_activity(self, days: int = 1):
-        """Bounded D1 indexed source facts; never an actionable signal or balance."""
+    def frank_signed_activity(self, days=1, *, page_size=None, cursor=None, kind="ALL", mint=None):
+        """Complete local indexed ranges; optional pages never cap total history."""
         try:
-            result = read_signed_activity(self.frank.database, int(time.time()), days=days)
+            if page_size is None:
+                result = read_signed_activity(self.frank.database, int(time.time()), days=days)
+            else:
+                result = activity_page(self.frank.database, int(time.time()), days=days,
+                                       page_size=page_size, cursor=cursor, kind=kind, mint=mint)
             return {"status": "INDEXED_LOCAL_ONLY", **result}
         except (ValueError, OSError, sqlite3.DatabaseError) as exc:
-            reason = ("INDEX_WINDOW_TOO_LARGE_NOT_TRUNCATED"
-                      if isinstance(exc, ValueError)
-                      and str(exc) == "INDEX_WINDOW_TOO_LARGE_NOT_TRUNCATED"
-                      else "LOCAL_ACTIVITY_SOURCE_UNAVAILABLE")
+            known = CURSOR_ERRORS | {"INDEX_WINDOW_TOO_LARGE_NOT_TRUNCATED", "INVALID_ACTIVITY_RANGE",
+                                     "INVALID_ACTIVITY_PAGE_SIZE", "INVALID_ACTIVITY_KIND", "INVALID_ACTIVITY_MINT"}
+            reason = str(exc) if isinstance(exc, ValueError) and str(exc) in known else "LOCAL_ACTIVITY_SOURCE_UNAVAILABLE"
             return {
                 "status": "UNAVAILABLE", "reason": reason,
                 "scope": "LOCAL_INDEX_ONLY_NOT_COMPLETE_CHAIN",
@@ -1150,6 +1324,22 @@ class DashboardState:
         """Separate private D2 GET lane; never changes the old watchlist."""
         return query_d2(self.control_root, mint=mint, page=page)
 
+    def frank_personal_watchlist(self):
+        observed = self.frank_observed_watchlist()
+        revision, preferences = self.watch_metadata.preferences()
+        by_mint = {r["mint"]: r for r in preferences}
+        rows = []
+        for row in observed.get("rows", []):
+            mint = row["mint"]
+            rows.append({**row, "user_metadata": by_mint.pop(mint, None)})
+        # User-selected mints outside the index remain reachable, with no
+        # invented chain, trade or model state.
+        rows.extend({"mint": mint, "watch_state": "USER_ONLY",
+                     "origin_scope": "USER_METADATA_ONLY", "user_metadata": pref}
+                    for mint, pref in by_mint.items())
+        return {**observed, "rows": rows, "metadata_revision": revision,
+                "user_preferences_scope": "USER_VIEW_ONLY_NOT_MODEL_OR_CHAIN"}
+
     def recent_trades(self):
         return self.frank.recent_trades(100)
 
@@ -1176,6 +1366,262 @@ class Handler(BaseHTTPRequestHandler):
     def _allowed_host(self):
         return _host_header_is_loopback(self.headers.get("Host"))
 
+    def _research_origin(self, *, write=False):
+        host = self.headers.get("Host", "")
+        origin = self.headers.get("Origin")
+        if origin is not None and origin != "http://" + host:
+            return False
+        if write:
+            return origin == "http://" + host
+        return self.headers.get("X-Frank-Research-Read") == "1"
+
+    def _research_get(self, path):
+        if not self._research_origin():
+            return self._json({"error":"SAME_ORIGIN_READ_REQUIRED"},403)
+        try:
+            params = parse_qs(urlparse(self.path).query,keep_blank_values=True,max_num_fields=5)
+            if any(len(v)!=1 for v in params.values()):
+                raise ValueError("INVALID_QUERY")
+            params = {k:v[0] for k,v in params.items()}
+            research = self.state.research
+            if path in {"/api/frank-balance-refresh", "/api/frank-market-refresh"}:
+                if set(params)!={"refresh_id"}:raise ValueError("INVALID_QUERY")
+                job=research.job(params["refresh_id"],"balance" if "balance" in path else "market")
+                return self._json(job or {"error":"JOB_NOT_FOUND"},200 if job else 404)
+            if set(params)-{"snapshot_id","mint","limit","cursor"}:raise ValueError("INVALID_QUERY")
+            if "mint" in params and not SOLANA_PUBKEY_RE.fullmatch(params["mint"]):raise ValueError("INVALID_MINT")
+            raw_limit=params.pop("limit","100")
+            if not re.fullmatch(r"[0-9]{1,4}",raw_limit) or not 1<=int(raw_limit)<=1000:raise ValueError("INVALID_PAGE_SIZE")
+            limit=int(raw_limit)
+            if path=="/api/frank-positions":
+                return self._json(research.positions(**params,limit=limit))
+            if "snapshot_id" in params:raise ValueError("INVALID_QUERY")
+            observations=research.market_rows()
+            mint=params.get("mint")
+            rows=[r for m,r in sorted(observations.items()) if mint is None or mint==m]
+            page=research.page(rows,"market",research_digest(rows),mint,limit,params.get("cursor"))
+            return self._json({"status":"OK" if observations else "UNAVAILABLE",**page,"as_of":time.time(),"max_age_seconds":60})
+        except ValueError as exc:
+            reason=str(exc)
+            code=409 if reason in {"CURSOR_QUERY_CHANGED","SOURCE_BINDING_CHANGED"} else 400
+            return self._json({"error":reason if reason in {"INVALID_QUERY","INVALID_MINT","INVALID_PAGE_SIZE","INVALID_CURSOR","INVALID_JOB_ID","CURSOR_QUERY_CHANGED","SOURCE_BINDING_CHANGED"} else "INVALID_QUERY"},code)
+        except (OSError,sqlite3.Error):
+            return self._json({"error":"LOCAL_RESEARCH_UNAVAILABLE"},503)
+
+    def _watch_get(self, path):
+        if not self._research_origin():
+            return self._json({"error":"SAME_ORIGIN_READ_REQUIRED"},403)
+        try:
+            query = parse_qs(urlparse(self.path).query, keep_blank_values=True, max_num_fields=3)
+            if any(len(v) != 1 for v in query.values()) or set(query)-{"mint","limit","cursor"}:
+                raise ValueError
+            params = {k:v[0] for k,v in query.items()}
+            raw_limit = params.pop("limit", "100")
+            if not re.fullmatch(r"[0-9]{1,4}", raw_limit):
+                raise ValueError
+            store = self.state.watch_metadata
+            if path.endswith("-events"):
+                if "mint" not in params:
+                    raise ValueError
+                return self._json(store.events(**params, limit=int(raw_limit)))
+            return self._json(store.list(**params, limit=int(raw_limit)))
+        except WatchMetadataError as exc:
+            return self._json({"error":exc.code},exc.http_status)
+        except (ValueError,TypeError,UnicodeError,RecursionError):
+            return self._json({"error":"INVALID_METADATA_QUERY"},400)
+        except (OSError,sqlite3.Error):
+            return self._json({"error":"WATCH_METADATA_UNAVAILABLE"},503)
+
+    def _manifest_get(self, path):
+        if not self._research_origin():
+            return self._json({"error":"SAME_ORIGIN_READ_REQUIRED"},403)
+        try:
+            query = parse_qs(urlparse(self.path).query, keep_blank_values=True, max_num_fields=7)
+            if any(len(v)!=1 for v in query.values()):
+                raise ValueError
+            params = {k:v[0] for k,v in query.items()}
+            allowed = {"manifest_id","kind","limit","cursor"}
+            if path.endswith("-activity"):
+                allowed |= {"days","mint"}
+                if "manifest_id" not in params:
+                    raise ValueError
+                days = params.pop("days","all")
+                if days not in {"1","7","30","all"}:
+                    raise ValueError
+                params["days"] = days if days=="all" else int(days)
+            if set(params)-allowed:
+                raise ValueError
+            limit = params.pop("limit","100")
+            if not re.fullmatch(r"[0-9]{1,4}",limit):
+                raise ValueError
+            method = self.state.evidence_manifests.activity if path.endswith("-activity") else self.state.evidence_manifests.manifests
+            return self._json(method(**params,limit=int(limit)))
+        except ManifestError as exc:
+            return self._json({"error":exc.code},exc.http_status)
+        except (ValueError,TypeError,UnicodeError,RecursionError):
+            return self._json({"error":"INVALID_MANIFEST_QUERY"},400)
+        except (OSError,sqlite3.Error):
+            return self._json({"error":"MANIFEST_STORAGE_UNAVAILABLE"},503)
+
+    def _wallet_cost_get(self, path):
+        if not self._research_origin():
+            return self._json({"error": "SAME_ORIGIN_READ_REQUIRED"}, 403)
+        try:
+            query = parse_qs(urlparse(self.path).query, keep_blank_values=True, max_num_fields=4)
+            if any(len(values) != 1 for values in query.values()):
+                raise ValueError
+            params = {key: values[0] for key, values in query.items()}
+            if path == "/api/frank-cost-rebuild":
+                if set(params) != {"run_id"}:
+                    raise ValueError
+                return self._json(self.state.wallet_cost.get(**params))
+            if set(params) - {"run_id", "mint", "limit", "cursor"}:
+                raise ValueError
+            limit = params.pop("limit", "100")
+            if not re.fullmatch(r"[0-9]{1,4}", limit):
+                raise ValueError
+            return self._json(self.state.wallet_cost.page(**params, limit=int(limit)))
+        except CostStoreError as exc:
+            return self._json({"error": exc.code}, exc.http_status)
+        except (ValueError, TypeError, UnicodeError, RecursionError):
+            return self._json({"error": "INVALID_COST_QUERY"}, 400)
+
+    def _history_coverage_get(self):
+        if not self._research_origin():
+            return self._json({"error": "SAME_ORIGIN_READ_REQUIRED"}, 403)
+        try:
+            params = parse_qs(urlparse(self.path).query, keep_blank_values=True, max_num_fields=1)
+        except ValueError:
+            return self._json({"error": "INVALID_COVERAGE_QUERY"}, 400)
+        if params and set(params) != {"days"}:
+            return self._json({"error": "INVALID_COVERAGE_QUERY"}, 400)
+        days = params.get("days", ["all"])[0]
+        if days not in {"all", "1", "7", "30"}:
+            return self._json({"error": "INVALID_COVERAGE_RANGE"}, 400)
+        try:
+            return self._json(coverage_for_wallet(self.state.frank.database, int(time.time()),
+                                                  days=days if days == "all" else int(days)))
+        except CoverageError as exc:
+            return self._json({"error": exc.code}, exc.http_status)
+
+    def do_PATCH(self):
+        if not self._allowed_host():
+            return self.send_error(421, "loopback Host required")
+        path = urlparse(self.path).path
+        prefix = "/api/frank-watch-metadata/"
+        if not path.startswith(prefix):
+            return self.send_error(404)
+        if not self._research_origin(write=True):
+            return self._json({"error":"EXACT_SAME_ORIGIN_REQUIRED"},403)
+        if not _content_type_is_json(self.headers.get("Content-Type")):
+            return self._json({"error":"APPLICATION_JSON_REQUIRED"},415)
+        try:
+            if urlparse(self.path).query:
+                raise ValueError
+            length = int(self.headers.get("Content-Length", "0"))
+            if not 0 < length <= 32768:
+                raise ValueError
+            def pairs(items):
+                obj = {}
+                for k,v in items:
+                    if k in obj:
+                        raise ValueError
+                    obj[k] = v
+                return obj
+            body = json.loads(self.rfile.read(length), object_pairs_hook=pairs,
+                              parse_constant=lambda _: (_ for _ in ()).throw(ValueError()))
+            return self._json(self.state.watch_metadata.update(path[len(prefix):], body))
+        except WatchMetadataError as exc:
+            return self._json({"error":exc.code},exc.http_status)
+        except (ValueError,TypeError,UnicodeError,RecursionError):
+            return self._json({"error":"INVALID_METADATA_REQUEST"},400)
+        except (OSError,sqlite3.Error):
+            return self._json({"error":"WATCH_METADATA_UNAVAILABLE"},503)
+
+    def _risk_get(self, path):
+        if not self._research_origin():
+            return self._json({"error": "SAME_ORIGIN_READ_REQUIRED"}, 403)
+        try:
+            query = parse_qs(urlparse(self.path).query, keep_blank_values=True, max_num_fields=4)
+            if any(len(values) != 1 for values in query.values()):
+                raise ValueError
+            params = {key: values[0] for key, values in query.items()}
+            if path == "/api/frank-intelligence-refresh":
+                if set(params) != {"run_id"}:
+                    raise ValueError
+                return self._json(self.state.risk_runs.get(params["run_id"]))
+            if set(params) - {"mint", "kind", "limit", "cursor"}:
+                raise ValueError
+            limit = params.pop("limit", "100")
+            if not re.fullmatch(r"[0-9]{1,4}", limit):
+                raise ValueError
+            return self._json(self.state.risk_runs.page(**params, limit=int(limit)))
+        except RiskRunError as exc:
+            return self._json({"error": exc.code}, exc.http_status)
+        except (ValueError, TypeError, UnicodeError, RecursionError):
+            return self._json({"error": "INVALID_RISK_QUERY"}, 400)
+
+    def _research_post(self, path):
+        if not self._research_origin(write=True):
+            return self._json({"error":"EXACT_SAME_ORIGIN_REQUIRED"},403)
+        try:
+            length=int(self.headers.get("Content-Length","0"))
+            if not 0<length<=32768:raise ValueError("INVALID_REQUEST_SIZE")
+            def pairs(items):
+                obj={}
+                for k,v in items:
+                    if k in obj:raise ValueError("DUPLICATE_JSON_FIELD")
+                    obj[k]=v
+                return obj
+            body=json.loads(self.rfile.read(length),object_pairs_hook=pairs,
+                            parse_constant=lambda _: (_ for _ in ()).throw(ValueError("NONFINITE_JSON")))
+            if not isinstance(body,dict):raise ValueError("INVALID_JSON_OBJECT")
+            if path=="/api/frank-evidence-manifests":
+                required = {"kind", "idempotency_key"}
+                if not required <= set(body) <= required | {"supersedes_manifest_id"}:
+                    raise ValueError("INVALID_FIELDS")
+                return self._json(self.state.evidence_manifests.create(**body),201)
+            if path == "/api/frank-cost-rebuild":
+                if set(body) != {"input_manifest_id", "idempotency_key"}:
+                    raise ValueError("INVALID_FIELDS")
+                return self._json(self.state.wallet_cost.create(**body), 201)
+            if path == "/api/frank-intelligence-refresh":
+                if "idempotency_key" not in body or set(body) - {"idempotency_key", "input_manifest_id"}:
+                    raise ValueError("INVALID_FIELDS")
+                key = body["idempotency_key"]
+                return self._json(self.state.risk_runs.create(
+                    **body, load_inputs=lambda manifest_id: self.state.risk_input(manifest_id, key)), 201)
+            if path == "/api/frank-quote":
+                return self._json(self.state.frank_quote.create(body))
+            if path == "/api/frank-notification-archive":
+                required = {"notification_id", "channel", "archived", "expected_revision", "idempotency_key"}
+                if not required <= set(body) <= required | {"reason"}:
+                    raise ValueError("INVALID_FIELDS")
+                return self._json(self.state.notification_audit.archive(**body))
+            if path=="/api/frank-balance-refresh/resume":
+                if set(body)!={"refresh_id","idempotency_key"}:raise ValueError("INVALID_FIELDS")
+                if not isinstance(body["idempotency_key"],str) or not 1<=len(body["idempotency_key"])<=256 or any(ord(c)<32 for c in body["idempotency_key"]):raise ValueError("INVALID_IDEMPOTENCY_KEY")
+                job=self.state.research.resume(body["refresh_id"],idempotency_key=body["idempotency_key"])
+            else:
+                kind="balance" if path=="/api/frank-balance-refresh" else "market"
+                allowed={"idempotency_key"} if kind=="balance" else {"idempotency_key","scope","mint"}
+                if set(body)-allowed or "idempotency_key" not in body:raise ValueError("INVALID_FIELDS")
+                if kind=="market":
+                    if body.get("scope") not in {"observed","positions","signals","mint"}:raise ValueError("INVALID_SCOPE")
+                    if body["scope"]=="mint":
+                        if not isinstance(body.get("mint"),str) or not SOLANA_PUBKEY_RE.fullmatch(body["mint"]):raise ValueError("INVALID_MINT")
+                    elif "mint" in body:raise ValueError("INVALID_FIELDS")
+                job=self.state.research.submit(kind,body)
+            return self._json(job,202)
+        except (ManifestError, CostStoreError, RiskRunError, QuoteError, NotificationAuditError) as exc:
+            return self._json({"error":exc.code},exc.http_status)
+        except (ValueError,TypeError,UnicodeError,RecursionError) as exc:
+            reason=str(exc)
+            safe={"INVALID_REQUEST_SIZE","DUPLICATE_JSON_FIELD","NONFINITE_JSON","INVALID_JSON_OBJECT","INVALID_FIELDS","INVALID_SCOPE","INVALID_MINT","INVALID_IDEMPOTENCY_KEY","INVALID_JOB_ID","JOB_NOT_FOUND","IDEMPOTENCY_CONFLICT","SOURCE_BINDING_CHANGED"}
+            return self._json({"error":reason if reason in safe else "INVALID_RESEARCH_REQUEST"},409 if reason in {"IDEMPOTENCY_CONFLICT","SOURCE_BINDING_CHANGED"} else 404 if reason=="JOB_NOT_FOUND" else 400)
+        except (OSError,sqlite3.Error):
+            return self._json({"error":"LOCAL_RESEARCH_UNAVAILABLE"},503)
+
     def _d2_same_origin_read(self):
         # Browser same-origin fetch uses a custom header. A cross-origin page
         # cannot set it without a preflight, which this server never enables.
@@ -1186,6 +1632,23 @@ class Handler(BaseHTTPRequestHandler):
             return False
         origin = self.headers.get("Origin")
         return not origin or origin == "http://" + (self.headers.get("Host") or "")
+
+    def _notification_audit_get(self):
+        if not self._research_origin():
+            return self._json({"error": "SAME_ORIGIN_READ_REQUIRED"}, 403)
+        try:
+            query = parse_qs(urlparse(self.path).query, keep_blank_values=True, max_num_fields=4)
+            if set(query) - {"notification_id", "channel", "limit", "cursor"} or any(len(v) != 1 for v in query.values()):
+                raise ValueError
+            params = {key: values[0] for key, values in query.items()}
+            limit = params.pop("limit", "100")
+            if not re.fullmatch(r"[0-9]{1,4}", limit):
+                raise ValueError
+            return self._json(self.state.notification_audit.page(**params, limit=int(limit)))
+        except NotificationAuditError as exc:
+            return self._json({"error": exc.code}, exc.http_status)
+        except (ValueError, TypeError, UnicodeError, RecursionError):
+            return self._json({"error": "INVALID_NOTIFICATION_QUERY"}, 400)
 
     def _json(self, payload, status=200):
         data = json.dumps(payload, ensure_ascii=False, default=str).encode()
@@ -1212,6 +1675,16 @@ class Handler(BaseHTTPRequestHandler):
         if not self._allowed_host():
             return self.send_error(421, "loopback Host required")
         path = urlparse(self.path).path
+        if path == "/api/frank-notification-audit":
+            return self._notification_audit_get()
+        if path in {"/api/frank-watch-metadata", "/api/frank-watch-metadata-events"}:
+            return self._watch_get(path)
+        if path in {"/api/frank-evidence-manifests", "/api/frank-evidence-activity"}:
+            return self._manifest_get(path)
+        if path in {"/api/frank-cost-basis", "/api/frank-cost-rebuild"}:
+            return self._wallet_cost_get(path)
+        if path == "/api/frank-coverage":
+            return self._history_coverage_get()
         if path == "/api/runtime":
             return self._json(self.state.runtime())
         if path == "/api/control-health":
@@ -1222,15 +1695,28 @@ class Handler(BaseHTTPRequestHandler):
             if urlparse(self.path).query:
                 return self._json({"error": "UNSUPPORTED_F01_QUERY"}, 400)
             return self._json(self.state.follow_opportunities())
+        if path in {"/api/frank-balance-refresh","/api/frank-market-refresh","/api/frank-positions","/api/frank-market-observations"}:
+            return self._research_get(path)
         if path == "/api/frank-intelligence":
             if urlparse(self.path).query:
                 return self._json({"error": "UNSUPPORTED_INTELLIGENCE_QUERY"}, 400)
             return self._json(self.state.frank_intelligence())
+        if path in {"/api/frank-intelligence-refresh", "/api/frank-intelligence-updates"}:
+            return self._risk_get(path)
         if path == "/api/frank-activity-watch":
             if urlparse(self.path).query:
                 return self._json({"error": "UNSUPPORTED_ACTIVITY_QUERY"}, 400)
             return self._json(self.state.frank_activity_watch())
         if path == "/api/frank-observed-watchlist":
+            if urlparse(self.path).query:
+                if urlparse(self.path).query != "personal=1":
+                    return self._json({"error":"INVALID_METADATA_QUERY"},400)
+                if not self._research_origin():
+                    return self._json({"error":"SAME_ORIGIN_READ_REQUIRED"},403)
+                try:
+                    return self._json(self.state.frank_personal_watchlist())
+                except WatchMetadataError as exc:
+                    return self._json({"error":exc.code},exc.http_status)
             return self._json(self.state.frank_observed_watchlist())
         if path == "/api/frank-d2-at-slot":
             if not self._d2_same_origin_read():
@@ -1255,13 +1741,31 @@ class Handler(BaseHTTPRequestHandler):
                 return self._json({"error": "INVALID_D2_QUERY"}, 400)
             return self._json(result)
         if path == "/api/frank-signed-activity":
-            values = parse_qs(urlparse(self.path).query)
-            if set(values) - {"days"} or len(values.get("days", ["1"])) != 1:
+            try:
+                values = parse_qs(urlparse(self.path).query, keep_blank_values=True, max_num_fields=5)
+            except ValueError:
+                return self._json({"error": "INVALID_ACTIVITY_RANGE"}, 400)
+            if set(values) - {"days", "limit", "cursor", "kind", "mint"} or any(len(v) != 1 for v in values.values()):
                 return self._json({"error": "INVALID_ACTIVITY_RANGE"}, 400)
             days = values.get("days", ["1"])[0]
-            if days not in ("1", "7"):
+            if days not in ("1", "7", "30", "all"):
                 return self._json({"error": "INVALID_ACTIVITY_RANGE"}, 400)
-            return self._json(self.state.frank_signed_activity(int(days)))
+            days = "all" if days == "all" else int(days)
+            if not set(values) - {"days"}:
+                return self._json(self.state.frank_signed_activity(days))
+            limit = values.get("limit", ["100"])[0]
+            kind = values.get("kind", ["ALL"])[0]
+            mint = values.get("mint", [None])[0]
+            cursor = values.get("cursor", [None])[0]
+            if (not limit.isascii() or not limit.isdecimal() or len(limit) > 4
+                    or not 1 <= int(limit) <= 1000 or kind not in ACTIVITY_KINDS
+                    or (mint is not None and not SOLANA_PUBKEY_RE.fullmatch(mint))
+                    or (cursor is not None and not 1 <= len(cursor) <= 4096)):
+                return self._json({"error": "INVALID_ACTIVITY_QUERY"}, 400)
+            result = self.state.frank_signed_activity(days, page_size=int(limit), cursor=cursor, kind=kind, mint=mint)
+            reason = result.get("reason")
+            status = 409 if reason == "ACTIVITY_CURSOR_SOURCE_CHANGED" else 400 if reason in CURSOR_ERRORS else 200
+            return self._json(result, status)
         if path == "/api/trades":
             return self._json(self.state.recent_trades())
         if path == "/api/coverage":
@@ -1313,6 +1817,12 @@ class Handler(BaseHTTPRequestHandler):
         if not _content_type_is_json(self.headers.get("Content-Type")):
             return self._json({"error":"APPLICATION_JSON_REQUIRED"},415)
         path = urlparse(self.path).path
+        if path in {"/api/frank-balance-refresh", "/api/frank-balance-refresh/resume", "/api/frank-market-refresh",
+                    "/api/frank-evidence-manifests", "/api/frank-cost-rebuild",
+                    "/api/frank-intelligence-refresh", "/api/frank-quote", "/api/frank-notification-archive"}:
+            if urlparse(self.path).query:
+                return self._json({"error":"INVALID_QUERY"},400)
+            return self._research_post(path)
         if path != "/api/cluster-analysis":
             return self.send_error(404)
         try:
@@ -1329,7 +1839,8 @@ class Handler(BaseHTTPRequestHandler):
             if "resume_job_id" in body:
                 job = self.state.cluster_jobs.resume(body["resume_job_id"], body.get("mint", ""))
             else:
-                job = self.state.cluster_jobs.submit(body.get("mint",""), body.get("preset","standard"))
+                scoped = {key: body[key] for key in ("scope", "owner", "base_job_id") if key in body}
+                job = self.state.cluster_jobs.submit(body.get("mint",""), body.get("preset","standard"), **scoped)
         except ValueError as exc:
             # Preserve only the known public CA validation code; never reflect
             # arbitrary exception text, RPC details or internal paths.

@@ -178,6 +178,9 @@ class JobCheckpoint:
                 'endpoint_last_at': {}, 'endpoint_cooldown_until': {},
                 'bytes_used': 0, 'entry_count': 0, 'head': '', 'last_saved_at': now,
                 'last_source_read_at': None, 'resume_count': 0, 'status': 'QUEUED'}
+        for key in ('query_scope', 'focus_owner', 'base_job_id', 'base_report_sha256'):
+            if key in job:
+                meta[key] = job[key]
         with sqlite3.connect(path) as db:
             db.execute('CREATE TABLE metadata(id INTEGER PRIMARY KEY,body TEXT NOT NULL,sha TEXT NOT NULL)')
             db.execute('CREATE TABLE reads(seq INTEGER PRIMARY KEY,body TEXT NOT NULL,sha TEXT NOT NULL)')
@@ -462,7 +465,12 @@ class CheckpointRPC:
             index=self.checkpoint.index+offset
             if index<len(self.checkpoint.entries):
                 expected={'channel':'rpc','operation':'getTransaction','args':[[signature,OPTIONS]],'kwargs':{'ttl':ttl}}
-                if self.checkpoint.entries[index]['request']!=expected:
+                recorded=self.checkpoint.entries[index]['request']
+                if recorded!=expected:
+                    # Prefetch plans an entire page, even after the last launch
+                    # transaction used. Leave the cutoff block to its own call.
+                    if recorded['channel']=='rpc' and recorded['operation']=='getBlock':
+                        return
                     self.checkpoint.fault='CA_CHECKPOINT_READ_SEQUENCE_CHANGED'
                     raise CheckpointError(self.checkpoint.fault)
             else:remaining.append(signature)

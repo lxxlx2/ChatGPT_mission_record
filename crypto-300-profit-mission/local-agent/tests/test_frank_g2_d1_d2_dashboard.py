@@ -74,14 +74,18 @@ class G2ReadOnlyIntegrationTests(unittest.TestCase):
             self.assertEqual(result["reason"], "INDEX_WINDOW_TOO_LARGE_NOT_TRUNCATED")
             self.assertIsNone(result["signatures"])
 
-    def test_api_rejects_unbounded_ranges_and_handles_seven_days(self):
+    def test_api_accepts_complete_ranges_and_rejects_invalid_parameters(self):
         handler = server.Handler.__new__(server.Handler)
         handler._allowed_host = lambda: True
         handler._json = lambda payload, status=200: (payload, status)
         handler.state = SimpleNamespace(frank_signed_activity=lambda days: {"days":days})
         handler.path = "/api/frank-signed-activity?days=7"
         self.assertEqual(handler.do_GET(), ({"days":7}, 200))
-        for suffix in ("?days=30", "?days=1&days=7", "?other=1"):
+        handler.path = "/api/frank-signed-activity?days=30"
+        self.assertEqual(handler.do_GET(), ({"days":30}, 200))
+        handler.path = "/api/frank-signed-activity?days=all"
+        self.assertEqual(handler.do_GET(), ({"days":"all"}, 200))
+        for suffix in ("?days=31", "?days=1&days=7", "?other=1", "?days="):
             handler.path = "/api/frank-signed-activity" + suffix
             self.assertEqual(handler.do_GET()[1], 400)
 
