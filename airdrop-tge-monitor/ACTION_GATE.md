@@ -1,5 +1,17 @@
 # TGE / Airdrop Action Gate
 
+## 2026-11-21 LATEST USER AUTHORITY: MONITOR INVESTMENT MILESTONES AND PAYOUT, not token-only (supersedes older GATE narrowing)
+
+- The existing task may monitor all **28** registered original issuer identities for materially changing investment outcomes, whether token TGE, token listing, equity IPO/direct listing, acquisition or real share/contract allocation, material financing affecting recorded investment valuation or exit probability, RepublicX contingent-note settlement, vesting/distribution, refund or critical capital safety. This is one monitored investment lifecycle. A corporate/robotics issuer must NOT be silently dropped merely for lacking a governance coin.
+- The issuer/project is the list identity. Echo, CoinList, Republic and other syndicate/host providers are **mapped evidence and actual claim/distribution sources**, not a redundant project name. The user's original USD 1,000 01 Exchange investment via Echo remains, no 01/N1 points.
+- Extend prior `MATERIAL_ACTION` to `MATERIAL_DECISION_STAGE`: a credible first-party or formally filed new stage (firm TGE/IPO/public listing timetable, real filing, executed merger affecting conversion, economic allocation, lockup/actual settlement, important quantified new financing that directly changes exposure thesis, forced conversion/wind-down/security loss) may warrant **one** evidence-backed email when it materially impacts the user's next investment decision, even if a claim button is not yet open. Do not notify on normal product PR, speculative IPO chatter, recycled fundraising/press, or ordinary market moves.
+- Always compare with **last independently confirmed** issuer stage and actual Gmail Sent event_key+material_version. A user's already-supplied event is **USER_AWARE_ASSUMED_HANDLED** for notification scope, NOT automatically `ONCHAIN_CLAIMED`; the one-time actual missed warning may be repaired using existing Sent QA, but do not auto-create project/monitor/urgent after user discovery. `SENT`, `CLAIM_ATTEMPTED`, `CLAIM_VERIFIED`, `INELIGIBLE`, `REFUNDED`, `EXCLUDED` are separate fields.
+- **Galxe is user-surfaced and attempted, already corrected by one Gmail Sent**. Mark `GALXE_CLOSED_USER_KNOWN`, exclude from any dynamic urgent, special platform lifecycle sweep, new notices or tasks until explicit new user authorization.
+- **Current active scope** = 28 entries in Shard 8/6/7/7; permanent Urgent 0; dynamic urgent from *these* entries and real live deadlines only. Known user exclusions Concrete, MetaMask, Claynosaurz, HEEBOO, Space, StandX, Cambria, Forecast, Neutrl, etc remain closed.
+- Before any email, first-party issuer/official exchange/regulatory filing/onchain evidence or mapped issuer investment-host Tier B, concrete dates, material relevance, no earlier verified notice, available legally permitted action, no invented allocations, Sent + exact text and Git archive proof. Source gap stays PARTIAL, never assumed NO_UPDATE.
+- Latest `REGISTRY.md` and `state/known-events.md` override any stale hardcoded fixed-five, 15-only, TGE-only, Echo refund-only, or Galxe urgent rule below.
+
+
 ## 2026-11-21 latest USER ENTITLEMENT / CLOSED-LIFECYCLE GATE (overrides stale references below)
 
 Mandatory first step before **each discovery**, deep official-source request, dynamic urgent promotion or email:
