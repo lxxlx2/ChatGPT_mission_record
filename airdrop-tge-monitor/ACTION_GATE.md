@@ -1,5 +1,17 @@
 # TGE / Airdrop Action Gate
 
+## 2026-11-21 latest USER ENTITLEMENT / CLOSED-LIFECYCLE GATE (overrides stale references below)
+
+Mandatory first step before **each discovery**, deep official-source request, dynamic urgent promotion or email:
+
+1. Read the **latest** `REGISTRY.md` and `state/known-events.md`. Any entry with `USER_SUPPRESSED_NO_REMAINING_ACTION`, `CLOSED`, `REFUNDED`, `CLAIMED`, `INELIGIBLE`, `NO_POINTS` or equivalent explicit user-scope closure is **EXCLUDED_BEFORE_DISCOVERY**, not counted as a scanned candidate, nor as `SOURCE_GAP`. Do not auto-reopen without user reauthorization.
+2. **Concrete, MetaMask, Claynosaurz/Clay Shares, HEEBOO, Space @intodotspace, StandX, Cambria and Forecast** are now excluded from active TGE monitoring per user instruction. Former five-project fixed urgent lane has **zero** members. Project-level updates and old email archives cannot independently reactivate these.
+3. **01 Exchange / N1 point balances are zero according to user confirmation.** Do not invent points, call them UNKNOWN, or offer new point/TGE claims to this user. Track **only Echo's USD 1,000 original 01 investment**, which has `OPEN_OUTCOME_UNVERIFIED` as the sole Shard-2 Echo deal-rights item. It is not a point holding and has no verified automatic N1 conversion.
+4. `SENT_EMAIL`, `TGE_COMPLETED`, `CLAIM_OPEN`, `CLAIMED`, `INELIGIBLE`, `REFUNDED` and `USER_SUPPRESSED` must be separate state dimensions. A delivered email DOES NOT prove user claim. User's explicit completion/ineligibility statement *does* close future user-rights monitoring for that item, but is labeled `USER_CONFIRMED`, never `ONCHAIN_VERIFIED`.
+5. For all still-active entries, dynamic urgent membership can be 0. Promote only with material, current user-relevant action/deadline or genuine funds-at-risk evidence, not an old permanent name. Any confirmed user completion, claim or ineligibility **must reconcile** Registry + known-events + current cache and the existing task's prompt before future hourly runs, without touching old event/email logs. Do not send a notification merely for scope maintenance.
+6. Re-check each proposed email against the user's actual deal/eligible claim status and earlier actual Sent/event archive. No new factual evidence -> NO_ACTION / silent. This new rule does not expand scope or create tasks.
+
+
 Updated: 2026-10-02 Asia/Bangkok
 Status: canonical pre-notification gate
 
