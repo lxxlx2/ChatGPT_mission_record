@@ -1,3 +1,17 @@
+## Latest authoritative hourly execution (2026-11-22 03:00 Asia/Bangkok)
+- run_path: airdrop-tge-monitor/runs/2026-11-22/030027-final.md
+- run_status: PARTIAL
+- scheduled_shard: 3
+- executed_shard: 3
+- shard_issuer_partial_receipts: 4/7
+- shard_verified_complete: 0/7
+- source_gaps: 3 issuer plus mapped investor channel gaps
+- candidate_count: 0
+- action_count: 0
+- gmail_attempted: false
+- notification: false
+- final_commit: a491213e3e694b7b88909601a4f4c66e3ce1ca6b
+
 # Current monitor execution pointer
 
 - last_run: 2026-11-22T01:55:25+07:00
