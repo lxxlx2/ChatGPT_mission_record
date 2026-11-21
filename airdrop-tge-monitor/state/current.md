@@ -211,3 +211,22 @@ The earlier historical run's unresolved right snapshots below were recorded befo
 - active_registry: 28; shard_denominator: 6; checked_public_no_update: 3; issuer_source_gaps: 3; additional_authenticated_rights_gap: 1
 - candidate_count: 0; action_count: 0; gmail_sent: false; app_notification: false; code_gate: CODE_NOT_EXECUTED
 - last_meaningful_attempt_shard1: 2026-11-21T17:57:26+07:00; last_verified_complete_at: unchanged
+
+
+## 2026-11-22 01:03:49 Asia/Bangkok latest run
+- schedule: hourly HH:00 Asia/Bangkok
+- scheduled_shard: 1
+- executed_shard: 1
+- run_path: `airdrop-tge-monitor/runs/2026-11-22/010349-final.md`
+- run_status: PARTIAL_ONLY
+- candidate_count: 0
+- action_count: 0
+- gmail_attempted: false
+- notification_sent: false
+- verified_issuer_receipts: Surf, OnRe (partial coverage)
+- source_gap_projects: Hylo, Reflect, Tydro, Theo
+- source_gap_count: 4
+- identity_failure_count: 0 observed, not a full identity audit
+- code_gate: CODE_NOT_EXECUTED
+- last_verified_complete_at: unchanged; partial attempt must not advance it
+- last_meaningful_attempt_at: 2026-11-22T01:03:49+07:00 for shard 1
