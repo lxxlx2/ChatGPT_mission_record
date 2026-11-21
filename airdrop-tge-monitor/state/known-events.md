@@ -1,10 +1,26 @@
 # TGE / Airdrop Known User State
 
-Updated: 2026-11-21 Asia/Bangkok, user-confirmed obsolete rights closure and Echo USD 1,000 ownership correction.
+Updated: 2026-11-21 Asia/Bangkok, completed/ineligible rights cleanup, Echo USD 1,000 correction and Neutrl exclusion.
 
 Purpose: durable dedupe/state input for events already known, delivered, completed, refunded, explicitly closed, user-suppressed, or explicitly scheduled by the user within the existing rights monitor. This file is an input to ACTION_GATE.md.
 
 Hard scope rule: do not create a new monitor/task/file for a user-specific future action. If the user explicitly gives a date/time for an action already within this existing rights-monitor scope, record it here as an unresolved known event so the existing monitor can act on it. No new monitoring scope may be added without explicit user authorization.
+
+## Latest user-directed exclusion: Neutrl (2026-11-21)
+
+- project_id: neutrl
+- canonical_official_handle: @neutrl_labs / @Neutrl; canonical current domain neutrl.finance (historical neutrl.fi was sunset after DNS incident)
+- user_scope: **USER_SUPPRESSED_NO_TGE_ACTION / REMOVE_FROM_SHARD_1_AND_URGENT**
+- issuer_fact: 2026-08-13 project paused minting and redemption due to reserve issues; 2026-08-28 explicitly said **not a contract exploit/hack/code vulnerability**, reported approximately USD 27M liquid reserves with additional illiquid positions, outcome unknown. Original issuer source https://x.com/Neutrl/status/2093390526582010348 ; official https://t.me/s/NeutrlOfficial
+- issuer_fact: 2026-09-17 NUSD/sNUSD orderly redemptions opened at a **fixed reserve-dependent rate**, not full USD par; source https://x.com/Neutrl/status/2100614848241414280 , https://redeem.neutrl.finance
+- loss_corrob: Nexus Mutual first-party insurance claim history https://docs.nexusmutual.io/overview/claims-history/neutrl-2026/ says redemption at roughly **51% of reference value, 49% shortfall**. No proof all holders were fully paid.
+- current_claim_deadline: official account message dated 2026-11-16 extends redemption submission to **2026-12-13 23:59 UTC**; original X post exact status link UNVERIFIED in this pass, original-account text accessible through https://teapaw.org/Neutrl and cited public account reposts. Does NOT warrant notification to this user after explicit suppression.
+- user_personal_NUSD_or_sNUSD_holdings: UNKNOWN; the user specifically asked to REMOVE this project from their TGE monitor. Do not invent a claimed refund or infer token allocations.
+- status: RESERVE_IMPAIRMENT / CORE_OPERATIONS_PAUSED / PARTIAL_RECOVERY_REDEMPTION / TOKEN_TGE_NOT_CONFIRMED / USER_SUPPRESSED
+- precise_token_TGE_cancellation: NOT_CONFIRMED; refrain from saying issuer publicly cancelled governance token, completely closed the company, smart contracts were hacked, or users were repaid 100% without original proof
+- monitor_action: **NO_PROJECT_SCAN / NO_DYNAMIC_URGENT / NO_EMAIL**; exclude before source-discovery and from project count. Other investors' redemption options are historical/research context only unless user explicitly reactivates
+- configuration: former 8/7/7/7 active shard counts become **8/6/7/7 = 28 active entries**, permanent urgent zero
+- provenance: user direction + independent issuer/social originals and Nexus Mutual claim evidence; existing historical notices remain immutable
 
 ## LATEST CANONICAL USER RIGHTS OVERRIDE, 2026-11-21 (takes precedence over all older entries below)
 
@@ -40,7 +56,7 @@ Hard scope rule: do not create a new monitor/task/file for a user-specific futur
 
 ### Dynamic urgent eligibility rule after cleanup
 - permanent_urgent_count: **0**
-- active_shards: Shard0=8, Shard1=7, Shard2=7 (includes Echo 01 investment, excludes N1/01 points), Shard3=7; total=29
+- active_shards: Shard0=8, Shard1=6 (Neutrl user-excluded), Shard2=7 (includes Echo 01 investment, excludes N1/01 points), Shard3=7; total=28
 - dynamic_urgent: may be **0**; promote only a real existing eligible user right, confirmed current action and material urgency; never auto-reactivate suppressed/closed items because of project-wide news
 - close_transition: notify only on genuinely NEW material actions; after user says CLAIMED / NO_ALLOCATION / INELIGIBLE / REFUNDED / CLOSED, reconcile the registry entry and known-events in the same authorized work turn, and suppress future checks. A SENT email is just `NOTIFIED`, **not** `CLAIMED`.
 - evidence_protection: never rewrite historic mailed content, never call a user statement a chain receipt, never fabricate refund or closed balance proof
