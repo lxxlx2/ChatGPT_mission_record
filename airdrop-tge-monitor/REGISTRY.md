@@ -1,39 +1,58 @@
 # Airdrop / TGE Canonical Registry
 
-Active schedule stays hourly HH:00 Asia/Bangkok, same hour % 4 single shard. **LATEST USER AUTHORITY 2026-11-21: strictly token TGE/first native-token launch, not an all-purpose user-rights/IPO/refund/legacy-claim monitor.** Former fixed urgent projects excluded; Galxe is historical user-known and NOT active; issuer review supersedes the older 28-entry registry and rights-only rules below. Only the latest four Shards are active.
+Active schedule: existing Asia/Bangkok HOURLY HH:00, hour%4 single shard. **LATEST USER SCOPE: all 28 previously established crypto + equity + tokenized investment projects kept for issuer milestones and economic realization.** A 15-project token-only rollback was erroneous and has been reversed. No new tasks or unauthorized projects.
 
-Updated: 2026-11-21, TGE-only canonical scope, issuer lifecycle audit of all 28 prior rows, Galxe closure and Echo channel dedupe.
+Updated: 2026-11-21, user clarification restores 28 investment/IPO/TGE/realization project scopes; Galxe stays user-known closed.
 
 Grass 与 Backpack 明确排除。
 
-## Dynamic TGE event urgency ONLY (no fixed project, no claim/legacy platform discovery)
+## Dynamic time-critical event queue, no fixed members
 
-The former five permanent Urgent projects are excluded. The original Galxe/Gravity platform closure and claims information was surfaced by the USER on 2026-11-20, who already tried claiming. It is **USER_KNOWN / ASSUMED_HANDLED_FOR_MONITOR / USER_SUPPRESSED** and is NOT an active TGE or dynamic urgent entry. No Galxe/G rewards/Smart Balance monitoring, no automatic follow-on monitoring, no reactivation based on new issuer news. Historical notification Gmail Sent is archived and remains valid; do not resend.
+Zero permanent Urgent entries. The old five projects Concrete/MetaMask/Claynosaurz/HEEBOO/Space remain explicitly user-closed. **Galxe is USER_AWARE_ASSUMED_HANDLED and closed as an independently monitored project; never add back**. Dynamic urgent considers only existing active project material milestones with a real user-relevant time-sensitive action or funds-at-risk, e.g. TGE within 72h, verified IPO/public listing and investor cutoff, claim/lockup release, new payout/refund/redemption deadline, or major failure to redeem a known investment. It can be empty; no rotating static names. No dynamic addition from user messages/screenshots without explicit authorization.
 
-Dynamic urgency can be zero. It may be triggered ONLY by an **already registered still-active** issuer's original, credible, new **TGE / first token launch**, confirmed TGE schedule change or directly associated initial token delivery deadline affecting a legitimately open user interest, with evidence, dedupe and source QA. Company financing, Echo investment contracts/repayments, IPOs, legacy non-token rewards, completed account claim, asset redemption and platform shutdown alone are OUT OF SCOPE for this TGE task. General risk/platform exit may be assessed by the separately existing Crypto Daily where authorized, never by creating a new monitor. Once the user flags an event personally or says they attempted a claim, presume `USER_AWARE_ASSUMED_HANDLED` **for monitoring only** and close the event, unless they specifically request a follow-up. A missed TGE alert may receive one factual correction email through the pre-existing delivery rules; a user-aware event may never autonomously create a new project or task.
+## Active projects by existing 4-hour shard (USER REALIZATION / CASH-OUT SCOPE)
 
-## Shard 0
+These are existing user-relevant projects or investments, **not a new watchlist**. The names in the list are issuer/project names, NOT an investment host or payout method. TGE, IPO, first listing, distribution, unlock, tokenized note exit, investor share settlement, refunds and important user-required deadlines are **all material realizations**, subject to the actual investment structure. For a known Echo investment, inspect Echo/SPV materials as mapped Tier B proof, but do not rename the issuer to Echo. **01/N1 points owned = 0; only original 01 investment through Echo = USD 1,000, USER_CONFIRMED; settlement unresolved.**
+
+### Shard 0 (8)
 - Block Stranding
 - Base / @base
 - OpenSea / @opensea
 - Polymarket / @Polymarket
+- Perena / @perena
 - TurboFlow / @TurboFlow_xyz
 - Makina / @makinafi
-- Rho X / Rho Labs — official old-Rho migration preserves legacy Rho Points; future native RHO token TGE only (date unconfirmed)
+- Rho X / Rho Labs
 
-## Shard 1
+### Shard 1 (6)
+- Surf
 - Hylo / @hylo_so
+- OnRe / @onrefinance
+- Reflect / @reflectmoney
+- Tydro / @tydrohq
 - Theo / @Theo_Network
 
-## Shard 2
+### Shard 2 (7)
+- Relay / @RelayProtocol
 - Titan / @Titan_Exchange
 - Reya / @reya_xyz
-- 01 Exchange (acquired by N1) — **TGE_ONLY**; Echo is a historical subscription channel, user has zero 01/N1 points; no generic investment refunds, IPO or SPV term checks in this task
+- 01 Exchange / N1 (original user investment via Echo, USD 1,000; **NO** 01/N1 points)
+- Figure AI / @Figure_robot
 - Pond / JoinPond / @JoinPond
 - OhBabyGames / @OhBabyGames
 
-## Shard 3
+### Shard 3 (7)
+- Crusoe / @CrusoeAI
+- Apptronik / @Apptronik
+- Thalassa Robotics / Thalassa Inc.
 - Fortytwo / @fortytwonetwork
+- 1X / @1x_tech
+- Aalo Atomics / @AaloAtomics
+- rTTOK / RepublicX / Republic / @joinrepublic
+
+**Count: 8 / 6 / 7 / 7 = 28.** No 5-project fixed urgent list. Dynamics selected only by fresh material events, not permanent names. Old excluded projects stay excluded. Do not auto-add any project based on a screenshot, a general company deal, a third-party recommendation or a notification.
+
+## Shard cadence
 
 ## Shard cadence
 
@@ -45,7 +64,40 @@ Asia/Bangkok hour modulo 4:
 
 剩余活跃 TGE 候选按原 4 小时轮转。动态 Urgent 仅基于真实新增 TGE 事件，允许 0 项。已知/已处理事件不列为活跃候选。
 
-## 2026-11-21 TGE-ONLY issuer audit and corrected active universe (TOP AUTHORITY)
+## 2026-11-21 LATEST CANONICAL SCOPE: existing investments, milestone discovery and realization (overrides TGE-ONLY rollback and legacy exclusions)
+
+**User clarified that the established monitor, still titled TGE monitor, tracks REAL PROGRESS for all *existing* registered investment/airdrop projects.** Token TGE, CEX listing, equity IPO/direct listing, tokenized security distribution/redemption, first liquid trading and investment allocations are semantically different but equivalent as economic milestones. A company with no native token may nevertheless be a legitimate user investment. Prior 15-only TGE classification was incorrect and REVERSED. Do not remove a project solely because it is robotics, nuclear, AI cloud, private equity, or a pre-issued contingent payout note. No assumption every company will IPO or that user owns a certain stock size.
+
+**User-known and prior action guard:** If the user first supplies an event/screenshot and says they attempted claiming, classify that PARTICULAR event `USER_AWARE_ASSUMED_HANDLED` (not automatically chain-verified `CLAIMED`). If a missed notification is still due, send only a verified one-time correction via the original Gmail/Sent/archive policy, then archive/dedupe. Do not turn the user-supplied event into a new continuous watch, additional Shard/urgent, task or scope. Galxe is such a historical user-discovered event and **FULLY REMOVED** from dynamic urgent and all monitoring; the previous one-time correction Gmail Sent id `1a1f9a770fcb1c29` is already on record, do not resend unchanged notice.
+
+**Differentiated categories and stage transitions:** (A) token/TGE/initial listing, (B) equity/private investment -> financing/fundraising/IPO filing or prospectus/direct listing/lockup/distribution, (C) contingent tokenized securities like rTTOK -> reference issuer qualified liquidity event or RepublicX cash settlement, (D) still-held points/rewards -> actual eligibility/claim/distribution, (E) invested capital at risk -> insolvency/refund/withdrawal/impairment. Track issuer milestones + mapped deal host if user participated through Echo/CoinList/Republic/etc, only where a known existing exposure is plausible. **One new material milestone** may justify a notification even before a claim window (e.g. confirmed IPO filing, firm TGE date, material actual fundraising/IPO timeline, major issuer security/insolvency event), if it changes the user's outlook, liquidity or next action. Ordinary PR, generic price moves, old website, unchanged countdowns and undated speculation stay silent.
+
+**Automatic state reconciliation**: each scheduled execution reads current REGISTRY + known-events + latest evidence. Maintain separate `issuer_stage`, `listing_stage`, `user_rights_known`, `notice_sent`, `claim_attempted`, `claim_confirmed`, `investment_settled`, `user_excluded` and `next_milestone`; a completed TGE is not proof of completed distribution, and a delivered email is not a claim. A new verified stage transition changes the *live* state; remove project only if user explicitly closes it or no current entitlement/decision-relevant outcome remains, not because its financial instrument differs. Historical alerts remain immutable. Every event receipt must include dated issuer/host source, checked_at, previous verified stage, current verified stage, material delta, user relevance, deadline, confidence and email decision. Pure searches are ATTEMPTED and not verified complete; continue scanning if one issuer inaccessible. Preserve previous 2026-10-10 last verified full scan claim unless new actual complete evidence appears.
+
+**Original task stays HOURLY HH:00 Bangkok with hour%4 single-shard, 28 current entries, zero permanently fixed urgent; no extra task or broadcast email.** Existing Galxe and completed/ineligible Concrete/MetaMask/Claynosaurz/HEEBOO/Space/StandX/Cambria/Forecast/Neutrl etc remain excluded unless user explicitly requests reopening.
+
+### Initial issuer-stage checkpoint with original sources (2026-11-21; incomplete current-account rights, not a full live audit)
+
+| Project(s) | Observed milestone / source and limitations | Next decision-relevant trigger |
+|---|---|---|
+| OpenSea | Official Sea launch POSTPONED not cancelled: https://support.opensea.io/en/articles/14324219-optional-fee-refund-faq ; May 2025 token plan https://opensea.io/blog/articles/introducing-os2 | Dated Foundation SEA schedule, eligibility, snapshot and trade |
+| Base | Network-token idea explored, no definitive launch: https://www.base.org/blog/the-state-of-base-at-basecamp-2025 ; Nov20 2026 weekly update did not establish token allocation https://www.base.org/blog/weekly-update-2026-11-20 | Actual issuer TGE decision and eligibility |
+| Polymarket | Official Jun24 2026 FAQ states no airdrop/TGE planned: https://help.polymarket.com/en/articles/13364250-does-polymarket-have-a-token | New issuer statement superseding FAQ |
+| Makina | Official Season 3 points running: https://makina.finance/points | First actual distribution/vesting terms |
+| Rho X | Legacy Rho user must withdraw old-market assets and points migrate to Rho X: https://app.rho.trading/ ; previously stated token-linked points https://rho.trading/blog/pre-season-points-campaign | Verified migrated points, RHO launch, at-risk old balance access |
+| OnRe | Active existing ONyc yield token and issuer insurance business https://docs.onre.finance/introduction/onre-tokenized-reinsurance-onyc ; current updates https://www.onre.finance/resources/announcements | Actual known investment milestones or new token/capital return; do NOT confuse ONyc circulating with future governance token |
+| Reflect | USDC+ recovery portal is currently presented https://claims.reflect.money/ ; user did not ask to close this project; specific personal eligibility UNKNOWN | Only NEW stage of actual user's still-unresolved exposure; do not duplicate old Sept claim alert |
+| Relay | Old 2024 issuer token FAQ says no official token https://support.relay.link/en/articles/9261056-when-will-you-have-a-token ; current 2026 issuer token plan not independently verified | New dated token/points or concrete investment distribution |
+| Figure AI | Private robotics issuer, no public IPO verified. Issuer warns of unauthorized shares https://www.figure.ai/news | SEC/prospectus/company confirmed IPO or equity distribution |
+| Crusoe | 2026-09-17 issuer completed initial Series F closing, announced $30.9B post-money valuation https://www.crusoe.ai/resources/newsroom/crusoe-announces-series-f-funding | Confirmed financing terms affecting existing investment, IPO filing/listing, allocation |
+| Apptronik | 2026-11-17 official expanded GXO partnership; 2026-02-11 over $935M Series A https://apptronik.com/company/press-releases | Credible IPO/liquidity/valuation or user rights changes, not routine PR |
+| Aalo Atomics | Issuer milestone July4 reactor criticality, updates https://www.aalo.com/news ; no IPO verified | Material financing and public listing/exit/settlement |
+| Republic rTTOK | **Security token already issued**; issuer RepublicX contingent note payoff conditional on ByteDance qualifying IPO/M&A/liquidity or maturity, not ByteDance equity itself: https://republic.com/rttok ; maturity Nov 3, 2035 under offering docs | ByteDance qualified liquidity event, RepublicX real payout, lockup/rights |
+| Remaining original projects | Block Stranding, Perena, TurboFlow, Surf, Hylo, Tydro, Theo, Titan, Reya, 01/N1 via Echo, Pond, OhBabyGames, Thalassa Robotics, Fortytwo, 1X. Their stage/detail is **SOURCE_INCOMPLETE** for this batch, NOT verified no change. | Each item's original issuer/connected investment-host stage must be read in its own shard; no invented date/claim |
+
+**Quality gate:** this is a real official-source checkpoint for the cited examples, NOT a blanket statement that all 28 were fully checked, nor that any user owns the listed assets in a particular quantity. Existing accounts and allocation eligibility remain UNVERIFIED until authenticated original evidence. New information without an actual user-relevant material change stays silent.
+
+## 2026-11-21 HISTORICAL TGE-ONLY ROLLBACK (SUPERSEDED; not active authority)
 
 **User directive and scope:** Watch **when the token TGE happens**. Echo is merely an entry/participation channel used for many existing projects. Do not turn Echo into a separate project, or follow private-stock/IPO/SPV contract/refund events in this TGE task. Only issuer-native **first token generation and listing/first token distribution directly tied to TGE** count. A company equity financing round, existing stable/yield-bearing token, non-token points, old claim window, legacy asset recovery, ordinary app launch or IPO does not by itself count as a new TGE.
 
