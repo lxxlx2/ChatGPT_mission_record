@@ -35,6 +35,29 @@
       <div class="panel-title"><div><h2>Frank 最近买卖</h2></div></div>
       <div id="trades" class="feed"></div>
     </section>
+    <section class="panel" id="frank-signed-activity-panel">
+      <div class="panel-title">
+        <div><h2>Frank 钱包签名活动（D1）</h2>
+          <p>来自本机已索引签名，与交易分类逐笔核对。被动转入、ATA 和未知行为不等于主动买入；无记录不等于链上无交易。</p>
+        </div>
+        <span id="signed-activity-updated">未读取</span>
+      </div>
+      <div class="frank-watch-controls">
+        <label for="signed-activity-days">时间范围</label>
+        <select id="signed-activity-days"><option value="1" selected>最近 24 小时</option><option value="7">最近 7 天</option></select>
+        <label for="signed-activity-search">筛选签名、CA 或分类</label>
+        <input id="signed-activity-search" type="search" autocomplete="off" placeholder="本地筛选，不触发 RPC">
+        <button type="button" class="link-btn" id="signed-activity-reload">重新读取</button>
+      </div>
+      <div class="frank-watch-summary" id="signed-activity-summary">正在读取钱包签名索引…</div>
+      <div class="frank-watch-table-wrap">
+        <table class="frank-watch-table" id="signed-activity-table">
+          <thead><tr><th>时间（本地）</th><th>签名</th><th>来源分类</th><th>已识别经济腿</th><th>核验状态</th></tr></thead>
+          <tbody id="signed-activity-rows"><tr><td colspan="5">正在读取…</td></tr></tbody>
+        </table>
+      </div>
+      <p class="frank-watch-footnote">最多读取 5,000 条已索引签名，超过上限会报告不可用，绝不静默截断；为了页面性能，每次显示前 200 条筛选结果。全部数据均为本地历史证据，不是实时完整链史、当前持仓、收益或跟单指令。</p>
+    </section>
     <section class="panel frank-watch-panel" id="frank-watch-panel">
       <div class="panel-title">
         <div>
