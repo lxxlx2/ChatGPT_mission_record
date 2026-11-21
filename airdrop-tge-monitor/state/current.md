@@ -1,3 +1,23 @@
+## Latest actual run 2026-11-21 23:03:10 Asia/Bangkok
+- last_run: 2026-11-21T23:03:10+07:00
+- schedule: HH:00 Asia/Bangkok
+- run_path: airdrop-tge-monitor/runs/2026-11-21/230310-final.md
+- run_status: PARTIAL_ONLY
+- scheduled_shard: 3
+- executed_shard: 3
+- active_registry: 28
+- fixed_urgent: 0
+- issuer_original_readback: 6/7
+- current_personal_rights_verified: 0/7
+- candidate_count: 0
+- action_count: 0
+- notification: NONE
+- source_gaps: Thalassa original and seven authenticated investor-rights checks
+- identity_failures: 0 observed
+- code_gate: CODE_NOT_EXECUTED
+- last_meaningful_attempt_shard3: 2026-11-21T23:03:10+07:00
+- last_verified_complete_shard3: UNCHANGED
+
 ## Latest actual run, 2026-11-21 21:57 Asia/Bangkok
 - last_run: 2026-11-21T21:57:32+07:00
 - schedule: HH:00 Asia/Bangkok
