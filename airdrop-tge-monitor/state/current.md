@@ -1,3 +1,18 @@
+## Latest authoritative hourly execution (2026-11-22 04:03 Asia/Bangkok)
+- run_path: airdrop-tge-monitor/runs/2026-11-22/040315-final.md
+- run_status: PARTIAL_ONLY
+- scheduled_shard: 0
+- executed_shard: 0
+- shard_discovery_attempted: 8/8
+- current_issuer_readable: 3/8; old issuer docs additional 2/8; source_gaps: 3/8
+- authenticated_user_rights: 0/8
+- candidate_count: 0; action_count: 0
+- gmail_attempted: false; notification: false
+- code_gate: CODE_NOT_EXECUTED
+- last_verified_complete_at: 2026-10-10T07:52:16+07:00 (not advanced)
+- last_meaningful_attempt_shard0: 2026-11-22T04:03:15+07:00
+- final_commit: ef6b5beb48d78b77a2c8db650ce507b99e8fad29
+
 ## Latest authoritative hourly execution (2026-11-22 03:00 Asia/Bangkok)
 - run_path: airdrop-tge-monitor/runs/2026-11-22/030027-final.md
 - run_status: PARTIAL
