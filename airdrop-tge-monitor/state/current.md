@@ -1,232 +1,28 @@
-## Latest actual run 2026-11-21 23:57:25 Asia/Bangkok
-- last_run: 2026-11-21T23:57:25+07:00
-- schedule: HH:00 Asia/Bangkok
-- run_path: airdrop-tge-monitor/runs/2026-11-21/235725-final.md
+# Current monitor execution pointer
+
+- last_run: 2026-11-22T01:55:25+07:00
+- schedule: Asia/Bangkok HOURLY HH:00 unchanged
+- run_path: airdrop-tge-monitor/runs/2026-11-22/015525-final.md
 - run_status: PARTIAL_ONLY
-- scheduled_shard: 3
-- executed_shard: 3
-- active_registry: 28
-- fixed_urgent: 0
-- issuer_original_or_mapped_readback: 5/7
-- current_personal_rights_verified: 0/7
-- candidate_count: 1 (ByteDance secondary buyback, Tier C, rejected)
-- action_count: 0
-- notification: NONE
-- source_gaps: Thalassa and Fortytwo current original, seven authenticated investor-rights checks
-- identity_failures: 0 proven
+- active_registry: 28; fixed_urgent: 0
+- scheduled_shard: 1; executed_shard: 1
+- shard_denominator: 6; issuer_original_readback: 4/6; authenticated_rights_verified: 0/6
+- candidate_count: 0; action_count: 0; gmail_attempted: false; notification_sent: false
+- source_gaps: Hylo and Theo current original, user authenticated rights 6/6
+- identity_failures: 0 proven; Theo/Autheo collision suppressed
 - code_gate: CODE_NOT_EXECUTED
-- last_meaningful_attempt_shard3: 2026-11-21T23:57:25+07:00
-- last_verified_complete_shard3: UNCHANGED
-
-## Latest actual run 2026-11-21 23:03:10 Asia/Bangkok
-- last_run: 2026-11-21T23:03:10+07:00
-- schedule: HH:00 Asia/Bangkok
-- run_path: airdrop-tge-monitor/runs/2026-11-21/230310-final.md
-- run_status: PARTIAL_ONLY
-- scheduled_shard: 3
-- executed_shard: 3
-- active_registry: 28
-- fixed_urgent: 0
-- issuer_original_readback: 6/7
-- current_personal_rights_verified: 0/7
-- candidate_count: 0
-- action_count: 0
-- notification: NONE
-- source_gaps: Thalassa original and seven authenticated investor-rights checks
-- identity_failures: 0 observed
-- code_gate: CODE_NOT_EXECUTED
-- last_meaningful_attempt_shard3: 2026-11-21T23:03:10+07:00
-- last_verified_complete_shard3: UNCHANGED
-
-## Latest actual run, 2026-11-21 21:57 Asia/Bangkok
-- last_run: 2026-11-21T21:57:32+07:00
-- schedule: HH:00 Asia/Bangkok
-- run_path: airdrop-tge-monitor/runs/2026-11-21/215732-final.md
-- run_status: PARTIAL_ONLY
-- scheduled_shard: 1
-- executed_shard: 1
-- shard_denominator: 6
-- original_source_readback: 4/6 (recent dated issuer publications 2/6)
-- full_investor_rights_verified: 0/6
-- candidate_count: 0
-- action_count: 0
-- notification: NONE
-- source_rights_gaps: 6
-- identity_failures: 0
-- last_meaningful_attempt_shard1: 2026-11-21T21:57:32+07:00
-- last_verified_complete_shard1: UNCHANGED
-
-## Actual hourly run 2026-11-21 21:02:36 Asia/Bangkok
-- schedule: HOURLY HH:00; scheduled_shard: 1; executed_shard: 1; active_registry: 28; fixed_urgent: 0
-- run_path: airdrop-tge-monitor/runs/2026-11-21/210236-final.md
-- run_status: PARTIAL_ONLY; issuer_original_readback: 4/6; personal_rights_verified: 0/6; source_gaps: 2; identity_failures: 0 proven
-- candidate_count: 0; action_count: 0; notification: NONE; gmail_attempted: false; code_gate: CODE_NOT_EXECUTED
-- last_meaningful_attempt_shard1: 2026-11-21T21:02:36+07:00; last_verified_complete_shard1: UNCHANGED
-
-## Latest actual run, 2026-11-21 19:57 Asia/Bangkok
-- last_run: 2026-11-21T19:57:14+07:00
-- schedule: HH:00 Asia/Bangkok
-- run_path: airdrop-tge-monitor/runs/2026-11-21/195714-final.md
-- run_status: PARTIAL_ONLY
-- scheduled_shard: 3
-- executed_shard: 3
-- shard_denominator: 7
-- original_issuer_readback: 4/7
-- full_investor_rights_verified: 0/7
-- candidate_count: 0
-- action_count: 0
-- notification: NONE
-- source_rights_gaps: 7
-- identity_failures: 0 proven
-- last_meaningful_attempt_shard3: 2026-11-21T19:57:14+07:00
-- last_verified_complete_shard3: UNCHANGED
-
-## Latest actual hourly run, 2026-11-21 18:59 Asia/Bangkok
-- last_run: 2026-11-21T18:59:28+07:00
-- schedule: HH:00 Asia/Bangkok
-- run_path: airdrop-tge-monitor/runs/2026-11-21/185928-final.md
-- run_status: PARTIAL_ONLY
-- scheduled_shard: 2
-- executed_shard: 2
-- shard_denominator: 7
-- candidate_count: 0
-- action_count: 0
-- notification: NONE
-- source_failures: 3
-- identity_failures: 0
-- last_meaningful_attempt_shard2: 2026-11-21T18:59:28+07:00
-- last_verified_complete_shard2: UNCHANGED
-
-# Current TGE monitor state
-
-## 2026-11-21 LATEST CANONICAL CONFIG, user-corrected actual investments and milestones
-
-- scope: **28 existing investment/issuer projects**, across crypto TGE, IPO, private capital exit, stock allocation, note settlement, major issuer funding/valuation affecting a known investment, unlock/refund/claim, and at-risk capital
-- shard_counts: **0=8; 1=6; 2=7; 3=7; total=28**, original four-hour rotation intact
-- fixed_urgent: **0**; dynamic eligible events may be 0
-- user_01_points: **0**; user_N1_points: **0**; original 01 investment amount via Echo **USD 1,000 (user confirmed)**, actual claim/settlement outcome not verified; issuer in Shard2 named 01 Exchange / N1
-- issuer_identity_vs_channel: issuer/project in list, funding/participation intermediary retained only as first-party mapped evidence source (Echo/CoinList/Republic etc)
-- note_rTTOK: RepublicX contingent payout note referencing ByteDance share performance; relevant qualified liquidity event includes IPO/M&A, not native TGE
-- Galxe: **USER_AWARE_ASSUMED_HANDLED / USER_SUPPRESSED_NO_FURTHER_MONITOR**; 2026-11-20 user supplied platform closure and tried claim, prior one-time corrective Gmail Sent verified in old records; no dynamic urgent, no project scan
-- existing_exclusions_unchanged: Concrete, MetaMask, Claynosaurz, HEEBOO, Space, StandX, Cambria, Forecast, Neutrl, Abstract, Loopscale, humans& and other explicitly user-closed items
-- user_known_event_policy: user-supplied screenshot/attempted claim is a notification-acknowledged/handled event for workflow, **not automatic proof of claim success**. One factual missed-notice correction only if genuinely needed and not SENT, never automatic new watch
-- notification_trigger: **verified new material issuer/issuer-platform decision milestone**, including token TGE, firm IPO filing/listing, major financing affecting exposure, first trade, conversion, distribution, end of lockup, refund, platform security or insolvency with user exposure. No repeat/general press/no-op email
-- source_qa: issuer original publications, actual investor-side contractual source, official exchange/regulatory filings or onchain facts; `SEARCH_ATTEMPTED` != `ORIGINAL_READBACK_PASS`; source gap is PARTIAL
-- schedule: unchanged hourly HH:00 Asia/Bangkok, same existing task ID 6a85fff710e0819190ffcf8c1145a170 and recipient
-- execution_verification: **POST_CHANGE_RUN_ATTEMPTED_PARTIAL_ONLY**; original hourly Shard 3 run at 2026-11-21T11:59:56+07:00 executed with latest 28-project Registry, fixed urgent 0 and shard3 denominator 7; first-party source readback 5/7, current rights 0/7, hence NOT fully recovered. Latest proof: `airdrop-tge-monitor/runs/2026-11-21/115956-final.md`. Prior 11:00 audit remains historical.
-- project_source_checkpoint: 2026-11-21 sourced in REGISTRY.md LATEST CANONICAL SCOPE; includes OpenSea delay, CoinList Reya TBA, Crusoe Sept17 Series F, RepublicX rTTOK event terms; incomplete original current wallet/exchange and source coverage for other projects, so NO COMPLETE_AUDIT claim
-
-## Historical last execution snapshot before this correction (NOT LIVE COUNTS)
-
-- last_run: 2026-11-21T11:00:18+07:00
-- schedule: Asia/Bangkok HH:00 hourly (unchanged)
-- latest_final: airdrop-tge-monitor/runs/2026-11-21/110018-final.md
-- run_status: PARTIAL_ONLY
-- scheduled_shard: 3
-- executed_shard: 3
-- candidate_count: 0 new qualifying ACTION
-- action_gate_pass: 0
-- triggered_events: 0
-- gmail_sent: false
-- app_notification: false
-- code_gate: CODE_NOT_EXECUTED
-- source_attempted_slots: HISTORICAL PRE-CORRECTION urgent 5/5; shard3 9/9 (bounded discovery; original rights incomplete)
-- event_bound_new_rights_verified: 0/14
-- current_rights_complete: 0/14
-- source_failures: 14/14 slots not fully verified; see 110018-final.md
-- identity_failures: 0 proven
-- browser_session: BROWSER_SESSION_UNAVAILABLE
 - last_verified_complete_at: 2026-10-10T07:52:16+07:00 (unchanged)
 
-## Last meaningful attempts
-- shard0: 2026-11-21 08:00:04 Asia/Bangkok (PARTIAL_ONLY)
-- shard1: 2026-11-21 09:04:08 Asia/Bangkok (PARTIAL_ONLY)
-- shard2: 2026-11-21 10:03:12 Asia/Bangkok (PARTIAL_ONLY)
-- shard3: 2026-11-21 11:00:18 Asia/Bangkok (PARTIAL_ONLY)
+## Last meaningful partial attempts
+- shard0: 2026-11-21T16:01:50+07:00 (older cache pointer; not asserted latest)
+- shard1: 2026-11-22T01:55:25+07:00
+- shard2: 2026-11-21T18:59:28+07:00
+- shard3: 2026-11-21T23:57:25+07:00
 
-## Historical unresolved items and newer classification
-
-The earlier historical run's unresolved right snapshots below were recorded before the latest scope revision and do not automatically populate present urgent queue. Latest active exposure includes original 01 investment via Echo with USD 1,000 recorded, settlement UNKNOWN. Galxe is user-closed, despite old November 20 deadline/asset-recovery references. New source checking must discover actual issuer progress for ALL 28 projects, with original issuer/host source dates and separate attempt-vs-verified denominators.
-
-
-- Echo USD 1,000 original 01 investment: settlement/refund/distribution UNKNOWN; no 01/N1 points
-- SurfBoard Nov13 expired absent verified extension
-- Crusoe mapped investor rights unverified
-- Galxe Nov9 sunset + Dec5/Dec15 campaign deadlines already emailed; separate G/Smart Balance/staking asset recovery process NOT YET ANNOUNCED in Nov9 issuer Help Center; claim-center authenticated eligibility SOURCE_GAP
-- Exclusions: Forecast, Abstract, Grass, Backpack, Loopscale, humans&, UNICRED; plus Concrete, MetaMask, Claynosaurz, HEEBOO, Space, StandX, Cambria, Neutrl USER_SUPPRESSED
-- Space/Spacecoin and Theo/Autheo collision guard
-
-## Latest actual run 2026-11-21 11:59:56 Asia/Bangkok
-- run_path: airdrop-tge-monitor/runs/2026-11-21/115956-final.md
-- run_status: PARTIAL_ONLY; schedule: HH:00; scheduled_shard: 3; executed_shard: 3
-- active_projects: 28; shard_attempted: 7/7; original_source_readback: 5/7; current_rights_verified: 0/7
-- candidate_count: 0; action_count: 0; gmail_attempted: false; app_notification: false
-- source_failures: 2 (Thalassa, Fortytwo); identity_failures: 0; code_gate: CODE_NOT_EXECUTED
-- previous complete verification date remains 2026-10-10; no full-coverage claim
-
-## Latest actual run 2026-11-21 12:56:01 Asia/Bangkok
-- run_path: airdrop-tge-monitor/runs/2026-11-21/125601-final.md
-- run_status: PARTIAL_ONLY; schedule: HH:00; scheduled_shard: 0; executed_shard: 0
-- active_projects: 28; fixed_urgent: 0; shard_attempted: 8/8; current original-stage readback: 2/8; historical original readback: 4/8; current personal-rights verified: 0/8
-- candidate_count: 0; action_count: 0; gmail_attempted: false; app_notification: false
-- source_failures: 6 incomplete current-stage slots; identity_failures: 0 observed; code_gate: CODE_NOT_EXECUTED
-- last_meaningful_attempt_at_shard0: 2026-11-21T12:56:01+07:00
-- last_verified_complete_at remains 2026-10-10T07:52:16+07:00; no full-coverage claim
-
-## Latest actual run 2026-11-21 14:03:06 Asia/Bangkok
-- run_path: airdrop-tge-monitor/runs/2026-11-21/140306-final.md
-- run_status: PARTIAL_ONLY; scheduled_shard: 2; executed_shard: 2
-- active_projects: 28; fixed_urgent: 0; shard_attempted: 7/7; original_page_readback: 7/7; fully_verified_issuer_and_user_rights: 0/7
-- candidate_count: 0; action_count: 0; gmail_attempted: false; app_notification: false
-- code_gate: CODE_NOT_EXECUTED; last_meaningful_attempt_at_shard2: 2026-11-21T14:03:06+07:00
-- last_verified_complete_at: unchanged; source gaps remain; no full coverage claim
-
-## Latest actual run 2026-11-21 15:00:41 Asia/Bangkok
-- run_path: airdrop-tge-monitor/runs/2026-11-21/150041-final.md
-- run_status: PARTIAL_ONLY; schedule: HH:00; scheduled_shard: 3; executed_shard: 3
-- active_projects: 28; fixed_urgent: 0; shard_attempted: 7/7; original issuer/partner source readback: 6/7; issuer+personal rights fully verified: 0/7
-- candidate_count: 1 (ByteDance secondary buyback report, Tier C, rejected); action_count: 0; gmail_attempted: false; app_notification: false
-- source_identity_failure: Thalassa Robotics issuer primary inaccessible, 1 source gap; Thalassa Holdings collision rejected; investor-rights gaps 7/7; code_gate: CODE_NOT_EXECUTED
-- last_meaningful_attempt_at_shard3: 2026-11-21T15:00:41+07:00; last_verified_complete_at: unchanged
-
-## Hourly execution 2026-11-21 16:01:50 Asia/Bangkok
-- schedule: HOURLY HH:00; scheduled_shard: 0; executed_shard: 0; registry_active: 28; fixed_urgent: 0
-- run_path: airdrop-tge-monitor/runs/2026-11-21/160150-final.md
-- run_status: PARTIAL_ONLY; attempted: 8/8; direct_current_original_readback: 7/8; full_user_rights_verified: 0/8
-- candidate_count: 0; action_count: 0; gmail_attempted: false; app_notification: false
-- source_gaps: 1 (Block Stranding current announcement unreadable); Rho personal account/migration SOURCE_GAP; identity_failures: 0; code_gate: CODE_NOT_EXECUTED
-- last_meaningful_attempt_at_shard0: 2026-11-21T16:01:50+07:00; last_verified_complete_at: 2026-10-10T07:52:16+07:00 unchanged
-
-## Latest execution 2026-11-21 16:59:53 Asia/Bangkok (imminent 17:00 shard 1)
-- run_path: airdrop-tge-monitor/runs/2026-11-21/165953-final.md
-- run_status: PARTIAL_ONLY; schedule: HOURLY HH:00; scheduled_shard: 1; executed_shard: 1
-- active_projects: 28; fixed_urgent: 0; shard_attempted: 6/6; useful_original_readback: 4/6; personal_rights_verified: 0/6
-- candidate_count: 0; action_count: 0; gmail_attempted: false; app_notification: false
-- source_gaps: 2 primary (Hylo, Theo); Tydro after Nov18 not verified; identity_conflicts: 1 excluded Autheo/THEO collision; code_gate: CODE_NOT_EXECUTED
-- last_meaningful_attempt_at_shard1: 2026-11-21T16:59:53+07:00; last_verified_complete_at unchanged
-
-## Actual run 2026-11-21 17:57:26 Asia/Bangkok
-- run_path: airdrop-tge-monitor/runs/2026-11-21/175726-final.md
-- run_status: PARTIAL_ONLY; schedule: HH:00 Asia/Bangkok; scheduled_shard: 1; executed_shard: 1
-- active_registry: 28; shard_denominator: 6; checked_public_no_update: 3; issuer_source_gaps: 3; additional_authenticated_rights_gap: 1
-- candidate_count: 0; action_count: 0; gmail_sent: false; app_notification: false; code_gate: CODE_NOT_EXECUTED
-- last_meaningful_attempt_shard1: 2026-11-21T17:57:26+07:00; last_verified_complete_at: unchanged
-
-
-## 2026-11-22 01:03:49 Asia/Bangkok latest run
-- schedule: hourly HH:00 Asia/Bangkok
-- scheduled_shard: 1
-- executed_shard: 1
-- run_path: `airdrop-tge-monitor/runs/2026-11-22/010349-final.md`
-- run_status: PARTIAL_ONLY
-- candidate_count: 0
-- action_count: 0
-- gmail_attempted: false
-- notification_sent: false
-- verified_issuer_receipts: Surf, OnRe (partial coverage)
-- source_gap_projects: Hylo, Reflect, Tydro, Theo
-- source_gap_count: 4
-- identity_failure_count: 0 observed, not a full identity audit
-- code_gate: CODE_NOT_EXECUTED
-- last_verified_complete_at: unchanged; partial attempt must not advance it
-- last_meaningful_attempt_at: 2026-11-22T01:03:49+07:00 for shard 1
+## Canonical state
+- 28 original projects in REGISTRY.md (8/6/7/7); issuer and deal-host rights sources as mapped
+- user exclusions and Galxe USER_AWARE_ASSUMED_HANDLED remain authoritative in REGISTRY.md and known-events.md
+- 01/N1 points = 0; Echo original 01 investment USD 1000 unresolved
+- fixed urgent = 0; dynamic urgent = 0 confirmed this run
+- no new qualified material ACTION, no email, no App notice
+- this pointer is cache only; actual terminal final and event archives are authoritative
