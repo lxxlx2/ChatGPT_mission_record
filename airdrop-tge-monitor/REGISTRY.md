@@ -1,52 +1,39 @@
 # Airdrop / TGE Canonical Registry
 
-Active schedule remains hourly HH:00 Asia/Bangkok with original hour % 4 shard rotation. **2026-11-21 user-scope override: the former five fixed urgent projects are ALL REMOVED, including every active shard entry.** Earlier claim-only classifications are historical and superseded by the user's confirmed zero remaining actionable rights or ineligibility; no automatic return to active scope.
+Active schedule stays hourly HH:00 Asia/Bangkok, same hour % 4 single shard. **LATEST USER AUTHORITY 2026-11-21: strictly token TGE/first native-token launch, not an all-purpose user-rights/IPO/refund/legacy-claim monitor.** Former fixed urgent projects excluded; Galxe is historical user-known and NOT active; issuer review supersedes the older 28-entry registry and rights-only rules below. Only the latest four Shards are active.
 
-Updated: 2026-11-21, user-confirmed rights cleanup, fixed Urgent-five retirement and Neutrl reserve-impairment exclusion.
+Updated: 2026-11-21, TGE-only canonical scope, issuer lifecycle audit of all 28 prior rows, Galxe closure and Echo channel dedupe.
 
 Grass 与 Backpack 明确排除。
 
-## Dynamic urgent queue, NOT a fixed five-project whitelist
+## Dynamic TGE event urgency ONLY (no fixed project, no claim/legacy platform discovery)
 
-The old permanent Concrete, MetaMask, Claynosaurz, HEEBOO and Space urgent checks are **retired and removed from active scope**, including all shard entries; Neutrl is also removed from active Shard1 by user instruction. They are excluded from current discovery and user notifications by explicit request, regardless of issuer news; only the user can explicitly reactivate a personally relevant entitlement. Do not automatically re-add them on a generic new TGE or campaign.
+The former five permanent Urgent projects are excluded. The original Galxe/Gravity platform closure and claims information was surfaced by the USER on 2026-11-20, who already tried claiming. It is **USER_KNOWN / ASSUMED_HANDLED_FOR_MONITOR / USER_SUPPRESSED** and is NOT an active TGE or dynamic urgent entry. No Galxe/G rewards/Smart Balance monitoring, no automatic follow-on monitoring, no reactivation based on new issuer news. Historical notification Gmail Sent is archived and remains valid; do not resend.
 
-Urgent may be **zero** on any run. For the remaining registered projects, promote an item only if there is a currently actionable user entitlement or at-risk deposit plus credible official deadline within 7 days, new claim/withdrawal/KYC requirement, deadline change or urgent loss-of-funds event. Check issuer source and user's eligibility before making a user-specific claim; unknown entitlement is UNKNOWN, not an invented allocation. Already-notified, claimed, ineligible, refunded or user-closed items cannot be auto-promoted. Galxe previously authorized platform-sunset exception remains separate, and must pass event freshness/dedupe rules. Shard cadence, task ID, recipient and original EMAIL-ONLY policy are unchanged.
+Dynamic urgency can be zero. It may be triggered ONLY by an **already registered still-active** issuer's original, credible, new **TGE / first token launch**, confirmed TGE schedule change or directly associated initial token delivery deadline affecting a legitimately open user interest, with evidence, dedupe and source QA. Company financing, Echo investment contracts/repayments, IPOs, legacy non-token rewards, completed account claim, asset redemption and platform shutdown alone are OUT OF SCOPE for this TGE task. General risk/platform exit may be assessed by the separately existing Crypto Daily where authorized, never by creating a new monitor. Once the user flags an event personally or says they attempted a claim, presume `USER_AWARE_ASSUMED_HANDLED` **for monitoring only** and close the event, unless they specifically request a follow-up. A missed TGE alert may receive one factual correction email through the pre-existing delivery rules; a user-aware event may never autonomously create a new project or task.
 
 ## Shard 0
 - Block Stranding
 - Base / @base
 - OpenSea / @opensea
 - Polymarket / @Polymarket
-- Perena / @perena
 - TurboFlow / @TurboFlow_xyz
 - Makina / @makinafi
-- Rho / @Rho_Labs
+- Rho X / Rho Labs — official old-Rho migration preserves legacy Rho Points; future native RHO token TGE only (date unconfirmed)
 
 ## Shard 1
-- Surf
 - Hylo / @hylo_so
-- OnRe / @onrefinance — **INDEPENDENT_ACTIVE, ONyc already circulating**; no verified OnRe/Reflect merger or separate future governance TGE
-- Reflect / @reflectmoney — **INDEPENDENT_ACTIVE, RECOVERY_RIGHTS_ONLY**; USDC+ / Drift-related recovery changes; no verified Reflect governance TGE
-- Tydro / @tydrohq
 - Theo / @Theo_Network
 
 ## Shard 2
-- Relay / @RelayProtocol
 - Titan / @Titan_Exchange
 - Reya / @reya_xyz
-- Echo / legacy 01 Exchange USD 1,000 investment — **INVESTMENT_RIGHTS_ONLY; user has zero 01 and zero N1 points**; track Echo-hosted deal allocation/refund/settlement, not N1 points/TGE.
-- Figure AI / @Figure_robot
+- 01 Exchange (acquired by N1) — **TGE_ONLY**; Echo is a historical subscription channel, user has zero 01/N1 points; no generic investment refunds, IPO or SPV term checks in this task
 - Pond / JoinPond / @JoinPond
 - OhBabyGames / @OhBabyGames
 
 ## Shard 3
-- Crusoe / @CrusoeAI
-- Apptronik / @Apptronik
-- Thalassa Robotics / Thalassa Inc.
 - Fortytwo / @fortytwonetwork
-- 1X / @1x_tech
-- Aalo Atomics / @AaloAtomics
-- rTTOK / RepublicX / Republic / @joinrepublic
 
 ## Shard cadence
 
@@ -56,15 +43,58 @@ Asia/Bangkok hour modulo 4:
 - hour % 4 == 2 → Shard 2
 - hour % 4 == 3 → Shard 3
 
-因此剩余有效项目按原 4 小时轮转；仅真实未完成权益进入动态 Urgent。已排除项目不计扫描分母。
+剩余活跃 TGE 候选按原 4 小时轮转。动态 Urgent 仅基于真实新增 TGE 事件，允许 0 项。已知/已处理事件不列为活跃候选。
 
-## 2026-11-21 user-owned rights and exclusion update, superseding old states
+## 2026-11-21 TGE-ONLY issuer audit and corrected active universe (TOP AUTHORITY)
+
+**User directive and scope:** Watch **when the token TGE happens**. Echo is merely an entry/participation channel used for many existing projects. Do not turn Echo into a separate project, or follow private-stock/IPO/SPV contract/refund events in this TGE task. Only issuer-native **first token generation and listing/first token distribution directly tied to TGE** count. A company equity financing round, existing stable/yield-bearing token, non-token points, old claim window, legacy asset recovery, ordinary app launch or IPO does not by itself count as a new TGE.
+
+**Historical user-known incident rule:** When the user reports an event, supplies a screenshot showing they discovered it or says they already tried a claim, set `USER_AWARE_ASSUMED_HANDLED` for active notification/discovery scope, without claiming cryptographically verified successful claim. At most send a corrected missed notice if previously required and not already SENT, without adding the project/asset to Urgent, Shard, lifecycle queue, or a new task. Galxe 2026-11-20 qualifies and is **removed from all active scanning**.
+
+**Four active TGE Shards: 7 / 2 / 5 / 1 = 15 unique project candidates. Permanent urgent 0; no active Galxe exception.** An unconfirmed native-token program is only a **speculative existing watch**, not official token issuance or a promised airdrop. Do not assert dates, personal eligibility or points. If a source confirms issuer will not issue a token, exclude and archive on next review, but never create a fresh watch entry without the user's approval.
+
+### Reviewed complete prior 28-entry list, each with a disposition and evidence standard
+
+| Old project | Scope audit at 2026-11-21 | Decision |
+|---|---|---|
+| Block Stranding | Presale terms describe conditional future TGE; no confirmed token-launch date, https://presale.blockstranding.com/terms.pdf | KEEP / PRE_TGE_UNDATED |
+| Base | Official 2025 issuer post explores a potential network token, but **not definitive plans**, https://www.base.org/blog/the-state-of-base-at-basecamp-2025 | KEEP / EXPLORE_UNCONFIRMED |
+| OpenSea | SEA TGE postponed March 2026, not cancelled; no replacement date in available issuer statement, https://x.com/openseafdn | KEEP / TGE_POSTPONED |
+| Polymarket | No official native POLY token, allocation or TGE announced; prior user participation justifies existing speculative watch, official Help Center / https://polymarket.com | KEEP / SPECULATIVE_NO_ANNOUNCEMENT |
+| Perena | USD* yield asset already live; public founder statement in Aug 2026 reported no native token planned in foreseeable future, corroboration https://solanacompass.com/projects/perena ; https://perena.org | REMOVE / NO_PROSPECTIVE_NATIVE_TGE_EVIDENCE |
+| TurboFlow | Points and prospective token speculation, no verified issuer TGE date, https://tf.xyz | KEEP / TOKEN_UNCONFIRMED |
+| Makina | Official multi-season point program; Machine Tokens are strategy vouchers, **not Makina governance TGE**, https://makina.finance/points ; https://makina.finance | KEEP / TOKEN_UNCONFIRMED (do not treat Machine Tokens as platform TGE) |
+| Rho Labs | Old Rho Protocol shutdown/migration to Rho X, old points carried over; issuer promises future point redemption for RHO tokens subject to eligibility, https://app.rho.trading/ ; https://rho.trading/blog/pre-season-points-campaign | KEEP AS Rho X / RHO_TGE_PENDING_UNDATED |
+| Surf | Surf is AI intelligence/research product with Surfboard NFT program; no authentic native-token TGE plan found, https://asksurf.ai/ | REMOVE / NO_VALID_TGE_PATH |
+| Hylo | hyUSD/eHYUSD/yield tokens already live, separate governance native token not announced; XP points program exists, https://hylo.so | KEEP / SPECULATIVE_NATIVE_TOKEN_UNCONFIRMED (do not equate xSOL/hyUSD TGE) |
+| OnRe | ONyc yield-bearing insurance exposure token already circulating, not future governance token; issuer https://docs.onre.finance/introduction/onre-tokenized-reinsurance-onyc | REMOVE / EXISTING_PRODUCT_TOKEN_ONLY |
+| Reflect | Reflect yield and USDC+ recovery are old product/incident rights, no official distinct governance TGE evidenced, https://reflect.money/ | REMOVE / RECOVERY_NOT_TGE |
+| Tydro | Official Ink Aave-compatible lending; earns **Ink points** related to **Ink Foundation** token, no separate Tydro token announcement, https://app.tydro.com/markets/ | REMOVE / DIFFERENT_ISSUER_POINTS |
+| Theo Network | thBILL/thUSD existing RWA products, separate prospective governance TGE unconfirmed, https://theo.xyz ; **NOT Autheo THEO** already trading Aug 2026 | KEEP / TOKEN_UNCONFIRMED |
+| Relay | Issuer's own token FAQ says no official Relay token, no credible fresh native TGE, https://support.relay.link/en/articles/9261056-when-will-you-have-a-token | REMOVE / NO_NATIVE_TGE_PLAN |
+| Titan Exchange | Solana exchange/router active; no confirmed TGE date/token program in current issuer site, https://titan.exchange ; https://about.titan.exchange | KEEP / SPECULATIVE_ONLY |
+| Reya | Prior token sale investment and pending launch/distribution, specific TGE date/claim must be rechecked against official issuer and CoinList; no date assumed, https://reya.xyz | KEEP / INVESTOR_TGE_UNCONFIRMED |
+| 01 Exchange / N1 | N1 acquired 01 and sunset old app July 2026, https://www.nullstudios.com/blog/n1-01 ; user has NO 01/N1 points and previously made an Echo investment into 01. | KEEP ONE PROJECT as **01 Exchange (acquired by N1)** / FIRST_RELEVANT_TOKEN_TGE_ONLY, no Echo deal-term/IPO/refund activity or points claims |
+| Figure AI | Robotics company, conventional preferred/common shares, firm warns unauthorized secondary stock transfers, https://www.figure.ai/news/notice-regarding-unauthorized-attempts-to-sell-figure-stock | REMOVE / PRIVATE_EQUITY_NOT_TGE |
+| Pond (JoinPond) | AI marketplace/bounty business, platform supports external creators' third-party tokens; *own Pond governance TGE not verified*; https://joinpond.ai/blog | KEEP / SPECULATIVE_ONLY due user prior points participation; no invented token |
+| OhBabyGames | Active game platform; press has token speculation, issuer has no verified TGE date, https://www.ohbabygames.com/news | KEEP / SPECULATIVE_ONLY |
+| Crusoe | Corporate AI/cloud infrastructure venture funding, no issuer native crypto token path shown, https://www.crusoe.ai/resources/newsroom/crusoe-announces-series-f-funding | REMOVE / CORPORATE_EQUITY_NOT_TGE |
+| Apptronik | Robotics hardware company raising Series A financing, no native TGE, https://apptronik.com/company/press-releases | REMOVE / CORPORATE_EQUITY_NOT_TGE |
+| Thalassa Robotics | Underwater robotics company, not unrelated 'Thalassa Coin'; https://www.thalassainc.com ; https://f.inc/portfolio/thalassa-robotics/ | REMOVE / WRONG_TOKEN_IDENTITY |
+| Fortytwo | Distributed AI project token/TGE schedule unverified; distinguish platform points/product from token issuance, https://fortytwo.network | KEEP / SPECULATIVE_ONLY |
+| 1X Technologies | Robotics manufacturer, NEO product preorder, no own crypto TGE, https://www.1x.tech/discover/neo-home-robot | REMOVE / CORPORATE_EQUITY_NOT_TGE |
+| Aalo Atomics | Nuclear reactor startup, no native crypto TGE, https://www.aalo.com | REMOVE / CORPORATE_EQUITY_NOT_TGE |
+| rTTOK / RepublicX | Existing tokenized ByteDance-linked structured note already sold in 2025; issuer describes payout tied to stock IPO/liquidity and note maturity, not a new platform token TGE, https://republic.com/rttok | REMOVE / ALREADY_ISSUED_SECURITY_TOKEN_NOT_PROSPECTIVE_TGE |
+
+**Proof categories:** `CONFIRMED` only for facts stated by the original issuer/exchange or chain; `SPECULATIVE_ONLY` means no issuer-confirmed TGE and should not produce launch date claims or emails; `REMOVED` means no more hourly polling for that project. Old historical notification receipts are immutable. The 15 retained candidates do **not** claim 15 issuer-approved TGE launches.
+
+## 2026-11-21 historical user-rights cleanup (SUPERSEDED FOR ACTIVE TGE SCOPE)
 
 **USER CONFIRMED:** original 01 / N1 points held = 0 / 0. The sole 01-related exposure is a USD 1,000 investment through Echo, whose present settlement/returned amount is UNVERIFIED. Treat this as one Echo-hosted deal-rights item in Shard 2. Never infer N1 points, claimable tokens or conversion from the acquisition announcement.
 
 The user confirms there are no remaining actionable entitlements in **Concrete, MetaMask, Claynosaurz, HEEBOO, Space, StandX and Cambria**, because the old items were already claimed or the user was ineligible. Specific items' claimed-versus-ineligible breakdown and individual transaction hashes are not independently verified. Status is `USER_SUPPRESSED_NO_REMAINING_ACTION`, not a fabricated chain payout. All seven are absent from active shards and all urgent queues. Historical emails and evidence remain for audit. Only an explicit new instruction from the user can reactivate any of them.
 
-**Active fixed Shards after cleanup: 8 / 6 / 7 / 7 = 28 entries. Fixed Urgent set: 0.** Dynamically urgent eligible projects can be zero and must be selected by a real actionable rights event.
+**Historic post-rights-cleanup counts: 8 / 6 / 7 / 7 = 28 entries, SUPERSEDED by the current TGE-only count 7 / 2 / 5 / 1 = 15. Fixed Urgent set: 0.** Dynamically urgent eligible projects can be zero and must be selected by a real actionable rights event.
 
 ## 2026-11-21 historical issuer lifecycle reconciliation (NOT active monitoring authorization)
 
@@ -79,7 +109,7 @@ This is a correction of *existing* monitored projects, not an addition to scope,
 | StandX (@StandX_Official) | Original StandX token TGE cancelled 2026-10-15 and prior DUSD/compensation notices archived | **USER_SUPPRESSED_NO_REMAINING_ACTION**; no DUSD or partner-rights polling, no future alerts absent fresh explicit user consent. |
 | Cambria (@playcambria) | RSGP TGE completed 2026-10-29; prior claim and cross-chain reports archived | **USER_SUPPRESSED_NO_REMAINING_ACTION**; remove active RSGP/old-stake polling and alerts unless user specifically reopens. |
 
-**Scope guard:** all five prior permanent urgent entries were removed by explicit user request. After user-closed rights exclusions, Shard 0/1/2/3 have 8/6/7/7 active entries. No new task, alert or monitoring category.
+**Scope guard:** latest TGE-only 15 active projects in 7/2/5/1 shards, old rights-only and equity names fully excluded, no Galxe active exception. No new task, alert or monitoring category.
 
 ## Identity
 
@@ -109,8 +139,7 @@ Material rights events include:
 
 A platform/intermediary notice can be a valid ACTION even when the underlying project posts nothing publicly.
 
-Known mapping:
-- Echo / legacy 01 Exchange: **user-confirmed USD 1,000 deal exposure via Echo**, status of refund/settlement and contractual rights UNKNOWN. User has NO 01 or N1 points; issuer acquisition is historical context, not token/points allocation. Echo is the mapped intermediary for this existing deal.
+Historical context (OUT OF SCOPE for this task): Echo was the subscription channel for the original 01 Exchange investment. This monitor checks only the issuer's actual first relevant token TGE for the monitored 01/N1 identity, not private-investment terms, repayments, SPV conversion or other deal updates. No user 01/N1 points.
 
 Do not require a public project announcement to recognize a direct platform entitlement/refund notice.
 
@@ -187,10 +216,7 @@ The Base RSGP token launched on Oct29 15:00 UTC (22:00 BKK), independently confi
 
 Scoping is CLOSED for this user. Historical settlement chain analysis stays archived; current shard scheduling unchanged for remaining active projects.
 
-## Galxe legacy platform exception (2026-11-20)
+## Galxe 2026-11-20 historical missed-event repair (CLOSED, NOT ACTIVE)
 
-User expressly requested monitoring Galxe platform exit and unclaimed historic rewards. Add only Galxe (@Galxe; root galxe.com; app.galxe.com; associated Gravity and G) to the existing *dynamic urgent entitlement lifecycle* until the announced claim deadlines and separate asset-redemption milestones resolve. This is not a new automation or shard entry; fixed urgent-five was retired and original shard denominators are now 8/7/7/7. This platform is historically user-relevant, but user's personal account activity, amount and wallet eligibility are UNKNOWN.
+Galxe 2026-11-09 closure/Dec5/Dec15 campaign deadlines were **discovered and presented by the user 2026-11-20**, who already attempted to claim. A correction email was previously sent, Gmail Sent id `1a1f9a770fcb1c29`. Mark `USER_AWARE_ASSUMED_HANDLED` and `USER_SUPPRESSED`; this does not prove individual cryptographic claim success. The Galxe/Gravity G/Smart Balance/claims platform is **NOT** an active TGE project, fixed Urgent, dynamic Urgent or cross-project special sweep. No further scans or notifications without explicit new user authorization. Historical decision and source URL https://help.galxe.com/en/articles/18361711-galxe-is-integrating-into-gravity-what-you-need-to-know archived.
 
-Verified Tier A: https://help.galxe.com/en/articles/18361711-galxe-is-integrating-into-gravity-what-you-need-to-know (issuer announcement Nov 9 2026); https://x.com/Galxe/status/2119681030609105175. Issuer-confirmed: Galxe Quest/ID/Passport are winding down; Gravity and G continue. Dec 5 2026 final campaign participation day; Dec 15 2026 last day to claim previously earned campaign rewards, thereafter Galxe site read-only. Official claim-center https://app.galxe.com/claim-center advertises account-linked G holder, G Staking and Latch asset claims; linked address and amount require authenticated check. The help center separately says a process for Smart Balance, unwithdrawn staked G and G on Gravity Alpha will be announced. DO NOT infer that campaign Dec 15 deadline applies to all these separate assets or that claim-center accessibility proves an individual's balance.
-
-One issuer-confirmed public claim cutoff for a previously used platform justifies a CONDITIONAL, deduplicated email to preserve possible user rights, even if personal allocation is unverified. The screenshot showing about 85 G is a third party's balance, NEVER this user's allocated G. Watch material updated claim instructions, new deadlines or account eligibility independently. Do not convert this exception to a new comprehensive watch list for unrelated platforms or introduce new backup monitors. Existing exclusion and source-tier gates remain.
