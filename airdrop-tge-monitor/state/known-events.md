@@ -1,12 +1,51 @@
 # TGE / Airdrop Known User State
 
-Updated: 2026-11-21 Asia/Bangkok (N1/01 acquisition, Concrete and Cambria post-TGE, StandX native TGE cancellation, OnRe/Reflect separated; historical reports unchanged)
+Updated: 2026-11-21 Asia/Bangkok, user-confirmed obsolete rights closure and Echo USD 1,000 ownership correction.
 
 Purpose: durable dedupe/state input for events already known, delivered, completed, refunded, explicitly closed, user-suppressed, or explicitly scheduled by the user within the existing rights monitor. This file is an input to ACTION_GATE.md.
 
 Hard scope rule: do not create a new monitor/task/file for a user-specific future action. If the user explicitly gives a date/time for an action already within this existing rights-monitor scope, record it here as an unresolved known event so the existing monitor can act on it. No new monitoring scope may be added without explicit user authorization.
 
-## 2026-11-21 issuer lifecycle reconciliation (canonical for future monitor runs)
+## LATEST CANONICAL USER RIGHTS OVERRIDE, 2026-11-21 (takes precedence over all older entries below)
+
+**User supplied the following personal entitlement facts directly.** These are `USER_CONFIRMED`, not independently proven by chain signatures. Legacy issuer TGE/claim announcements, old emails and older `SOURCE_GAP` investigations are archived history, and do NOT re-enable scanning of these projects.
+
+### 01 / N1 points false-positive corrected; separate Echo investment OPEN
+- entity: 01 Exchange / N1 acquisition; historical official issuer source https://www.nullstudios.com/blog/n1-01
+- user_01_points: **0, USER_CONFIRMED**
+- user_N1_points: **0, USER_CONFIRMED**
+- points_monitoring: **SUPPRESSED**, no user eligibility/points balance, N1 token claim or points-to-token conversion may be inferred
+- user_actual_investment_channel: **Echo**
+- user_original_deal: **USD 1,000 invested in the original 01 Exchange deal, USER_CONFIRMED**
+- paid_back_or_settlement_status: **UNKNOWN / NOT VERIFIED IN THIS TURN**; do not mark returned, distributed, converted into N1 or fulfilled without original deal evidence
+- monitor_scope: `ECHO_01_DEAL_INVESTMENT_RIGHTS_ONLY`, single Shard-2 entry with Echo user-facing terms and issuer updates where directly connected to the user's deal
+- material_events: Echo contract/issuer substitution, actual refund/partial refund, cancellation, redemption, token/warrant/equity deliverable, distribution deadline, investor action, allocation or fee change
+- status: `OPEN_OUTCOME_UNVERIFIED`, not auto-urgent in absence of verified immediate deadline
+- identity_guard: the N1 2026-07-08 app acquisition recognizes points for other legacy users; user has **none**. USD 1,000 Echo deal is independent unless contractual evidence proves otherwise.
+
+### Explicit exclusion of all five former fixed Urgent projects
+- project_ids: `concrete`, `metamask`, `claynosaurz` (including Clay Shares), `heeboo`, `space` (issuer @intodotspace, not Spacecoin)
+- status_each: `USER_SUPPRESSED_NO_REMAINING_ACTION`
+- confirmed_by: USER explicitly says **all five have no utility and must be removed**; prior user rights already handled or not eligible
+- individual_claim_vs_ineligible_breakdown: UNKNOWN; do not assert each was claimed or paid onchain
+- monitor_action: **REMOVE_FROM_FIXED_URGENT / REMOVE_FROM_ACTIVE_SHARDS / NO_DYNAMIC_REENTRY / NO_GMAIL** until user explicitly requests new monitoring
+- note: past claims, rewards, send receipts and project history remain archived and cannot be treated as present unclaimed rights
+
+### Additional old project rights closed by user
+- project_ids: `standx`, `cambria`
+- status_each: `USER_SUPPRESSED_NO_REMAINING_ACTION`
+- original_project_lifecycle: StandX platform token TGE cancelled; Cambria RSGP TGE completed. Previous DUSD, RSGP, NeoSoul and old stake claim announcements are historical only, not user-owned unresolved claims.
+- monitor_action: REMOVE_FROM_ACTIVE_SHARDS / REMOVE_FROM_DYNAMIC_URGENT / NO_GMAIL; preserve existing old alerts for audit
+- claim_or_ineligibility_breakdown: UNKNOWN, only user's no-current-action assertion is confirmed
+
+### Dynamic urgent eligibility rule after cleanup
+- permanent_urgent_count: **0**
+- active_shards: Shard0=8, Shard1=7, Shard2=7 (includes Echo 01 investment, excludes N1/01 points), Shard3=7; total=29
+- dynamic_urgent: may be **0**; promote only a real existing eligible user right, confirmed current action and material urgency; never auto-reactivate suppressed/closed items because of project-wide news
+- close_transition: notify only on genuinely NEW material actions; after user says CLAIMED / NO_ALLOCATION / INELIGIBLE / REFUNDED / CLOSED, reconcile the registry entry and known-events in the same authorized work turn, and suppress future checks. A SENT email is just `NOTIFIED`, **not** `CLAIMED`.
+- evidence_protection: never rewrite historic mailed content, never call a user statement a chain receipt, never fabricate refund or closed balance proof
+
+## 2026-11-21 historical issuer lifecycle reconciliation (superseded for above user rights) (canonical for future monitor runs)
 
 **This section supersedes historical old-stage descriptions below where states conflict. Historical email IDs and earlier observations remain true for their original dates.** No email is authorized simply because this classification was repaired.
 
