@@ -1,10 +1,67 @@
 # TGE / Airdrop Known User State
 
-Updated: 2026-11-21 Asia/Bangkok (Forecast Founding principal refund and TGE exclusion)
+Updated: 2026-11-21 Asia/Bangkok (N1/01 acquisition, Concrete and Cambria post-TGE, StandX native TGE cancellation, OnRe/Reflect separated; historical reports unchanged)
 
 Purpose: durable dedupe/state input for events already known, delivered, completed, refunded, explicitly closed, user-suppressed, or explicitly scheduled by the user within the existing rights monitor. This file is an input to ACTION_GATE.md.
 
 Hard scope rule: do not create a new monitor/task/file for a user-specific future action. If the user explicitly gives a date/time for an action already within this existing rights-monitor scope, record it here as an unresolved known event so the existing monitor can act on it. No new monitoring scope may be added without explicit user authorization.
+
+## 2026-11-21 issuer lifecycle reconciliation (canonical for future monitor runs)
+
+**This section supersedes historical old-stage descriptions below where states conflict. Historical email IDs and earlier observations remain true for their original dates.** No email is authorized simply because this classification was repaired.
+
+### N1 acquisition of 01 Exchange (independent 01 TGE monitoring closed)
+- event_key: n1:acquisition_01_exchange:2026-07-08
+- issuer_first_party: https://www.nullstudios.com/blog/n1-01 (published 2026-07-08; checked 2026-11-21)
+- status: ACQUIRED_01 / LEGACY_APP_SUNSET / HISTORICAL_POINTS_RECOGNIZED_BY_N1
+- previous_01_account: app.01.xyz retired as independent destination; official destination https://app.n1.xyz
+- historical_01_points: N1 issuer explicitly says all previously earned 01 points recognized under N1; this is NOT a verified N1 token allocation, claim date or amount
+- user_specific_points_balance_or_token_rights: UNKNOWN
+- treatment: independent 01 Exchange entry removed from Shard 2; continue under existing N1 Shard-2 project identity, preserving separate Echo/SPV rights if present and separately evidenced
+- notification: SUPPRESS acquisition as stale July news; send only new original rights/claim/compensation event passing source and dedupe gates
+
+### Concrete CT token launched; original TGE is finished
+- event_key: concrete:ct_tge_completed:2026-09-30
+- official_exchange_listing: https://blog.kraken.com/product/asset-listings/ct-is-available-for-trading (dated 2026-10-02, states trading since 2026-09-30)
+- status: TGE_COMPLETED / RIGHTS_CLAIM_ONLY
+- tge_time: 2026-09-30 (calendar date confirmed)
+- original_claim_open: already DELIVERED via event `concrete:ct_claim_open:2026-09-30`, Gmail `1a0fb623103c8948`; do not send duplicates
+- individual_CT_claim_eligibility_or_balance: UNKNOWN
+- claim_end_time: NOT_VERIFIED; must consult authentic issuer interface / first-party source; impersonating foundation domains exist and should not be linked without issuer verification
+- unrelated_extra_USDC_claim: remains SOURCE_GAP, not silently dropped, verify separately
+- treatment: Concrete remains fixed urgent-five and Shard-1 only for bounded unresolved CT/right claims or changed deadline, no another first TGE alert
+
+### StandX platform token cancelled; wind-down DUSD/withdrawal rights remain
+- event_key: standx:platform_tge_cancelled:2026-10-15
+- official_issuer: https://x.com/StandX_Official/status/2110613283967230232 ; https://standx.com/
+- status: PLATFORM_TGE_CANCELLED / WIND_DOWN / RIGHTS_ONLY
+- issuer_milestones: DUSD claim window stated Nov2 UTC through 2026-12-31 08:00 UTC in official account posts reflected publicly; issuer's live claim UI and user eligibility remain to be separately verified before any personal action
+- withdrawal_cutoff: 2027-01-31 (issuer announced; exact time not independently confirmed)
+- final_positions_cutoff: 2027-01-15 (issuer announced)
+- old_warning: standx:winddown_dusd_airdrop:2026-10-15 already emailed, Gmail `1a13e6930e07d0ae`
+- personal_DUSD_allocation, remaining_positions, refund_amount: UNKNOWN
+- treatment: retain existing Shard-0 as RIGHTS_ONLY and dynamic urgent if current user-entitlement deadline warrants; stop discovery of native StandX TGE; no repeat old warnings; distinct verified partner benefit and material claim delta may notify
+
+### Cambria RSGP TGE complete; independent cross-chain rights remain
+- event_key: cambria:rsgp_tge_completed:2026-10-29
+- official_game_token: https://lobby.cambria.gg/genesis/ , Base RSGP contract `0x44B63aF715D5ef02CC3646a6CE96875e11d69E85`
+- independent_first_party_listing: https://www.mexc.com/announcements/article/first-in-market-17827791539281 (trading 2026-10-29 15:00 UTC)
+- status: RSGP_TGE_COMPLETED / RIGHTS_CLAIM_ONLY
+- prior_notice: RSGP first launch Oct28 already emailed Gmail `1a1812a1f6802ecb`; never repeat unchanged TGE
+- personal_RSGP_claim_wallet_eligibility_and_amount: UNKNOWN
+- distinct_legacy_right: Blast/Abstract historical Duel Arena stake reclaim may still require issuer ticket; maintain separate existing event and no duplicates
+- treatment: retain original Shard-3 only for issuer-verified new claim, allocation, claim deadline, escrow repayment or wallet migration change
+
+### OnRe and Reflect are distinct; neither merger nor extra governance TGE proven
+- event_key: onre_reflect:identity_separation:2026-11-21
+- first_party_onre: https://www.onre.finance/resources/announcements , ONyc independently circulating and active
+- first_party_reflect: https://reflect.money/insights , https://claims.reflect.money/ ; Reflect is independently operated and its USDC+ recovery portal is a separate rights family after Drift April 2026 exploit
+- alleged_merger: **NOT_CONFIRMED**; Reflect's 'reUSD' Re Protocol underlying must not be mislabeled as OnRe reinsurance
+- onre_new_governance_tge: NOT_CONFIRMED; existing ONyc is a yield-bearing product token, not proof of prospective governance TGE
+- reflect_new_governance_tge: NOT_CONFIRMED
+- previously_delivered_reflect_recovery: `reflect:recovery_claim_open:2026-09-12`, Gmail `1a09250f1088fcc6`; suppress unchanged claim notices
+- user_USDC_plus_or_recovery_eligibility: UNKNOWN
+- treatment: keep separate existing Shard-1 entries, rights-discovery only where verified and material, no manufactured merger or generic TGE claim
 
 ## Merger-resolved TGE scope — historical / no active independent TGE
 
