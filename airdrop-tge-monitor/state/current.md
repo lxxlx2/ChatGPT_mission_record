@@ -1,3 +1,19 @@
+## Latest actual hourly run, 2026-11-21 18:59 Asia/Bangkok
+- last_run: 2026-11-21T18:59:28+07:00
+- schedule: HH:00 Asia/Bangkok
+- run_path: airdrop-tge-monitor/runs/2026-11-21/185928-final.md
+- run_status: PARTIAL_ONLY
+- scheduled_shard: 2
+- executed_shard: 2
+- shard_denominator: 7
+- candidate_count: 0
+- action_count: 0
+- notification: NONE
+- source_failures: 3
+- identity_failures: 0
+- last_meaningful_attempt_shard2: 2026-11-21T18:59:28+07:00
+- last_verified_complete_shard2: UNCHANGED
+
 # Current TGE monitor state
 
 ## 2026-11-21 LATEST CANONICAL CONFIG, user-corrected actual investments and milestones
