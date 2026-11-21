@@ -1,20 +1,20 @@
 # Current TGE monitor state
-- last_run: 2026-11-21T10:03:12+07:00
+- last_run: 2026-11-21T11:00:18+07:00
 - schedule: Asia/Bangkok HH:00 hourly (unchanged)
-- latest_final: airdrop-tge-monitor/runs/2026-11-21/100312-final.md
+- latest_final: airdrop-tge-monitor/runs/2026-11-21/110018-final.md
 - run_status: PARTIAL_ONLY
-- scheduled_shard: 2
-- executed_shard: 2
+- scheduled_shard: 3
+- executed_shard: 3
 - candidate_count: 0 new qualifying ACTION
 - action_gate_pass: 0
 - triggered_events: 0
 - gmail_sent: false
 - app_notification: false
 - code_gate: CODE_NOT_EXECUTED
-- source_attempted_slots: urgent 5/5; shard2 10/10 (bounded English discovery, incomplete original rights coverage)
-- event_bound_new_rights_verified: 0/15
-- current_rights_complete: 0/15
-- source_failures: 15/15 slots not fully verified; see 100312-final.md
+- source_attempted_slots: urgent 5/5; shard3 9/9 (bounded discovery; original rights incomplete)
+- event_bound_new_rights_verified: 0/14
+- current_rights_complete: 0/14
+- source_failures: 14/14 slots not fully verified; see 110018-final.md
 - identity_failures: 0 proven
 - browser_session: BROWSER_SESSION_UNAVAILABLE
 - last_verified_complete_at: 2026-10-10T07:52:16+07:00 (unchanged)
@@ -23,7 +23,7 @@
 - shard0: 2026-11-21 08:00:04 Asia/Bangkok (PARTIAL_ONLY)
 - shard1: 2026-11-21 09:04:08 Asia/Bangkok (PARTIAL_ONLY)
 - shard2: 2026-11-21 10:03:12 Asia/Bangkok (PARTIAL_ONLY)
-- shard3: 2026-11-20 23:59:33 Asia/Bangkok (PARTIAL_ONLY)
+- shard3: 2026-11-21 11:00:18 Asia/Bangkok (PARTIAL_ONLY)
 
 ## Unresolved
 - StandX DUSD Nov2 claim VERIFYING/SOURCE_GAP; allocation UNKNOWN
