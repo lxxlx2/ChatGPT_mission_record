@@ -1,32 +1,24 @@
 # Airdrop / TGE Canonical Registry
 
-Active scheduled minutes (2026-10-10 user-approved): hourly HH:00 Asia/Bangkok. Existing urgent set and hour % 4 shard mapping remain unchanged. Historic HH:50 logs are legitimate past records. ForecastFDN was removed on 2026-11-21 after full principal refund. The 2026-11-21 issuer-status reconciliation below removes the independent 01 Exchange Shard-2 entry, preserving its N1 rights mapping, and reclassifies four active entries to rights-only/claim-only without changing the original hourly task ID, time, urgent-five or shard rotation.
+Active schedule remains hourly HH:00 Asia/Bangkok with original hour % 4 shard rotation. **2026-11-21 user-scope override: the former five fixed urgent projects are ALL REMOVED, including every active shard entry.** Earlier claim-only classifications are historical and superseded by the user's confirmed zero remaining actionable rights or ineligibility; no automatic return to active scope.
 
-Updated: 2026-11-21 (reconciliation: 01/N1 acquisition; Concrete/Cambria TGE completed; StandX TGE cancelled; OnRe/Reflect distinct)
+Updated: 2026-11-21, user-confirmed rights cleanup and permanent Urgent-five retirement.
 
 Grass 与 Backpack 明确排除。
 
-## Always-hourly urgent set
+## Dynamic urgent queue, NOT a fixed five-project whitelist
 
-每小时都检查：
-- Concrete / @ConcreteXYZ
-- MetaMask / @MetaMask
-- Claynosaurz / @Claynosaurz
-- HEEBOO / @HeebooOfficial
-- Space / @intodotspace
-- 以及 state/current.md 中 deadline <= 7 days、已触发但未完成、KYC/claim/registration 正在开放的动态 urgent 项目。
+The old permanent Concrete, MetaMask, Claynosaurz, HEEBOO and Space urgent checks are **retired and removed from active scope**, including all shard entries. They are excluded from current discovery and user notifications by explicit request, regardless of issuer news; only the user can explicitly reactivate a personally relevant entitlement. Do not automatically re-add them on a generic new TGE or campaign.
 
-Clay Shares 作为 Claynosaurz/HEEBOO 相关权益子项持续检查。
+Urgent may be **zero** on any run. For the remaining registered projects, promote an item only if there is a currently actionable user entitlement or at-risk deposit plus credible official deadline within 7 days, new claim/withdrawal/KYC requirement, deadline change or urgent loss-of-funds event. Check issuer source and user's eligibility before making a user-specific claim; unknown entitlement is UNKNOWN, not an invented allocation. Already-notified, claimed, ineligible, refunded or user-closed items cannot be auto-promoted. Galxe previously authorized platform-sunset exception remains separate, and must pass event freshness/dedupe rules. Shard cadence, task ID, recipient and original EMAIL-ONLY policy are unchanged.
 
 ## Shard 0
 - Block Stranding
 - Base / @base
 - OpenSea / @opensea
 - Polymarket / @Polymarket
-- StandX / @StandX_Official — **RIGHTS_ONLY, PLATFORM_TGE_CANCELLED**; check DUSD airdrop/redemption and verified partner beneficiary rights, not StandX native TGE
 - Perena / @perena
 - TurboFlow / @TurboFlow_xyz
-- MetaMask / @MetaMask
 - Makina / @makinafi
 - Rho / @Rho_Labs
 
@@ -38,26 +30,21 @@ Clay Shares 作为 Claynosaurz/HEEBOO 相关权益子项持续检查。
 - Tydro / @tydrohq
 - Theo / @Theo_Network
 - Neutrl / @neutrl_labs
-- Concrete / @ConcreteXYZ — **CT_TGE_COMPLETED, CLAIM_ONLY**; no second launch alert, check verified unclaimed rights/deadlines only
 
 ## Shard 2
 - Relay / @RelayProtocol
 - Titan / @Titan_Exchange
 - Reya / @reya_xyz
-- N1 / @N1Chain — **includes legacy 01 Exchange points and rights**, 01 separate app sunset 2026-07-08
+- Echo / legacy 01 Exchange USD 1,000 investment — **INVESTMENT_RIGHTS_ONLY; user has zero 01 and zero N1 points**; track Echo-hosted deal allocation/refund/settlement, not N1 points/TGE.
 - Figure AI / @Figure_robot
 - Pond / JoinPond / @JoinPond
 - OhBabyGames / @OhBabyGames
-- Claynosaurz / @Claynosaurz
-- HEEBOO / @HeebooOfficial
 
 ## Shard 3
-- Cambria / @playcambria — **RSGP_TGE_COMPLETED, CLAIM_ONLY**; check legacy player claim and previously funded stake recovery, no second TGE alert
 - Crusoe / @CrusoeAI
 - Apptronik / @Apptronik
 - Thalassa Robotics / Thalassa Inc.
 - Fortytwo / @fortytwonetwork
-- Space / @intodotspace
 - 1X / @1x_tech
 - Aalo Atomics / @AaloAtomics
 - rTTOK / RepublicX / Republic / @joinrepublic
@@ -70,9 +57,17 @@ Asia/Bangkok hour modulo 4:
 - hour % 4 == 2 → Shard 2
 - hour % 4 == 3 → Shard 3
 
-因此完整白名单最多约 4 小时刷新一次，urgent 项目每小时刷新。
+因此剩余有效项目按原 4 小时轮转；仅真实未完成权益进入动态 Urgent。已排除项目不计扫描分母。
 
-## 2026-11-21 canonical project lifecycle reconciliation
+## 2026-11-21 user-owned rights and exclusion update, superseding old states
+
+**USER CONFIRMED:** original 01 / N1 points held = 0 / 0. The sole 01-related exposure is a USD 1,000 investment through Echo, whose present settlement/returned amount is UNVERIFIED. Treat this as one Echo-hosted deal-rights item in Shard 2. Never infer N1 points, claimable tokens or conversion from the acquisition announcement.
+
+The user confirms there are no remaining actionable entitlements in **Concrete, MetaMask, Claynosaurz, HEEBOO, Space, StandX and Cambria**, because the old items were already claimed or the user was ineligible. Specific items' claimed-versus-ineligible breakdown and individual transaction hashes are not independently verified. Status is `USER_SUPPRESSED_NO_REMAINING_ACTION`, not a fabricated chain payout. All seven are absent from active shards and all urgent queues. Historical emails and evidence remain for audit. Only an explicit new instruction from the user can reactivate any of them.
+
+**Active fixed Shards after cleanup: 8 / 7 / 7 / 7 = 29 entries. Fixed Urgent set: 0.** Dynamically urgent eligible projects can be zero and must be selected by a real actionable rights event.
+
+## 2026-11-21 historical issuer lifecycle reconciliation (NOT active monitoring authorization)
 
 This is a correction of *existing* monitored projects, not an addition to scope, scheduled task, or alert stream. Keep historical email/run archives immutable. `TGE_COMPLETED` or `TGE_CANCELLED` stops fresh first-launch announcements; it does not automatically close still-valid user rights. Expired or previously delivered claim-open messages remain deduplicated under ACTION_GATE and state/known-events.md.
 
@@ -80,12 +75,12 @@ This is a correction of *existing* monitored projects, not an addition to scope,
 |---|---|---|
 | OnRe (@onrefinance) | Active independent reinsurance protocol with ONyc circulating; no verified merger with Reflect. Official https://www.onre.finance/resources/announcements | Keep independent identity. ONyc is a yield-bearing asset, not proof of a fresh future OnRe governance TGE. Alert only first-party rights change; no speculative token claims. |
 | Reflect (@reflectmoney) | Separate active Solana yield/tranche platform; USDC+ recovery portal is active after Drift April 2026 incident. https://reflect.money/ ; https://claims.reflect.money/ | Keep independent rights status. Original recovery claim-open already emailed 2026-09-12; only new material first-party recovery/eligibility/deadline changes may be alerted. No merger with OnRe established; Reflect reUSD underlying is Re Protocol, not OnRe. |
-| Concrete (@ConcreteXYZ) | CT **TGE_COMPLETED 2026-09-30**. Exchange first-party confirmation https://blog.kraken.com/product/asset-listings/ct-is-available-for-trading | **CLAIM_ONLY**: stop TGE / listing-preflight notices. Preserve unresolved wallet-specific CT claim and distinct additional USDC right only if independently proved, no repeat CT claim-open (already emailed). Do not link unverified lookalike Foundation websites; issuer root https://concrete.xyz . |
-| N1 / legacy 01 | N1 developer publicly confirmed **ACQUIRED_01 2026-07-08**; https://www.nullstudios.com/blog/n1-01 . 01 separate app sunset; all 01-earned points recognized on N1. | Remove independent 01 Shard-2 entry; N1 is sole canonical project for linked points. Do not erase 01 points or conclude they became tokens/cash. Echo intermediary rights remain a separate mapped user-deal evidence question. |
-| StandX (@StandX_Official) | **PLATFORM_TGE_CANCELLED 2026-10-15** and wind-down. Official https://x.com/StandX_Official/status/2110613283967230232 ; project shutdown notice https://standx.com . No native token TGE. | Keep original Shard-0 member **RIGHTS_ONLY** for DUSD airdrop (official Nov2 opening; claim cutoff 2026-12-31 08:00 UTC), positions 2027-01-15, DUSD redemption/withdrawal 2027-01-31 and independently verified distinct partner rights. Do not send another 'StandX token launching' alert. Same DUSD claim-open version requires prior Sent dedupe; personal allocation UNKNOWN. |
-| Cambria (@playcambria) | **RSGP_TGE_COMPLETED 2026-10-29 15:00 UTC**, Base contract `0x44B63aF715D5ef02CC3646a6CE96875e11d69E85`, first-party https://lobby.cambria.gg/genesis/ and MEXC https://www.mexc.com/announcements/article/first-in-market-17827791539281 . | Retain Shard-3 **CLAIM_ONLY** for outstanding game-derived RSGP and old Blast/Abstract stake recovery. Already-notified TGE (Oct28 email) never re-emit; personal amount and remaining claim status UNKNOWN. |
+| Concrete (@ConcreteXYZ) | CT TGE completed 2026-09-30; original claim notices archived | **USER_SUPPRESSED_NO_REMAINING_ACTION**. No future CT/USDC claim polling or urgent checks until user explicitly reactivates. |
+| N1 / legacy 01 | 01 app acquired by N1 2026-07-08, official https://www.nullstudios.com/blog/n1-01 | User has **0 01 points / 0 N1 points**. Remove independent N1 points watch; preserve only **Echo-hosted USD 1,000 investment** in Shard 2, with outcome UNKNOWN. |
+| StandX (@StandX_Official) | Original StandX token TGE cancelled 2026-10-15 and prior DUSD/compensation notices archived | **USER_SUPPRESSED_NO_REMAINING_ACTION**; no DUSD or partner-rights polling, no future alerts absent fresh explicit user consent. |
+| Cambria (@playcambria) | RSGP TGE completed 2026-10-29; prior claim and cross-chain reports archived | **USER_SUPPRESSED_NO_REMAINING_ACTION**; remove active RSGP/old-stake polling and alerts unless user specifically reopens. |
 
-**Scope guard:** fixed always-hourly urgent-five unchanged (Concrete retains urgent placement solely for unresolved rights, not future first TGE). Existing Shard 0=10, Shard 1=8, Shard 2=9 after 01 dedupe, Shard 3=9. No new automated tasks, no production trading or emails, no activation of already-closed Forecast/Loopscale/Abstract or completed unrelated deals.
+**Scope guard:** all five prior permanent urgent entries were removed by explicit user request. After user-closed rights exclusions, Shard 0/1/2/3 have 8/7/7/7 active entries. No new task, alert or monitoring category.
 
 ## Identity
 
@@ -116,7 +111,7 @@ Material rights events include:
 A platform/intermediary notice can be a valid ACTION even when the underlying project posts nothing publicly.
 
 Known mapping:
-- N1 / 01 Exchange legacy: N1 acquired 01 and absorbed the app and historical 01 points on 2026-07-08. Maintain any user 01 points under the N1 record. Preserve Echo/SPV rights checks only for any separately evidenced user capital commitment; do NOT assert that an Echo private deal was automatically converted into N1 token/points.
+- Echo / legacy 01 Exchange: **user-confirmed USD 1,000 deal exposure via Echo**, status of refund/settlement and contractual rights UNKNOWN. User has NO 01 or N1 points; issuer acquisition is historical context, not token/points allocation. Echo is the mapped intermediary for this existing deal.
 
 Do not require a public project announcement to recognize a direct platform entitlement/refund notice.
 
@@ -134,6 +129,9 @@ Do not require a public project announcement to recognize a direct platform enti
 - first_party_governance: https://forums.orca.so/t/tokenholder-proposal-resourcing-orca-for-its-next-phase/1281
 
 ## Closed / excluded deals
+
+- **User-suppressed closed/ineligible 2026-11-21:** Concrete (CT), MetaMask, Claynosaurz / Clay Shares, HEEBOO, Space (@intodotspace / SPC), StandX and Cambria (RSGP / Duel Arena). User reports old rights already claimed or ineligible, and wants no monitoring of any of these; exact per-project disposition is NOT chain-verified. Removed from both active shards and every urgent route. Do not poll or notify, even on generic new official announcements; historical event records remain. Reactivation requires user's explicit new request.
+
 
 - Forecast / ForecastFDN / @ForecastFDN — **USER_SUPPRESSED / FOUNDING_PRINCIPAL_FULLY_REFUNDED** on 2026-11-21. The original 100 USDC Founding deposit was returned in full by the original Base Safe to the user's original wallet, verified onchain at 2026-11-20 22:51:59 UTC (2026-11-21 05:51:59 Bangkok), tx `0xff0dee7e…0ad6a`. Remove Forecast from Shard 1 and exclude it from independent TGE/airdrop scanning, dynamic urgent inclusion, refund/claim notifications, and deal-rights alerts. **Do not infer from principal refund that no separate token/rewards ever exist; suppression is the user's explicit request.** Preserve old audit records and the chain evidence in `research/projects/forecast/founding-deposit-custody-20261121.md` on the separate research branch; do not reactivate unless user explicitly requests it. All other project monitoring remains unchanged.
 
@@ -161,14 +159,14 @@ The 2026-10-16 02:05 shard-2 terminal audit reported source gaps for Relay, Tita
 - **Relay / @RelayProtocol**: https://relay.link/blog/announcements and https://support.relay.link/en/articles/9261056-when-will-you-have-a-token . Relay's official FAQ is old (2024), so a static no-token statement cannot establish that today's token status has freshly changed or that a present-day negative finding is exhaustive. Verify current announcements before classification.
 - **Titan / @Titan_Exchange (Solana aggregator)**: https://titan.exchange/ (currently redirects to https://titan.exchange/pro). Identity guard: `titanexchange.io` describes a separate Titan Trading/bot platform. Never mix it with the monitored `@Titan_Exchange` Solana aggregator.
 - **Pond / @JoinPond**: https://joinpond.ai/blog and https://docs.joinpond.ai/docs/terms-of-use ; issuer site explicitly connects brand and platform. Do not mistake general AI-marketplace bounties, completed tasks, or company funding for a verified token/TGE entitlement.
-- **N1 / @N1Chain**: official announcement channel https://t.me/s/n1announcements references original @N1Chain posts and https://docs.n1.xyz/learn/protocol/prime ; the docs original was unavailable at this check, so keep its direct-page status SOURCE_GAP unless actual first-party readback succeeds. Separate general trading-product releases from a rights event.
-- **01 Exchange / @01Exchange**: historical independent identity only. SUPERSEDED by direct 2026-07-08 N1 issuer announcement https://www.nullstudios.com/blog/n1-01 : N1 acquired 01, retired independent app, and recognized prior 01 points on app.n1.xyz. No separate 01 token/TGE monitoring; check old user points through N1, with wallet-specific status UNKNOWN. Mapped Echo investment rights remain independent if separately evidenced.
+- **N1 / @N1Chain**: issuer acquisition announcement is historical context only, not a user points watch. The user holds NO 01 / N1 points. Read N1 issuer sources only when relevant to verified Echo contract rights.
+- **01 Exchange / @01Exchange**: independent app ended after acquisition; historical only. User's active deal is a USD 1,000 Echo-hosted investment, with settlement UNKNOWN; never scan for 01/N1 points or assume their ownership.
 
-At the next *existing* shard-2 rotation, attempt these bounded, canonical fallback anchors before declaring each domain inaccessible; record individual actual retrieval status, dated source content and source gaps. Never retroactively change the 2026-10-16 02:05 `PARTIAL` into success, invent a verified source observation, expand shard membership, or send a no-change email. All other source gaps, including Concrete additional USDC, Space extension and StandX original X full-text, remain open until equivalent valid first-party evidence is actually obtained.
+At the next existing Shard-2 rotation, use these original source routes only for remaining registered items and the Echo USD 1,000 deal. The old Concrete, Space and StandX SOURCE_GAP items are now user-closed and must not be carried into active unresolved queues. Historic 2026-10-16 partial status is immutable.
 
-## Existing StandX beneficiary relationship (not a new independent project watch) — 2026-10-16
+## Historical StandX beneficiary relationship (USER-CLOSED, no future scanning) — 2026-10-16
 
-- existing_project_id: standx (Shard 0)
+- existing_project_id: standx (HISTORICAL ONLY, removed from Shard 0 2026-11-21)
 - external_issuer_candidate: NeoSoul / DNA, official X https://x.com/NeoSoulAI , project https://neosoul.ai/
 - canonical_relation: `NeoSoul issuer -> StandX community beneficiary`, NOT `StandX platform native token`
 - candidate_event: `neosoul:dna_standx_community_allocation:2026-10-15`
@@ -176,21 +174,21 @@ At the next *existing* shard-2 rotation, attempt these bounded, canonical fallba
 - secondary_issuer_attributed_announcement: https://www.binance.com/en/square/post/10-15-2026-neosoul-plans-dedicated-dna-airdrop-for-standx-community-377570746498100
 - current_issuer_primary_commitment_direct_readback: SOURCE_GAP
 - beneficiary_entitlement, snapshot, claim_url, claim_time, user_allocation: UNVERIFIED
-- status: HIGH_MATERIALITY_VERIFYING_PARTNER_RIGHTS, no separate project/full scan and no ACTION without authoritative proof
+- status: HISTORICAL_USER_SUPPRESSED, prior candidate retained for audit; do not search or notify without new explicit user authorization
 - reject_identity_collision: legacy NEO cryptocurrency/Neo blockchain is not NeoSoul DNA; Binance Alpha Points claim is separate from proposed StandX compensation.
-- required_existing_lane: StandX Shard-0 RIGHTS_ONLY and applicable dynamic urgent rights deadlines, never a native StandX TGE watch; on issuer-verified new action apply ACTION_GATE and Gmail dedupe.
+- required_existing_lane: NONE. User closed StandX rights 2026-11-21; Shard-0 and urgent removed.
 
 ## Cambria cross-chain TGE rights mapping — 2026-10-28
 
-Cambria / @playcambria is ALREADY registered in Shard 3. Monitor **the game's user entitlements over every actual reward distribution chain**, including Game activity on Abstract/Blast/Ronin with token delivery on Base, without adding Abstract/ABS as an independent monitored coin. Canonical official issuer https://cambria.gg/ , token docs https://docs.cambria.gg/genesis/usdrsgp , official token/season Journey https://lobby.cambria.gg/token/ , original X https://x.com/playcambria . Cambria $RSGP on Base is a distinct family from old Duel Arena stake/AGW migration and earlier Genesis opt-in.
+Cambria / @playcambria was historically in Shard 3, but was **removed 2026-11-21** after user confirmed no further useful/eligible claims. Historical prior game rights did span Abstract/Blast/Ronin and Base; do not resume any scan without new explicit authorization. Canonical official issuer https://cambria.gg/ , token docs https://docs.cambria.gg/genesis/usdrsgp , official token/season Journey https://lobby.cambria.gg/token/ , original X https://x.com/playcambria . Cambria $RSGP on Base is a distinct family from old Duel Arena stake/AGW migration and earlier Genesis opt-in.
 
-The Base RSGP token launched on Oct29 15:00 UTC (22:00 BKK), independently confirmed by MEXC listing and Cambria's official token page; the TGE milestone was already email-delivered on Oct28, id `1a1812a1f6802ecb`. It MUST be present in `state/known-events.md`. Do not re-alert unchanged TGE date. New claim eligibility, user allocation, official claim-open or time/chain/contract change may be a distinct actionable version, subject to Tier A issuer evidence and ACTION_GATE. No personal wallet amount may be inferred without actual authenticated eligibility/wallet proof.
+The Base RSGP token launched on Oct29 15:00 UTC (22:00 BKK), independently confirmed by MEXC listing and Cambria's official token page; the TGE milestone was already email-delivered on Oct28, id `1a1812a1f6802ecb`. It MUST be present in `state/known-events.md`. Do not re-alert unchanged TGE date. These are historical distinct event types only; user closed active Cambria scope 2026-11-21. Do not dispatch further alerts solely on generic claim/listing announcements.
 
-Scoping is *existing Cambria*; do not widen registry or change shard scheduling. A change of **settlement chain** never suppresses rights already earned in another supported game chain.
+Scoping is CLOSED for this user. Historical settlement chain analysis stays archived; current shard scheduling unchanged for remaining active projects.
 
 ## Galxe legacy platform exception (2026-11-20)
 
-User expressly requested monitoring Galxe platform exit and unclaimed historic rewards. Add only Galxe (@Galxe; root galxe.com; app.galxe.com; associated Gravity and G) to the existing *dynamic urgent entitlement lifecycle* until the announced claim deadlines and separate asset-redemption milestones resolve. This is not a new automation or a new scheduled shard entry; fixed urgent5 and all shard0-3 project denominators remain unchanged. This platform is historically user-relevant, but user's personal account activity, amount and wallet eligibility are UNKNOWN.
+User expressly requested monitoring Galxe platform exit and unclaimed historic rewards. Add only Galxe (@Galxe; root galxe.com; app.galxe.com; associated Gravity and G) to the existing *dynamic urgent entitlement lifecycle* until the announced claim deadlines and separate asset-redemption milestones resolve. This is not a new automation or shard entry; fixed urgent-five was retired and original shard denominators are now 8/7/7/7. This platform is historically user-relevant, but user's personal account activity, amount and wallet eligibility are UNKNOWN.
 
 Verified Tier A: https://help.galxe.com/en/articles/18361711-galxe-is-integrating-into-gravity-what-you-need-to-know (issuer announcement Nov 9 2026); https://x.com/Galxe/status/2119681030609105175. Issuer-confirmed: Galxe Quest/ID/Passport are winding down; Gravity and G continue. Dec 5 2026 final campaign participation day; Dec 15 2026 last day to claim previously earned campaign rewards, thereafter Galxe site read-only. Official claim-center https://app.galxe.com/claim-center advertises account-linked G holder, G Staking and Latch asset claims; linked address and amount require authenticated check. The help center separately says a process for Smart Balance, unwithdrawn staked G and G on Gravity Alpha will be announced. DO NOT infer that campaign Dec 15 deadline applies to all these separate assets or that claim-center accessibility proves an individual's balance.
 
