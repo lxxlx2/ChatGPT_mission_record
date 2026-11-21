@@ -1,6 +1,6 @@
 # TGE / Airdrop Known User State
 
-Updated: 2026-10-15 Asia/Bangkok
+Updated: 2026-11-21 Asia/Bangkok (Forecast Founding principal refund and TGE exclusion)
 
 Purpose: durable dedupe/state input for events already known, delivered, completed, refunded, explicitly closed, user-suppressed, or explicitly scheduled by the user within the existing rights monitor. This file is an input to ACTION_GATE.md.
 
@@ -21,6 +21,24 @@ Hard scope rule: do not create a new monitor/task/file for a user-specific futur
 - monitor_action: SUPPRESS_INDEPENDENT_TGE_DISCOVERY; remove Loopscale from Shard 1, do not add Orca or Formation. Maintain history for audit; do not create new automation. A separately proven new user right or fresh token launch requires new first-party evidence and explicit user direction.
 - daily_lane: Crypto Daily Section 6 (merger + ORCA tokenholder governance), not TGE Section 7
 - current_governance: proposal not proven passed; vote ends 2026-10-10 19:42 UTC, cooldown ends 2026-10-12 19:42 UTC; do not assert enactment
+
+## Closed TGE scope after full principal refund (2026-11-21)
+
+### Forecast / ForecastFDN
+- project_id: forecast / forecastfdn
+- event_key: forecast:founding_principal_full_refund:2026-11-21
+- state: CLOSED_PRINCIPAL_REFUNDED / USER_SUPPRESSED_TGE
+- original_deposit: 100.000000 USDC, Base, 2026-05-29 10:18:17 UTC
+- actual_refund: 100.000000 USDC, Base, 2026-11-20 22:51:59 UTC (2026-11-21 05:51:59 Asia/Bangkok)
+- payer: original Forecast Founding Safe (4-of-5), 0xf605…2378
+- recipient: original depositor, masked 0x3df4…ea7c
+- confirmed_tx: 0xff0dee7e…0ad6a (Base, native USDC, 100 USDC, success)
+- source_type: user_report_confirmed + Alchemy Base RPC transfers and transaction receipt
+- principal_unpaid: 0 USDC
+- other_claim_or_reward_entitlement: NOT_EVALUATED; suppression is by user request, not a claim there can never be a token
+- monitor_action: REMOVED_FROM_SHARD_1 / SUPPRESS_FORECAST_TGE_AIRDROP_REFUND_DISCOVERY / NO_DYNAMIC_URGENT / NO_FUTURE_ACTION until the user explicitly reactivates Forecast
+- audit_evidence: research/projects/forecast/founding-deposit-custody-20261121.md (separate research branch, commit fac596425a55f11d3aba604624afa2460c128951)
+- delivery_status: NO_GMAIL; no new task or change to schedule, fixed urgent5 or other projects. Retain all historical reports.
 
 ## CLOSED / no remaining rights
 
