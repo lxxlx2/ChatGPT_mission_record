@@ -14,7 +14,7 @@
 - notification_trigger: **verified new material issuer/issuer-platform decision milestone**, including token TGE, firm IPO filing/listing, major financing affecting exposure, first trade, conversion, distribution, end of lockup, refund, platform security or insolvency with user exposure. No repeat/general press/no-op email
 - source_qa: issuer original publications, actual investor-side contractual source, official exchange/regulatory filings or onchain facts; `SEARCH_ATTEMPTED` != `ORIGINAL_READBACK_PASS`; source gap is PARTIAL
 - schedule: unchanged hourly HH:00 Asia/Bangkok, same existing task ID 6a85fff710e0819190ffcf8c1145a170 and recipient
-- execution_verification: **CONFIG_UPDATED_PENDING_POST_CHANGE_RUN**; past final results cannot prove new configuration works. Historical final pointer below refers to pre-update.
+- execution_verification: **POST_CHANGE_RUN_ATTEMPTED_PARTIAL_ONLY**; original hourly Shard 3 run at 2026-11-21T11:59:56+07:00 executed with latest 28-project Registry, fixed urgent 0 and shard3 denominator 7; first-party source readback 5/7, current rights 0/7, hence NOT fully recovered. Latest proof: `airdrop-tge-monitor/runs/2026-11-21/115956-final.md`. Prior 11:00 audit remains historical.
 - project_source_checkpoint: 2026-11-21 sourced in REGISTRY.md LATEST CANONICAL SCOPE; includes OpenSea delay, CoinList Reya TBA, Crusoe Sept17 Series F, RepublicX rTTOK event terms; incomplete original current wallet/exchange and source coverage for other projects, so NO COMPLETE_AUDIT claim
 
 ## Historical last execution snapshot before this correction (NOT LIVE COUNTS)
