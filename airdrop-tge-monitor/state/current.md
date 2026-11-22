@@ -38,3 +38,11 @@ verified_complete: false
 - Latest REGISTRY and known-events govern 28 original projects and exclusions, including Galxe suppression.
 - 01/N1 points 0; original Echo 01 investment USD 1000 unresolved.
 - No verified new material ACTION. No email or App notice. Source gaps remain; partial shard scan.
+
+
+## 2026-11-22 17:56 Asia/Bangkok actual run
+- schedule: HOURLY HH:00; scheduled_shard: 1; executed_shard: 1
+- run_path: airdrop-tge-monitor/runs/2026-11-22/175600-final.md
+- run_status: PARTIAL_ONLY; candidates: 0; actions: 0; email_sent: false
+- shard_projects_attempted: 6/6; full_current_rights_verified: 0/6; source_gaps_or_partial: 4; identity_collision_rejected: 1
+- source timestamps and evidence in final. Existing prior successful stage proofs not overwritten.
