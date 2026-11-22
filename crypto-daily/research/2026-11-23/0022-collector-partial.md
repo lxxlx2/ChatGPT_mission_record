@@ -1,0 +1,15 @@
+# Crypto Daily 2026-11-23 00:20 collector (PARTIAL_SOURCE_GAPS)
+
+Run time: 2026-11-23 00:22 Asia/Bangkok. Collector only; NO email due in this window. No claim of complete six-family/source coverage.
+
+Git main readback SHA: PIPELINE_CONTRACT 29ffbc1d32ca87a744d2990e8d55639ebb84a6f9; EDITORIAL_RULESET 2ed51528d230508ae4e0015762b1d60c9d72e299; ledger 0b4acf861b4a8a755759b5c6ab3d2cf5469609b1. Other rules fetched in same run; no QA executed.
+
+Binance official connector spot 24h ticker sampled 2026-11-23 ~00:23 Bangkok, source https://api.binance.com/api/v3/ticker/24hr (symbol-specific): BTCUSDT 60852.18 (+1.090%; 58768.51-61669.99), ETHUSDT 1713.76 (+1.723%; 1648.35-1732.52), SOLUSDT 70.40 (-0.551%; 68.74-71.43), BNBUSDT 557.90 (+1.753%), HYPEUSDT 62.89 (+3.166%). Rolling 24h, not daily close. Connector multi-symbol attempt failed HTTP 400; individual requests succeeded.
+
+Binance official futures connector mark/funding sampled same window, source https://fapi.binance.com/fapi/v1/premiumIndex: BTC mark 60829.00 funding -0.00001684; ETH mark 1713.17442261 funding 0.00002719; SOL mark 70.36226475 funding 0.00000911. These are last funding rate fields, not guaranteed next funding.
+
+Gmail Sent queried for 2026-11-16 onward: latest full Crypto daily 2026-11-22 Sent ID 1a2034b8ca694f60; 2026-11-21 1a1fc4aa5080c3cf; 2026-11-20 corrected 1a1f9b7f90744f4e. Search was subject/date summary only, NOT seven complete body readbacks, so 7-day semantic dedupe remains incomplete and no candidate promoted.
+
+Source discovery: official Binance announcements https://www.binance.com/en/support/announcement (checked 2026-11-23 ~00:23 Bangkok): dated Nov22 USDC/USDT Earn promotion, no established global material novelty. Laravel original security advisory listing https://github.com/laravel/framework/security/advisories checked, most recent shown Nov11, no new verified high event from this source. Railway official incident https://status.railway.com/incident/KC7EWDY4 shows historical Oct22 resolved, Nov5 record, no novel state. Galxe official https://help.galxe.com/en/articles/18361711-galxe-is-integrating-into-gravity-what-you-need-to-know retains Nov9 shutdown and Dec5/Dec15 deadlines; already delivered in separate TGE notice, do not repeat. Lookonchain https://lookonchain.com/token/bitcoin/3 checked but page results stale Nov15; ONCHAIN_SOURCE_GAP. Anthropic ANTB Binance margin collateral official announcement surfaced https://www.binance.com/en/square/profile/binance_announcement dated Nov19, this is secondary market collateral, NOT newly opened IPO subscription.
+
+SOURCE_GAP: Farside BTC/ETH/SOL live session not directly fetched; SEC/Fed primary latest not confirmed; Arkham original TX not verified; current official X Browser session not accessed; TGE/Early/NFT and ACTIVE project source coverage incomplete; independent security lanes web_runtime_rce, web_pki_tls, ai_package_supply_chain, cloud_secrets_identity and general security lack full dated first-party receipts. Search results cannot establish no news. No new high candidate certified. No Gmail sent, no schedule changes, no additional monitor.
