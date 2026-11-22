@@ -1,64 +1,26 @@
-# Latest run cache
-latest_run_at: 2026-11-22T19:01:11+07:00
+# Current monitor execution pointer
+latest_run_at: 2026-11-22T20:03:21+07:00
 schedule: Asia/Bangkok HOURLY HH:00
-scheduled_shard: 3
-executed_shard: 3
-run_path: airdrop-tge-monitor/runs/2026-11-22/190111-final.md
+scheduled_shard: 0
+executed_shard: 0
+run_path: airdrop-tge-monitor/runs/2026-11-22/200321-final.md
 run_status: PARTIAL_ONLY
+active_registry: 28 (8/6/7/7)
+fixed_urgent: 0
+dynamic_urgent: 0
+shard_denominator: 8
 candidate_count: 0
 action_count: 0
+gmail_attempted: false
 notification_sent: false
-source_gap_count: 2
 identity_failure_count: 0
+source_gap: current rights verification incomplete; Block Stranding and TurboFlow original pages unavailable
 verified_complete: false
+code_gate: CODE_NOT_EXECUTED
+last_verified_complete_at: 2026-10-10T07:52:16+07:00
+last_meaningful_attempt_shard0: 2026-11-22T20:03:21+07:00
+last_meaningful_attempt_shard1: 2026-11-22T17:03:34+07:00
+last_meaningful_attempt_shard2: 2026-11-22T06:57:29+07:00
 last_meaningful_attempt_shard3: 2026-11-22T19:01:11+07:00
 
-## Prior cache
-# Current run cache
-
-latest_run_at: 2026-11-22T17:03:34+07:00
-schedule: Asia/Bangkok hourly HH:00
-scheduled_shard: 1
-executed_shard: 1
-run_path: airdrop-tge-monitor/runs/2026-11-22/170334-final.md
-run_status: PARTIAL_ONLY
-candidate_count: 0
-action_count: 0
-notification_sent: false
-source_gap_count: 2
-identity_failure_count: 0
-verified_complete: false
-
-## Previous state snapshot
-
-# Current monitor execution pointer
-- last_run: 2026-11-22T16:01:40+07:00
-- schedule: Asia/Bangkok HOURLY HH:00 unchanged
-- run_path: airdrop-tge-monitor/runs/2026-11-22/160140-final.md
-- run_status: PARTIAL_ONLY
-- active_registry: 28 (8/6/7/7); fixed_urgent: 0; dynamic_urgent: 0 confirmed
-- scheduled_shard: 0; executed_shard: 0; shard_denominator: 8
-- directly_read_original_sources: 4/8
-- fully_verified_issuer_and_user_rights: 0/8
-- source_gaps: 8 incomplete current issuer/user-rights verification
-- identity_failures: 0; perena_same_name_collision: unresolved
-- candidate_count: 0; action_count: 0; gmail_attempted: false; notification_sent: false
-- code_gate: CODE_NOT_EXECUTED
-- last_verified_complete_at: 2026-10-10T07:52:16+07:00 (not advanced)
-- last_meaningful_attempt_shard0: 2026-11-22T16:01:40+07:00
-- last_meaningful_attempt_shard1: 2026-11-22T13:02:47+07:00
-- last_meaningful_attempt_shard2: 2026-11-22T06:57:29+07:00
-- last_meaningful_attempt_shard3: 2026-11-22T15:02:47+07:00
-
-## Canonical scope and status
-- Latest REGISTRY and known-events govern 28 original projects and exclusions, including Galxe suppression.
-- 01/N1 points 0; original Echo 01 investment USD 1000 unresolved.
-- No verified new material ACTION. No email or App notice. Source gaps remain; partial shard scan.
-
-
-## 2026-11-22 17:56 Asia/Bangkok actual run
-- schedule: HOURLY HH:00; scheduled_shard: 1; executed_shard: 1
-- run_path: airdrop-tge-monitor/runs/2026-11-22/175600-final.md
-- run_status: PARTIAL_ONLY; candidates: 0; actions: 0; email_sent: false
-- shard_projects_attempted: 6/6; full_current_rights_verified: 0/6; source_gaps_or_partial: 4; identity_collision_rejected: 1
-- source timestamps and evidence in final. Existing prior successful stage proofs not overwritten.
+Canonical scope and exclusions: consult REGISTRY.md and state/known-events.md; 28 active issuers; 01/N1 points 0, original Echo 01 USD1000 investment open; Galxe and user-closed projects excluded. No verified new material ACTION; no email.
