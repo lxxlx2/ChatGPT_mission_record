@@ -1790,7 +1790,7 @@ class WalletClusterAnalyzer:
         apply_sufficient_top10(holder_rankings)
         return supply,decimals,holders,holder_rankings,pool_vaults,pool_holder_roles,special_address_roles
 
-    def _apply_protocol_history_exclusions(self,special_address_roles):
+    def _apply_protocol_history_exclusions(self,special_address_roles,pool_vaults,pool_holder_roles):
         if not self.exhaust_history:
             return
         # Exclude only verified protocol facilities from personal acquisition
@@ -1799,6 +1799,21 @@ class WalletClusterAnalyzer:
             if r.get("classification")=="CHAIN_ACCOUNT_ROLE"
             and r.get("role") in {"LP","AMM_POOL","PROTOCOL_VAULT"}]
         self._protocol_pool_accounts={(r.get("owner"),r.get("token_account")) for r in self._protocol_history_exclusions}
+        from .pool_holder_roles import selected_pool_vault_binding
+        if pool_holder_roles.get("status")=="SAME_SLOT_CONTRADICTION":
+            return
+        selected=selected_pool_vault_binding(self.mint,pool_vaults)
+        if selected is None:
+            return
+        pair=(selected["authority"],selected["vault_address"])
+        if pair not in self._protocol_pool_accounts:
+            self._protocol_pool_accounts.add(pair)
+            self._protocol_history_exclusions.append({
+                "owner":pair[0],"token_account":pair[1],"role":"PROTOCOL_VAULT",
+                "classification":"CHAIN_ACCOUNT_ROLE","scope":"EXACT_VAULT_PERSONAL_HISTORY_ONLY",
+                "basis":selected["role_basis"],"pool_slot":selected["pool_slot"],
+                "pool_response_sha256":selected["pool_response_sha256"],
+            })
 
     def _wallet_snapshot(self):
         base=self.wallet_base
@@ -1834,7 +1849,8 @@ class WalletClusterAnalyzer:
         owners=holder_rankings.get("owners") or []
         balances={r["owner"]:int(r["raw"]) for r in owners} if verified else None
         excluded=set(holder_rankings.get("verified_pool_authorities") or [])
-        excluded.update(r["owner"] for r in self._protocol_history_exclusions if r.get("owner"))
+        excluded.update(r["owner"] for r in self._protocol_history_exclusions
+                        if r.get("owner") and r.get("scope")!="EXACT_VAULT_PERSONAL_HISTORY_ONLY")
         self._progress("LAUNCH_FLOW",parsed=0)
         flow=collect_launch_flow(self.mint,self.rpc,launch=launch,current_balances=balances,supply_raw=supply,
                                  excluded_owners=excluded,progress=lambda parsed:self._progress("LAUNCH_FLOW",parsed=parsed))
@@ -1857,7 +1873,7 @@ class WalletClusterAnalyzer:
             token_profile,launch,market,narrative=self._identity_and_narrative()
             (supply,decimals,holders,holder_rankings,pool_vaults,
              pool_holder_roles,special_address_roles)=self._holder_snapshot(token_profile,market)
-        self._apply_protocol_history_exclusions(special_address_roles)
+        self._apply_protocol_history_exclusions(special_address_roles,pool_vaults,pool_holder_roles)
         independent_balance_check={"version":1,"status":"NOT_REQUESTED"}
         if self.query_scope=="full" and self.independent_rpc is not None:
             from .independent_check import collect_independent_balance_check

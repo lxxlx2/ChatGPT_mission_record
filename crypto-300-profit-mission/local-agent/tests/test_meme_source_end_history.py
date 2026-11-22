@@ -3,7 +3,7 @@ import copy
 from mission_agent.meme import cluster
 from mission_agent.meme.cluster import WalletClusterAnalyzer, Holder
 from test_meme_wallet_cluster_pagination import PageRPC, rows
-from test_meme_owner_account_history import analyzer, A, B, T1, T2, TB
+from test_meme_owner_account_history import analyzer, A, B, T1, T2, TZ, TB
 from test_meme_holder_ranks import account, key, MINT, P
 
 
@@ -181,3 +181,55 @@ def test_owner_whose_every_verified_current_account_is_protocol_has_explicit_not
     assert out['holders'][0]['first_acquisition']['status']=='NOT_APPLICABLE_PROTOCOL_POOL'
     assert T1 not in {address for address,_ in rpc.history}
     assert A not in out['coverage']['owners_not_scanned']
+
+
+def selected_pool_snapshot():
+    from mission_agent.meme.pool_vaults import PROGRAM
+    return {
+        'status':'VAULT_BALANCE_SNAPSHOT','source':'SOLANA_FINALIZED_RAW_ACCOUNTS',
+        'pool_program':PROGRAM,'pool_address':A,'vault_authority':A,'mint':MINT,
+        'snapshot_slot':103,'response_sha256':'e'*64,
+        'target':{'mint':MINT,'vault':T1,'authority':A,'token_program':P,
+                  'raw':'500','mint_supply_raw':'1000','decimals':0},
+        'quote':{'mint':key(912)},
+    }
+
+
+def test_verified_selected_vault_skips_only_its_personal_history_when_global_roles_unresolved(monkeypatch):
+    a,rpc=analyzer(monkeypatch,exhaust_history=True)
+    pool=selected_pool_snapshot()
+    a.pool_vault_snapshot=lambda market:pool
+    a.special_role_snapshot=lambda *args:{'status':'INCOMPLETE_EVIDENCE','rankings':{'records':[]}}
+    a._scan_funding=lambda *args:None
+
+    result=a.analyze()
+
+    addresses={address for address,_ in rpc.history}
+    assert addresses=={T2,TZ,TB}
+    coverage=result['coverage']
+    assert coverage['protocol_history_exclusions']==[
+        {'owner':A,'token_account':T1,'role':'PROTOCOL_VAULT','classification':'CHAIN_ACCOUNT_ROLE',
+         'scope':'EXACT_VAULT_PERSONAL_HISTORY_ONLY',
+         'basis':'PROGRAM_DISCRIMINATOR_STORED_VAULT_AND_TOKEN_AUTHORITY',
+         'pool_slot':103,'pool_response_sha256':'e'*64}]
+    assert any(row['token_account']==T1 for row in result['holders'])
+    assert result['pool_vaults']==pool
+    assert result['special_address_roles']['status']=='INCOMPLETE_EVIDENCE'
+    assert result['pool_holder_roles']['metric_status']=='UNRESOLVED'
+
+
+def test_selected_vault_identity_missing_or_contradictory_keeps_history(monkeypatch):
+    a,rpc=analyzer(monkeypatch,exhaust_history=True)
+    a._scan_funding=lambda *args:None
+    pool=selected_pool_snapshot()
+    pool['target']['authority']=B
+    a.pool_vault_snapshot=lambda market:pool
+
+    result=a.analyze()
+
+    assert T1 in {address for address,_ in rpc.history}
+    assert result['coverage']['protocol_history_exclusions']==[]
+
+    a,rpc=analyzer(monkeypatch,exhaust_history=True)
+    a._apply_protocol_history_exclusions({},selected_pool_snapshot(),{'status':'SAME_SLOT_CONTRADICTION'})
+    assert (A,T1) not in a._protocol_pool_accounts
