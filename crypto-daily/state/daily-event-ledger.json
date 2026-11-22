@@ -1,8 +1,8 @@
 {
   "schema": "CRYPTO_DAILY_EVENT_LEDGER_V1",
-  "updated_at": "2026-11-15T02:33:00Z",
+  "updated_at": "2026-11-22T12:46:52Z",
   "status": "ACTIVE",
-  "note": "Verified final canonical Crypto Nov14 corrected full reissue Sent 1a1dd076f4748434 due omitted official Binance 87-network withdrawal status, supersedes 1a1d8a65a1935ab7; complete full-body exact Git archived commit a104d860e0f2b4b52568e64199e99d9aba706359. Nov15 scheduled 09:20 automation COMPLETED without actual Sent, despite full 08:20 prebuild PARTIAL; manual full 13-section sent 1a1dd09a9eee770f, exact Git commit 66148c4faf1a530a4aabc790e1cd8d480778bcbf. Previous historical IDs retained, dedupe by event_family/version. No unattended Crypto production recovery proven. TGE source partial as-of Nov15; no action gate pass.",
+  "note": "Verified final canonical Crypto Nov14 corrected full reissue Sent 1a1dd076f4748434 due omitted official Binance 87-network withdrawal status, supersedes 1a1d8a65a1935ab7; complete full-body exact Git archived commit a104d860e0f2b4b52568e64199e99d9aba706359. Nov15 scheduled 09:20 automation COMPLETED without actual Sent, despite full 08:20 prebuild PARTIAL; manual full 13-section sent 1a1dd09a9eee770f, exact Git commit 66148c4faf1a530a4aabc790e1cd8d480778bcbf. Previous historical IDs retained, dedupe by event_family/version. No unattended Crypto production recovery proven. TGE source partial as-of Nov15; no action gate pass. 2026-11-22 user-requested same-day Crypto recovery Sent 1a2034b8ca694f60 exact Gmail/Git canonical; new material events Chainflip vault theft, Kraken CAD book dislocation, HK official bill; 2026-11-22 prebuild filename search failure fixed via original prompt and DELIVERY_RUNBOOK. Earlier research gaps persist, unattended production remains unverified.",
   "previous_events": [
     {
       "event_key": "qubic:weak_seed_wallet_drain:2026-10-18",
@@ -3212,6 +3212,49 @@
       "delivered_date": "2026-11-15",
       "canonical_gmail_message_id": "1a1dd09a9eee770f",
       "canonical_report_date": "2026-11-15"
+    },
+    {
+      "event_key": "chainflip:vault-compromise:2026-11-21",
+      "family_key": "security:chainflip-vault-theft",
+      "material_version": "issuer-2026-11-22-122p86137042BTC-520p2243399ETH-3249631p41USDC-758141p33USDT",
+      "aliases": [
+        "Chainflip",
+        "FLIP",
+        "Chainflip vault"
+      ],
+      "source_url": "https://chainflip.io/return",
+      "independent_source_url": "https://bitquery.io/investigations/chainflip-hack",
+      "source_status": "ISSUER_CONFIRMED_THEFT_ASSET_AMOUNTS_ETH_ANALYSIS_VERIFIED_BTC_ONCHAIN_NOT_INDEPENDENTLY_RECOMPUTED",
+      "delivered_date": "2026-11-22",
+      "gmail_message_id": "1a2034b8ca694f60",
+      "canonical_report_date": "2026-11-22",
+      "new_delta_required_for_repeat": true
+    },
+    {
+      "event_key": "kraken:btc-cad-market-dislocation:2026-11-21",
+      "family_key": "cex:kraken-cad-flash-crash",
+      "material_version": "btc-cad-min-cad24250-executed-orders-stand-2026-11-21",
+      "aliases": [
+        "Kraken",
+        "BTC/CAD"
+      ],
+      "source_url": "https://cointelegraph.com/news/bitcoin-17k-kraken-canadian-dollar-market-trades-stand",
+      "source_status": "EXCHANGE_STATEMENT_ATTRIBUTED_AND_HISTORICAL_MARKET_QUOTE_NOT_GLOBAL_BTC_USD_CRASH",
+      "delivered_date": "2026-11-22",
+      "gmail_message_id": "1a2034b8ca694f60",
+      "canonical_report_date": "2026-11-22",
+      "new_delta_required_for_repeat": true
+    },
+    {
+      "event_key": "hongkong:virtual-assets-bill-gazetted:2026-11-20",
+      "family_key": "regulation:hk-virtual-asset-services-licensing-expansion",
+      "material_version": "government-gazette-2026-11-20-first-reading-dec-02",
+      "source_url": "https://www.info.gov.hk/gia/general/202611/20/P2026112000582.htm",
+      "source_status": "GOVERNMENT_BILL_PUBLISHED_NOT_LAW_IN_FORCE",
+      "delivered_date": "2026-11-22",
+      "gmail_message_id": "1a2034b8ca694f60",
+      "canonical_report_date": "2026-11-22",
+      "new_delta_required_for_repeat": true
     }
   ],
   "open_missed_candidates": []
