@@ -1,5 +1,6 @@
 """Pump.fun launch identity, creator metadata/post chain and second-provider parity (injected I/O)."""
 import base64,hashlib
+import pytest
 from mission_agent.meme.holder_ranks import find_program_address,b58decode32,_b58,on_ed25519_curve
 from mission_agent.meme.launch_identity import collect_pump_launch,collect_token_metadata,PUMP_PROGRAM,BONDING_CURVE_DISCRIMINATOR
 from mission_agent.meme.narrative import collect_origin,ipfs_candidates
@@ -47,7 +48,7 @@ def test_ipfs_gateway_candidates_preserve_cid():
 
 def tweet(user,tid,ts,text,quote=None):
     return {'url':f'https://x.com/{user}/status/{tid}','id':tid,'text':text,'created_timestamp':ts,
-            'author':{'screen_name':user,'followers':10,'verification':{'verified':True,'type':'individual'}},'quote':quote}
+            'author':{'screen_name':user,'id':'10','followers':10,'verification':{'verified':True,'type':'individual'}},'quote':quote}
 
 
 def test_origin_separates_creator_link_from_author_confirmation_and_follows_quote():
@@ -55,15 +56,46 @@ def test_origin_separates_creator_link_from_author_confirmation_and_follows_quot
     pages={'https://a.ipfs.4everland.io':None}
     def fetch(url):
         if 'ipfs' in url:return {'status':'OK','json':{'name':'CRAWLNET','symbol':'CRAWL','twitter':'https://x.com/dev/status/22222'},'response_sha256':'0'*64}
-        if url.endswith('/dev/status/22222'):return {'status':'OK','json':{'tweet':tweet('dev','22222',200,'i built it',q)}}
-        if url.endswith('/orig/status/11111'):return {'status':'OK','json':{'tweet':q}}
+        if url.endswith('/dev/status/22222'):return {'status':'OK','json':{'tweet':tweet('dev','22222',200,'i built it',q)},'response_sha256':'1'*64}
+        if url.endswith('/orig/status/11111'):return {'status':'OK','json':{'tweet':q},'response_sha256':'2'*64}
         return {'status':'UNAVAILABLE','reason':'HTTP_404'}
-    md={'status':'VERIFIED_CHAIN_STATE','uri':'ipfs://bafkreiae3diu6wznn2vmmojusoq4iam6fdfrql4lswueqbzefocm5qhkmy','name':'CRAWLNET','symbol':'CRAWL','is_mutable':False}
+    md={'status':'VERIFIED_CHAIN_STATE','mint':MINT,'uri':'ipfs://bafkreiae3diu6wznn2vmmojusoq4iam6fdfrql4lswueqbzefocm5qhkmy','name':'CRAWLNET','symbol':'CRAWL','is_mutable':False}
     out=collect_origin(MINT,md,{'main_pair':{'pair_created_at_ms':298000}},fetch_json=fetch,clock=lambda:1)
     assert out['ca_link_status']=='CREATOR_METADATA_LINKS_POST'
     assert [p['author'] for p in out['posts']]==['dev','orig'] and out['posts'][1]['quoted_by'].endswith('/22222')
     assert out['earliest_traceable']['author']=='orig' and out['linked_post_to_pair_seconds']==98.0
     assert not any(p['exact_ca_mentioned'] for p in out['posts'])
+
+
+@pytest.mark.parametrize('mint,case,expected',[
+    ('111111111111111111111111111111JF','claim','EXACT_CA_CLAIM_VERIFIED'),
+    ('111111111111111111111111111111JG','other_mint','LINK_ONLY'),
+    ('111111111111111111111111111111JH','wrong_author','LINK_ONLY'),
+    ('111111111111111111111111111111JJ','no_source','SOURCE_UNAVAILABLE'),
+])
+def test_origin_distinguishes_mentions_claims_and_source_failure_across_mints(mint,case,expected):
+    authority_link='https://x.com/issuer/status/22345'
+    meta={'status':'VERIFIED_CHAIN_STATE','mint':mint,'uri':'https://project.example/meta.json'}
+    author='imposter' if case=='wrong_author' else 'issuer'
+    address=MINT if case=='other_mint' else mint
+    ancestor=tweet('source','12345',100,'A different story')
+    issuer=tweet(author,'22345',200,'Our official CA: '+address,quote=ancestor)
+    issuer.update(replying_to='source',replying_to_status='12345')
+    calls=[]
+    def fetch(url):
+        calls.append(url)
+        if case=='no_source':return {'status':'UNAVAILABLE','reason':'HTTP_403'}
+        if url==meta['uri']:data={'twitter':authority_link}
+        elif url.endswith('/22345'):data={'tweet':issuer}
+        else:data={'tweet':ancestor}
+        return {'status':'OK','json':data,'response_sha256':'a'*64}
+    out=collect_origin(mint,meta,{'narrative_post_links':[authority_link]},fetch_json=fetch)
+    assert out['recognition']['status']==expected
+    if case=='claim':
+        assert [edge['type'] for edge in out['interactions']]==['QUOTE','REPLY']
+        assert sum(url.endswith('/12345') for url in calls)==1
+    if case=='wrong_author':
+        assert out['posts']==[] and any(r['reason']=='POST_LINK_AUTHOR_MISMATCH' for r in out['unresolved_links'])
 
 
 def test_origin_without_metadata_is_unavailable_not_invented():

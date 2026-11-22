@@ -264,7 +264,10 @@ def test_restart_does_not_duplicate_signal(tmp_path):
 class RPC:
     def __init__(self,gap=False):self.gap=gap
     def signatures(self,before=None):return [] if self.gap else [{'signature':'new','slot':12},{'signature':'seed','slot':11}]
-    def transaction(self,sig):return tx()
+    def transaction(self,sig):
+        document=tx()
+        document['transaction']['signatures']=[sig]
+        return document
 
 def test_cursor_does_not_advance_on_rpc_gap(tmp_path):
     l=Ledger(tmp_path/'db');l.checkpoint(WALLET,'seed',11);s=Scanner(l,{WALLET:'frank'},tmp_path/'raw',{WALLET:RPC(True)})
@@ -273,6 +276,49 @@ def test_cursor_does_not_advance_on_rpc_gap(tmp_path):
 
 def test_restart_catches_up_missed_signatures(tmp_path):
     l=Ledger(tmp_path/'db');l.checkpoint(WALLET,'seed',11);l.db.close();l=Ledger(tmp_path/'db');s=Scanner(l,{WALLET:'frank'},tmp_path/'raw',{WALLET:RPC()});s.cycle(WALLET);assert l.cursor(WALLET)['signature']=='new' and len(l.audit())==1
+
+
+def test_multi_page_resume_after_partial_raw_failure_does_not_repeat_durable_events(tmp_path):
+    class PagedRPC:
+        def __init__(self):
+            self.pause = True
+            self.raw_reads = []
+
+        def signatures(self, before=None):
+            newest = {"signature": "second", "slot": 13}
+            older = {"signature": "first", "slot": 12}
+            return [newest, older] if before is None else [older, {"signature": "seed", "slot": 11}]
+
+        def transaction(self, signature):
+            self.raw_reads.append(signature)
+            if signature == "second" and self.pause:
+                return None
+            document = tx()
+            document["slot"] = 12 if signature == "first" else 13
+            document["transaction"]["signatures"] = [signature]
+            return document
+
+    source = tmp_path / "source"
+    ledger = Ledger(source)
+    ledger.checkpoint(WALLET, "seed", 11)
+    rpc = PagedRPC()
+    scanner = Scanner(ledger, {WALLET: "frank"}, tmp_path / "raw", {WALLET: rpc})
+    with pytest.raises(ValueError, match="RAW_UNAVAILABLE_CURSOR_NOT_ADVANCED"):
+        scanner.cycle(WALLET)
+    assert ledger.cursor(WALLET)["signature"] == "first"
+    assert dict(ledger.db.execute("SELECT signature,state FROM signature_detections")) == {
+        "first": "CLASSIFIED_DURABLE", "second": "RAW_PENDING"}
+    ledger.db.close()
+
+    ledger = Ledger(source)
+    rpc.pause = False
+    scanner = Scanner(ledger, {WALLET: "frank"}, tmp_path / "raw", {WALLET: rpc})
+    assert scanner.cycle(WALLET)["new_signatures"] == 1
+    assert scanner.cycle(WALLET)["new_signatures"] == 0
+    assert ledger.cursor(WALLET)["signature"] == "second"
+    assert rpc.raw_reads == ["first", "second", "second"]
+    assert ledger.db.execute("SELECT count(*) FROM signatures").fetchone()[0] == 2
+    assert ledger.db.execute("SELECT count(*) FROM outbox").fetchone()[0] == 0
 
 def test_unknown_is_durable_and_no_position(tmp_path):
     l=Ledger(tmp_path/'db');e=classify('broken',{'slot':12,'blockTime':123},WALLET);put(l,e);assert l.audit()[0]['alert_state']=='NO' and l.db.execute('select count(*) from positions').fetchone()[0]==0

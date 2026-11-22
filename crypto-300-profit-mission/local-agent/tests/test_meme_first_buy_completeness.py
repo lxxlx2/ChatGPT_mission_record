@@ -27,7 +27,8 @@ class RPC:
         self.requests.append((method,params))
         if method=='getSignaturesForAddress':
             if params[1].get('before'):return []
-            rows=[{'signature':'older','slot':7,'blockTime':7}]
+            slot=self.older_result.get('slot',7) if isinstance(self.older_result,dict) else 7
+            rows=[{'signature':'older','slot':slot,'blockTime':slot}]
             if self.with_buy:rows.insert(0,{'signature':'later-buy','slot':9,'blockTime':9})
             return rows
         if method=='getTransaction':
@@ -54,7 +55,8 @@ class Probe(WalletClusterAnalyzer):
 def analyze(monkeypatch,older_result,with_buy,*,classification=None,two_accounts=False):
     original=cluster.classify
     def classify(sig,tx,owner):
-        if sig=='later-buy':return {'classification':'ACTIVE_TRADE','trade':{'mint':MINT,'direction':'BUY'}}
+        if sig=='later-buy' or classification=='fixture_buy':
+            return {'classification':'ACTIVE_TRADE','trade':{'mint':MINT,'direction':'BUY'}}
         if classification=='actual':return original(sig,tx,owner)
         if isinstance(classification,Exception):raise classification
         return {'classification':classification or 'NO_ACTION','trade':None}
@@ -100,13 +102,33 @@ def test_successful_exhaustion_still_reports_current_account_scope(monkeypatch,w
     assert len(report['coverage']['history_windows'])==2
 
 
+@pytest.mark.parametrize('timestamp',[None,15])
+def test_first_buy_follows_chain_slot_when_block_time_is_missing_or_out_of_order(monkeypatch,timestamp):
+    tx=transaction('older',7);tx['blockTime']=timestamp
+    report,_=analyze(monkeypatch,tx,True,classification='fixture_buy')
+    first=report['holders'][0]['first_acquisition']
+    assert first['status']=='CONFIRMED_ACCOUNT_COMPLETE'
+    assert first['signature']=='older' and first['slot']==7 and first['block_time']==timestamp
+
+
+def test_multiple_buys_in_same_earliest_slot_keep_the_exact_first_unresolved(monkeypatch):
+    report,_=analyze(monkeypatch,transaction('older',9),True,classification='fixture_buy',two_accounts=True)
+    first=report['holders'][0]['first_acquisition']
+    assert first['status']=='CONFIRMED_BOUNDED'
+    assert first['same_slot_buy_signatures']==['later-buy','older']
+    assert first['slot']==9
+
+
 @pytest.mark.parametrize('method,cause',[
     (None,'SAME_SLOT_SUPPLY_RECONCILED'),
     ('NO_MINT_AUTHORITY_MONOTONIC_SUPPLY_BRACKET','NO_MINT_AUTHORITY_MONOTONIC_SUPPLY_BRACKET'),
 ])
 def test_balance_completeness_names_the_actual_supply_reconciliation(method,cause):
-    ranks={'requested':True,'status':'COMPLETE_SNAPSHOT','normalization_complete':False}
-    if method:ranks['supply_bracket']={'method':method,'before_slot':1,'after_slot':3}
+    ranks={'requested':True,'status':'COMPLETE_SNAPSHOT','normalization_complete':False,
+           'snapshot_slot':2,'supply_slot':2}
+    if method:
+        ranks['supply_slot']=1
+        ranks['supply_bracket']={'method':method,'before_slot':1,'after_slot':3,'mint_authority_slot':1}
     report={'holder_rankings':ranks}
     row=next(r for r in report_completeness(report)['requirements'] if r['id']=='holder_balances')
     assert row['cause']==cause

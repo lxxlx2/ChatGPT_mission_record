@@ -15,6 +15,32 @@ from .pool_programs import SUPPORTED_PROGRAMS
 def _hash(v):return isinstance(v,str) and re.fullmatch('[0-9a-f]{64}',v) is not None
 
 
+def selected_pool_vault_binding(mint,pool):
+    """Identity from the finalized pool-and-vault batch, independent of ranking parity."""
+    if not isinstance(pool,dict) or pool.get('status')!='VAULT_BALANCE_SNAPSHOT':
+        return None
+    program=pool.get('pool_program')
+    if (pool.get('source')!='SOLANA_FINALIZED_RAW_ACCOUNTS' or pool.get('mint')!=mint
+            or not isinstance(program,str) or program not in SUPPORTED_PROGRAMS):
+        return None
+    t=pool.get('target');q=pool.get('quote')
+    if not isinstance(t,dict) or not isinstance(q,dict) or t.get('mint')!=mint:
+        return None
+    authority=t.get('authority')
+    if (authority!=pool.get('vault_authority',pool.get('pool_address')) or mint==q.get('mint')
+            or not all(valid_pubkey(v) for v in (mint,pool.get('pool_address'),authority,t.get('vault'),q.get('mint')))):
+        return None
+    token_program=t.get('token_program');decimals=t.get('decimals');pool_slot=pool.get('snapshot_slot')
+    if (not isinstance(token_program,str) or token_program not in PROGRAMS or type(decimals) is not int
+            or not 0<=decimals<=255 or _uint(t.get('raw')) is None or _uint(t.get('mint_supply_raw')) is None
+            or type(pool_slot) is not int or pool_slot<=0 or not _hash(pool.get('response_sha256'))):
+        return None
+    return dict(mint=mint,pool_address=pool['pool_address'],vault_address=t['vault'],authority=t['authority'],
+               pool_slot=pool_slot,pool_response_sha256=pool['response_sha256'],vault_raw=t['raw'],
+               pool_program=pool['pool_program'],role='SELECTED_POOL_TARGET_TOKEN_VAULT',role_basis='PROGRAM_DISCRIMINATOR_STORED_VAULT_AND_TOKEN_AUTHORITY',
+               reference_blob=pool.get('layout_reference_blob','d907b16a91f035aeb3c3182bfa0972a91bf23a86'))
+
+
 def build_pool_holder_roles(mint,ranks,pool):
     out={'version':1,'status':'UNAVAILABLE','metric_status':'UNRESOLVED','independent_provider':False,
          'all_special_roles_normalized':False,'holder_mass_verified':False,'owners_after':[],
@@ -23,13 +49,10 @@ def build_pool_holder_roles(mint,ranks,pool):
          'deduction_basis':'RAW_TARGET_VAULT_NOT_EFFECTIVE_OR_VIRTUAL_RESERVES',
          'conflicts':[]}
     if not isinstance(pool,dict) or pool.get('status')=='NOT_REQUESTED':return {**out,'status':'NOT_REQUESTED','reason':'POOL_NOT_COLLECTED'}
-    t=pool.get('target');q=pool.get('quote');pool_slot=pool.get('snapshot_slot')
-    if not isinstance(t,dict) or not isinstance(q,dict) or pool.get('status')!='VAULT_BALANCE_SNAPSHOT' or pool.get('source')!='SOLANA_FINALIZED_RAW_ACCOUNTS' or pool.get('pool_program') not in SUPPORTED_PROGRAMS or pool.get('mint')!=mint or t.get('mint')!=mint or t.get('authority')!=pool.get('vault_authority',pool.get('pool_address')) or not all(valid_pubkey(v) for v in (mint,pool.get('pool_address'),t.get('vault'),q.get('mint'))) or mint==q.get('mint') or not isinstance(t.get('token_program'),str) or t.get('token_program') not in PROGRAMS or _uint(t.get('raw')) is None or _uint(t.get('mint_supply_raw')) is None or type(t.get('decimals')) is not int or not 0<=t['decimals']<=255 or type(pool_slot) is not int or pool_slot<=0 or not _hash(pool.get('response_sha256')):
-        return {**out,'reason':'POOL_IDENTITY_UNVERIFIED'}
-    out.update(mint=mint,pool_address=pool['pool_address'],vault_address=t['vault'],authority=t['authority'],
-               pool_slot=pool_slot,pool_response_sha256=pool['response_sha256'],vault_raw=t['raw'],
-               pool_program=pool['pool_program'],role='SELECTED_POOL_TARGET_TOKEN_VAULT',role_basis='PROGRAM_DISCRIMINATOR_STORED_VAULT_AND_TOKEN_AUTHORITY',
-               reference_blob=pool.get('layout_reference_blob','d907b16a91f035aeb3c3182bfa0972a91bf23a86'))
+    binding=selected_pool_vault_binding(mint,pool)
+    if binding is None:return {**out,'reason':'POOL_IDENTITY_UNVERIFIED'}
+    out.update(binding)
+    t=pool['target'];pool_slot=binding['pool_slot']
     c=ranks.get('raw_balance_check') if isinstance(ranks,dict) else None
     if not isinstance(c,dict) or c.get('status') not in {'RECONCILED_NONZERO_BALANCE_MASS','OBSERVED_SAMPLE_ONLY'} or c.get('mint')!=mint or not isinstance(c.get('program_id'),str) or c.get('program_id') not in PROGRAMS or not _hash(c.get('response_sha256')) or not _hash(c.get('enumeration_response_sha256')) or c['enumeration_response_sha256']!=ranks.get('response_sha256') or c.get('enumeration_slot')!=ranks.get('snapshot_slot') or type(c.get('snapshot_slot')) is not int or c['snapshot_slot']<=0 or _uint(c.get('mint_supply_raw')) is None or type(c.get('decimals')) is not int or not isinstance(c.get('records'),list) or len(c['records'])>99:
         return {**out,'reason':'HOLDER_BINARY_PROVENANCE_UNVERIFIED'}

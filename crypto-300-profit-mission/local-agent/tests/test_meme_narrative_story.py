@@ -209,13 +209,12 @@ def test_failed_sources_report_no_story_instead_of_inventing_a_topic():
     assert summary['interaction_status'] == summary['official_recognition'] == 'UNVERIFIED'
 
 
-def test_story_collection_keeps_three_requests_and_does_not_follow_post_links():
+def test_story_collection_preserves_supplied_roots_and_defers_post_graph_to_origin():
     pages = {url: page(description='A fictional community story from ' + url,
                        body='<a href="' + POST + '">Original post</a>')
              for url in [URL, 'https://second.example.org/', 'https://third.example.org/']}
     report, calls = collect_pages(pages)
-    assert len(calls) == 3
+    assert len(calls) == 4
     assert POST not in calls
-    assert report['source_request_limit'] == 3 and report['recursive_crawl'] is False
-    assert any(row['reason'] == 'SOURCE_LIMIT' and row['requested'] is False
-               for row in report['attempts'])
+    assert len(report['evidence']) == 3 and report['recursive_crawl'] is False
+    assert all(row['requested'] is True for row in report['attempts'])

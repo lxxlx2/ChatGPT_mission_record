@@ -4,7 +4,7 @@ import json
 import pytest
 
 from mission_agent.meme.cluster import RPCError, RPCJobBudgetExceeded
-from mission_agent.meme.holder_ranks import _b58
+from mission_agent.meme.holder_ranks import LEGACY_TOKEN_PROGRAM, TOKEN_2022_PROGRAM, _b58
 from mission_agent.meme.independent_check import collect_independent_balance_check
 from mission_agent.meme.job_checkpoint import CheckpointError
 
@@ -38,9 +38,11 @@ class Provider:
                 values.append(None)
                 continue
             amount = '61' if address in self.changed else '60'
-            info = {'supply': '100'} if address == MINT else {
-                'tokenAmount': {'amount': amount}, 'owner': OWNER, 'mint': MINT}
-            values.append({'data': {'parsed': {'info': info}}})
+            is_mint=address==MINT
+            info = {'supply': '100','decimals':0,'isInitialized':True} if is_mint else {
+                'tokenAmount': {'amount': amount,'decimals':0}, 'owner': OWNER, 'mint': MINT,'state':'initialized'}
+            values.append({'owner':LEGACY_TOKEN_PROGRAM,'executable':False,
+                           'data': {'parsed': {'type':'mint' if is_mint else 'account','info': info}}})
         return {'context': {'slot': self.slots[min(self.calls - 1, len(self.slots) - 1)]},
                 'value': values}
 
@@ -199,3 +201,69 @@ def test_unverified_or_wrong_target_identity_cannot_pass_by_matching_other_provi
     result=collect_independent_balance_check(MINT,[ACCOUNTS[0]],Malformed('primary',[]),Malformed('secondary',[]),full_accounts=True)
     assert result['status']=='UNAVAILABLE' and result['reason']=='RESPONSE_INVALID'
     assert result['accounts_compared']==0
+
+
+@pytest.mark.parametrize('bad',['program','executable','parsed_type','uninitialized','slot'])
+def test_two_matching_invalid_banks_do_not_prove_full_set_parity(bad):
+    class Invalid(Provider):
+        def call(self,method,params):
+            result=super().call(method,params)
+            mint=result['value'][0]
+            if bad=='program':mint['owner']=OWNER
+            elif bad=='executable':mint['executable']=True
+            elif bad=='parsed_type':mint['data']['parsed']['type']='account'
+            elif bad=='uninitialized':mint['data']['parsed']['info']['isInitialized']=False
+            else:result['context']['slot']=0
+            return result
+
+    out=collect_independent_balance_check(MINT,[],Invalid('a',[]),Invalid('b',[]),full_accounts=True)
+    assert out['status']=='UNAVAILABLE' and out['reason']=='RESPONSE_INVALID'
+
+
+@pytest.mark.parametrize('slot,change,status',[
+    (7,False,'SAME_SLOT_MATCH'),
+    (7,True,'SAME_SLOT_DIFFERENCE'),
+    (8,True,'DIFFERENT_SLOTS'),
+    (6,False,'UNAVAILABLE'),
+])
+def test_full_set_balance_reread_and_independent_enumeration_are_distinct(slot,change,status):
+    accounts=ACCOUNTS[:12]
+    order=[]
+    reference=dict(mint=MINT, program_id=LEGACY_TOKEN_PROGRAM, decimals=0, snapshot_slot=7,
+                   response_sha256='a'*64, account_count=len(accounts),accounts=[
+                       dict(token_account=a,owner=OWNER,raw='60',decimals=0) for a in accounts])
+    class Enumerating(Provider):
+        def call(self,method,params,*,ttl=0):
+            if method!='getProgramAccounts':return super().call(method,params)
+            assert params[0]==LEGACY_TOKEN_PROGRAM and params[1]['minContextSlot']==7 and ttl==0
+            options=params[1]
+            assert options['filters'][-1]=={'memcmp':{'offset':0,'bytes':MINT}}
+            self.calls+=1
+            keys=(*accounts[:-1],ACCOUNTS[-1]) if change else accounts
+            def row(address):
+                raw='61' if address==accounts[0] and change else '60'
+                info=dict(mint=MINT,owner=OWNER,state='initialized',tokenAmount=dict(amount=raw,decimals=0))
+                return dict(pubkey=address,account=dict(owner=LEGACY_TOKEN_PROGRAM,executable=False,
+                                                       data=dict(parsed=dict(type='account',info=info))))
+            return {'context':{'slot':slot},'value':[row(a) for a in keys]}
+
+    primary,secondary=Provider('a',order),Enumerating('b',order)
+    out=collect_independent_balance_check(MINT,accounts,primary,secondary,full_accounts=True,enumeration=reference)
+    assert out['status']=='SAME_SLOT_ALL_MATCH' and out['provided_account_set_compared'] is True
+    assert out['secondary_wire_attempts']==3
+    independent=out['independent_account_set']
+    assert independent['status']==status and independent['primary_slot']==7
+    if change:
+        assert independent['only_primary']==[accounts[-1]]
+        assert independent['only_secondary']==[ACCOUNTS[-1]]
+        assert independent['changed_owner_or_raw']==[accounts[0]]
+
+
+def test_second_rpc_rejects_primary_fallback_host_alias_under_another_path(monkeypatch):
+    from mission_agent.mission_control.server import ClusterJobManager
+    manager=object.__new__(ClusterJobManager)
+    manager.rpc_endpoints=['https://private.example','https://public.example/primary']
+    monkeypatch.setenv('SOLANA_RPC_SECONDARY','https://PUBLIC.example/secondary')
+    assert manager._independent_rpc() is None
+    monkeypatch.setenv('SOLANA_RPC_SECONDARY','https://other.example')
+    assert callable(manager._independent_rpc())

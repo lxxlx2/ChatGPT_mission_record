@@ -67,7 +67,7 @@ def test_priority_panel_states_are_explanatory_not_executable():
     css = (STATIC / "styles.css").read_text(encoding="utf-8")
     js = (STATIC / "app.js").read_text(encoding="utf-8")
     assert 'id="follow-opportunities"' in markup
-    assert "WAIT / NO_BUY 不是买入信号" in markup
+    assert "WAIT / NO_BUY 保留在历史判断里" in markup
     assert "观察池不触发提醒或交易" in markup
     assert ".priority-panel" in css
     assert "function renderCandidates(rows)" in js

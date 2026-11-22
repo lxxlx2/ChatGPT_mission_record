@@ -284,10 +284,10 @@ def test_unsliced_or_wrong_slice_binary_query_rejected_before_wire():
 
 def test_supply_bracket_upgrades_only_with_fixed_supply_and_equal_later_reading():
     rows=[binary_account(1,301,1000)]
-    ok=ranks.collect_mint_holder_ranks(MINT,P22,1000,0,90,RPC(rows,slot=100),lambda *a:('ORDINARY','fixture'),supply_fixed_above=True,supply_recheck=lambda:(1000,105))
+    ok=ranks.collect_mint_holder_ranks(MINT,P22,1000,0,90,RPC(rows,slot=100),lambda *a:('ORDINARY','fixture'),mint_authority_slot=90,supply_recheck=lambda:(1000,105))
     assert ok['status']=='COMPLETE_SNAPSHOT' and ok['supply_bracket']['after_slot']==105
-    for kw in [dict(supply_fixed_above=False,supply_recheck=lambda:(1000,105)),dict(supply_fixed_above=True,supply_recheck=lambda:(999,105)),
-               dict(supply_fixed_above=True,supply_recheck=lambda:(1000,99)),dict(supply_fixed_above=True,supply_recheck=lambda:1/0)]:
+    for kw in [dict(mint_authority_slot=91,supply_recheck=lambda:(1000,105)),dict(mint_authority_slot=90,supply_recheck=lambda:(999,105)),
+               dict(mint_authority_slot=90,supply_recheck=lambda:(1000,99)),dict(mint_authority_slot=90,supply_recheck=lambda:None)]:
         out=ranks.collect_mint_holder_ranks(MINT,P22,1000,0,90,RPC(rows,slot=100),lambda *a:('ORDINARY','fixture'),**kw)
         assert out['status']=='INCOMPLETE_EVIDENCE' and out['reason']=='SNAPSHOT_SLOT_UNRECONCILED'
 
@@ -297,6 +297,69 @@ def test_curve_check_separates_keypairs_from_pdas():
     assert ranks.on_ed25519_curve('2B8tftZ5ww8TREMr3pgkgERLNjJyJxEAPWMENViGMsL4') is False
     assert ranks.on_ed25519_curve('FcFu24r8M8TuTAhEjBSJsqhrPxeumUsKg7ZGzXAi4h9M') is False
     assert ranks.on_ed25519_curve('not-a-key') is None
+
+
+@pytest.mark.parametrize(("program","mint_slot","extensions","has_authority_field","expected","recheck"),[
+    (P,90,[],True,"COMPLETE_SNAPSHOT",True),
+    (P,95,[],True,"COMPLETE_SNAPSHOT",True),
+    (P,101,[],True,"INCOMPLETE_EVIDENCE",False),
+    (P,90,[],False,"INCOMPLETE_EVIDENCE",False),
+    (P22,90,[{"extension":"metadataPointer","state":{}}],True,"COMPLETE_SNAPSHOT",True),
+    (P22,90,[{"extension":"mintCloseAuthority","state":{"closeAuthority":key(222)}}],True,"INCOMPLETE_EVIDENCE",False),
+    (P22,90,[{"extension":"unparseableExtension"}],True,"INCOMPLETE_EVIDENCE",False),
+    (P22,90,[],True,"INCOMPLETE_EVIDENCE",False),
+])
+def test_analyzer_anchors_cross_slot_supply_to_proven_mint_state(program,mint_slot,extensions,has_authority_field,expected,recheck):
+    from mission_agent.meme.cluster import WalletClusterAnalyzer
+
+    class FixtureRPC(RPC):
+        def call(self,method,params,ttl=0):
+            if method=="getTokenSupply":
+                self.requests.append((method,params))
+                return {"context":{"slot":105},"value":{"amount":"1000","decimals":0}}
+            if method=="getAccountInfo":
+                self.requests.append((method,params))
+                info={"isInitialized":True,"supply":"1000","decimals":0,
+                      "mintAuthority":None,"freezeAuthority":None,"extensions":extensions}
+                return {"context":{"slot":mint_slot},"value":{"owner":program,"executable":False,
+                    "space":82 if program==P else 234,"data":{"parsed":{"type":"mint","info":info}}}}
+            return super().call(method,params,ttl)
+
+    rpc=FixtureRPC([account(1,301,1000,program)])
+    analyzer=WalletClusterAnalyzer(MINT,rpc=rpc,enumerate_holder_ranks=True)
+    mint_profile=analyzer.token_profile()
+    if not has_authority_field:
+        del mint_profile["mint_authority"]
+    analyzer._snapshot_slots["supply"]=90
+    result=analyzer._holder_ranks(mint_profile,1000,0)
+    assert result["status"]==expected
+    assert any(method=="getTokenSupply" for method,_ in rpc.requests) is recheck
+    if recheck:
+        assert result["supply_bracket"]["before_slot"]==max(mint_slot,90)
+        assert result["supply_bracket"]["mint_authority_slot"]==mint_slot
+    else:
+        assert result["metrics"]["GLOBAL_OWNER_TOP10_PCT"]=="UNRESOLVED"
+
+
+def test_failed_owner_metadata_batch_does_not_hide_later_available_evidence():
+    records=[account(i,400+i,1) for i in range(1,102)]
+    rpc=RPC(records)
+    batches=[]
+
+    def read_owners(addresses,slot):
+        batches.append(addresses)
+        if len(batches)==1:
+            return None
+        return {"context":{"slot":slot},"value":[{"owner":key(0)} for _ in addresses]}
+
+    report=ranks.collect_mint_holder_ranks(MINT,P,101,0,100,rpc,
+        lambda owner,info:("ORDINARY","fixture") if info["value"] else ("UNRESOLVED","fixture"),
+        owner_reader=read_owners,normalization_declared=True)
+    assert [len(batch) for batch in batches]==[100,1]
+    assert report["owner_metadata_reason"]=="OWNER_METADATA_UNAVAILABLE"
+    assert report["status"]=="COMPLETE_SNAPSHOT"
+    assert report["normalization_complete"] is False
+    assert {row["owner"] for row in report["owners"] if row["role"]=="ORDINARY"}==set(batches[1])
 
 
 def test_missing_owner_account_is_ordinary_only_when_on_curve():

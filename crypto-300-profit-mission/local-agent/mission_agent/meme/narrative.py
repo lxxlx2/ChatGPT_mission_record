@@ -1,5 +1,6 @@
-"""Bounded public source claims, distinct from official exact-CA recognition."""
+"""Public linked-source claims, post relationships and exact-CA recognition."""
 import base64
+from collections import deque
 from datetime import datetime,timezone
 import hashlib
 import json
@@ -9,7 +10,7 @@ import time
 from urllib.parse import urlsplit
 from .cluster import RPCJobBudgetExceeded
 from .holder_ranks import valid_pubkey
-from .public_html import canonical_url,read_public_html,MAX_HTML_BYTES
+from .public_html import canonical_url,read_public_html,read_public_json,MAX_HTML_BYTES
 
 
 def clip(value,words,chars):return ' '.join(str(value or '').split()[:words])[:chars]
@@ -40,7 +41,6 @@ def story_fields(text, links):
         if parsed.hostname not in {'x.com','www.x.com','twitter.com','www.twitter.com'}:continue
         if re.fullmatch(r'/[A-Za-z0-9_]{1,30}/status/[0-9]+/?',parsed.path) is None:continue
         if url not in posts:posts.append(url)
-        if len(posts)==4:break
     return {'version':1,'themes':themes,'actors_mentioned':actors,
             'interaction_status':'UNVERIFIED','post_links':posts,
             'post_links_scope':'PRESENT_IN_READ_PAGE; NOT_FOLLOWED_OR_AUTHOR_VERIFIED'}
@@ -87,7 +87,7 @@ class ClaimHTML(HTMLParser):
             if not void:self.hidden.append(tag)
             return
         if tag in {'p','div','article','section','li','h1','h2','h3','br'}:self.text.append('\n')
-        if tag=='a' and len(self.links)<64 and isinstance(attrs.get('href'),str):self.links.append(attrs['href'])
+        if tag=='a' and isinstance(attrs.get('href'),str):self.links.append(attrs['href'])
         if tag=='html':self.language=attrs.get('lang')
         if tag=='title':self.title=True
         if tag=='meta':
@@ -145,70 +145,94 @@ def extract_page_claim(raw,url,mint,observed_at):
             'response_sha256':hashlib.sha256(raw).hexdigest()}
 
 
+FETCH_REASONS = frozenset({
+    'URL_NOT_ALLOWED','DNS_NOT_PUBLIC','PUBLIC_IPV4_UNAVAILABLE','DNS_UNAVAILABLE',
+    'REDIRECT_NOT_FOLLOWED','NOT_HTML','NOT_JSON','COMPRESSED_BODY_NOT_SUPPORTED','RESPONSE_LIMIT',
+    'SOURCE_UNAVAILABLE','FETCH_WORKER_FAILED','FETCH_TIMEOUT','TimeoutError',
+})
+CLAIM_REASONS = frozenset({
+    'RESPONSE_LIMIT','RESPONSE_TEXT_INVALID','ACCESS_WALL_OR_SCRIPT_ONLY',
+    'NO_EXTRACTABLE_CLAIM','SOURCE_LANGUAGE_NOT_SELECTED',
+})
+
+
+def _source_reason(value):
+    if isinstance(value,str) and (value in FETCH_REASONS or re.fullmatch(r'HTTP_[0-9]{3}',value)):
+        return value
+    return 'SOURCE_UNAVAILABLE'
+
+
+def _social_urls(market):
+    rows=market.get('socials') if isinstance(market,dict) else None
+    for row in rows if isinstance(rows,list) else ():
+        if not isinstance(row,dict):continue
+        url,handle=row.get('url'),row.get('handle')
+        if not url and isinstance(handle,str):
+            if handle.startswith('https://'):url=handle
+            elif str(row.get('platform') or '').lower() in {'x','twitter'} and re.fullmatch(r'@?[A-Za-z0-9_]{1,30}',handle):
+                url='https://x.com/'+handle.lstrip('@')
+        if isinstance(url,str):yield url
+
+
+def _read_claim(fetch,clock,kind,url,mint):
+    claim=None
+    attempt={'kind':kind,'source_url':url,'requested':True,'status':'UNAVAILABLE'}
+    try:
+        result=fetch(url)
+        reason=_source_reason(result.get('reason'))
+        if result.get('status')=='OK':
+            encoded=result.get('body_b64','')
+            if not isinstance(encoded,str) or len(encoded)>2*MAX_HTML_BYTES:raise ValueError('RESPONSE_LIMIT')
+            claim=extract_page_claim(base64.b64decode(encoded,validate=True),url,mint,clock())
+            claim['source_kind']=kind
+            attempt.update(status='CLAIM_READ',response_sha256=claim['response_sha256'])
+            reason=None
+    except (ValueError,TypeError,KeyError,AttributeError,OSError) as exc:
+        reason=str(exc) if str(exc) in CLAIM_REASONS else 'SOURCE_UNAVAILABLE'
+    attempt.update(observed_at=clock(),reason=reason)
+    return attempt,claim
+
+
 class PublicNarrativeClient:
     def __init__(self,*,fetch=read_public_html,clock=time.time,fetch_json=None):self.fetch=fetch;self.clock=clock;self.fetch_json=fetch_json
+
     def collect_origin(self,mint,metadata,market):
-        return collect_origin(mint,metadata,market,fetch_json=self.fetch_json or read_public_json,clock=self.clock)
+        return collect_origin(mint,metadata,market,fetch_json=self.fetch_json or read_public_json,
+                              fetch_html=self.fetch,clock=self.clock)
+
     def collect(self,mint,market):
-        if not valid_pubkey(mint):return {'version':1,'status':'UNAVAILABLE','attempts':[],'evidence':[],'reason':'MINT_IDENTITY_UNVERIFIED','official_recognition':'UNVERIFIED','exhaustive':False,'search_coverage':'BOUNDED_HINTS_ONLY'}
-        websites=[v for v in (market.get('websites') or [])[:4] if isinstance(v,str)]
-        socials=[]
-        for row in (market.get('socials') or [])[:2]:
-            if not isinstance(row,dict):continue
-            url=row.get('url');handle=row.get('handle')
-            if not url and isinstance(handle,str):
-                if handle.startswith('https://'):url=handle
-                elif str(row.get('platform') or '').lower() in {'x','twitter'} and re.fullmatch(r'@?[A-Za-z0-9_]{1,30}',handle):url='https://x.com/'+handle.lstrip('@')
-            if isinstance(url,str):socials.append(url)
+        attempts=[];evidence=[];seen=set();claim_keys=set()
+        out={'version':1,'status':'UNAVAILABLE','attempts':attempts,'evidence':evidence,
+             'official_recognition':'UNVERIFIED','exhaustive':False,'search_coverage':'BOUNDED_HINTS_ONLY',
+             'recursive_crawl':False,'earliest_origin':'UNVERIFIED'}
+        if not valid_pubkey(mint):return {**out,'reason':'MINT_IDENTITY_UNVERIFIED'}
+        websites=market.get('websites') if isinstance(market,dict) else None
         candidates=[('LAUNCHPAD_PAGE','https://pump.fun/coin/'+mint)]
-        candidates += [('MARKET_WEBSITE_HINT',v) for v in websites[:1]]
-        candidates += [('MARKET_SOCIAL_HINT',v) for v in socials[:1]]
-        candidates += [('MARKET_WEBSITE_HINT',v) for v in websites[1:]]
-        candidates += [('MARKET_SOCIAL_HINT',v) for v in socials[1:]]
-        attempts=[];evidence=[];seen=set();claim_keys=set();reads=0
+        if isinstance(websites,list):
+            candidates.extend(('MARKET_WEBSITE_HINT',url) for url in websites if isinstance(url,str))
+        candidates.extend(('MARKET_SOCIAL_HINT',url) for url in _social_urls(market))
         for kind,hint in candidates:
             try:url=canonical_url(hint)
             except ValueError:
                 attempts.append({'kind':kind,'status':'UNAVAILABLE','reason':'URL_NOT_ALLOWED','requested':False});continue
             if url in seen:continue
             seen.add(url)
-            if reads>=3:
-                attempts.append({'kind':kind,'source_url':url,'status':'NOT_REQUESTED','reason':'SOURCE_LIMIT','requested':False});continue
-            reads+=1;when=self.clock()
-            attempt={'kind':kind,'source_url':url,'observed_at':when,'requested':True}
-            try:
-                result=self.fetch(url)
-                when=self.clock();attempt['observed_at']=when
-                if result.get('status')!='OK':
-                    reason=result.get('reason','SOURCE_UNAVAILABLE')
-                    allowed={'URL_NOT_ALLOWED','DNS_NOT_PUBLIC','PUBLIC_IPV4_UNAVAILABLE','DNS_UNAVAILABLE','REDIRECT_NOT_FOLLOWED','NOT_HTML','COMPRESSED_BODY_NOT_SUPPORTED','RESPONSE_LIMIT','SOURCE_UNAVAILABLE','FETCH_WORKER_FAILED','FETCH_TIMEOUT'}
-                    if reason not in allowed and not re.fullmatch(r'HTTP_[0-9]{3}',str(reason)):reason='SOURCE_UNAVAILABLE'
-                    attempt.update(status='UNAVAILABLE',reason=reason)
+            attempt,claim=_read_claim(self.fetch,self.clock,kind,url,mint)
+            if claim:
+                fingerprint=claim['content_sha256']
+                if fingerprint in claim_keys:
+                    attempt.update(status='DUPLICATE_CONTENT',reason='DUPLICATE_CONTENT')
                 else:
-                    encoded=result.get('body_b64','')
-                    if not isinstance(encoded,str) or len(encoded)>2*MAX_HTML_BYTES:raise ValueError('RESPONSE_LIMIT')
-                    raw=base64.b64decode(encoded,validate=True)
-                    claim=extract_page_claim(raw,url,mint,when);claim['source_kind']=kind
-                    fingerprint=claim['content_sha256']
-                    if fingerprint in claim_keys:attempt.update(status='DUPLICATE_CONTENT',reason='DUPLICATE_CONTENT')
-                    else:
-                        claim_keys.add(fingerprint);evidence.append(claim);attempt.update(status='CLAIM_READ',reason=None)
-            except (ValueError,TypeError,KeyError,AttributeError,OSError) as exc:
-                reason=str(exc) if str(exc) in {'RESPONSE_LIMIT','RESPONSE_TEXT_INVALID','ACCESS_WALL_OR_SCRIPT_ONLY','NO_EXTRACTABLE_CLAIM','SOURCE_LANGUAGE_NOT_SELECTED'} else 'SOURCE_UNAVAILABLE'
-                attempt.update(status='UNAVAILABLE',reason=reason)
+                    claim_keys.add(fingerprint);evidence.append(claim)
             attempts.append(attempt)
-        return {'version':1,'status':'PARTIAL' if evidence else 'UNAVAILABLE','attempts':attempts,'evidence':evidence,
-                'official_recognition':'UNVERIFIED','exhaustive':False,'search_coverage':'BOUNDED_HINTS_ONLY',
-                'source_request_limit':3,'recursive_crawl':False,'earliest_origin':'UNVERIFIED',
-                'story_summary':story_summary(evidence)}
+        return {**out,'status':'PARTIAL' if evidence else 'UNAVAILABLE','story_summary':story_summary(evidence)}
 
-
-# --- Creator-declared links and traceable post origin (bounded, free sources) ---
-from .public_html import read_public_json
 
 IPFS_GATEWAYS=('https://{cid}.ipfs.4everland.io/{path}','https://ipfs.filebase.io/ipfs/{cid}/{path}','https://gateway.pinata.cloud/ipfs/{cid}/{path}')
 STATUS_RE=re.compile(r'^https://(?:www\.)?(?:x|twitter)\.com/([A-Za-z0-9_]{1,30})/status/([0-9]{5,25})/?$')
-MAX_CHAIN=3
+HANDLE_RE=re.compile(r'[A-Za-z0-9_]{1,30}')
+POST_ID_RE=re.compile(r'[0-9]{5,25}')
+HASH_RE=re.compile(r'[a-f0-9]{64}')
 
 
 def ipfs_candidates(uri):
@@ -224,95 +248,206 @@ def _short(value,n):return ' '.join(str(value or '').split())[:n]
 
 
 def _post_ref(url):
-    m=STATUS_RE.match(url or '') if isinstance(url,str) else None
-    return (m.group(1),m.group(2)) if m else None
+    try:match=STATUS_RE.fullmatch(canonical_url(url))
+    except ValueError:return None
+    return (match[1].lower(),match[2]) if match else None
+
+
+def _post_url(ref):
+    return f'https://x.com/{ref[0]}/status/{ref[1]}'
 
 
 def _exact(text,mint):
     return bool(re.search(r'(?<![1-9A-HJ-NP-Za-km-z])'+re.escape(mint)+r'(?![1-9A-HJ-NP-Za-km-z])',str(text or '')))
 
 
-def _post(tweet,mint,relation):
-    a=tweet.get('author') or {};ver=a.get('verification') or {}
-    text=str(tweet.get('text') or '')
-    actors=[name for name,pattern in ACTORS if re.search(pattern,text+' @'+str(a.get('screen_name') or ''),re.I)]
-    return {'relation':relation,'url':tweet.get('url'),'id':str(tweet.get('id') or ''),
-            'author':a.get('screen_name'),'author_name':_short(a.get('name'),60),'author_followers':a.get('followers'),
-            'author_verified':ver.get('verified') is True,'author_verification_type':ver.get('type'),'author_joined':a.get('joined'),
-            'created_at':tweet.get('created_timestamp'),'text':_short(text,600),'lang':tweet.get('lang'),
-            'likes':tweet.get('likes'),'reposts':tweet.get('retweets'),'quotes':tweet.get('quotes'),'views':tweet.get('views'),
-            'exact_ca_mentioned':_exact(text,mint),'actors_in_text_or_author':actors,
-            'replying_to':tweet.get('replying_to'),'replying_to_status':tweet.get('replying_to_status')}
+def _response_hash(value):
+    return value if isinstance(value,str) and HASH_RE.fullmatch(value) else None
 
 
-def collect_origin(mint,metadata,market,*,fetch_json=read_public_json,clock=time.time):
-    """Who linked this exact CA to what, and the earliest post reachable by quote/reply links.
+def _source_number(value):
+    return value if type(value) is int and value>=0 else None
 
-    The creator's on-chain metadata URI is committed by the mint creator, so its
-    social links are a creator self-declaration for this exact CA. A linked post
-    that does not mention the CA is not an author confirmation. The quote/reply
-    chain is structural (API-reported), not an exhaustive search for earliest origin.
-    """
-    out={'version':1,'status':'UNAVAILABLE','reads':[],'creator_metadata':None,'posts':[],
-         'ca_link_status':'UNVERIFIED','earliest_traceable':None,
-         'earliest_scope':'QUOTE_AND_REPLY_CHAIN_FROM_LINKED_POST_NOT_EXHAUSTIVE','observed_at':clock()}
+
+def _timestamp(value):
+    return value if type(value) is int and 0<value<4102444800 else None
+
+
+def _post(raw,post_id,mint,response_hash):
+    """Bind an existing FxTwitter response to a post id and its reported author."""
+    if (not isinstance(raw,dict) or raw.get('id')!=post_id or raw.get('provider','twitter')!='twitter'
+            or not response_hash):
+        return None
+    author=raw.get('author')
+    if not isinstance(author,dict):return None
+    handle=author.get('screen_name')
+    if not isinstance(handle,str) or not HANDLE_RE.fullmatch(handle):return None
+    author_ref=(handle.lower(),post_id)
+    if _post_ref(raw.get('url'))!=author_ref:return None
+    author_id=author.get('id')
+    if not isinstance(author_id,str) or not author_id.isascii() or not author_id.isdigit():
+        author_id=None
+    verification=author.get('verification')
+    ver=verification if isinstance(verification,dict) else {}
+    text=raw.get('text') if isinstance(raw.get('text'),str) else ''
+    actors=[name for name,pattern in ACTORS if re.search(pattern,text+' @'+handle,re.I)]
+    return {'url':_post_url(author_ref),'id':post_id,'author':handle,'author_id':author_id,
+            'author_name':_short(author.get('name'),60),'author_followers':_source_number(author.get('followers')),
+            'author_verified':ver.get('verified') is True,'created_at':_timestamp(raw.get('created_timestamp')),
+            'text':_short(text,600),'response_sha256':response_hash,
+            'likes':_source_number(raw.get('likes')),'reposts':_source_number(raw.get('retweets')),
+            'quotes':_source_number(raw.get('quotes')),'views':_source_number(raw.get('views')),
+            'exact_ca_mentioned':_exact(text,mint),'actors_in_text_or_author':actors}
+
+
+def _post_targets(tweet):
+    quoted=tweet.get('quote')
+    quote_ref=_post_ref(quoted.get('url')) if isinstance(quoted,dict) else None
+    if quote_ref and quoted.get('id',quote_ref[1])==quote_ref[1]:
+        yield 'QUOTE',quote_ref
+    handle,post_id=tweet.get('replying_to'),tweet.get('replying_to_status')
+    if (isinstance(handle,str) and HANDLE_RE.fullmatch(handle)
+            and isinstance(post_id,str) and POST_ID_RE.fullmatch(post_id)):
+        yield 'REPLY',(handle.lower(),post_id)
+
+
+def _explicit_claim(tweet,mint):
+    # Check the author's original full text. An exact address in a quotation,
+    # a repost, a negation, or descriptive prose cannot certify a claim.
+    text=tweet.get('text')
+    if not isinstance(text,str) or tweet.get('reposted_by'):return False
+    pattern=r'(?i:our official (?:solana )?(?:ca|contract address|mint)(?:\s+is\s+|\s*:\s*))'+re.escape(mint)+r'\.?'
+    return re.fullmatch(pattern,text.strip()) is not None
+
+
+def collect_origin(mint,metadata,market,*,fetch_json=read_public_json,fetch_html=read_public_html,clock=time.time):
+    """Follow observed post references with a single read per id and preserve every edge."""
+    out={'version':1,'status':'UNAVAILABLE','reads':[],'creator_metadata':None,'creator_website_evidence':None,
+         'posts':[],'interactions':[],'unresolved_links':[],'ca_link_status':'UNVERIFIED',
+         'recognition':{'status':'SOURCE_UNAVAILABLE','mint':mint},
+         'earliest_traceable':None,'earliest_scope':'QUOTE_AND_REPLY_CHAIN_FROM_LINKED_POST_NOT_EXHAUSTIVE',
+         'observed_at':clock(),'exhaustive':False}
+    if not valid_pubkey(mint):
+        return {**out,'reason':'MINT_IDENTITY_UNVERIFIED'}
+
     def read(kind,url):
-        row={'kind':kind,'url':url}
-        try:result=fetch_json(url)
-        except RPCJobBudgetExceeded:raise
-        except Exception as exc:result={'status':'UNAVAILABLE','reason':type(exc).__name__}
-        row.update(status=result.get('status'),reason=result.get('reason'),response_sha256=result.get('response_sha256'))
+        row={'kind':kind,'status':'UNAVAILABLE','requested':False}
+        try:url=canonical_url(url)
+        except ValueError:row['reason']='URL_NOT_ALLOWED'
+        else:
+            row.update(url=url,requested=True)
+            try:result=fetch_json(url)
+            except RPCJobBudgetExceeded:raise
+            except Exception as exc:result={'status':'UNAVAILABLE','reason':type(exc).__name__}
+            if not isinstance(result,dict):result={}
+            status='OK' if result.get('status')=='OK' else 'UNAVAILABLE'
+            row.update(status=status,reason=None if status=='OK' else _source_reason(result.get('reason')),
+                       response_sha256=_response_hash(result.get('response_sha256')))
         out['reads'].append(row)
-        return result.get('json') if result.get('status')=='OK' else None
+        return row,result.get('json') if row['status']=='OK' else None
+
     meta=None
-    if isinstance(metadata,dict) and metadata.get('status')=='VERIFIED_CHAIN_STATE':
-        for url in ipfs_candidates(metadata.get('uri'))[:3]:
-            value=read('CREATOR_METADATA_JSON',url)
-            if isinstance(value,dict):meta=value;break
-    socials=[]
+    meta_read=None
+    if isinstance(metadata,dict) and metadata.get('status')=='VERIFIED_CHAIN_STATE' and metadata.get('mint')==mint:
+        for url in ipfs_candidates(metadata.get('uri')):
+            item,value=read('CREATOR_METADATA_JSON',url)
+            if isinstance(value,dict):meta=value;meta_read=item;break
+            if item['status']=='OK':item.update(status='UNAVAILABLE',reason='NOT_JSON_OBJECT')
+
+    queue=deque()
+    creator_post=None
+    page_links=market.get('narrative_post_links') if isinstance(market,dict) else None
     if isinstance(meta,dict):
-        links={k:meta.get(k) for k in ('twitter','website','telegram','createdOn') if isinstance(meta.get(k),str) and meta.get(k).startswith('https://')}
-        out['creator_metadata']={'uri':metadata.get('uri'),'source':metadata.get('source'),
+        links={}
+        for key in ('twitter','website','telegram','createdOn'):
+            if key not in meta:continue
+            try:links[key]=canonical_url(meta[key])
+            except ValueError:out['unresolved_links'].append({'kind':'CREATOR_METADATA_'+key.upper(),'reason':'URL_NOT_ALLOWED'})
+        out['creator_metadata']={'uri':meta_read['url'],'source':metadata.get('source'),
             'name':_short(meta.get('name'),64),'symbol':_short(meta.get('symbol'),32),'description':_short(meta.get('description'),400),
             'links':links,'name_matches_chain':_short(meta.get('name'),64)==_short(metadata.get('name'),64),
             'symbol_matches_chain':_short(meta.get('symbol'),32)==_short(metadata.get('symbol'),32),
-            'metadata_mutable':metadata.get('is_mutable'),
-            'scope':'URI_COMMITTED_ON_CHAIN_FOR_THIS_MINT; CONTENT_AUTHORED_BY_MINT_CREATOR'}
-        if links.get('twitter'):socials.append(('CREATOR_METADATA',links['twitter']))
-    for row in (market.get('socials') or [])[:2] if isinstance(market,dict) else []:
-        url=row.get('url') if isinstance(row,dict) else None
-        if isinstance(url,str):socials.append(('MARKET_SOCIAL',url))
-    seen=set();pair_ms=((market or {}).get('main_pair') or {}).get('pair_created_at_ms') if isinstance(market,dict) else None
-    for origin,url in socials:
-        ref=_post_ref(url.split('?')[0])
-        if not ref or ref[1] in seen:continue
-        relation='LINKED_BY_'+origin;depth=0;current=ref
-        while current and depth<=MAX_CHAIN and current[1] not in seen and len(out['posts'])<6:
-            seen.add(current[1])
-            data=read('X_POST_API','https://api.fxtwitter.com/'+current[0]+'/status/'+current[1])
+            'metadata_mutable':metadata.get('is_mutable'),'response_sha256':meta_read['response_sha256'],
+            'scope':'URI_COMMITTED_ON_CHAIN_FOR_THIS_MINT; OFFCHAIN_CONTENT_AUTHOR_UNVERIFIED'}
+        if links.get('twitter'):
+            creator_post=_post_ref(links['twitter'])
+            if creator_post:
+                queue.append((creator_post,'LINKED_BY_CREATOR_METADATA',None))
+                out['ca_link_status']='CREATOR_METADATA_LINKS_POST'
+            else:
+                out['unresolved_links'].append({'kind':'CREATOR_METADATA_TWITTER','url':links['twitter'],
+                                                'reason':'PROFILE_OR_NON_POST_LINK'})
+        already_read=market.get('narrative_read_urls') if isinstance(market,dict) else None
+        if links.get('website') and links['website'] not in (already_read if isinstance(already_read,list) else []):
+            attempt,claim=_read_claim(fetch_html,clock,'CREATOR_METADATA_WEBSITE',links['website'],mint)
+            out['reads'].append({**attempt,'url':attempt['source_url']})
+            out['creator_website_evidence']=claim
+            if claim:
+                page_links=[*(page_links if isinstance(page_links,list) else []),*claim['story']['post_links']]
+    for url in _social_urls(market):
+        ref=_post_ref(url)
+        if ref:queue.append((ref,'LINKED_BY_MARKET_SOCIAL',None))
+    for url in page_links if isinstance(page_links,list) else ():
+        ref=_post_ref(url)
+        if ref:queue.append((ref,'LINKED_BY_READ_PAGE',None))
+
+    seen_edges=set()
+    responses={}
+    posts={}
+    while queue:
+        ref,relation,source_id=queue.popleft()
+        edge=(ref,relation,source_id)
+        if edge in seen_edges:continue
+        seen_edges.add(edge)
+        post_id=ref[1]
+        if post_id not in responses:
+            row,data=read('X_POST_API',f'https://api.fxtwitter.com/{ref[0]}/status/{post_id}')
             tweet=data.get('tweet') if isinstance(data,dict) else None
-            if not isinstance(tweet,dict):break
-            post=_post(tweet,mint,relation)
-            if out['posts'] and not relation.startswith('LINKED_BY_'):post['quoted_by']=out['posts'][-1]['url']
+            post=_post(tweet,post_id,mint,row.get('response_sha256'))
+            if post is None and row['status']=='OK':
+                row.update(status='UNAVAILABLE',reason='POST_IDENTITY_UNVERIFIED')
+            responses[post_id]=row,tweet,post
+        row,tweet,post=responses[post_id]
+        from_post=posts.get(source_id)
+        if post is None or post['author'].lower()!=ref[0]:
+            out['unresolved_links'].append({'kind':relation,'url':_post_url(ref),
+                'from':from_post['url'] if from_post else None,
+                'reason':row['reason'] if post is None else 'POST_LINK_AUTHOR_MISMATCH'})
+            continue
+        if post_id not in posts:
+            post.update(relation=relation)
+            if from_post:post['quoted_by']=from_post['url']
+            posts[post_id]=post
             out['posts'].append(post)
-            nxt=None
-            q=tweet.get('quote')
-            if isinstance(q,dict) and q.get('url'):
-                if _post_ref(q.get('url')) and _post_ref(q['url'])[1] not in seen:
-                    nxt=_post_ref(q['url']);relation='QUOTED_BY_PREVIOUS'
-            if not nxt and tweet.get('replying_to') and tweet.get('replying_to_status'):
-                nxt=(tweet['replying_to'],str(tweet['replying_to_status']));relation='REPLIED_TO_BY_PREVIOUS'
-            current=nxt;depth+=1
-        break
-    linked=[p for p in out['posts'] if p['relation'].startswith('LINKED_BY_')]
-    if out['creator_metadata'] and out['creator_metadata']['links'].get('twitter'):
-        out['ca_link_status']='CREATOR_METADATA_LINKS_POST'
-    if any(p['exact_ca_mentioned'] for p in out['posts']):out['ca_link_status']='POST_MENTIONS_EXACT_CA'
-    if out['posts']:
-        first=min(out['posts'],key=lambda p:(p['created_at'] if isinstance(p.get('created_at'),(int,float)) else float('inf')))
-        out['earliest_traceable']={'url':first['url'],'author':first['author'],'created_at':first['created_at'],'relation':first['relation']}
-        if isinstance(pair_ms,(int,float)) and linked and isinstance(linked[0].get('created_at'),(int,float)):
-            out['linked_post_to_pair_seconds']=round(pair_ms/1000-linked[0]['created_at'],1)
-    out['interactions']=[{'from':p.get('quoted_by'),'to':p['url'],'author':p['author'],'type':p['relation'],'status':'API_REPORTED_STRUCTURAL_RELATION'} for p in out['posts'] if not p['relation'].startswith('LINKED_BY_')]
-    out['status']='PARTIAL' if (out['creator_metadata'] or out['posts']) else 'UNAVAILABLE'
+            for interaction,related in _post_targets(tweet):
+                queue.append((related,interaction,post_id))
+        if from_post:
+            out['interactions'].append({'from':from_post['url'],'to':post['url'],'author':from_post['author'],
+                'author_id':from_post['author_id'],'target_author':post['author'],'type':relation,
+                'status':'API_REPORTED_STRUCTURAL_RELATION'})
+
+    linked=next((post for post in out['posts'] if post['relation'].startswith('LINKED_BY_')),None)
+    pair=market.get('main_pair') if isinstance(market,dict) else None
+    pair_ms=_source_number(pair.get('pair_created_at_ms')) if isinstance(pair,dict) else None
+    if linked and linked['created_at'] is not None and pair_ms:
+        out['linked_post_to_pair_seconds']=round(pair_ms/1000-linked['created_at'],1)
+    if any(p['exact_ca_mentioned'] for p in out['posts']):
+        out['ca_link_status']='POST_MENTIONS_EXACT_CA'
+    dated=[p for p in out['posts'] if p['created_at'] is not None]
+    if dated:
+        first=min(dated,key=lambda p:(p['created_at'],int(p['id'])))
+        out['earliest_traceable']={key:first[key] for key in ('url','author','created_at','relation','response_sha256')}
+
+    creator=out['creator_metadata']
+    issuer=next((post for post in out['posts'] if post['relation']=='LINKED_BY_CREATOR_METADATA'),None)
+    if (issuer and creator['response_sha256'] and issuer['response_sha256']
+            and issuer['author_id'] and _explicit_claim(responses[issuer['id']][1],mint)):
+        out['recognition'].update(status='EXACT_CA_CLAIM_VERIFIED',basis='CHAIN_LINKED_POST_AUTHOR_EXPLICIT_EXACT_MINT_CLAIM',
+            source_url=issuer['url'],author=issuer['author'],author_id=issuer['author_id'],
+            post_response_sha256=issuer['response_sha256'],metadata_response_sha256=creator['response_sha256'])
+    elif creator and creator['links']:
+        out['recognition'].update(status='LINK_ONLY',basis='CHAIN_METADATA_URI_EXTERNAL_LINK_ONLY')
+    elif out['posts'] or creator or (isinstance(market,dict) and market.get('narrative_claims_read')):
+        out['recognition'].update(status='NO_VERIFIABLE_CLAIM')
+    out['status']='PARTIAL' if (creator or out['posts']) else 'UNAVAILABLE'
     return out

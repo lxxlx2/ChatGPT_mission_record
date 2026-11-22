@@ -1,10 +1,25 @@
 """Finalized catch-up, independent of notification, Git transport and GPT."""
-import gzip,json,time,hashlib
+import gzip,json,time,hashlib,re
 from pathlib import Path
 from ..frank.rpc import SolanaRPC
 from ..frank.archive import publish
 from ..hashing import digest
 from .classifier import classify
+
+def _validated_transaction_bytes(tx, signature, slot):
+    if not isinstance(tx,dict):
+        raise ValueError('CHAIN_TRANSACTION_INVALID')
+    if type(tx.get('slot')) is not int or tx['slot']!=slot:
+        raise ValueError('CHAIN_SLOT_CONFLICT')
+    transaction=tx.get('transaction')
+    signed=transaction.get('signatures') if isinstance(transaction,dict) else None
+    # Solana uses the first signature as the transaction ID.
+    if not isinstance(signed,list) or not signed or signed[0]!=signature:
+        raise ValueError('CHAIN_SIGNATURE_CONFLICT')
+    try:
+        return json.dumps(tx,sort_keys=True,separators=(',',':'),allow_nan=False).encode()
+    except (ValueError,TypeError):
+        raise ValueError('CHAIN_TRANSACTION_INVALID') from None
 
 class WalletRPC(SolanaRPC):
     def __init__(self,wallet,**kwargs):super().__init__(**kwargs);self.wallet=wallet
@@ -31,15 +46,30 @@ class Scanner:
     def cycle(self,wallet):
         db=self.ledger.db;rpc=self.rpcs[wallet];cursor=self.ledger.cursor(wallet)
         if not cursor:raise ValueError('EXPLICIT_DURABLE_CHECKPOINT_REQUIRED')
-        pending=[];before=None;head=None;seen=set();found=False
+        pending=[];before=None;head=None;seen={};found=False;last_slot=None
         try:
             for _ in range(1000):
                 page=rpc.signatures(before=before)
+                if not isinstance(page,list):raise ValueError('INVALID_SIGNATURE_LIST')
                 if head is None and page:head=page[0]
                 for row in page:
-                    sig=row['signature']
+                    if not isinstance(row,dict):raise ValueError('INVALID_SIGNATURE_ROW')
+                    sig,slot=row.get('signature'),row.get('slot')
+                    if (not isinstance(sig,str) or not re.fullmatch(r'[A-Za-z0-9_-]{1,128}',sig)
+                            or type(slot) is not int or slot<0):
+                        raise ValueError('INVALID_SIGNATURE_ROW')
+                    if sig==cursor['signature'] and slot!=cursor['slot']:
+                        raise ValueError('CURSOR_SLOT_CONFLICT')
+                    if sig in seen:
+                        if seen[sig]!=slot:raise ValueError('SIGNATURE_SLOT_CONFLICT')
+                        continue
+                    if last_slot is not None and slot>last_slot:
+                        raise ValueError('SIGNATURE_PAGE_ORDER_INVALID')
                     if sig==cursor['signature']:found=True;break
-                    if sig not in seen:pending.append(row);seen.add(sig)
+                    if slot<cursor['slot']:raise ValueError('CURSOR_GAP_UNRESOLVED')
+                    seen[sig]=slot
+                    last_slot=slot
+                    pending.append(row)
                 if found:break
                 if not page or page[-1]['signature']==before:raise ValueError('CURSOR_GAP_UNRESOLVED')
                 before=page[-1]['signature']
@@ -48,15 +78,14 @@ class Scanner:
                 db.execute('INSERT OR IGNORE INTO signature_detections(wallet,signature,person_id,slot,block_time,seen_at,state) VALUES(?,?,?,?,?,?,?)',(wallet,row['signature'],self.wallets[wallet],row['slot'],row.get('blockTime'),time.time(),'RAW_PENDING'))
             for row in reversed(pending):
                 sig=row['signature'];path=self.raw_root/(sig+'.json.gz')
-                if path.exists():tx=json.loads(gzip.decompress(path.read_bytes()))
+                archived=path.exists()
+                if archived:tx=json.loads(gzip.decompress(path.read_bytes()))
                 else:
                     tx=rpc.transaction(sig)
                     if tx is None:raise ValueError('RAW_UNAVAILABLE_CURSOR_NOT_ADVANCED')
-                    publish(path,gzip.compress(json.dumps(tx,sort_keys=True).encode(),mtime=0))
-                if tx.get('slot')!=row['slot']:raise ValueError('CHAIN_SLOT_CONFLICT')
-                signed=tx.get('transaction',{}).get('signatures')
-                if signed is not None and sig not in signed:raise ValueError('CHAIN_SIGNATURE_CONFLICT')
-                self.ledger.put(self.wallets[wallet],classify(sig,tx,wallet),hashlib.sha256(json.dumps(tx,sort_keys=True,separators=(',',':'),allow_nan=False).encode()).hexdigest(),str(path),advance=True,dry_run=True)
+                payload=_validated_transaction_bytes(tx,sig,row['slot'])
+                if not archived:publish(path,gzip.compress(payload,mtime=0))
+                self.ledger.put(self.wallets[wallet],classify(sig,tx,wallet),hashlib.sha256(payload).hexdigest(),str(path),advance=True,dry_run=True)
                 db.execute("UPDATE signature_detections SET state='CLASSIFIED_DURABLE' WHERE wallet=? AND signature=?",(wallet,sig))
             health={'last_successful_poll':time.time(),'last_chain_signature':head['signature'] if head else None,'last_local_signature':self.ledger.cursor(wallet)['signature'],'lag_seconds':0 if head and head['signature']==self.ledger.cursor(wallet)['signature'] else None,'consecutive_errors':0,'status':'RUNNING' if self.mode=='LIVE' else 'RUNNING_SHADOW_DELIVERY_DISABLED'}
         except Exception as exc:

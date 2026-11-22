@@ -1,4 +1,4 @@
-"""Bounded multi-pool account roles and reproducible known-exclusion ranks.
+"""Multi-pool account roles and reproducible known-exclusion ranks.
 
 No finite chain query proves every CEX/MM identity. Unlabelled accounts stay
 UNKNOWN, never implicitly ORDINARY. Complete filtered ranks require exhaustive
@@ -12,7 +12,7 @@ from .holder_binary import collect_holder_binary_check,verified_holder_mass
 from .pool_programs import decode_pool
 from .pool_vaults import PoolSourceError,_slot
 
-MAX_POOLS=8
+RPC_ACCOUNT_BATCH=100
 LP_ROLES={'LP','AMM_POOL','PROTOCOL_VAULT'}
 
 
@@ -140,19 +140,24 @@ def derive_special_ranks(mint,check,pools,registry=None):
 
 
 def collect_special_roles(mint,source,market,rpc,registry=None):
+    from .cluster import RPCError,RPCJobBudgetExceeded
+
     out={'version':1,'status':'INCOMPLETE_EVIDENCE','mint':mint,'pools':[],
-         'all_special_roles_normalized':False,'independent_provider':False,'max_pools':MAX_POOLS,
-         'discovery_scope':'BOUNDED_INDEXER_OWNER_AND_PROGRAM_HINTS_NOT_ALL_POOLS',
+         'all_special_roles_normalized':False,'independent_provider':False,'max_pools':None,
+         'discovery_scope':'OBSERVED_INDEXER_OWNER_AND_PROGRAM_HINTS_NOT_ALL_POOLS',
          'owner_hint_scope':'SELF_AUTHORITY_POOL_OWNERS_NOT_GLOBAL_AUTHORITY_REVERSE_LOOKUP',
          'rejected_owner_pool_hints':0}
     if not isinstance(source,dict) or source.get('requested') is not True:return {**out,'status':'NOT_REQUESTED','reason':'NO_ENUMERATION'}
-    good_market=isinstance(market,dict) and market.get('status')=='OK' and market.get('source')=='DEXSCREENER_API' and market.get('mint')==mint
+    good_market=(isinstance(market,dict) and market.get('source')=='DEXSCREENER_API' and market.get('mint')==mint
+                 and (market.get('status')=='OK' or market.get('reason')=='NO_BASE_TOKEN_PAIR'))
     out['indexer_discovery_status']='AVAILABLE' if good_market else 'UNAVAILABLE'
     index_hints=([market.get('main_pair')]+(market.get('pool_candidates') if isinstance(market.get('pool_candidates'),list) else [])) if good_market else []
     indices=[]
-    for hint in index_hints[:65]:
-        if not isinstance(hint,dict) or hint.get('base_address')!=mint:continue
-        a=hint.get('pair_address');q=hint.get('quote_address')
+    for hint in index_hints:
+        if not isinstance(hint,dict):continue
+        base,quote=hint.get('base_address'),hint.get('quote_address')
+        if mint not in (base,quote):continue
+        a=hint.get('pair_address');q=quote if base==mint else base
         if not all(valid_pubkey(k) for k in (a,q,mint)) or len({mint,a,q})!=3:continue
         indices.append({'pool_address':a,'quote_mint':q,'candidate_sources':['DEXSCREENER_API'],'owner_hints':[]})
     owner_hints=source.get('owner_pool_hints');owner_hints=owner_hints if isinstance(owner_hints,list) else []
@@ -160,7 +165,7 @@ def collect_special_roles(mint,source,market,rpc,registry=None):
     accounts_by_address={r['token_account']:r for r in accounts if isinstance(r,dict) and valid_pubkey(r.get('token_account'))}
     slot=source.get('snapshot_slot');sha=source.get('response_sha256');owners=[]
     def hash_ok(v):return isinstance(v,str) and len(v)==64 and all(c in '0123456789abcdef' for c in v)
-    for h in owner_hints[:8]:
+    for h in owner_hints:
         good=isinstance(h,dict) and source.get('mint')==mint and type(slot) is int and slot>0 and hash_ok(sha)
         if good:
             a=h.get('pair_address');q=h.get('quote_address');v=h.get('target_vault');ref=accounts_by_address.get(v) if isinstance(v,str) else None
@@ -179,8 +184,7 @@ def collect_special_roles(mint,source,market,rpc,registry=None):
                     'candidate_sources':['MINT_FILTERED_PROGRAM_QUERY'],'owner_hints':[],'program_hints':[h]}
                    for h in program_discovery['hints']]
     out['program_pool_hints_available']=len(program_hints)
-    # Keep the main pair first, then alternate owner and remaining index hints.
-    # A long index list cannot starve every owner-derived candidate.
+    # Keep the main pair first, then alternate the three kinds of evidence.
     ordered=indices[:1]
     for i in range(max(len(owners),len(indices[1:]),len(program_hints))):
         if i<len(owners):ordered.append(owners[i])
@@ -195,14 +199,13 @@ def collect_special_roles(mint,source,market,rpc,registry=None):
             if row['quote_mint']!=hint['quote_mint']:row['hint_quote_conflict']=True
             row['candidate_sources']=sorted(set(row['candidate_sources']+hint['candidate_sources']))
             row['owner_hints']+=hint['owner_hints'];row['program_hints']+=hint.get('program_hints',[])
-    all_candidates=list(merged.values());out['candidate_count']=len(all_candidates)
+    candidates=list(merged.values());out['candidate_count']=len(candidates)
     index_skipped=market.get('pool_candidates_not_selected',0) if good_market else 0
     index_skipped=index_skipped if type(index_skipped) is int and index_skipped>=0 else 0
     owner_summary=source.get('owner_pool_discovery') or {};owner_skipped=owner_summary.get('hints_not_selected',0) if isinstance(owner_summary,dict) else 0
     owner_skipped=owner_skipped if type(owner_skipped) is int and owner_skipped>=0 else 0
-    out['not_selected_pool_hints']=max(0,len(all_candidates)-MAX_POOLS)+index_skipped+owner_skipped+max(0,len(owner_hints)-8)+max(0,len(index_hints)-65)+program_discovery.get('hints_not_selected',0)
-    candidates=all_candidates[:MAX_POOLS]
-    def holder_only(reason):
+    out['not_selected_pool_hints']=index_skipped+owner_skipped+program_discovery.get('hints_not_selected',0)
+    def holder_only(reason,discovered=()):
         # Pool discovery is optional role evidence, not a prerequisite for
         # dated account attribution. Never treat a missing pool as ordinary.
         lower=max(slot if type(slot) is int and slot>0 else 0,out.get('discovery_slot',0))
@@ -212,41 +215,70 @@ def collect_special_roles(mint,source,market,rpc,registry=None):
                 result=rpc.call(method,[addresses,cfg],ttl=ttl)
                 return result
         check=collect_holder_binary_check(mint,source,HolderRPC())
-        if type(check.get('snapshot_slot')) is int and check['snapshot_slot']<lower:
+        holder_slot=check.get('snapshot_slot')
+        if type(holder_slot) is int and holder_slot<lower:
             check.update(status='UNAVAILABLE',reason='HOLDER_CONTEXT_BEFORE_DISCOVERY',full_positive_mass_reconciled=False)
-        out.update(audit_path='HOLDER_ONLY_NO_BOUND_POOL',pool_discovery_reason=reason,balance_check=check,
+            holder_slot=None
+        for pool in discovered:
+            if pool['discovery_slot']==holder_slot:
+                pool.update(status='POOL_IDENTITY_BOUND',snapshot_slot=holder_slot)
+            else:
+                pool['reason']='POOL_HOLDER_CONTEXT_UNALIGNED'
+        out.update(audit_path='HOLDER_AND_POOL_DISCOVERY_BATCHES' if discovered else 'HOLDER_ONLY_NO_BOUND_POOL',
+                   pool_discovery_reason=reason,balance_check=check,
                    snapshot_slot=check.get('snapshot_slot'),cohort_response_sha256=check.get('response_sha256'),
-                   rankings=derive_special_ranks(mint,check,[],registry))
+                   rankings=derive_special_ranks(mint,check,discovered,registry))
         return out
     if not candidates:return holder_only('NO_VALID_POOL_HINTS')
     discovery_cfg={'encoding':'base64','commitment':'finalized'}
     owner_slots=[h['owner_metadata_slot'] for p in candidates for h in p['owner_hints']]
     owner_slots+=[h['program_snapshot_slot'] for p in candidates for h in p['program_hints']]
     if owner_slots:discovery_cfg['minContextSlot']=max(owner_slots)
-    response=rpc.call('getMultipleAccounts',[[p['pool_address'] for p in candidates],discovery_cfg],ttl=30)
-    discovery_slot=_slot(response);values=response.get('value')
-    out['discovery_slot']=discovery_slot;out['discovery_response_sha256']=digest(response)
-    if not isinstance(values,list) or len(values)!=len(candidates):return holder_only('DISCOVERY_RESPONSE_INVALID')
-    accepted=[]
-    for candidate,account in zip(candidates,values):
-        address=candidate['pool_address'];quote=candidate['quote_mint']
-        row={**candidate,'status':'UNVERIFIED'}
+    accepted=[];out['discovery_batches']=[];discovery_slots=[]
+    for offset in range(0,len(candidates),RPC_ACCOUNT_BATCH):
+        batch=candidates[offset:offset+RPC_ACCOUNT_BATCH]
+        evidence={'account_count':len(batch),'status':'UNAVAILABLE'}
+        out['discovery_batches'].append(evidence)
         try:
-            if row.get('hint_quote_conflict'):raise PoolSourceError('POOL_HINT_QUOTE_CONFLICT')
-            d=decode_pool(account,address)
-            for h in row['owner_hints']:
+            response=rpc.call('getMultipleAccounts',[[p['pool_address'] for p in batch],discovery_cfg],ttl=30)
+            batch_slot=_slot(response);values=response.get('value')
+            if not isinstance(values,list) or len(values)!=len(batch):
+                raise PoolSourceError('DISCOVERY_RESPONSE_INVALID')
+            discovery_slots.append(batch_slot)
+            evidence.update(status='OBSERVED',snapshot_slot=batch_slot,response_sha256=digest(response))
+        except RPCJobBudgetExceeded:raise
+        except (RPCError,ValueError,TypeError,OSError) as exc:
+            evidence['reason']=str(exc) if isinstance(exc,PoolSourceError) else 'POOL_DISCOVERY_SOURCE_UNAVAILABLE'
+            out['pools'].extend({**p,'status':'UNVERIFIED','reason':evidence['reason']} for p in batch)
+            continue
+        for candidate,account in zip(batch,values):
+            row={**candidate,'status':'UNVERIFIED','discovery_slot':batch_slot,
+                 'discovery_response_sha256':evidence['response_sha256']}
+            try:
+                if row.get('hint_quote_conflict'):raise PoolSourceError('POOL_HINT_QUOTE_CONFLICT')
+                d=decode_pool(account,row['pool_address'])
                 target_vault=d['base_vault'] if d['base_mint']==mint else d['quote_vault'] if d['quote_mint']==mint else None
-                if d['authority']!=h['authority'] or target_vault!=h['target_vault']:raise PoolSourceError('OWNER_HINT_POOL_CHANGED')
-                if discovery_slot<h['owner_metadata_slot']:raise PoolSourceError('DISCOVERY_BEFORE_OWNER_HINT')
-            for h in row['program_hints']:
-                target_vault=d['base_vault'] if d['base_mint']==mint else d['quote_vault'] if d['quote_mint']==mint else None
-                if d['program']!=h['pool_program'] or d['authority']!=h['authority'] or target_vault!=h['target_vault']:raise PoolSourceError('PROGRAM_HINT_POOL_CHANGED')
-                if discovery_slot<h['program_snapshot_slot']:raise PoolSourceError('DISCOVERY_BEFORE_PROGRAM_HINT')
-            if {d['base_mint'],d['quote_mint']}!={mint,quote}:raise PoolSourceError('POOL_PAIR_MISMATCH')
-            row.update(status='DISCOVERED',decoded=d);accepted.append(row)
-        except (ValueError,TypeError,KeyError) as exc:row['reason']=str(exc) if isinstance(exc,PoolSourceError) else 'POOL_RESPONSE_INVALID'
-        out['pools'].append(row)
+                for h in row['owner_hints']:
+                    if d['authority']!=h['authority'] or target_vault!=h['target_vault']:raise PoolSourceError('OWNER_HINT_POOL_CHANGED')
+                    if batch_slot<h['owner_metadata_slot']:raise PoolSourceError('DISCOVERY_BEFORE_OWNER_HINT')
+                for h in row['program_hints']:
+                    if d['program']!=h['pool_program'] or d['authority']!=h['authority'] or target_vault!=h['target_vault']:raise PoolSourceError('PROGRAM_HINT_POOL_CHANGED')
+                    if batch_slot<h['program_snapshot_slot']:raise PoolSourceError('DISCOVERY_BEFORE_PROGRAM_HINT')
+                if {d['base_mint'],d['quote_mint']}!={mint,row['quote_mint']}:raise PoolSourceError('POOL_PAIR_MISMATCH')
+                if type(slot) is int and batch_slot<slot:raise PoolSourceError('DISCOVERY_BEFORE_ENUMERATION')
+                row.update(status='DISCOVERED',decoded=d);accepted.append(row)
+            except (ValueError,TypeError,KeyError) as exc:row['reason']=str(exc) if isinstance(exc,PoolSourceError) else 'POOL_RESPONSE_INVALID'
+            out['pools'].append(row)
+    discovery_slot=max(discovery_slots,default=0)
+    if discovery_slot:out['discovery_slot']=discovery_slot
+    if len(out['discovery_batches'])==1:
+        out['discovery_response_sha256']=out['discovery_batches'][0].get('response_sha256')
     if not accepted:return holder_only('NO_SUPPORTED_POOL_IDENTITIES')
+    # The finalized account RPC accepts up to 100 addresses per call. Preserve
+    # the full holder reread whenever pool identities need a separate batch.
+    room=RPC_ACCOUNT_BATCH-1-max(10,min(len(accounts),RPC_ACCOUNT_BATCH-1))
+    if len(accepted)>room:
+        return holder_only('POOL_AND_HOLDER_KEYS_REQUIRE_SEPARATE_BATCHES',accepted)
     extra=[p['pool_address'] for p in accepted];captured={}
     class CohortRPC:
         def call(self,method,params,ttl=0):
@@ -258,7 +290,11 @@ def collect_special_roles(mint,source,market,rpc,registry=None):
             if actual<cfg['minContextSlot'] or not isinstance(vals,list) or len(vals)!=len(addresses)+len(extra):raise PoolSourceError('COHORT_RESPONSE_INVALID')
             captured.update(slot=actual,hash=digest(result),values=vals[len(addresses):])
             return {'context':result['context'],'value':vals[:len(addresses)]}
-    check=collect_holder_binary_check(mint,source,CohortRPC(),max_full_accounts=99-len(extra))
+    try:
+        check=collect_holder_binary_check(mint,source,CohortRPC(),max_full_accounts=RPC_ACCOUNT_BATCH-1-len(extra))
+    except RPCJobBudgetExceeded:raise
+    except (RPCError,ValueError,TypeError,OSError):
+        return holder_only('POOL_AND_HOLDER_COHORT_UNAVAILABLE',accepted)
     out['balance_check']=check
     if not captured:return {**out,'reason':check.get('reason','COHORT_UNAVAILABLE')}
     for p,account in zip(accepted,captured['values']):

@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "result": "PASS_PLAN_CONSISTENCY_ONLY",
+  "executed_at": "2026-11-15T12:10:44.306517+00:00",
+  "planning_input_sha": "f174b7f4ac0bfbf8304e7a60ca42869f5ed4b56c",
+  "requirements_mapped": 59,
+  "in_scope": 54,
+  "deferred": 4,
+  "out_of_scope": 1,
+  "work_packages": 15,
+  "dependency_graph": "ACYCLIC",
+  "http_contracts": 32,
+  "internal_contracts": 14,
+  "unified_scenarios": 15,
+  "existing_http_paths": "MATCH_SOURCE",
+  "activity_enum": "EXACT_MATCH",
+  "get_contracts": "NO_SIDE_EFFECTS",
+  "local_markdown_links": "RESOLVE",
+  "sensitive_pattern_scan": "NO_MATCH_IN_PLAN_FILES",
+  "socket_events": 0,
+  "product_functionality_tested": false,
+  "live_rpc_ca": "NOT_RUN",
+  "mac_chrome": "NOT_RUN",
+  "plan_file_sha256": {
+    "TECHNICAL_PLAN_20261115.md": "2658fb6e453f57922bb86bf618d8da54b6d142f5ca8d56f57405b4f5fd44cf3e",
+    "implementation-plan-v1.json": "b3e1fcca37dc1c61d7972f6c31ae967ea8bffc200ce1186f9e1e323b953eb811",
+    "interface-contracts-v1.json": "63379a88723db19196b38062726f1a1567d09f75fe583823ec2b17b676e4ae0d"
+  }
+}

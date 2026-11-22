@@ -9,7 +9,7 @@ enumerate holders or prove that the supplied address set is exhaustive.
 import re
 import time
 from .cluster import RPCJobBudgetExceeded
-from .holder_ranks import valid_pubkey
+from .holder_ranks import PROGRAMS, HolderRankSourceError, read_mint_account_set, valid_pubkey
 from .job_checkpoint import CheckpointError
 
 MAX_ACCOUNTS=30
@@ -39,11 +39,11 @@ def _last_source_error(rpc):
     return code if code in {'TimeoutError','URLError','OSError','ValueError','JSONDecodeError'} else None
 
 
-def _read(rpc,addresses,*,strict_mint=None):
+def _read(rpc,addresses,*,strict_mint=None,expected_program=None):
     r=rpc.call('getMultipleAccounts',[addresses,{'encoding':'jsonParsed','commitment':'finalized'}])
     slot=((r or {}).get('context') or {}).get('slot') if isinstance(r,dict) else None
     values=(r or {}).get('value') if isinstance(r,dict) else None
-    if type(slot) is not int or not isinstance(values,list) or len(values)!=len(addresses):raise ValueError('RESPONSE_INVALID')
+    if type(slot) is not int or slot<=0 or not isinstance(values,list) or len(values)!=len(addresses):raise ValueError('RESPONSE_INVALID')
     out={}
     for address,v in zip(addresses,values):
         info=(((v or {}).get('data') or {}).get('parsed') or {}).get('info') if isinstance(v,dict) and isinstance(v.get('data'),dict) else None
@@ -52,11 +52,24 @@ def _read(rpc,addresses,*,strict_mint=None):
             out[address]=None;continue
         if strict_mint is not None:
             is_mint=address==strict_mint
-            raw=info.get('supply') if is_mint else (info.get('tokenAmount') or {}).get('amount')
-            if (not re.fullmatch(r'[0-9]{1,20}',str(raw)) or int(str(raw))>2**64-1
-                or (is_mint and 'supply' not in info)
-                or (not is_mint and (not valid_pubkey(info.get('owner')) or info.get('mint')!=strict_mint))):
+            amount=info if is_mint else info.get('tokenAmount')
+            amount=amount if isinstance(amount,dict) else {}
+            raw=amount.get('supply' if is_mint else 'amount')
+            decimals=amount.get('decimals')
+            program=v.get('owner')
+            parsed=v['data']['parsed']
+            if (not isinstance(program,str) or program not in PROGRAMS or v.get('executable') is not False
+                or (expected_program is not None and program!=expected_program)
+                or parsed.get('type')!=('mint' if is_mint else 'account')
+                or not isinstance(raw,str) or not re.fullmatch(r'(?:0|[1-9][0-9]{0,19})',raw)
+                or int(raw)>2**64-1 or type(decimals) is not int or not 0<=decimals<=255
+                or (is_mint and info.get('isInitialized') is not True)
+                or (not is_mint and (not valid_pubkey(info.get('owner')) or info.get('mint')!=strict_mint
+                                     or info.get('state') not in ('initialized','frozen')))):
                 raise ValueError('RESPONSE_INVALID')
+            out[address]={'kind':'mint' if is_mint else 'account','raw':raw,'decimals':decimals,'program':program}
+            if not is_mint:out[address].update(owner=info['owner'],mint=info['mint'])
+            continue
         if 'supply' in info:out[address]={'kind':'mint','raw':str(info.get('supply'))}
         else:out[address]={'kind':'account','raw':str((info.get('tokenAmount') or {}).get('amount')),'owner':info.get('owner'),'mint':info.get('mint')}
     return slot,out
@@ -71,11 +84,57 @@ def _compare(addresses,primary,secondary):
         else:status='DIFFERS';differs+=1
         rows.append({'address':address,'kind':(x or y or {}).get('kind'),
                      'primary_raw':(x or {}).get('raw'),'secondary_raw':(y or {}).get('raw'),'status':status,
+                     'different_fields':sorted(k for k in (x.keys()|y.keys()) if x.get(k)!=y.get(k)) if status=='DIFFERS' else [],
                      'difference_raw':str(int(y['raw'])-int(x['raw'])) if status=='DIFFERS' and str(x.get('raw')).isdigit() and str(y.get('raw')).isdigit() else None})
     return rows,matches,differs,missing
 
 
-def _collect_full_set(mint,accounts,primary,secondary,label,clock,progress):
+def _primary_account_set(mint,ranking):
+    if not isinstance(ranking,dict) or ranking.get('mint')!=mint:return None
+    rows=ranking.get('accounts')
+    program,decimals=ranking.get('program_id'),ranking.get('decimals')
+    slot,sha=ranking.get('snapshot_slot'),ranking.get('response_sha256')
+    if (not isinstance(rows,list) or type(ranking.get('account_count')) is not int or ranking['account_count']!=len(rows)
+            or not isinstance(program,str) or program not in PROGRAMS or type(decimals) is not int or not 0<=decimals<=255
+            or type(slot) is not int or slot<=0 or not isinstance(sha,str) or not re.fullmatch(r'[0-9a-f]{64}',sha)):
+        return None
+    entries={}
+    for row in rows:
+        if (not isinstance(row,dict) or not valid_pubkey(row.get('token_account'))
+                or row['token_account']==mint or row['token_account'] in entries or not valid_pubkey(row.get('owner'))):return None
+        raw=row.get('raw')
+        if (not isinstance(raw,str) or not re.fullmatch(r'(?:0|[1-9][0-9]{0,19})',raw) or int(raw)>2**64-1
+                or type(row.get('decimals')) is not int or row['decimals']!=decimals):return None
+        entries[row['token_account']]={'token_account':row['token_account'],'owner':row['owner'],
+                                      'raw':raw,'decimals':decimals}
+    return program,decimals,slot,sha,entries
+
+
+def _independent_account_set(mint,source,rpc):
+    program,decimals,primary_slot,primary_sha,original=source
+    base={'status':'UNAVAILABLE','primary_slot':primary_slot,'primary_response_sha256':primary_sha,
+          'primary_account_count':len(original)}
+    try:
+        secondary_slot,rows,secondary_sha=read_mint_account_set(mint,program,decimals,primary_slot,rpc)
+    except CheckpointError:raise
+    except HolderRankSourceError as exc:return {**base,'reason':str(exc),'last_source_error':_last_source_error(rpc)}
+    except Exception as exc:return {**base,'reason':_safe_reason(exc),'last_source_error':_last_source_error(rpc)}
+    if secondary_slot<primary_slot:
+        return {**base,'reason':'SNAPSHOT_BEFORE_REQUESTED_SLOT','secondary_slot':secondary_slot,
+                'secondary_response_sha256':secondary_sha}
+    reread={row['token_account']:row for row in rows}
+    missing=sorted(original.keys()-reread.keys())
+    extra=sorted(reread.keys()-original.keys())
+    changed=sorted(key for key in (original.keys()&reread.keys()) if original[key]!=reread[key])
+    same_slot=primary_slot==secondary_slot
+    if same_slot:status='SAME_SLOT_DIFFERENCE' if missing or extra or changed else 'SAME_SLOT_MATCH'
+    else:status='DIFFERENT_SLOTS'
+    return {**base,'status':status,'secondary_slot':secondary_slot,'secondary_response_sha256':secondary_sha,
+            'secondary_account_count':len(rows),'only_primary':missing,'only_secondary':extra,
+            'changed_owner_or_raw':changed}
+
+
+def _collect_full_set(mint,accounts,primary,secondary,label,clock,progress,enumeration):
     unique=list(dict.fromkeys(accounts))
     invalid=sum(not valid_pubkey(a) for a in unique)
     addresses=[mint]+[a for a in unique if valid_pubkey(a) and a!=mint]
@@ -85,6 +144,9 @@ def _collect_full_set(mint,accounts,primary,secondary,label,clock,progress):
           'batch_size':RPC_BATCH_SIZE,'batches_completed':0,'provided_account_set_compared':False,
           'accounts_compared':0,'not_compared':len(addresses),'matches':0,'differences':0,'missing':0,
           'batches':[],'rows':[]}
+    source=_primary_account_set(mint,enumeration)
+    source=source if source is not None and source[-1].keys()==set(addresses[1:]) else None
+    base['supplied_set_origin']='PRIMARY_MINT_ENUMERATION' if source is not None else 'SUPPLIED_ADDRESSES_ONLY'
     if secondary is None:return {**base,'status':'NOT_REQUESTED','reason':'NO_SECONDARY_PROVIDER'}
     if not valid_pubkey(mint) or invalid:
         return {**base,'reason':'INVALID_ACCOUNT_ADDRESS','invalid_addresses':invalid+int(not valid_pubkey(mint))}
@@ -93,7 +155,7 @@ def _collect_full_set(mint,accounts,primary,secondary,label,clock,progress):
         batch=addresses[offset:offset+RPC_BATCH_SIZE]
         # A primary budget/checkpoint error must still terminate the whole job.
         try:
-            p_slot,p=_read(primary,batch,strict_mint=mint);p_at=clock()
+            p_slot,p=_read(primary,batch,strict_mint=mint,expected_program=source[0] if source else None);p_at=clock()
         except (RPCJobBudgetExceeded,CheckpointError):raise
         except Exception as exc:
             return {**base,'status':'PARTIAL' if base['batches_completed'] else 'UNAVAILABLE',
@@ -106,7 +168,7 @@ def _collect_full_set(mint,accounts,primary,secondary,label,clock,progress):
                 return {**base,'status':'PARTIAL' if base['batches_completed'] else 'UNAVAILABLE',
                         'reason':'SECONDARY_PROVIDER_UNAVAILABLE','failed_batch':len(base['batches']),
                         'failure_phase':'SECONDARY'}
-            s_slot,s=_read(rpc,batch,strict_mint=mint);s_at=clock()
+            s_slot,s=_read(rpc,batch,strict_mint=mint,expected_program=source[0] if source else None);s_at=clock()
         except CheckpointError:raise
         except Exception as exc:
             return {**base,'status':'PARTIAL' if base['batches_completed'] else 'UNAVAILABLE',
@@ -129,6 +191,9 @@ def _collect_full_set(mint,accounts,primary,secondary,label,clock,progress):
     if base['differences']==0 and base['missing']==0:
         status='SAME_SLOT_ALL_MATCH' if same else 'NEAR_TIME_ALL_MATCH'
     else:status='SAME_SLOT_MISMATCH' if same else 'NEAR_TIME_DIFFERENCES'
+    if source is not None:
+        base['independent_account_set']=_independent_account_set(mint,source,rpc)
+        base['secondary_wire_attempts']=_wire_attempts(rpc)
     return {**base,'status':status,'provided_account_set_compared':True,
             'primary_slot':primary_slots[0],'secondary_slot':secondary_slots[0],
             'slot_gap':secondary_slots[0]-primary_slots[0],
@@ -138,8 +203,8 @@ def _collect_full_set(mint,accounts,primary,secondary,label,clock,progress):
             'last_source_error':_last_source_error(rpc)}
 
 
-def collect_independent_balance_check(mint,accounts,primary,secondary,*,label='PUBLICNODE',clock=time.time,full_accounts=False,progress=None):
-    if full_accounts:return _collect_full_set(mint,accounts,primary,secondary,label,clock,progress)
+def collect_independent_balance_check(mint,accounts,primary,secondary,*,label='PUBLICNODE',clock=time.time,full_accounts=False,progress=None,enumeration=None):
+    if full_accounts:return _collect_full_set(mint,accounts,primary,secondary,label,clock,progress,enumeration)
     base={'version':1,'status':'UNAVAILABLE','secondary_provider':label,'scope':'LARGEST_TOKEN_ACCOUNTS_AND_MINT_SUPPLY; NOT_FULL_ENUMERATION','secondary_wire_attempts':0,'last_source_error':None}
     if secondary is None:return {**base,'status':'NOT_REQUESTED','reason':'NO_SECONDARY_PROVIDER'}
     addresses=[mint]+[a for a in dict.fromkeys(accounts) if valid_pubkey(a) and a!=mint][:MAX_ACCOUNTS]

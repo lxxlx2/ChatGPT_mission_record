@@ -97,7 +97,7 @@ def test_html_and_browser_bind_into_existing_dashboard_without_touching_old_send
     assert "setInterval(refreshFrankIntelligence,60000)" in js
     assert "get('/api/candidates')" in js
     assert "get('/api/frank-signed-activity?days='" in js
-    assert "get('/api/frank-observed-watchlist')" in js
+    assert "get('/api/frank-observed-watchlist?personal=1')" in js
 
 
 def test_twelve_genuine_archival_observations_render_with_no_future_outcomes():

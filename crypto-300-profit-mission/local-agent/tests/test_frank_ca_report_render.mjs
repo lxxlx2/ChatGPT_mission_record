@@ -72,13 +72,26 @@ test('all-account second-provider batches keep source-universe and time limits e
   const output=h.context.renderIndependentCheck({independent_balance_check:{
     version:1,status:'NEAR_TIME_ALL_MATCH',secondary_provider:'PUBLICNODE',
     scope:'ALL_PROVIDED_TOKEN_ACCOUNTS_AND_MINT_SUPPLY; NOT_INDEPENDENT_ENUMERATION',
-    accounts_compared:301,matches:301,differences:0,missing:0,rows:[],
+    supplied_set_origin:'PRIMARY_MINT_ENUMERATION',accounts_compared:301,matches:301,differences:0,missing:0,rows:[],
   }});
   assert.match(output,/主来源枚举的全部账户/);
   assert.match(output,/逐批实际 slot/);
-  assert.match(output,/未独立发现其他账户/);
+  assert.match(output,/独立枚举结果尚未取得/);
   assert.match(output,/不能证明原子同快照一致/);
   assert.doesNotMatch(output,/最大代币账户/);
+});
+
+test('independent enumeration uses its own slot and shows set conflict despite matching rereads',()=>{
+  const h=harness();
+  const output=h.context.renderIndependentCheck({independent_balance_check:{
+    version:1,status:'SAME_SLOT_ALL_MATCH',secondary_provider:'PUBLICNODE',
+    scope:'ALL_PROVIDED_TOKEN_ACCOUNTS_AND_MINT_SUPPLY; NOT_INDEPENDENT_ENUMERATION',
+    supplied_set_origin:'PRIMARY_MINT_ENUMERATION',accounts_compared:3,matches:3,rows:[],
+    independent_account_set:{status:'SAME_SLOT_DIFFERENCE',primary_slot:19,secondary_slot:19,
+      only_primary:['a'],only_secondary:['b'],changed_owner_or_raw:['c']},
+  }});
+  assert.match(output,/同一 finalized slot 枚举冲突/);
+  assert.match(output,/仅主源 1，  *仅第二源 1|仅主源 1，仅第二源 1/);
 });
 
 test('partial second-provider result preserves completed work without endorsing unread accounts',()=>{
@@ -387,14 +400,14 @@ for (const control of ['cluster-read-cached','cluster-read-report']) {
     const ack=deferred();
     h.setResponse(async(url,options)=>options.method==='POST' ? ack.promise :
       {ok:true,status:200,json:async()=>url.startsWith('/api/cluster-analysis?') ?
-        {job_id:secondJob,mint:pendingMint,status:'RUNNING'} : {...fixture,ca_job_id:jobId}});
+        {job_id:secondJob,mint:pendingMint,status:'RUNNING',query_scope:'overview'} : {...fixture,ca_job_id:jobId}});
     h.element('cluster-mint').value=pendingMint;h.element('cluster-preset').value='quick';
     h.element('cluster-reports').value=jobId;
     const submitting=h.element('cluster-form').listeners.get('submit')({preventDefault(){}});
     const requestCount=h.requests.length;
     await h.element(control).listeners.get('click')();
     assert.equal(h.requests.length,requestCount,'no history GET while POST receipt is pending');
-    ack.resolve({ok:true,status:202,json:async()=>({job_id:secondJob,mint:pendingMint})});
+    ack.resolve({ok:true,status:202,json:async()=>({job_id:secondJob,mint:pendingMint,query_scope:'overview'})});
     await submitting;await new Promise(resolve=>setImmediate(resolve));
     assert.equal(JSON.parse(h.store.get(pendingKey)).id,secondJob);
     assert.equal(h.element('cluster-mint').value,pendingMint);
@@ -455,7 +468,7 @@ test('a failed optional last-CA write cannot discard an acknowledged POST job',a
   const h=harness({storageWriteError:true});
   h.element('cluster-mint').value=mint;h.element('cluster-preset').value='quick';
   h.setResponse(async(url,options)=>({ok:true,status:options.method==='POST'?202:200,json:async()=>
-    options.method==='POST'?{job_id:jobId,mint}:{job_id:jobId,mint,status:'RUNNING'}}));
+    options.method==='POST'?{job_id:jobId,mint,query_scope:'overview'}:{job_id:jobId,mint,status:'RUNNING',query_scope:'overview'}}));
   await h.element('cluster-form').listeners.get('submit')({preventDefault(){}});
   await new Promise(resolve=>setImmediate(resolve));
   assert.equal(JSON.parse(h.store.get(pendingKey)).id,jobId);
@@ -477,11 +490,11 @@ test('an optional storage write failure after DONE keeps the received report suc
 test('editing CA while POST awaits receipt cannot mislabel its acknowledged job',async()=>{
   const h=harness(),ack=deferred();
   h.setResponse(async(url,options)=>options.method==='POST'?ack.promise:
-    {ok:true,status:200,json:async()=>({job_id:jobId,mint,status:'RUNNING'})});
+    {ok:true,status:200,json:async()=>({job_id:jobId,mint,status:'RUNNING',query_scope:'overview'})});
   h.element('cluster-mint').value=mint;h.element('cluster-preset').value='quick';
   const submitting=h.element('cluster-form').listeners.get('submit')({preventDefault(){}});
   h.element('cluster-mint').value=pendingMint;
-  ack.resolve({ok:true,status:202,json:async()=>({job_id:jobId,mint})});
+  ack.resolve({ok:true,status:202,json:async()=>({job_id:jobId,mint,query_scope:'overview'})});
   await submitting;await new Promise(resolve=>setImmediate(resolve));
   assert.equal(h.element('cluster-mint').value,mint);
   assert.equal(JSON.parse(h.store.get(pendingKey)).mint,mint);
@@ -751,7 +764,7 @@ test('CA has one visible query entry and no accuracy preset selector',()=>{
   assert.match(html,/统一查询/);
 });
 
-test('CA submit uses fixed bounded standard without reading a mode control',async()=>{
+test('CA submit requests an overview without reading a mode control',async()=>{
   let posted;
   const h=harness({responseFor:async(url,options)=>{
     if(options.method==='POST'){
@@ -763,7 +776,7 @@ test('CA submit uses fixed bounded standard without reading a mode control',asyn
   h.element('cluster-mint').value=mint;
   h.element('cluster-preset').value='unsupported-stale-dom';
   await h.element('cluster-form').listeners.get('submit')({preventDefault(){}});
-  assert.deepEqual(posted,{mint,preset:'standard'});
+  assert.deepEqual(posted,{mint,preset:'standard',scope:'overview'});
   assert.equal(h.requests.filter(x=>x.method==='POST').length,1);
 });
 
@@ -1101,7 +1114,7 @@ function specialRoleReportForUi() {
 
 test('multi-pool known-exclusion arithmetic retains unknown balance and both denominators',()=>{
   const h=harness(),r=specialRoleReportForUi();h.context.renderClusterReport(r);const html=h.element('cluster-rankings').innerHTML;
-  assert.match(html,/cluster-special-roles/);assert.match(html,/已知排除口径已复算/);assert.match(html,/未知角色余额/);assert.match(html,/40%/);assert.match(html,/未穷尽全部池/);
+  assert.match(html,/cluster-special-roles/);assert.match(html,/已知排除口径已复算/);assert.match(html,/未知角色余额/);assert.match(html,/40%/);assert.match(html,/覆盖范围有限/);
 });
 
 test('multi-pool forged mass, deduction, slot or exhaustive flag cannot retain exact filtered ranks',()=>{
@@ -1129,7 +1142,7 @@ test('Owner-derived pool discovery is visible without implying a complete revers
   a.owner_pool_hints_available=1;a.rejected_owner_pool_hints=2;a.pools[0].candidate_sources=['HOLDER_OWNER_ACCOUNT'];
   h.context.renderClusterReport(r);const html=h.element('cluster-rankings').innerHTML;
   assert.match(html,/已读 Owner 账户/);assert.match(html,/有效 Owner 池线索 1/);assert.match(html,/拒绝的 Owner 线索 2/);
-  assert.match(html,/共享全局 authority/);assert.match(html,/已知排除口径已复算/);
+  assert.match(html,/合并池候选 1 个/);assert.match(html,/已知排除口径已复算/);
 });
 
 test('unknown pool candidate source never echoes arbitrary provider text',()=>{
@@ -1143,7 +1156,7 @@ test('shared authority filtered program discovery shows bounded query coverage a
   a.pools[0].candidate_sources=['MINT_FILTERED_PROGRAM_QUERY'];
   a.program_pool_discovery={version:1,logical_queries:2,attempts:[{program:'CPMMoo8L3F4NbTegBCKVNunggL7H1ZpdTHKxQB5qKP1C',mint_side:'BASE',status:'OBSERVED_QUERY_RESULT',matching_rows:2,eligible_rows:1,snapshot_slot:101},{program:'CPMMoo8L3F4NbTegBCKVNunggL7H1ZpdTHKxQB5qKP1C',mint_side:'QUOTE',status:'UNAVAILABLE',reason:'https://private.invalid/SECRET'}]};
   h.context.renderClusterReport(r);const html=h.element('cluster-rankings').innerHTML;
-  assert.match(html,/Mint 过滤程序查询/);assert.match(html,/本轮 2 个过滤查询/);assert.match(html,/最多4个/);assert.match(html,/128账户/);assert.match(html,/来源仍有缺口/);assert.doesNotMatch(html,/private.invalid|SECRET/);
+  assert.match(html,/Mint 过滤程序查询/);assert.match(html,/本轮 2 个过滤查询/);assert.match(html,/最多4个/);assert.match(html,/256 KiB/);assert.match(html,/来源仍有缺口/);assert.doesNotMatch(html,/private.invalid|SECRET/);
 });
 
 test('legacy role report does not invent a program-query count',()=>{
@@ -1537,10 +1550,11 @@ for(const secondsBeforeReport of [1,300,86400]) test('browser narrative retains 
 test('holder rankings describe a supply bracket without claiming a same-slot snapshot',()=>{
   const h=harness();
   h.context.renderHolderRankings({holder_rankings:{requested:true,status:'COMPLETE_SNAPSHOT',
-    snapshot_slot:20,supply_slot:10,supply_bracket:{before_slot:10,after_slot:30,method:'NO_MINT_AUTHORITY_MONOTONIC_SUPPLY_BRACKET'},
+    snapshot_slot:20,supply_slot:10,supply_bracket:{before_slot:10,after_slot:30,mint_authority_slot:9,method:'NO_MINT_AUTHORITY_MONOTONIC_SUPPLY_BRACKET'},
     metrics:{GLOBAL_OWNER_TOP10_PCT:'58.9540'},owners:[]}});
   const html=h.element('cluster-rankings').innerHTML;
   assert.match(html,/跨 slot 供给夹逼/);
+  assert.match(html,/权限 slot 9/);
   assert.match(html,/前 10.*账户 20.*后 30/);
   assert.doesNotMatch(html,/账户余额总和与同 slot 供给已核对/);
   assert.match(html,/58.954%/);
@@ -1549,10 +1563,13 @@ test('holder rankings describe a supply bracket without claiming a same-slot sna
 test('holder rankings only use same-slot wording for recorded equal slots',()=>{
   const h=harness();
   for(const slots of [{snapshot_slot:20,supply_slot:10},{snapshot_slot:null,supply_slot:null},
-    {snapshot_slot:20,supply_slot:10,supply_bracket:{before_slot:10,after_slot:15,method:'NO_MINT_AUTHORITY_MONOTONIC_SUPPLY_BRACKET'}}]) {
-    h.context.renderHolderRankings({holder_rankings:{requested:true,status:'COMPLETE_SNAPSHOT',...slots,metrics:{},owners:[]}});
+    {snapshot_slot:20,supply_slot:10,supply_bracket:{before_slot:10,after_slot:15,mint_authority_slot:9,method:'NO_MINT_AUTHORITY_MONOTONIC_SUPPLY_BRACKET'}},
+    {snapshot_slot:20,supply_slot:10,supply_bracket:{before_slot:10,after_slot:30,method:'NO_MINT_AUTHORITY_MONOTONIC_SUPPLY_BRACKET'}},
+    {snapshot_slot:20,supply_slot:10,supply_bracket:{before_slot:10,after_slot:30,mint_authority_slot:11,method:'NO_MINT_AUTHORITY_MONOTONIC_SUPPLY_BRACKET'}}]) {
+    h.context.renderHolderRankings({holder_rankings:{requested:true,status:'COMPLETE_SNAPSHOT',...slots,metrics:{GLOBAL_OWNER_TOP10_PCT:'58.9540'},owners:[]}});
     assert.doesNotMatch(h.element('cluster-rankings').innerHTML,/账户余额总和与同 slot 供给已核对/);
     assert.match(h.element('cluster-rankings').innerHTML,/slot 关系未记录或未核实/);
+    assert.doesNotMatch(h.element('cluster-rankings').innerHTML,/58.954%/);
   }
   h.context.renderHolderRankings({holder_rankings:{requested:true,status:'COMPLETE_SNAPSHOT',snapshot_slot:20,supply_slot:20,metrics:{},owners:[]}});
   assert.match(h.element('cluster-rankings').innerHTML,/账户余额总和与同 slot 供给已核对/);
@@ -1642,4 +1659,83 @@ test('nonstandard token exchange first-buy amount is explicitly a net boundary o
   const html=h.context.acquisitionCell({first_acquisition:{status:'CONFIRMED_ACCOUNT_COMPLETE',quote_quantity:'12',quote_asset:mint,
     quote_amount_semantics:'NET_WALLET_PAIR_NOT_EXACT_FINAL_TARGET_COST'}});
   assert.match(html,/账户净交换量/);assert.match(html,/不等于精确买入成本/);
+});
+
+
+test('the first view shows a sourced story independently of exact CA recognition',()=>{
+  const h=harness(), report=storyReport();
+  report.narrative.origin={version:1,recognition:{status:'NO_VERIFIABLE_CLAIM',mint}};
+  h.context.renderClusterPreview({mint,query_scope:'overview',status:'RUNNING',preview:{
+    narrative:report.narrative, token_status:'OK', market_status:'OK', market_cap_usd:123456,
+  }});
+  const view=h.element('cluster-preview').innerHTML;
+  assert.match(view,/A crawler trains an AI model/);
+  assert.match(view,/href="https:\/\/project\.example\.org\/"/);
+  assert.match(view,/CA 认领[\s\S]*已读来源中未找到可验证认领/);
+  assert.doesNotMatch(view,/已核实链上资料关联账号/);
+});
+
+test('first view shows source-bound interaction and requires exact Mint and source-bound evidence for claim',()=>{
+  const h=harness(), report=storyReport();
+  const source='a'.repeat(64), metadata='b'.repeat(64);
+  const from='https://x.com/elonmusk/status/456',to='https://x.com/example/status/123';
+  report.narrative.origin={
+    version:1,creator_metadata:{uri:'https://project.example.org/metadata',description:'A cat in space <script>alert(1)</script>',response_sha256:metadata},
+    posts:[{id:'456',url:from,author:'elonmusk',text:'Interesting',response_sha256:source,created_at:1792683606},
+      {id:'123',url:to,author:'example',author_id:'999',text:'CA: '+mint,response_sha256:source,exact_ca_mentioned:true,relation:'LINKED_BY_CREATOR_METADATA'}],
+    interactions:[{status:'API_REPORTED_STRUCTURAL_RELATION',from,to,type:'REPLY',author:'elonmusk'}],
+    recognition:{mint,basis:'CHAIN_LINKED_POST_AUTHOR_EXPLICIT_EXACT_MINT_CLAIM',status:'EXACT_CA_CLAIM_VERIFIED',
+      source_url:to,author:'example',author_id:'999',post_response_sha256:source,metadata_response_sha256:metadata},
+  };
+  h.context.renderClusterReport(report);
+  const view=h.element('cluster-story').innerHTML;
+  assert.match(view,/cat in space &lt;script&gt;/);
+  assert.match(view,/@elonmusk 回复了 @example/);
+  assert.match(view,/CA 认领[\s\S]*已核实链上资料关联账号/);
+  assert.match(view,/href="https:\/\/x\.com\/example\/status\/123"/);
+  report.narrative.origin.recognition.mint=pendingMint;
+  h.context.renderClusterReport(report);
+  assert.match(h.element('cluster-story').innerHTML,/尚未核实准确 CA/);
+  assert.doesNotMatch(h.element('cluster-story').innerHTML,/认领原帖/);
+});
+
+test('overview and wallet are explicitly separate jobs and wallet details preserve the overview',async()=>{
+  const owner='44444444444444444444444444444444';
+  const fullId='cccccccccccccccccccccccccccccccc';
+  const posts=[];
+  const h=harness({responseFor:async(url,options)=>{
+    if (options.method==='POST') {
+      const body=JSON.parse(options.body);posts.push(body);
+      const binding=body.scope==='wallet' ? {focus_owner:owner,base_job_id:jobId} : {base_job_id:jobId};
+      return {ok:true,status:202,json:async()=>({mint,job_id:body.scope==='wallet'?secondJob:fullId,query_scope:body.scope,...binding})};
+    }
+    if (url.endsWith('job_id='+secondJob)) {
+      const fields={mint,query_scope:'wallet',focus_owner:owner,base_job_id:jobId};
+      return {ok:true,status:200,json:async()=>url.startsWith('/api/cluster-analysis') ?
+        {...fields,job_id:secondJob,status:'DONE'} : {...fields,ca_job_id:secondJob,observed_at:1792683606,wallet_detail:{owner,raw:'191',supply_pct:'1.5'},decimals:2}};
+    }
+    return new Promise(()=>{});
+  }});
+  h.element('cluster-mint').value=mint;
+  h.context.renderClusterReport({...fixture,ca_job_id:jobId,query_scope:'overview'});
+  const summary=h.element('cluster-summary').innerHTML;
+  const click=h.element('cluster-result').listeners.get('click');
+  await click({target:{closest:()=>({dataset:{clusterOwner:owner}})}});
+  await new Promise(resolve=>setImmediate(resolve));
+  assert.deepEqual(posts,[{mint,preset:'standard',scope:'wallet',owner,base_job_id:jobId}]);
+  assert.equal(h.element('cluster-wallet-panel').hidden,false);
+  assert.match(h.element('cluster-wallet-detail').innerHTML,/1\.91/);
+  assert.equal(h.element('cluster-summary').innerHTML,summary);
+  await h.element('cluster-full-query').listeners.get('click')();
+  assert.deepEqual(posts[1],{mint,preset:'standard',scope:'full',base_job_id:jobId});
+});
+
+test('missing launch evidence does not hide the chain-proven Pump creator',()=>{
+  const h=harness();
+  h.context.renderClusterReport({...fixture,launch_identity:{pump:{status:'VERIFIED_CHAIN_STATE',creator:mint}},
+    launch_flow:{status:'PARTIAL',reason:'MALFORMED_SIGNATURE_PAGE'},quick_check:{dev:null}});
+  const view=h.element('cluster-quick-check').innerHTML;
+  assert.match(view,/当前持仓未核实.*卖出未核实/);
+  assert.match(view,/开盘覆盖不完整/);
+  assert.doesNotMatch(view,/非 Pump.fun/);
 });

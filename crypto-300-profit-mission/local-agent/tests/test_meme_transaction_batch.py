@@ -1,7 +1,7 @@
 import json
 import uuid
 import pytest
-from mission_agent.meme.cluster import SolanaReadOnlyRPC, WalletClusterAnalyzer, Holder
+from mission_agent.meme.cluster import RpcCache, SolanaReadOnlyRPC, WalletClusterAnalyzer, Holder
 from mission_agent.meme.job_checkpoint import JobCheckpoint, CheckpointRPC, CheckpointError
 
 OPTIONS={'commitment':'finalized','encoding':'jsonParsed','maxSupportedTransactionVersion':1}
@@ -33,6 +33,28 @@ def test_four_transactions_use_one_wire_and_restore_out_of_order_ids():
     wires=[];rpc=rpc_with(wires);sigs=['s1','s2','s3','s4'];schedule(rpc,sigs)
     assert [rpc.call('getTransaction',[s,OPTIONS],ttl=TTL)['signature'] for s in sigs]==sigs
     assert len(wires)==rpc.calls==1
+
+@pytest.mark.parametrize('count',[5,29,109])
+def test_cold_and_reopened_warm_cache_preserve_every_signature_across_sizes(tmp_path,count):
+    signatures=[f'fixture-{count}-{i}' for i in range(count)]
+    def collect(rpc,batched):
+        if batched:schedule(rpc,signatures)
+        return [rpc.call('getTransaction',[s,OPTIONS],ttl=TTL) for s in signatures]
+
+    baseline_calls=[]
+    expected=collect(rpc_with(baseline_calls),False)
+    assert len(baseline_calls)==count
+    path=tmp_path/'rpc.sqlite'
+    cold_calls=[]
+    cold=rpc_with(cold_calls);cold.cache=RpcCache(path)
+    assert collect(cold,True)==expected
+    cold.cache.close()
+    warm_calls=[]
+    warm=rpc_with(warm_calls);warm.cache=RpcCache(path)
+    assert collect(warm,True)==expected
+    warm.cache.close()
+    assert len(cold_calls)==(count+3)//4
+    assert not warm_calls and warm.cache_hits==count
 
 @pytest.mark.parametrize('mode',['duplicate','partial','null'])
 def test_invalid_partial_or_null_batch_never_drops_a_transaction_or_leaks_source_text(mode):

@@ -64,7 +64,9 @@ def test_ca_ui_has_independent_fast_view_and_disclosed_technical_evidence():
         "cluster-token-profile", "cluster-coverage", "cluster-evidence",
     ]
     assert all(parser.ids.count(node) == 1 for node in needed)
-    assert html.index('id="cluster-conclusion"') < html.index('id="cluster-holders"')
+    assert html.index('id="cluster-story"') < html.index('id="cluster-quick-check"')
+    assert html.index('id="cluster-quick-check"') < html.index('id="cluster-holders"')
+    assert html.index('id="cluster-holders"') < html.index('id="cluster-conclusion"')
     assert html.index('id="cluster-market"') < html.index('id="cluster-holders"')
     assert html.index('id="cluster-holders"') < html.index('id="cluster-coverage"')
     assert 'class="panel cluster-detail-fold"' in html

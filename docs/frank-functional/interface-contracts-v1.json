@@ -1,0 +1,945 @@
+{
+  "schema_version": 1,
+  "kind": "DESIGN_CONTRACT_NOT_AN_IMPLEMENTED_OPENAPI_SERVER",
+  "base_url": "http://127.0.0.1:8766",
+  "compatibility": "existing payloads/errors preserved; new fields additive; PROPOSED routes not present until implemented",
+  "common_response": {
+    "schema_version": "integer=1",
+    "status": "OK|PARTIAL|UNAVAILABLE|NOT_SUPPORTED",
+    "as_of": "UTC epoch seconds, finite",
+    "data": "typed object/array per endpoint",
+    "coverage": "scope/enumeration_status/history_status/classification_status/parity_status/missing_items/stop_reason",
+    "sources": "SourceRef[]: provider_id/method/request_hash/response_sha256/observed_at/slot?/commitment?/private opaque receipt_id",
+    "errors": "safe code/stage/retryable/retry_after?, never exception/URL/private path"
+  },
+  "job_response": {
+    "job_id": "opaque ID",
+    "state": "QUEUED|RUNNING|DONE|PARTIAL|PAUSED|ERROR",
+    "progress": "stage/completed_items/pending_items/updated_at",
+    "binding": "code_sha/parser_version/source_binding/request_hash",
+    "result_ref": "nullable snapshot_id/run_id",
+    "errors": "safe typed errors",
+    "resume_allowed": "boolean; source binding and freshness checked"
+  },
+  "paging": {
+    "limit": "integer 1..1000 response capacity, no total row cap",
+    "cursor": "opaque locator bound to filter/as_of/source and snapshot or revision; 409 if changed",
+    "returned": "integer",
+    "total_matching": "integer|null with exact/unknown definition",
+    "next_cursor": "nullable string; all matching results reachable",
+    "scope": "explicit local index/open accounts/history scope"
+  },
+  "security": {
+    "host": "loopback only",
+    "new_write_origin": "exact request origin including port; reject cross-origin even other loopback port",
+    "content_type": "application/json for writes",
+    "unknown_duplicate_fields": "reject400",
+    "raw_secrets": "never in public output",
+    "get_invariant": "no source socket, job creation, derived writes, notifications, quote, signing or source age refresh"
+  },
+  "interfaces": [
+    {
+      "id": "API01",
+      "method": "GET",
+      "path": "/api/frank-signed-activity",
+      "implementation_state": "IMPLEMENTED_CANDIDATE",
+      "request": {
+        "days": "1|7|30|all; default1",
+        "limit": "optional page capacity1..1000",
+        "cursor": "optional query-bound cursor",
+        "kind": "ALL|BUY|SELL|ACTIVE_TRADE|PASSIVE_TRANSFER|FAILED_TX|ATA_CREATE|UNKNOWN_NEEDS_REVIEW|OTHER_OR_UNKNOWN",
+        "mint": "optional valid Solana pubkey"
+      },
+      "response": "existing response + rows/signatures/trade legs/provenance/paging, LOCAL_INDEX_ONLY; rowid fence does not freeze existing rows",
+      "side_effects": "NONE",
+      "work_packages": [
+        "W01",
+        "W06"
+      ],
+      "errors": {
+        "400": "invalid query/cursor/filter changed",
+        "409": "ACTIVITY_CURSOR_SOURCE_CHANGED",
+        "200": "INDEXED_LOCAL_ONLY or legacy UNAVAILABLE body; compatibility retained"
+      }
+    },
+    {
+      "id": "API02",
+      "method": "GET",
+      "path": "/api/frank-coverage",
+      "implementation_state": "IMPLEMENTED_LOCAL_INSTALLED_CHROME_VERIFIED",
+      "request": {
+        "days": "1|7|30|all, default all"
+      },
+      "response": "Local indexed window, timed and untimed counts, class counts, unresolved and detected pending signatures, source hashes and recorded scanner observation. Known gaps and historical backfill are unknown without evidence. No chain completeness inference.",
+      "side_effects": "NONE",
+      "work_packages": [
+        "W02",
+        "W06"
+      ],
+      "errors": {
+        "400": "invalid range or unknown/duplicate query field",
+        "403": "same-origin read guard required",
+        "421": "loopback Host required",
+        "503": "local source unavailable"
+      }
+    },
+    {
+      "id": "API03",
+      "method": "POST",
+      "path": "/api/frank-balance-refresh",
+      "implementation_state": "IMPLEMENTED_LIVE_HTTP_CHROME_INSTALLED",
+      "request": {
+        "idempotency_key": "required nonempty string"
+      },
+      "response": "202 common Job; same active wallet/source job reused",
+      "side_effects": "READ_EXISTING_RPC_WRITE_CONTROL_ROOT",
+      "work_packages": [
+        "W03"
+      ],
+      "errors": {
+        "400": "invalid/unknown/duplicate input",
+        "403": "exact same-origin or Host required for new sensitive/write routes",
+        "404": "entity not found",
+        "409": "revision/idempotency/source binding changed",
+        "503": "source unavailable or throttled; no invented zero"
+      }
+    },
+    {
+      "id": "API04",
+      "method": "GET",
+      "path": "/api/frank-balance-refresh",
+      "implementation_state": "IMPLEMENTED_LIVE_HTTP_CHROME_INSTALLED",
+      "request": {
+        "refresh_id": "required opaque ID"
+      },
+      "response": "common Job; immutable/latest successful snapshot refs and failure separately",
+      "side_effects": "NONE",
+      "work_packages": [
+        "W03"
+      ],
+      "errors": {
+        "400": "invalid/unknown/duplicate input",
+        "403": "exact same-origin or Host required for new sensitive/write routes",
+        "404": "entity not found",
+        "409": "revision/idempotency/source binding changed",
+        "503": "source unavailable or throttled; no invented zero"
+      }
+    },
+    {
+      "id": "API05",
+      "method": "POST",
+      "path": "/api/frank-balance-refresh/resume",
+      "implementation_state": "IMPLEMENTED_LIVE_HTTP_CHROME_INSTALLED",
+      "request": {
+        "refresh_id": "required ID",
+        "idempotency_key": "required string"
+      },
+      "response": "202 Job; validates binding and freshness; expired stages recaptured",
+      "side_effects": "READ_EXISTING_RPC_WRITE_CONTROL_ROOT",
+      "work_packages": [
+        "W03"
+      ],
+      "errors": {
+        "400": "invalid/unknown/duplicate input",
+        "403": "exact same-origin or Host required for new sensitive/write routes",
+        "404": "entity not found",
+        "409": "revision/idempotency/source binding changed",
+        "503": "source unavailable or throttled; no invented zero"
+      }
+    },
+    {
+      "id": "API06",
+      "method": "GET",
+      "path": "/api/frank-positions",
+      "implementation_state": "IMPLEMENTED_LIVE_HTTP_CHROME_INSTALLED",
+      "request": {
+        "snapshot_id": "optional ID; default latest successful snapshot with actual age",
+        "mint": "optional valid pubkey",
+        "limit": "optional1..1000",
+        "cursor": "optional snapshot-bound"
+      },
+      "response": "Position[] + paging: wallet/mint/programs/raw balance/decimals/model/reconciliation/snapshot refs/freshness; partial and zero distinct; full open-account snapshot, native SOL separate, source binding conflicts409, unpriced null",
+      "side_effects": "NONE",
+      "work_packages": [
+        "W03",
+        "W07"
+      ],
+      "errors": {
+        "400": "invalid/unknown/duplicate input",
+        "403": "exact same-origin or Host required for new sensitive/write routes",
+        "404": "entity not found",
+        "409": "revision/idempotency/source binding changed",
+        "503": "source unavailable or throttled; no invented zero"
+      }
+    },
+    {
+      "id": "API07",
+      "method": "POST",
+      "path": "/api/frank-market-refresh",
+      "implementation_state": "IMPLEMENTED_LIVE_HTTP_CHROME_INSTALLED",
+      "request": {
+        "scope": "observed|positions|signals|mint; positions=all nonzero captured balances plus SOL market reference; signals=all source candidates plus USDC/USD reference",
+        "mint": "required only if scope=mint",
+        "idempotency_key": "required"
+      },
+      "response": "202 Job; all selected Mint queued without total truncation",
+      "side_effects": "READ_EXISTING_FREE_MARKET_WRITE_CONTROL_ROOT",
+      "work_packages": [
+        "W04"
+      ],
+      "errors": {
+        "400": "invalid/unknown/duplicate input",
+        "403": "exact same-origin or Host required for new sensitive/write routes",
+        "404": "entity not found",
+        "409": "revision/idempotency/source binding changed",
+        "503": "source unavailable or throttled; no invented zero"
+      }
+    },
+    {
+      "id": "API08",
+      "method": "GET",
+      "path": "/api/frank-market-refresh",
+      "implementation_state": "IMPLEMENTED_LIVE_HTTP_CHROME_INSTALLED",
+      "request": {
+        "refresh_id": "required"
+      },
+      "response": "common Job + per-Mint completed/failed/unavailable counts",
+      "side_effects": "NONE",
+      "work_packages": [
+        "W04"
+      ],
+      "errors": {
+        "400": "invalid/unknown/duplicate input",
+        "403": "exact same-origin or Host required for new sensitive/write routes",
+        "404": "entity not found",
+        "409": "revision/idempotency/source binding changed",
+        "503": "source unavailable or throttled; no invented zero"
+      }
+    },
+    {
+      "id": "API09",
+      "method": "GET",
+      "path": "/api/frank-market-observations",
+      "implementation_state": "IMPLEMENTED_LIVE_HTTP_CHROME_INSTALLED",
+      "request": {
+        "mint": "optional",
+        "limit": "optional1..1000",
+        "cursor": "optional"
+      },
+      "response": "MarketObservation[] + paging; chain/mint/pair/base/quote/currency/price/source_time/observed/expires/coverage",
+      "side_effects": "NONE",
+      "work_packages": [
+        "W04"
+      ],
+      "errors": {
+        "400": "invalid/unknown/duplicate input",
+        "403": "exact same-origin or Host required for new sensitive/write routes",
+        "404": "entity not found",
+        "409": "revision/idempotency/source binding changed",
+        "503": "source unavailable or throttled; no invented zero"
+      }
+    },
+    {
+      "id": "API10",
+      "method": "GET",
+      "path": "/api/frank-watch-metadata",
+      "implementation_state": "IMPLEMENTED_LOCAL_INSTALLED_CHROME_VERIFIED",
+      "request": {
+        "mint": "optional",
+        "limit": "optional1..1000",
+        "cursor": "optional"
+      },
+      "response": "watch metadata[] + paging, revision and last change ID, no network",
+      "side_effects": "NONE",
+      "work_packages": [
+        "W05"
+      ],
+      "errors": {
+        "400": "invalid/unknown/duplicate input",
+        "403": "exact same-origin or Host required for new sensitive/write routes",
+        "404": "entity not found",
+        "409": "revision/idempotency/source binding changed",
+        "503": "source unavailable or throttled; no invented zero"
+      }
+    },
+    {
+      "id": "API11",
+      "method": "PATCH",
+      "path": "/api/frank-watch-metadata/{mint}",
+      "implementation_state": "IMPLEMENTED_LOCAL_INSTALLED_CHROME_VERIFIED",
+      "request": {
+        "mint": "path valid pubkey",
+        "expected_revision": "required nonnegative integer;0 creates",
+        "idempotency_key": "required",
+        "pinned": "optional boolean",
+        "note": "optional plain string; bounded request capacity, no implicit HTML",
+        "watch_override": "optional FOLLOW|HIDE|DEFAULT; user metadata only"
+      },
+      "response": "200 metadata + revision/event_id; same key+body returns original, conflict409",
+      "side_effects": "WRITE_CONTROL_ROOT_ONLY",
+      "work_packages": [
+        "W05"
+      ],
+      "errors": {
+        "400": "invalid/unknown/duplicate input",
+        "403": "exact same-origin or Host required for new sensitive/write routes",
+        "404": "entity not found",
+        "409": "revision/idempotency/source binding changed",
+        "503": "source unavailable or throttled; no invented zero"
+      }
+    },
+    {
+      "id": "API12",
+      "method": "POST",
+      "path": "/api/frank-cost-rebuild",
+      "implementation_state": "IMPLEMENTED_LOCAL_INSTALLED_CHROME_VERIFIED",
+      "request": {
+        "input_manifest_id": "required fixed fact set reference",
+        "idempotency_key": "required"
+      },
+      "response": "201 COMPLETE. Synchronous materialization of an immutable FIFO run keyed by facts manifest and accounting version. Only local derived storage is written.",
+      "side_effects": "WRITE_DERIVED_CONTROL_ROOT_ONLY",
+      "work_packages": [
+        "W07"
+      ],
+      "errors": {
+        "400": "invalid/unknown/duplicate input",
+        "403": "exact same-origin or Host required for new sensitive/write routes",
+        "404": "entity not found",
+        "409": "revision/idempotency/source binding changed",
+        "503": "source unavailable or throttled; no invented zero"
+      }
+    },
+    {
+      "id": "API13",
+      "method": "GET",
+      "path": "/api/frank-cost-rebuild",
+      "implementation_state": "IMPLEMENTED_LOCAL_INSTALLED_CHROME_VERIFIED",
+      "request": {
+        "run_id": "required"
+      },
+      "response": "Completed run metadata including immutable input hash, accounting version, data cutoff, valuation time and coverage.",
+      "side_effects": "NONE",
+      "work_packages": [
+        "W07"
+      ],
+      "errors": {
+        "400": "invalid/unknown/duplicate input",
+        "403": "exact same-origin or Host required for new sensitive/write routes",
+        "404": "entity not found",
+        "409": "revision/idempotency/source binding changed",
+        "503": "source unavailable or throttled; no invented zero"
+      }
+    },
+    {
+      "id": "API14",
+      "method": "GET",
+      "path": "/api/frank-cost-basis",
+      "implementation_state": "IMPLEMENTED_LOCAL_INSTALLED_CHROME_VERIFIED",
+      "request": {
+        "mint": "optional",
+        "run_id": "optional latest with explicit input age",
+        "limit": "optional1..1000",
+        "cursor": "optional run-bound"
+      },
+      "response": "Immutable run-bound Mint pages with FIFO lots, movements, exact original-currency totals, network fees, account funding and closure refunds. Covered PnL includes only comparable components. Whole wallet totals stay unknown where coverage is unproven.",
+      "side_effects": "NONE",
+      "work_packages": [
+        "W07"
+      ],
+      "errors": {
+        "400": "invalid/unknown/duplicate input",
+        "403": "exact same-origin or Host required for new sensitive/write routes",
+        "404": "entity not found",
+        "409": "revision/idempotency/source binding changed",
+        "503": "source unavailable or throttled; no invented zero"
+      }
+    },
+    {
+      "id": "API15",
+      "method": "GET",
+      "path": "/api/frank-intelligence",
+      "implementation_state": "IMPLEMENTED_LOCAL_INSTALLED_CHROME_VERIFIED",
+      "request": {},
+      "response": "legacy envelope + rows using available captured market refs; local pure preview, no implicit fetch or update write; comparable USDC reference requires fresh target USD and USDC/USD observations; both source refs retained",
+      "side_effects": "NONE",
+      "work_packages": [
+        "W04",
+        "W08"
+      ],
+      "errors": {
+        "400": "invalid/unknown/duplicate input",
+        "403": "exact same-origin or Host required for new sensitive/write routes",
+        "404": "entity not found",
+        "409": "revision/idempotency/source binding changed",
+        "503": "source unavailable or throttled; no invented zero"
+      }
+    },
+    {
+      "id": "API16",
+      "method": "POST",
+      "path": "/api/frank-intelligence-refresh",
+      "implementation_state": "IMPLEMENTED_LOCAL_INSTALLED_CHROME_VERIFIED",
+      "request": {
+        "idempotency_key": "required",
+        "input_manifest_id": "optional; default captures current fixed local evidence refs"
+      },
+      "response": "201 COMPLETE. Synchronous durable analysis tied to a facts manifest, captured position and market references. Idempotent. Uses local observations only.",
+      "side_effects": "WRITE_DERIVED_CONTROL_ROOT_ONLY",
+      "work_packages": [
+        "W08"
+      ],
+      "errors": {
+        "400": "invalid/unknown/duplicate input",
+        "403": "exact same-origin or Host required for new sensitive/write routes",
+        "404": "entity not found",
+        "409": "revision/idempotency/source binding changed",
+        "503": "source unavailable or throttled; no invented zero"
+      }
+    },
+    {
+      "id": "API17",
+      "method": "GET",
+      "path": "/api/frank-intelligence-refresh",
+      "implementation_state": "IMPLEMENTED_LOCAL_INSTALLED_CHROME_VERIFIED",
+      "request": {
+        "run_id": "required"
+      },
+      "response": "Saved completed analysis run with fact cutoff, analysis time, evidence references, version and created versus deduplicated updates.",
+      "side_effects": "NONE",
+      "work_packages": [
+        "W08"
+      ],
+      "errors": {
+        "400": "invalid/unknown/duplicate input",
+        "403": "exact same-origin or Host required for new sensitive/write routes",
+        "404": "entity not found",
+        "409": "revision/idempotency/source binding changed",
+        "503": "source unavailable or throttled; no invented zero"
+      }
+    },
+    {
+      "id": "API18",
+      "method": "GET",
+      "path": "/api/frank-intelligence-updates",
+      "implementation_state": "IMPLEMENTED_LOCAL_INSTALLED_CHROME_VERIFIED",
+      "request": {
+        "mint": "optional",
+        "kind": "optional registered risk kind",
+        "limit": "optional1..1000",
+        "cursor": "optional"
+      },
+      "response": "durable update[] + paging; semantic identity/reason/source fact refs/missing/previous update; notification_enabled=false",
+      "side_effects": "NONE",
+      "work_packages": [
+        "W08"
+      ],
+      "errors": {
+        "400": "invalid/unknown/duplicate input",
+        "403": "exact same-origin or Host required for new sensitive/write routes",
+        "404": "entity not found",
+        "409": "revision/idempotency/source binding changed",
+        "503": "source unavailable or throttled; no invented zero"
+      }
+    },
+    {
+      "id": "API19",
+      "method": "POST",
+      "path": "/api/frank-quote",
+      "implementation_state": "IMPLEMENTED_INSTALLED_OFFLINE_TRANSPORT_CHROME_VERIFIED",
+      "request": {
+        "mint": "required valid pubkey",
+        "input_mint": "required valid pubkey",
+        "input_amount_raw": "required positive integer string, explicit user value",
+        "slippage_bps": "required integer; provider-supported range validated"
+      },
+      "response": "Bound ExactIn quote or NO_ROUTE with source and response digests, raw input and output, projected route and 30-second reference TTL. No transaction or wallet required.",
+      "side_effects": "READ_EXISTING_QUOTE_ONLY_NO_SIGN_OR_SEND",
+      "work_packages": [
+        "W08"
+      ],
+      "errors": {
+        "400": "invalid/unknown/duplicate input",
+        "403": "exact same-origin or Host required for new sensitive/write routes",
+        "404": "entity not found",
+        "409": "revision/idempotency/source binding changed",
+        "503": "source unavailable or throttled; no invented zero"
+      }
+    },
+    {
+      "id": "API20",
+      "method": "POST",
+      "path": "/api/frank-notification-archive",
+      "implementation_state": "EXISTING_LOCAL_VERIFIED",
+      "request": {
+        "notification_id": "required",
+        "channel": "required known channel",
+        "archived": "required boolean",
+        "reason": "optional plain text",
+        "expected_revision": "required",
+        "idempotency_key": "required"
+      },
+      "response": "annotation revision + event ID; immutable delivery status/receipt preserved",
+      "side_effects": "WRITE_CONTROL_ANNOTATION_ONLY_NO_ENQUEUE",
+      "work_packages": [
+        "W13"
+      ],
+      "errors": {
+        "400": "invalid/unknown/duplicate input",
+        "403": "exact same-origin or Host required for new sensitive/write routes",
+        "404": "entity not found",
+        "409": "revision/idempotency/source binding changed",
+        "503": "source unavailable or throttled; no invented zero",
+        "415": "application/json required"
+      }
+    },
+    {
+      "id": "API21",
+      "method": "GET",
+      "path": "/api/frank-notification-audit",
+      "implementation_state": "EXISTING_LOCAL_VERIFIED",
+      "request": {
+        "notification_id": "optional",
+        "channel": "optional",
+        "limit": "optional1..1000",
+        "cursor": "optional"
+      },
+      "response": "audit[] + paging with source/decision/outbox/attempt/receipt/verified vs unknown/archive and segmented latency",
+      "side_effects": "NONE",
+      "work_packages": [
+        "W13"
+      ],
+      "errors": {
+        "400": "invalid/unknown/duplicate input",
+        "403": "exact same-origin or Host required for new sensitive/write routes",
+        "404": "entity not found",
+        "409": "revision/idempotency/source binding changed",
+        "503": "source unavailable or throttled; no invented zero"
+      }
+    },
+    {
+      "id": "API22",
+      "method": "POST",
+      "path": "/api/cluster-analysis",
+      "implementation_state": "EXISTING_TO_EXTEND",
+      "request": {
+        "mint": "required valid Solana mint",
+        "preset": "existing preset; not a hidden total data cap",
+        "resume_job_id": "optional existing job ID; do not change mint"
+      },
+      "response": "202 existing CA Job + per-stage completeness/source binding; no default notional quote",
+      "side_effects": "READ_EXISTING_RPC_MARKET_NARRATIVE_WRITE_PRIVATE_JOB",
+      "work_packages": [
+        "W09",
+        "W10",
+        "W11",
+        "W12"
+      ],
+      "errors": {
+        "400": "INVALID_SOLANA_CA or INVALID_CLUSTER_REQUEST",
+        "403": "same-origin POST required",
+        "409": "planned source/code/parser binding mismatch",
+        "503": "source unavailable captured in async job result"
+      }
+    },
+    {
+      "id": "API23",
+      "method": "GET",
+      "path": "/api/cluster-analysis",
+      "implementation_state": "EXISTING_TO_EXTEND",
+      "request": {
+        "job_id": "required"
+      },
+      "response": "200 Job + stage partial results or404; GET restores saved view only",
+      "side_effects": "NONE",
+      "work_packages": [
+        "W12"
+      ],
+      "errors": {
+        "400": "invalid/unknown/duplicate input",
+        "403": "exact same-origin or Host required for new sensitive/write routes",
+        "404": "entity not found",
+        "409": "revision/idempotency/source binding changed",
+        "503": "source unavailable or throttled; no invented zero"
+      }
+    },
+    {
+      "id": "API24",
+      "method": "GET",
+      "path": "/api/cluster-latest",
+      "implementation_state": "EXISTING_TO_EXTEND",
+      "request": {
+        "mint": "required",
+        "job_id": "optional exact saved job"
+      },
+      "response": "200 saved report exact identity/hash + coverage/clock/performance;404 absent; no query run",
+      "side_effects": "NONE",
+      "work_packages": [
+        "W09",
+        "W10",
+        "W11",
+        "W12"
+      ],
+      "errors": {
+        "400": "invalid/unknown/duplicate input",
+        "403": "exact same-origin or Host required for new sensitive/write routes",
+        "404": "entity not found",
+        "409": "revision/idempotency/source binding changed",
+        "503": "source unavailable or throttled; no invented zero"
+      }
+    },
+    {
+      "id": "API25",
+      "method": "GET",
+      "path": "/api/cluster-narrative-supplement",
+      "implementation_state": "EXISTING_TO_EXTEND",
+      "request": {
+        "mint": "required",
+        "job_id": "required"
+      },
+      "response": "200 saved narrative content/actors/events/sources + independent claim/origin status;404 absent",
+      "side_effects": "NONE",
+      "work_packages": [
+        "W11"
+      ],
+      "errors": {
+        "400": "invalid/unknown/duplicate input",
+        "403": "exact same-origin or Host required for new sensitive/write routes",
+        "404": "entity not found",
+        "409": "revision/idempotency/source binding changed",
+        "503": "source unavailable or throttled; no invented zero"
+      }
+    },
+    {
+      "id": "API26",
+      "method": "GET",
+      "path": "/api/frank-d2-at-slot",
+      "implementation_state": "EXISTING_COMPATIBILITY",
+      "request": {
+        "header": "X-Frank-D2-Read:1 and existing same-origin validation",
+        "mint": "optional, exclusive with page",
+        "page": "optional existing page number"
+      },
+      "response": "existing dated snapshot + original capture/age, not current balance; keep existing error codes",
+      "side_effects": "NONE",
+      "work_packages": [
+        "W03"
+      ],
+      "errors": {
+        "400": "invalid/unknown/duplicate input",
+        "403": "exact same-origin or Host required for new sensitive/write routes",
+        "404": "entity not found",
+        "409": "revision/idempotency/source binding changed",
+        "503": "source unavailable or throttled; no invented zero"
+      }
+    },
+    {
+      "id": "API27",
+      "method": "GET",
+      "path": "/api/frank-observed-watchlist",
+      "implementation_state": "IMPLEMENTED_LOCAL_INSTALLED_CHROME_VERIFIED",
+      "request": {
+        "personal": "optional exact1; same-origin read header required; absent preserves legacy payload"
+      },
+      "response": "existing observed facts plus optional user-view pin/override overlay; no notes exposed; unindexed user Mints explicitly USER_ONLY",
+      "side_effects": "NONE",
+      "work_packages": [
+        "W03",
+        "W05"
+      ],
+      "errors": {
+        "400": "invalid/unknown/duplicate input",
+        "403": "exact same-origin or Host required for new sensitive/write routes",
+        "404": "entity not found",
+        "409": "revision/idempotency/source binding changed",
+        "503": "source unavailable or throttled; no invented zero"
+      }
+    },
+    {
+      "id": "API28",
+      "method": "GET",
+      "path": "/api/frank-activity-watch",
+      "implementation_state": "EXISTING_COMPATIBILITY",
+      "request": {},
+      "response": "existing latest100 summary explicit limited scope; complete activity usesAPI01",
+      "side_effects": "NONE",
+      "work_packages": [
+        "W01",
+        "W06"
+      ],
+      "errors": {
+        "400": "invalid/unknown/duplicate input",
+        "403": "exact same-origin or Host required for new sensitive/write routes",
+        "404": "entity not found",
+        "409": "revision/idempotency/source binding changed",
+        "503": "source unavailable or throttled; no invented zero"
+      }
+    },
+    {
+      "id": "API29",
+      "method": "GET",
+      "path": "/api/follow-opportunities",
+      "implementation_state": "IMPLEMENTED_LOCAL_INSTALLED_CHROME_VERIFIED",
+      "request": {},
+      "response": "existing source recent/history/eligibility split, no quote or source BUY suppression",
+      "side_effects": "NONE",
+      "work_packages": [
+        "W08"
+      ],
+      "errors": {
+        "400": "invalid/unknown/duplicate input",
+        "403": "exact same-origin or Host required for new sensitive/write routes",
+        "404": "entity not found",
+        "409": "revision/idempotency/source binding changed",
+        "503": "source unavailable or throttled; no invented zero"
+      }
+    },
+    {
+      "id": "API30",
+      "method": "POST",
+      "path": "/api/frank-evidence-manifests",
+      "implementation_state": "IMPLEMENTED_LOCAL_INSTALLED_CHROME_VERIFIED",
+      "request": {
+        "kind": "activity|facts implemented; positions/market deferred to their own versioned evidence contracts",
+        "idempotency_key": "required",
+        "supersedes_manifest_id": "optional prior v2 facts manifest of the same source. Bound to the idempotency key."
+      },
+      "response": "201 COMPLETE. Facts v2 retains its envelope. counts.archive_replay includes configured legacy coverage, archived instructions, source-bound exchanges and closing refunds.",
+      "side_effects": "WRITE_DERIVED_CONTROL_ROOT_ONLY",
+      "work_packages": [
+        "W02",
+        "W06"
+      ],
+      "errors": {
+        "400": "invalid/unknown/duplicate input",
+        "403": "exact same-origin or Host required for new sensitive/write routes",
+        "404": "entity not found",
+        "409": "revision/idempotency/source binding changed",
+        "503": "source unavailable or throttled; no invented zero"
+      }
+    },
+    {
+      "id": "API31",
+      "method": "GET",
+      "path": "/api/frank-evidence-manifests",
+      "implementation_state": "IMPLEMENTED_LOCAL_INSTALLED_CHROME_VERIFIED",
+      "request": {
+        "manifest_id": "optional exact manifest/status",
+        "kind": "optional filter",
+        "limit": "optional1..1000",
+        "cursor": "optional"
+      },
+      "response": "manifest[] + fence/query/source-bound paging; IDs, hashes, row counts, parser/code/scope; no raw private file paths",
+      "side_effects": "NONE",
+      "work_packages": [
+        "W02",
+        "W06",
+        "W07"
+      ],
+      "errors": {
+        "400": "invalid/unknown/duplicate input",
+        "403": "exact same-origin or Host required for new sensitive/write routes",
+        "404": "entity not found",
+        "409": "revision/idempotency/source binding changed",
+        "503": "source unavailable or throttled; no invented zero"
+      }
+    },
+    {
+      "id": "API32",
+      "method": "GET",
+      "path": "/api/frank-evidence-activity",
+      "implementation_state": "IMPLEMENTED_LOCAL_INSTALLED_CHROME_VERIFIED",
+      "request": {
+        "manifest_id": "required immutable activity/facts manifest",
+        "days": "1|7|30|all; default all",
+        "kind": "same registered enums as API01",
+        "mint": "optional",
+        "limit": "optional1..1000",
+        "cursor": "optional manifest-bound"
+      },
+      "response": "Immutable activity page. Facts v2 adds typed transaction_fact with exact raw units, component coverage, fact_id, supersedes_id and private source row references. An enriched artifact adds transaction_fact.archived_replay and snapshot-wide archive_replay_summary. GET reads frozen rows.",
+      "side_effects": "NONE",
+      "work_packages": [
+        "W06"
+      ],
+      "errors": {
+        "400": "invalid/unknown/duplicate input",
+        "403": "exact same-origin or Host required for new sensitive/write routes",
+        "404": "entity not found",
+        "409": "revision/idempotency/source binding changed",
+        "503": "source unavailable or throttled; no invented zero"
+      }
+    },
+    {
+      "id": "API33",
+      "method": "GET",
+      "path": "/api/frank-watch-metadata-events",
+      "implementation_state": "IMPLEMENTED_LOCAL_INSTALLED_CHROME_VERIFIED",
+      "request": {
+        "mint": "required exact32byte Solana Mint",
+        "limit": "optional1..1000 response capacity",
+        "cursor": "optional DB/revision/query bound"
+      },
+      "response": "append-only before/after user changes with revision/event_id/request_hash/time and complete paging",
+      "side_effects": "NONE",
+      "work_packages": [
+        "W05"
+      ],
+      "errors": {
+        "400": "invalid/unknown/duplicate input",
+        "403": "exact same-origin/Host or custom read header required",
+        "409": "revision/idempotency/query/source conflict",
+        "503": "local storage unavailable; safe code only"
+      }
+    }
+  ],
+  "internal_functions": [
+    {
+      "id": "FN01",
+      "signature": "read_activity_page(query,cursor)",
+      "returns": "ActivityPage",
+      "implementation": "existing wallet_activity_paging adapter",
+      "work_packages": [
+        "W01",
+        "W06"
+      ]
+    },
+    {
+      "id": "FN02",
+      "signature": "classify_evidence(tx,wallet,parser_version)",
+      "returns": "FactRevision[]",
+      "implementation": "extend existing classifier/parser, never frozen signal writer",
+      "work_packages": [
+        "W06"
+      ]
+    },
+    {
+      "id": "FN03",
+      "signature": "coverage_for_wallet(wallet,as_of)",
+      "returns": "Coverage",
+      "implementation": "new read adapter around scanner/source refs",
+      "work_packages": [
+        "W02",
+        "W06"
+      ]
+    },
+    {
+      "id": "FN04",
+      "signature": "capture_owner(wallet,rpc,clock)",
+      "returns": "BalanceSnapshot",
+      "implementation": "new wallet_refresh orchestration with existing RPC",
+      "work_packages": [
+        "W03"
+      ],
+      "current_implementation": "implemented capture/projection functions in wallet_refresh.py/research_data.py/market_observations.py; see actual source signatures"
+    },
+    {
+      "id": "FN05",
+      "signature": "validate_snapshot(raw_manifest)",
+      "returns": "VerifiedSnapshot",
+      "implementation": "reuse verified D2 owner/inventory projections, complete dual program",
+      "work_packages": [
+        "W03"
+      ],
+      "current_implementation": "implemented capture/projection functions in wallet_refresh.py/research_data.py/market_observations.py; see actual source signatures"
+    },
+    {
+      "id": "FN06",
+      "signature": "reconcile_positions(snapshot,model_facts)",
+      "returns": "Position[]",
+      "implementation": "extend wallet_reconciliation",
+      "work_packages": [
+        "W03"
+      ],
+      "current_implementation": "implemented capture/projection functions in wallet_refresh.py/research_data.py/market_observations.py; see actual source signatures"
+    },
+    {
+      "id": "FN07",
+      "signature": "capture_market(mints,source,clock)",
+      "returns": "MarketObservation[]",
+      "implementation": "existing market client + new typed currency/time adapter",
+      "work_packages": [
+        "W04"
+      ],
+      "current_implementation": "implemented capture/projection functions in wallet_refresh.py/research_data.py/market_observations.py; see actual source signatures"
+    },
+    {
+      "id": "FN08",
+      "signature": "update_watch_metadata(key,expected_revision,patch,idempotency_key)",
+      "returns": "MetadataRevision",
+      "implementation": "new repository, transactional optimistic lock",
+      "work_packages": [
+        "W05"
+      ]
+    },
+    {
+      "id": "FN09",
+      "signature": "rebuild_cost_ledger(fact_manifest,accounting_version)",
+      "returns": "CostRun",
+      "implementation": "new deterministic FIFO original-currency projection",
+      "work_packages": [
+        "W07"
+      ]
+    },
+    {
+      "id": "FN10",
+      "signature": "analyze_candidate(candidate,as_of,market,max_market_age_seconds)",
+      "returns": "Analysis",
+      "implementation": "existing pure function extended for explicit same-currency price contract",
+      "work_packages": [
+        "W04",
+        "W08"
+      ]
+    },
+    {
+      "id": "FN11",
+      "signature": "persist_intelligence(input_manifest,analysis_version)",
+      "returns": "IntelligenceRun",
+      "implementation": "new durable semantic-update repository",
+      "work_packages": [
+        "W08"
+      ]
+    },
+    {
+      "id": "FN12",
+      "signature": "analyze_ca(mint,adapters,checkpoint,clock)",
+      "returns": "PerStageCAReport",
+      "implementation": "extend existing cluster and specialized modules",
+      "work_packages": [
+        "W09",
+        "W10",
+        "W11",
+        "W12"
+      ]
+    },
+    {
+      "id": "FN13",
+      "signature": "archive_notification(id,channel,revision,patch,idempotency_key)",
+      "returns": "AnnotationRevision",
+      "implementation": "new annotations only; immutable prior delivery",
+      "work_packages": [
+        "W13"
+      ]
+    },
+    {
+      "id": "FN14",
+      "signature": "materialize_manifest(kind,source_read_transaction,parser_version)",
+      "returns": "EvidenceManifest",
+      "implementation": "new private immutable normalized evidence set; consistent SQLite read, no network",
+      "work_packages": [
+        "W02",
+        "W06"
+      ]
+    }
+  ],
+  "current_increment": {
+    "work_packages": [
+      "W08",
+      "W09"
+    ],
+    "state": "CHROME_W08_LOCAL_AND_W09_IDENTITY_VERIFIED",
+    "source_sha": "0fd546b089b7526046308c5aa9ac60057e0100fd",
+    "evidence": "W08_W09_RISK_AND_IDENTITY_ACCEPTANCE_20261119.md",
+    "design_adjustment": "API16 synchronously persists one completed local analysis. API19 explicitly requotes the user input. W09 refuses non-mint and malformed finalized account observations."
+  }
+}

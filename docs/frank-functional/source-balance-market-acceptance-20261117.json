@@ -1,0 +1,320 @@
+{
+  "schema_version": 1,
+  "acceptance_date": "2026-11-17",
+  "timezone": "Asia/Bangkok",
+  "implemented_and_installed_sha": "9f115cbe383da67b8893fb876d122d04bae22c7a",
+  "planning_sha": "c2e2d8d7bd522cdcfa28249d41029e2ee684dd1d",
+  "feature_verdict": "PASS_SOURCE_CAPTURE_FULL_OWNER_REFRESH_AND_MARKET_WIRING_LOCAL",
+  "available_market_data_coverage": "PARTIAL",
+  "overall_frank_verdict": "PARTIAL",
+  "python": {
+    "source_sha": "9f115cbe383da67b8893fb876d122d04bae22c7a",
+    "passed": 333,
+    "exit_code": 0,
+    "socket_events": [],
+    "actual_pytest_args": [
+      "-ra",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_frank_source_evidence.py",
+      "tests/test_frank_wallet_refresh.py",
+      "tests/test_frank_market_observations.py",
+      "tests/test_frank_research_data.py",
+      "tests/test_frank_activity_paging.py",
+      "tests/test_frank_g2_d1_d2_dashboard.py",
+      "tests/test_frank_wallet_watchlist_v2.py",
+      "tests/test_frank_wallet_inventory_v2.py",
+      "tests/test_frank_activity_watch_dashboard.py",
+      "tests/test_frank_intelligence_dashboard_integration.py",
+      "tests/test_frank_amount_free_intelligence.py",
+      "tests/test_mission_control_dashboard.py",
+      "tests/test_frank_d2_http_route.py",
+      "tests/test_frank_d2_ingress.py",
+      "tests/test_meme_market_and_rpc.py"
+    ],
+    "runner": "Mac isolated pytest.main with socket audit hook; no listeners"
+  },
+  "node": {
+    "source_sha": "9f115cbe383da67b8893fb876d122d04bae22c7a",
+    "passed": 218,
+    "failed": 0,
+    "skipped": 0,
+    "actual_command": "node --test tests/test_frank_ca_get_resume.mjs tests/test_frank_ca_report_render.mjs tests/test_frank_d2_ingress_ui.mjs tests/test_frank_ca_rpc_budget_ui.mjs tests/test_frank_research_ui.mjs"
+  },
+  "initial_failed_attempts": [
+    {
+      "kind": "node wildcard command",
+      "reason": "Playwright browser dependency not installed;212 other cases passed; replaced with explicit node suite plus real Google Chrome acceptance"
+    },
+    {
+      "kind": "new durable-job regression",
+      "reason": "coalesced retry key/recovery progress/source binding defects fixed before final SHA"
+    },
+    {
+      "kind": "private acceptance helper",
+      "reason": "empty headers argument accidentally selected default headers; helper fixed and actual missing-header403 confirmed"
+    },
+    {
+      "kind": "private read-only HTTP acceptance helper",
+      "reason": "probe overlapped an explicitly clicked Chrome market refresh and observed a new receipt; reran without concurrent source job and passed"
+    }
+  ],
+  "initial_live_owner": {
+    "code_sha": "281b57f1955664fa4f34576a30e4bc6740b45d4c",
+    "result": "PASS_LIVE_OWNER_CAPTURE_AND_INDEPENDENT_RAW_SUM",
+    "wire_attempts": 3,
+    "elapsed_seconds": 1.5774831670569256,
+    "account_count": 6418,
+    "mint_count": 6418,
+    "nonzero_mint_count": 5524,
+    "programs": [
+      {
+        "program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "slot": 470322054,
+        "accounts": 2160
+      },
+      {
+        "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "slot": 470322058,
+        "accounts": 4258
+      }
+    ],
+    "raw_response_hashes": [
+      "d12331ddf85dfa84f8c17749a8b05f3110b6ab964777eaf421098fbf22726ff9",
+      "c8710eee07675a56456d9bd4f104bc5ac943bdf82ce83de301025fe82c8934b0",
+      "b201d91745b516cbe0f1d07783083b779e9d74394cfabd6b57fe6610e72804d8"
+    ],
+    "same_slot_atomic": false,
+    "all_closed_accounts_history_verified": false
+  },
+  "full_live_matrix": {
+    "code_sha": "da7c6b3ca2ce351e433ecd9eff0eec3545bd71ae",
+    "balance_job": "DONE",
+    "account_count": 6419,
+    "mint_count": 6419,
+    "nonzero_mint_count": 5525,
+    "balance_with_full_137_page_audit_seconds": 4.359271749970503,
+    "independent_raw_sum": "PASS",
+    "paged_all_mints": "PASS",
+    "same_slot_atomic": false,
+    "market_job": "PARTIAL",
+    "market_errors": [],
+    "market_selected_count": 5526,
+    "market_complete_selection": true,
+    "market_status_counts": {
+      "NO_BASE_TOKEN_PAIR": 5138,
+      "OK": 385,
+      "USD_PRICE_UNAVAILABLE": 3
+    },
+    "full_market_seconds": 103.53395858302247,
+    "signal_market_job": "DONE",
+    "signal_count": 5,
+    "analysis_market_reference": "CAPTURED_LOCAL_REFERENCES",
+    "analysis_references_present": 5,
+    "exact_http_raw_receipts": 189,
+    "real_notifications": 0,
+    "quotes": 0,
+    "ca_jobs": 0,
+    "new_ports": 0,
+    "source_db_opened_readonly": true
+  },
+  "final_http": {
+    "code_sha": "9f115cbe383da67b8893fb876d122d04bae22c7a",
+    "source_observed_at": "1794892237.9455822",
+    "balance_mints": 6447,
+    "balance_accounts": 6447,
+    "independent_raw_sum": "PASS",
+    "http_pages": 48,
+    "http_page_size": 137,
+    "http_full_set_no_duplicates": "PASS",
+    "read_source_receipts_unchanged": true,
+    "receipt_files": 205,
+    "analysis_rows": 6,
+    "current_comparable_rows": 0,
+    "conversion_source_refs_consistent": true,
+    "missing_header_cross_origin_403": "PASS",
+    "legacy_control_and_delivery_files_unchanged": true,
+    "same_slot_atomic": false,
+    "source_hashes": [
+      "74dab6ab956d7cde854ba07ecafe60275ab32d5649e6ea0060bdf09f928d0a6d",
+      "bfca040c901c38da28e8b4dffc3451b1b29c9c40f8200bff970918016e530d44",
+      "46a0339480bb67356e5c4428c423c724a23a795e2745c275137e227f02772fde"
+    ],
+    "snapshot_id_sha256": "0463490274a8635e71600c6b1c469bb840ec1149d9407a2e1c46d3c886105dda"
+  },
+  "chrome": {
+    "code_sha": "9f115cbe383da67b8893fb876d122d04bae22c7a",
+    "result": "PASS",
+    "browser": "Google Chrome",
+    "url": "http://127.0.0.1:8766/#signals",
+    "after_install_verified": true,
+    "real_balance_refresh": "DONE",
+    "balance_accounts": 6447,
+    "balance_mints": 6447,
+    "source_age_expiry_observed_seconds": 305,
+    "next_page": "PASS",
+    "lookup_beyond_first100_sorted_index": 3494,
+    "integer_decimal_display_exact": true,
+    "signals_plus_usdc_reference_refresh": "DONE",
+    "comparable_signal_rows_observed": 6,
+    "usd_usdc_assumed_peg": false,
+    "read_and_filter_additional_receipts": 0,
+    "left_open": true,
+    "screenshots_private": true,
+    "prior_code_sha": "d6b71231f1b3eb43364e0bc075acd70da8cbf2c9"
+  },
+  "deployment": {
+    "code_sha": "9f115cbe383da67b8893fb876d122d04bae22c7a",
+    "port": 8766,
+    "new_ports": 0,
+    "process_release_identity": "MATCH",
+    "tracked_release_files_verified": 619,
+    "wrapper_sha256": "93ac3b7ef157fa15328e6726604ef4055e9c2a15b961984c0c8e0e18b5fa1da2",
+    "legacy_control_delivery_hashes_unchanged": true,
+    "scanner_pid_unchanged": true,
+    "scanner_code_sha": "1f2c6afc28b9988eaacdc896562ff9a71b78f801",
+    "loop_loaded": false,
+    "actual_interrupted_job_discovery_after_reload": "PASS_CHROME",
+    "same_job_explicit_resume": "PASS_CHROME_DONE",
+    "resumed_snapshot_mints": 6447,
+    "resumed_snapshot_accounts": 6447,
+    "no_automatic_resume": true,
+    "latest_comparable_signal_rows_observed_in_chrome": 6,
+    "real_signing_trades_notifications": 0
+  },
+  "scanner": {
+    "code_sha": "1f2c6afc28b9988eaacdc896562ff9a71b78f801",
+    "pid_unchanged": true,
+    "status": "LIVE",
+    "source_drift": false,
+    "consecutive_errors": 0
+  },
+  "ci": {
+    "code_sha": "9f115cbe383da67b8893fb876d122d04bae22c7a",
+    "statuses": [],
+    "pr_workflow_runs": [],
+    "verdict": "NO_RUN_RECORD_NOT_A_PASS"
+  },
+  "not_executed": {
+    "real_notification": 0,
+    "quote": 0,
+    "signing": 0,
+    "trade": 0,
+    "ca_job_post": 0,
+    "new_port": 0,
+    "new_provider": 0,
+    "scanner_restart": 0,
+    "loop_start": 0,
+    "merge": 0,
+    "paid_upgrade": 0
+  },
+  "remaining": [
+    "immutable historical fact manifests and history coverage API with W06",
+    "persistent watch metadata",
+    "versioned complex trade facts",
+    "cost lots and PnL",
+    "durable risk updates and fake delivery",
+    "multi-CA protocol lifecycle size risk acceptance",
+    "all closed account history remains unproven",
+    "provider missing pairs and missing prices not filled as zero"
+  ],
+  "prior_installed_feature_sha": "d6b71231f1b3eb43364e0bc075acd70da8cbf2c9",
+  "prior_python": {
+    "source_sha": "d6b71231f1b3eb43364e0bc075acd70da8cbf2c9",
+    "passed": 332,
+    "exit_code": 0,
+    "socket_events": [],
+    "actual_pytest_args": [
+      "-ra",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_frank_source_evidence.py",
+      "tests/test_frank_wallet_refresh.py",
+      "tests/test_frank_market_observations.py",
+      "tests/test_frank_research_data.py",
+      "tests/test_frank_activity_paging.py",
+      "tests/test_frank_g2_d1_d2_dashboard.py",
+      "tests/test_frank_wallet_watchlist_v2.py",
+      "tests/test_frank_wallet_inventory_v2.py",
+      "tests/test_frank_activity_watch_dashboard.py",
+      "tests/test_frank_intelligence_dashboard_integration.py",
+      "tests/test_frank_amount_free_intelligence.py",
+      "tests/test_mission_control_dashboard.py",
+      "tests/test_frank_d2_http_route.py",
+      "tests/test_frank_d2_ingress.py",
+      "tests/test_meme_market_and_rpc.py"
+    ],
+    "runner": "Mac isolated pytest.main with socket audit hook; no listeners"
+  },
+  "prior_node": {
+    "source_sha": "d6b71231f1b3eb43364e0bc075acd70da8cbf2c9",
+    "passed": 217,
+    "failed": 0,
+    "skipped": 0,
+    "actual_command": "node --test tests/test_frank_ca_get_resume.mjs tests/test_frank_ca_report_render.mjs tests/test_frank_d2_ingress_ui.mjs tests/test_frank_ca_rpc_budget_ui.mjs tests/test_frank_research_ui.mjs"
+  },
+  "prior_http": {
+    "code_sha": "d6b71231f1b3eb43364e0bc075acd70da8cbf2c9",
+    "source_observed_at": "1794873740.557141",
+    "balance_mints": 6420,
+    "balance_accounts": 6420,
+    "independent_raw_sum": "PASS",
+    "http_pages": 47,
+    "http_page_size": 137,
+    "http_full_set_no_duplicates": "PASS",
+    "read_source_receipts_unchanged": true,
+    "receipt_files": 197,
+    "analysis_rows": 5,
+    "current_comparable_rows": 0,
+    "conversion_source_refs_consistent": true,
+    "missing_header_cross_origin_403": "PASS",
+    "legacy_control_and_delivery_files_unchanged": true,
+    "same_slot_atomic": false,
+    "source_hashes": [
+      "b4b0a7761d84759ad7c69ec709593a9798fe80febd82e348a67efde7bd8dc6cc",
+      "9789e71492bfd9b4eee2492ff4a336d49837bd2bea694ca57a309192ada4cf25",
+      "703fdbf9556e7d23acffc4bd7a76ac0093238f6a5d50a8572f9bd6181c2f4b36"
+    ],
+    "snapshot_id_sha256": "d0a074a2ed843a7a2d4c9a2cad27b379734f7e01d974445f4697e1adfb112dad"
+  },
+  "prior_deployment": {
+    "code_sha": "d6b71231f1b3eb43364e0bc075acd70da8cbf2c9",
+    "port": 8766,
+    "new_ports": 0,
+    "rollback_actual_http": "PASS",
+    "launchagent_label_unchanged": true,
+    "wrapper_sha256": "97ab8c0d7c6a9c0d26ef2de1b1db00b58bfae380867f8f2966dc762cb343fd53",
+    "served_static_exact": true,
+    "process_release_identity": "MATCH",
+    "legacy_control_delivery_hashes_unchanged": true,
+    "scanner_restarted": false,
+    "loop_started": false,
+    "real_notifications": 0,
+    "quotes": 0,
+    "ca_posts": 0
+  },
+  "recovery_fix": {
+    "code_sha": "9f115cbe383da67b8893fb876d122d04bae22c7a",
+    "defect": "page reload lost in-memory balance job ID despite durable backend job",
+    "implementation": "GET positions exposes latest attempt even before first successful snapshot; explicit read restores paused/error task control, no automatic POST",
+    "unit_and_ui_reload_regression": "PASS",
+    "real_job_interrupted_by_dashboard_restart": true,
+    "chrome_read_discovers_same_persisted_job": "PAUSED",
+    "chrome_explicit_resume_same_job": "DONE",
+    "snapshot_after_resume_accounts": 6447,
+    "snapshot_after_resume_mints": 6447,
+    "new_source_requests_on_read_or_reload": 0
+  },
+  "status_query_readonly_validation": {
+    "installed_sha": "9f115cbe383da67b8893fb876d122d04bae22c7a",
+    "activity_30_days_page_http": 200,
+    "activity_all_buy_page_http": 200,
+    "positions_http": 200,
+    "positions_state": "STALE_ARCHIVED",
+    "retained_snapshot_mints": 6447,
+    "new_real_rpc_or_ca_posts": 0,
+    "meaning": "deployment label corrected; this probe does not revalidate all-chain history or fresh balances"
+  }
+}

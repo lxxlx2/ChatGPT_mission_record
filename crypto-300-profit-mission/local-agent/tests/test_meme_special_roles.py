@@ -167,17 +167,95 @@ def test_multi_pool_budget_exception_is_terminal_and_never_published_as_partial_
     with pytest.raises(RPCJobBudgetExceeded):collect_special_roles(target,source,market(),BudgetRPC())
 
 
-def test_discovery_is_capped_and_unsupported_pool_reasons_are_retained():
+def test_all_indexer_candidates_are_checked_in_rpc_batches():
     target,source,_,_,_=inputs();hints=[{'pair_address':key(3000+i),'base_address':target,'quote_address':QUOTE} for i in range(12)]
     seen=[]
     class Unsupported:
         def call(self,method,params,ttl=0):
             seen.append(params);return {'context':{'slot':100},'value':[account(P,b'bad') for _ in params[0]]}
     out=collect_special_roles(target,source,{**market(),'pool_candidates':hints},Unsupported())
-    assert len(seen)==2 and len(seen[0][0])==8 and out['not_selected_pool_hints']==4
+    assert len(seen)==2 and len(seen[0][0])==12 and out['not_selected_pool_hints']==0
     assert seen[1][0][0]==target and len(seen[1][0])<=100
     assert out['rankings']['metrics']['known_ex_special']['status']=='UNRESOLVED'
-    assert len(out['pools'])==8 and all(p['reason']=='UNSUPPORTED_POOL_PROGRAM' for p in out['pools'])
+    assert len(out['pools'])==12 and all(p['reason']=='UNSUPPORTED_POOL_PROGRAM' for p in out['pools'])
+
+
+@pytest.mark.parametrize("holder_slot",[102,103])
+def test_large_discovery_preserves_all_pools_and_only_uses_same_slot_for_exclusions(holder_slot):
+    target,source,_,holder_rpc,pool_rpc=inputs(holder_slot=holder_slot)
+    hints=[{'pair_address':POOL,'base_address':target,'quote_address':QUOTE}]
+    hints += [{'pair_address':key(13000+i),'base_address':target,'quote_address':QUOTE} for i in range(104)]
+    calls=[]
+    pool_accounts={POOL:pool_rpc.discovery}
+    for i,hint in enumerate(hints[1:]):
+        other=copy.deepcopy(pool_rpc.discovery)
+        change_data(other,lambda b:b.__setitem__(slice(139,171),k(20000+i)))
+        pool_accounts[hint['pair_address']]=other
+
+    class FixtureRPC:
+        def call(self,method,params,ttl=0):
+            addresses=params[0]
+            calls.append(len(addresses))
+            if addresses[0]==target:
+                return holder_rpc.call(method,params,ttl=ttl)
+            return {'context':{'slot':102},'value':[pool_accounts[address] for address in addresses]}
+
+    out=collect_special_roles(target,source,{**market(),'pool_candidates':hints},FixtureRPC())
+    assert calls==[100,5,1+len(source['accounts'])]
+    assert len(out['pools'])==out['candidate_count']==105
+    assert out['audit_path']=='HOLDER_AND_POOL_DISCOVERY_BATCHES'
+    assert out['not_selected_pool_hints']==0
+    assert out['rankings']['metrics']['known_ex_lp']['deducted_raw']==('600' if holder_slot==102 else '0')
+    assert all(p['status']==('POOL_IDENTITY_BOUND' if holder_slot==102 else 'DISCOVERED') for p in out['pools'])
+
+
+def test_failed_discovery_batch_preserves_later_candidates():
+    target,source,_,holder_rpc,pool_rpc=inputs(holder_slot=102)
+    other=[{'pair_address':key(13000+i),'base_address':target,'quote_address':QUOTE} for i in range(100)]
+
+    class FixtureRPC:
+        def call(self,method,params,ttl=0):
+            addresses=params[0]
+            if len(addresses)==100:
+                raise TimeoutError("provider-detail-must-stay-private")
+            if addresses[0]==target:
+                if len(addresses)==len(source['accounts'])+2:
+                    result=holder_rpc.call(method,[addresses[:-1],params[1]],ttl=ttl)
+                    result['value'].append(pool_rpc.discovery)
+                    return result
+                return holder_rpc.call(method,params,ttl=ttl)
+            return {'context':{'slot':102},'value':[pool_rpc.discovery]}
+
+    quote_hint={'pair_address':POOL,'base_address':target,'quote_address':QUOTE}
+    out=collect_special_roles(target,source,{**market(),'main_pair':other[0],
+        'pool_candidates':[*other,quote_hint]},FixtureRPC())
+    assert [batch['status'] for batch in out['discovery_batches']]==['UNAVAILABLE','OBSERVED']
+    assert len(out['pools'])==101 and 'provider-detail-must-stay-private' not in str(out)
+    assert out['pools'][-1]['pool_address']==POOL and out['pools'][-1]['status']=='POOL_IDENTITY_BOUND'
+
+
+def test_quote_side_only_indexer_pool_reaches_the_real_vault():
+    from mission_agent.meme.market import DexScreenerMarketClient
+    target,source,_,holder_rpc,pool_rpc=inputs(reverse=True)
+    indexed=DexScreenerMarketClient()._snapshot_from_payload(target,[{
+        'chainId':'solana','pairAddress':POOL,'baseToken':{'address':MINT},
+        'quoteToken':{'address':target},
+    }],1234,None)
+    assert indexed['reason']=='NO_BASE_TOKEN_PAIR'
+    assert 'price_usd' not in indexed
+
+    class FixtureRPC:
+        def call(self,method,params,ttl=0):
+            addresses=params[0]
+            if addresses==[POOL]:
+                return {'context':{'slot':100},'value':[pool_rpc.discovery]}
+            result=holder_rpc.call(method,[addresses[:-1],params[1]],ttl=ttl)
+            result['value'].append(pool_rpc.discovery)
+            return result
+
+    out=collect_special_roles(target,source,indexed,FixtureRPC())
+    assert out['candidate_count']==1 and out['pools'][0]['quote_mint']==MINT
+    assert out['rankings']['metrics']['known_ex_lp']['deducted_raw']=='600'
 
 
 def test_reserved_pool_keys_reduce_full_binary_batch_without_exceeding100():

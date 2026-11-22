@@ -13,8 +13,6 @@ from .pool_programs import CPMM,AMM_V4,LAYOUTS,stored_bump_authority,decode_pool
 from .pool_vaults import _key,_slot,PoolSourceError,MAX_RPC_BYTES
 
 PROGRAM_SEEDS={CPMM:b'vault_and_lp_mint_auth_seed',AMM_V4:b'amm authority'}
-MAX_QUERY_ACCOUNTS=128
-MAX_POOL_HINTS=8
 
 
 def query(mint,program,side,slot):
@@ -51,7 +49,7 @@ def _uint(value):
 def collect_global_pool_hints(mint,source,rpc):
     out={'version':1,'status':'NOT_REQUESTED','scope':'OBSERVED_SHARED_AUTHORITY_MINT_FILTERED_PROGRAM_DISCOVERY_NOT_EXHAUSTIVE',
          'trigger_semantics':'SEED_BUMP_HASH_MATCH_IS_ONLY_A_QUERY_TRIGGER','attempts':[],'hints':[],
-         'max_logical_queries':4,'max_accounts_per_query':MAX_QUERY_ACCOUNTS,'max_response_bytes_per_query':MAX_RPC_BYTES,
+         'max_logical_queries':4,'max_accounts_per_query':None,'max_response_bytes_per_query':MAX_RPC_BYTES,
          'logical_queries':0,'hints_not_selected':0,'membership_reconciliation':'REQUIRES_LATER_SAME_BANK_REREAD'}
     rows=source.get('accounts') if isinstance(source,dict) else None
     slot=source.get('snapshot_slot') if isinstance(source,dict) else None
@@ -84,7 +82,6 @@ def collect_global_pool_hints(mint,source,rpc):
                 if len(raw)>MAX_RPC_BYTES:raise PoolSourceError('POOL_ENUM_RESPONSE_LIMIT')
                 actual=_slot(response)
                 if actual<slot:raise PoolSourceError('POOL_ENUM_SLOT_BEFORE_SOURCE')
-                if len(response['value'])>MAX_QUERY_ACCOUNTS:raise PoolSourceError('POOL_ENUM_ACCOUNT_LIMIT')
                 digest=hashlib.sha256(raw).hexdigest();seen=set();staged=[]
                 for row in response['value']:
                     if not isinstance(row,dict) or not valid_pubkey(row.get('pubkey')) or row['pubkey'] in seen:raise PoolSourceError('POOL_ENUM_ROW_INVALID')
@@ -105,6 +102,6 @@ def collect_global_pool_hints(mint,source,rpc):
             except RPCError as exc:attempt['reason']='POOL_ENUM_RESPONSE_LIMIT' if str(exc)=='RPC_POOL_RESPONSE_LIMIT' else 'RPC_UNAVAILABLE'
             except (ValueError,TypeError,KeyError,OverflowError,TimeoutError,OSError):attempt['reason']='POOL_ENUM_SOURCE_INVALID'
     hints=sorted(found.values(),key=lambda h:(-int(h['observed_target_vault_raw']),h['pair_address']))
-    out.update(hints=hints[:MAX_POOL_HINTS],hints_not_selected=max(0,len(hints)-MAX_POOL_HINTS),
+    out.update(hints=hints,
                query_failures=sum(a['status']!='OBSERVED_QUERY_RESULT' for a in out['attempts']))
     return out
