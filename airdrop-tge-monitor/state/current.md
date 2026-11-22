@@ -1,3 +1,19 @@
+# Latest run cache
+latest_run_at: 2026-11-22T19:01:11+07:00
+schedule: Asia/Bangkok HOURLY HH:00
+scheduled_shard: 3
+executed_shard: 3
+run_path: airdrop-tge-monitor/runs/2026-11-22/190111-final.md
+run_status: PARTIAL_ONLY
+candidate_count: 0
+action_count: 0
+notification_sent: false
+source_gap_count: 2
+identity_failure_count: 0
+verified_complete: false
+last_meaningful_attempt_shard3: 2026-11-22T19:01:11+07:00
+
+## Prior cache
 # Current run cache
 
 latest_run_at: 2026-11-22T17:03:34+07:00
