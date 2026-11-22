@@ -1,3 +1,20 @@
+# Current run cache
+
+latest_run_at: 2026-11-22T17:03:34+07:00
+schedule: Asia/Bangkok hourly HH:00
+scheduled_shard: 1
+executed_shard: 1
+run_path: airdrop-tge-monitor/runs/2026-11-22/170334-final.md
+run_status: PARTIAL_ONLY
+candidate_count: 0
+action_count: 0
+notification_sent: false
+source_gap_count: 2
+identity_failure_count: 0
+verified_complete: false
+
+## Previous state snapshot
+
 # Current monitor execution pointer
 - last_run: 2026-11-22T16:01:40+07:00
 - schedule: Asia/Bangkok HOURLY HH:00 unchanged
