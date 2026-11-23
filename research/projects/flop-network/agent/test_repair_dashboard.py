@@ -22,7 +22,7 @@ class RepairDashboardTests(unittest.TestCase):
         self.assertEqual(info['pid'],321)
 
     def test_unknown_server_same_port_never_killed_or_restart(self):
-        info={'pid':667,'exists':True,'ours':False,'command':'/usr/bin/python3 -m http.server 8765'}
+        info={'pid':667,'exists':True,'ours':False,'command':'/usr/bin/python3 -m http.server 8766'}
         with patch.object(repair,'stable_root'),patch.object(repair,'git_sha',return_value='a'*40),\
              patch.object(repair,'active_plist'),patch.object(repair,'healthy',return_value=False),\
              patch.object(repair,'listener_pids',return_value=[667]),\
@@ -31,7 +31,7 @@ class RepairDashboardTests(unittest.TestCase):
              patch.object(repair,'restart_managed') as restart,\
              patch.object(repair.os,'kill') as kill:
             result=repair.run(apply=True)
-        self.assertEqual(result['status'],'BLOCKED_UNRECOGNIZED_8765_OWNER')
+        self.assertEqual(result['status'],'BLOCKED_UNRECOGNIZED_8766_OWNER')
         restart.assert_not_called()
         kill.assert_not_called()
 
