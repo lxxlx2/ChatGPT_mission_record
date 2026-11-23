@@ -19,7 +19,7 @@ import sqlite3
 import sys
 import time
 
-MISSION = Path(__file__).resolve().parents[3] / 'crypto-300-profit-mission' / 'local-agent'
+MISSION = Path(__file__).resolve().parents[4] / 'crypto-300-profit-mission' / 'local-agent'
 if str(MISSION) not in sys.path:
     sys.path.insert(0, str(MISSION))
 from mission_agent.signals.gmail_api import OAuthGmail
