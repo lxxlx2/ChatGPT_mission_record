@@ -66,3 +66,35 @@ https://github.com/flop-labs/network/issues/229
 https://github.com/flop-labs/yellowpaper/issues/172
 
 仓库权限边界：AGENTS.md；docs/DEVELOPMENT_RULES.md；crypto-300-profit-mission/PROJECT_ANALYSIS_EVIDENCE_WORKFLOW.md。NO_GO 仍有效。
+
+
+## 2026-11-24 FLOP 本地自动检查、真实邮件与首次测试通知
+
+本目录新增：
+- runtime.py：曼谷 2026-11-24 14:00 起自动检查是否真正开放 Testnet。每 5 分钟执行一次，无实测网络配置时不做链上写入。只有官方网络状态、RPC finalized genesis 与用户专用本地配置一致，才可能尝试首笔真实推理。
+- mail.py：复用用户 Mac 已有的 OAuthGmail 授权，通过 Gmail 实际 SENT 标签及完整消息内容回读验收；独立邮件队列，不影响 Frank；发送过程不明确时不自动重复。
+- install.py：显式 --apply 在 Mac 创建两个独立 LaunchAgents（定时 tick、只读看板）。安装前强制发一封邮件测试，必须 SENT_VERIFIED 才可安装。
+- test_runtime.py：模拟 Gmail Sent/失败/去重、危险结算停止和首次测试成功通知条件。GitHub CI 工作流自动检查。
+
+邮件：
+A. 首次邮件测试：安装时发一封 [FLOP] 邮件通道首次验收；核对 Gmail Sent label、唯一身份标记和正文哈希；通过才会安装启动任务。
+B. 首笔真实测试成功：仅在自有钱包付款、独立 Miner、实际推理消费、真实 finalized settlement 及完整链上证据通过后发一封 [FLOP] 首次真实推理测试成功。此事件没有在现实中发生；当前源码虽有状态转换与邮件代码，但尚无正式 Testnet 可用的独立链上验证适配器，因此不能把 CLI 0 返回码冒充成功。
+C. 正常状态报告：曼谷 08:00 和 20:00 发送，含实际已核验消费、成功和未知结算次数、最近成功时间、Faucet 额度是否可查、关键异常和邮件投递状态。错误每个 5 分钟 tick 检查，首次发现尽快发告警，相同错误按小时去重。
+
+看板：http://127.0.0.1:8765 。它显示实际验证后的结果，始终将未知余额/收益标为未核实。
+
+## 从固定 Git SHA Mac 隔离检出后执行
+
+请先用本机已经授权的 Frank Gmail OAuth 文件配置 FLOP 邮件。现有 Frank 本地配置 gmail-existing-source.json 中记录现有 existing_oauth_file 路径。Mac Codex 可在本机读取，不得将令牌、密钥或文件正文发到聊天或 Git。以下 OAuth 文件路径必须是本机真实路径：
+
+    python3 install.py
+    python3 install.py --apply --existing-oauth-file "$EXISTING_OAUTH_PATH"
+    python3 runtime.py status
+
+运行 install.py 不带 --apply 只有规划展示，没有副作用；带 --apply 会发送一封真实邮件并进行 Sent 回读，通过后才创建本地 launchd，故只在明确授权并备好 OAuth 时执行。
+
+有独立的 Testnet 钱包和正式网络数据后，在 Mac 的私有文件 ~/.local/share/flop-agent/private-testnet.json 创建 chmod 600 的配置。字段 network=testnet, expected_genesis=官方 0x 64位哈希, wallet=自有地址, keystore=本机私有钱包文件, miner=公开独立 SS58, endpoint=真实 HTTPS Session endpoint, model=已登记模型 slug, max_flop=经实测报价确定的单笔上限, total_test_flop_budget=单独授权的测试币预算。CLI 从系统 Keychain service flop-agent-wallet-password 读取私钥密码，只在当前进程内存中使用。
+
+官方 Testnet 目前仍为 planned，正式 genesis、RPC、Faucet 限额、Miner 身份尚未核实。禁止用 Devnet 的虚拟值或历史配置填充测试网配置。Mac 睡眠、关机或未登录会使本地 LaunchAgents 无法在预定时刻执行。所有实际钱包签名要以 Testnet 固定身份、预算和已通过邮件通道为前置门禁。
+
+当前实现的长期自动运行包括只读开放状态检查、Gmail 半日摘要、错误告警与看板；真实自动推理在首笔独立链上核验前保持阻塞。它尚不具备真实的长期赚钱能力，严禁声称已经开始计算空投。仍保持 NO_GO 交易环境，不触碰其他监控。
