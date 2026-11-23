@@ -58,9 +58,16 @@ class AgentTest(unittest.TestCase):
                     data = json.load(response)
                     self.assertEqual(response.status, 200)
                     self.assertEqual(data['execution_mode'], 'NO_SIGNING_NO_PAYMENT')
+                with urlopen(root + '/api/health?utm_source=chatgpt.com', timeout=3) as response:
+                    health=json.load(response)
+                    self.assertEqual(response.status,200)
+                    self.assertEqual(health['service'],'flop-dashboard')
+                    self.assertEqual(health['schema'],'flop-dashboard.v2')
+                    self.assertEqual(health['pid'],agent.os.getpid())
                 with self.assertRaises(HTTPError) as raised:
                     urlopen(root + '/unknown?utm_source=chatgpt.com', timeout=3)
                 self.assertEqual(raised.exception.code, 404)
+                raised.exception.close()
             finally:
                 server.shutdown()
                 server.server_close()
