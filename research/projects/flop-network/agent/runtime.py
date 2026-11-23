@@ -410,6 +410,41 @@ def queue_summary(conn):
     enqueue(conn,key,'[FLOP] 每12小时运行与有效消费报告｜'+slot,body)
     return True
 
+def check_dashboard_health_from_tick(conn, *, opener=urlopen):
+    """Independent tick detects a failed dashboard even when its own watchdog died."""
+    binding=DATA/'dashboard-bind.json'
+    if not binding.is_file():
+        return 'NO_VERIFIED_DASHBOARD_BINDING_YET'
+    try:
+        obj=json.loads(binding.read_text(encoding='utf-8'))
+        port=obj.get('port')
+        if type(port) is not int or not 1024 <= port <= 65535:
+            raise ValueError('BAD_DASHBOARD_BIND_PORT')
+        url=f'http://127.0.0.1:{port}/api/health'
+        with opener(Request(url,headers={'Accept':'application/json'}),timeout=3) as response:
+            if response.status!=200:
+                raise ValueError('HEALTH_HTTP_NOT_200')
+            health=json.loads(response.read(16000))
+        valid=(health.get('service')=='flop-dashboard'
+               and health.get('build')=='flop-dashboard-dynamic-port-v3'
+               and health.get('host')=='127.0.0.1'
+               and health.get('port')==port
+               and health.get('source_path')==str(Path(__file__).resolve().parent)
+               and isinstance(health.get('pid'),int)
+               and health['pid']>0)
+        if not valid:
+            raise ValueError('DASHBOARD_IDENTITY_MISMATCH')
+        put(conn,'dashboard_health','HTTP_200_IDENTITY_VERIFIED')
+        if get(conn,'current_error')=='DASHBOARD_UNHEALTHY':
+            clear_error(conn)
+        return 'HTTP_200_IDENTITY_VERIFIED'
+    except (OSError,TimeoutError,ValueError,TypeError,KeyError) as exc:
+        put(conn,'dashboard_health','FAILED_'+type(exc).__name__)
+        notify_error(conn,'DASHBOARD_UNHEALTHY',
+                     'Local FLOP dashboard is unavailable or the wrong service: '+type(exc).__name__)
+        return 'DASHBOARD_UNHEALTHY'
+
+
 def tick(*, fetch=_json_response, cli_status=cli_network_status, execution=do_direct_first):
     DATA.mkdir(parents=True,exist_ok=True,mode=0o700)
     conn=sqlite3.connect(MONITOR,timeout=10)
@@ -460,11 +495,13 @@ def tick(*, fetch=_json_response, cli_status=cli_network_status, execution=do_di
                         put(conn,'execution_mode','WAITING_FOR_PRIVATE_CONFIG')
             except (OSError,TimeoutError,ValueError,subprocess.SubprocessError) as exc:
                 notify_error(conn,'NETWORK_CHECK_FAILED',type(exc).__name__)
+        dashboard_state=check_dashboard_health_from_tick(conn)
         queue_summary(conn)
         delivery=pump(conn)
         put(conn,'last_scheduler_tick_utc',utc())
         return {'ready':state,'delivery':delivery,'at':utc(),
-                'mode':get(conn,'execution_mode','UNVERIFIED')}
+                'mode':get(conn,'execution_mode','UNVERIFIED'),
+                'dashboard':dashboard_state}
     finally:
         conn.close()
 
