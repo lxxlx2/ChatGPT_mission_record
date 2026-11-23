@@ -157,6 +157,17 @@ def private_config(path=CONF):
     if not (ceiling.is_finite() and daily.is_finite() and 0 < ceiling <= daily):
         raise ValueError('INVALID_SPEND_LIMIT')
     if not os.environ.get('FLOP_KEY_PASSWORD'):
+        security='/usr/bin/security'
+        if os.path.isfile(security):
+            try:
+                secret=subprocess.run([security,'find-generic-password','-s',
+                                       'flop-agent-wallet-password','-w'],
+                                      capture_output=True,text=True,timeout=10,check=False)
+                if secret.returncode==0 and secret.stdout.strip():
+                    os.environ['FLOP_KEY_PASSWORD']=secret.stdout.rstrip('\\r\\n')
+            except (OSError,subprocess.TimeoutExpired):
+                pass
+    if not os.environ.get('FLOP_KEY_PASSWORD'):
         raise ValueError('WALLET_PASSWORD_MISSING_FROM_LOCAL_KEYCHAIN')
     obj['keystore']=str(keystore)
     obj['max_flop']=str(ceiling)
