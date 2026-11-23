@@ -86,6 +86,9 @@ def notify_error(conn, code, detail, *, urgent=True):
     else:
         key=f'error-new-{code}-{bucket}'
     put(conn,'current_error',code)
+    if conn.execute("SELECT 1 FROM sqlite_master WHERE name='flop_mail'").fetchone():
+        if conn.execute('SELECT 1 FROM flop_mail WHERE mail_key=?',(key,)).fetchone():
+            return
     log(conn,'ERROR',code,detail,event_id=key)
     safe_detail=str(detail)[:350].replace('\x00','')
     enqueue(conn,key,'[FLOP] 异常告警｜'+code,
@@ -260,10 +263,10 @@ def do_direct_first(conn, config, *, run=subprocess.run):
     conn.commit()
     put(conn,'execution_mode','FIRST_TEST_IN_FLIGHT')
     cmd=[cli,'--network','testnet','--keystore',config['keystore'],'--password-env',
-         'FLOP_KEY_PASSWORD','--json','session','run','--miner',config['miner'],
+         'FLOP_KEY_PASSWORD','session','run','--miner',config['miner'],
          '--model',config['model'],'--prompt',
          'Analyze FLOP Testnet official launch readiness and return one concise answer.',
-         '--max-flop',config['max_flop'],'--via','auto','--endpoint',config['endpoint']]
+         '--max-flop',config['max_flop'],'--via','offer','--endpoint',config['endpoint'],'--json']
     try:
         cp=run(cmd,capture_output=True,text=True,timeout=CLI_TIMEOUT,check=False)
         # Include no raw response or secret-bearing CLI outputs in mail / Git.
