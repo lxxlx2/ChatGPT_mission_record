@@ -1,0 +1,26 @@
+name: FLOP Agent Offline Safety Tests
+on:
+  pull_request:
+    paths:
+      - "research/projects/flop-network/**"
+      - ".github/workflows/flop-agent-offline-ci.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  offline:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Offline tests, no network or private secrets
+        run: |
+          python3 -m unittest discover -v -s research/projects/flop-network/agent -p "test_*.py"
+          python3 research/projects/flop-network/agent/agent.py first-test
+      - name: Installer defaults to no side effects
+        run: |
+          python3 research/projects/flop-network/agent/install.py
