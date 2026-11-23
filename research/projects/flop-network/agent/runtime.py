@@ -164,7 +164,7 @@ def private_config(path=CONF):
                                        'flop-agent-wallet-password','-w'],
                                       capture_output=True,text=True,timeout=10,check=False)
                 if secret.returncode==0 and secret.stdout.strip():
-                    os.environ['FLOP_KEY_PASSWORD']=secret.stdout.rstrip('\\r\\n')
+                    os.environ['FLOP_KEY_PASSWORD']=secret.stdout.strip()
             except (OSError,subprocess.TimeoutExpired):
                 pass
     if not os.environ.get('FLOP_KEY_PASSWORD'):
