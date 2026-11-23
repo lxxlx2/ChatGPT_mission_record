@@ -80,11 +80,9 @@ def notify_error(conn, code, detail, *, urgent=True):
     """Errors: notify on transition and repeat no faster than 1h while ongoing."""
     stamp=now()
     bucket=int(stamp.timestamp()) // LAST_ALARM_INTERVAL
-    old=get(conn,'current_error')
-    if old==code:
-        key=f'error-{code}-{bucket}'
-    else:
-        key=f'error-new-{code}-{bucket}'
+    # Stable per-code/hour identity. A transition and subsequent recurrence
+    # in the same hour must not generate two mail identities.
+    key=f'error-{code}-{bucket}'
     put(conn,'current_error',code)
     if conn.execute("SELECT 1 FROM sqlite_master WHERE name='flop_mail'").fetchone():
         if conn.execute('SELECT 1 FROM flop_mail WHERE mail_key=?',(key,)).fetchone():
