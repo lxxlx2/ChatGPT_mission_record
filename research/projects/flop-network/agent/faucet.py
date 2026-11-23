@@ -40,7 +40,7 @@ def request_initial(conn, confirmed_genesis, *, cli_runner=subprocess.run):
     try:
         cp=cli_runner([cli,'--network','testnet','faucet','request',address,'--json'],
                       capture_output=True,text=True,timeout=100,check=False)
-        response={}
+        response=None
         try:
             response=json.loads(cp.stdout.strip())
         except (ValueError,TypeError):
@@ -48,7 +48,7 @@ def request_initial(conn, confirmed_genesis, *, cli_runner=subprocess.run):
         attempt['return_code']=cp.returncode
         attempt['output_sha256']=hashlib.sha256(cp.stdout.encode()).hexdigest()
         attempt['stderr_sha256']=hashlib.sha256(cp.stderr.encode()).hexdigest()
-        attempt['status']='CLI_ACCEPTED_UNVERIFIED' if cp.returncode==0 and isinstance(response,dict) else 'REJECTED_OR_UNKNOWN_NO_RETRY'
+        attempt['status']='CLI_ACCEPTED_UNVERIFIED' if cp.returncode==0 and isinstance(response,dict) and response else 'REJECTED_OR_UNKNOWN_NO_RETRY'
         attempt['response_status']=str(response.get('status','UNKNOWN'))[:65] if isinstance(response,dict) else 'UNKNOWN'
     except (OSError,subprocess.TimeoutExpired) as exc:
         attempt['status']='OUTCOME_UNKNOWN_NO_RETRY'
