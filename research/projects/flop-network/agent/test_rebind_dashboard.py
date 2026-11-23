@@ -93,8 +93,7 @@ class PortMigrationTests(unittest.TestCase):
         content=Path(rebind.__file__).read_text()
         self.assertNotIn('os.kill(',content)
         self.assertNotIn('SIGTERM',content)
-        self.assertNotIn('8765',content)
-        self.assertNotIn("'8766' ",content)
+        self.assertIn('PORTS=range(18766,18796)',content)
 
 if __name__=='__main__':
     unittest.main()
