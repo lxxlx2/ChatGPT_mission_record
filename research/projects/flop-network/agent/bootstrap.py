@@ -60,7 +60,7 @@ def cli_path():
             if p.is_file():
                 cli=str(p);break
     if not cli:raise RuntimeError('OFFICIAL_FLOP_CLI_0_8_0_REQUIRED')
-    cli=str(Path(cli).resolve())
+    cli=os.path.abspath(cli)
     # node is usually alongside npm global bin symlink; preserve its parent PATH.
     return cli
 
