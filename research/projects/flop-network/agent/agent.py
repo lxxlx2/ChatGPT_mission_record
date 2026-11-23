@@ -20,7 +20,19 @@ from urllib.parse import urlsplit
 
 ROOT = Path(__file__).resolve().parent
 DASHBOARD_HOST = '127.0.0.1'
-DASHBOARD_PORT = 8766  # 8765 belongs to the existing Technocore Close Call dashboard
+
+def configured_dashboard_port(env=None):
+    """Configurable independent localhost port; never bind a public interface."""
+    source = os.environ if env is None else env
+    raw = source.get('FLOP_DASHBOARD_PORT', '18766')
+    if not isinstance(raw, str) or not raw.isascii() or not raw.isdecimal():
+        raise ValueError('FLOP_DASHBOARD_PORT_INVALID')
+    value = int(raw)
+    if not 1024 <= value <= 65535:
+        raise ValueError('FLOP_DASHBOARD_PORT_OUT_OF_RANGE')
+    return value
+
+DASHBOARD_PORT = configured_dashboard_port()
 DATA = Path(os.environ.get('FLOP_AGENT_DATA_DIR', '~/.local/share/flop-agent')).expanduser()
 ENDPOINTS = {
     'network_commits': 'https://api.github.com/repos/flop-labs/network/commits?per_page=12',
@@ -152,6 +164,7 @@ def dashboard_health():
         sha='UNKNOWN'
     return {'service':'flop-dashboard','schema':'flop-dashboard.v2',
             'pid':os.getpid(),'source_path':str(ROOT.resolve()),
+            'host':DASHBOARD_HOST,'port':DASHBOARD_PORT,
             'git_head_sha':sha}
 
 
