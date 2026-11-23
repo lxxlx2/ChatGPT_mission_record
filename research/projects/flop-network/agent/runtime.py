@@ -210,12 +210,28 @@ def cli_network_status():
              rpc.get('genesisHash') or rpc.get('genesis') or
              faucet.get('genesis_hash') or faucet.get('genesisHash'))
     if not isinstance(genesis,str) or not re.fullmatch(r'0x[0-9a-fA-F]{64}',genesis):
-        return {'ready':False,'reason':'GENESIS_NOT_EXPLICITLY_AVAILABLE'}
+        # In CLI 0.7.0's real observed status, genesis is not exposed before launch.
+        # Only allow pinned official faucet /chain after CLI confirms RPC matches
+        # its expected chain AND faucet matches that same RPC genesis.
+        if faucet.get('url')!='https://faucet.testnet.flop.network':
+            return {'ready':False,'reason':'GENESIS_NOT_EXPLICITLY_AVAILABLE'}
+        try:
+            with urlopen(Request('https://faucet.testnet.flop.network/chain',
+                                 headers={'Accept':'application/json',
+                                          'User-Agent':'flop-agent-testnet/0.1'}),
+                         timeout=HTTP_TIMEOUT) as reply:
+                if reply.status!=200:
+                    return {'ready':False,'reason':'FAUCET_CHAIN_NOT_HTTP_200'}
+                chain=json.loads(reply.read(100000))
+            genesis=chain.get('genesisHash') or chain.get('genesis_hash')
+        except (OSError,TimeoutError,ValueError):
+            return {'ready':False,'reason':'CANONICAL_FAUCET_CHAIN_NOT_AVAILABLE'}
+    if not isinstance(genesis,str) or not re.fullmatch(r'0x[0-9a-fA-F]{64}',genesis):
+        return {'ready':False,'reason':'GENESIS_NOT_VERIFIED'}
     finalized=rpc.get('finalized_head') or rpc.get('finalizedHead')
-    if finalized is None:
-        return {'ready':False,'reason':'FINALITY_NOT_EXPLICITLY_AVAILABLE'}
     return {'ready':True,'genesis':genesis.lower(),
-            'finalized_head':str(finalized),'profile_status':profile}
+            'finalized_head':str(finalized) if finalized is not None else None,
+            'settlement_ready':finalized is not None,'profile_status':profile}
 
 
 def ready_to_send(conn, config=None, *, fetch=_json_response, cli_status=cli_network_status):
@@ -233,6 +249,8 @@ def ready_to_send(conn, config=None, *, fetch=_json_response, cli_status=cli_net
     if config is None:
         return {'ready':False,'reason':'PRIVATE_CONFIG_NOT_CONFIGURED',
                 'genesis':cli['genesis']}
+    if not cli.get('settlement_ready', bool(cli.get('finalized_head'))):
+        return {'ready':False,'reason':'CHAIN_FINALITY_NOT_VERIFIED'}
     if cli['genesis']!=config['expected_genesis'].lower():
         return {'ready':False,'reason':'CONFIG_RPC_GENESIS_MISMATCH'}
     return {'ready':True,'reason':'DOC_CLI_RPC_FAUCET_CHAIN_MATCH',
