@@ -38,8 +38,12 @@ class AgentTest(unittest.TestCase):
 
     def test_dashboard_uses_separate_port_from_technocore(self):
         self.assertEqual(agent.DASHBOARD_HOST, '127.0.0.1')
-        self.assertEqual(agent.DASHBOARD_PORT, 8766)
+        self.assertEqual(agent.DASHBOARD_PORT, 18766)
         self.assertNotEqual(agent.DASHBOARD_PORT, 8765)
+        self.assertNotEqual(agent.DASHBOARD_PORT, 8766)
+        self.assertEqual(agent.configured_dashboard_port({'FLOP_DASHBOARD_PORT':'18769'}),18769)
+        with self.assertRaises(ValueError):
+            agent.configured_dashboard_port({'FLOP_DASHBOARD_PORT':'0'})
 
     def test_dashboard_http_routes_ignore_tracking_query_strings(self):
         from threading import Thread
@@ -68,6 +72,7 @@ class AgentTest(unittest.TestCase):
                     self.assertEqual(response.status,200)
                     self.assertEqual(health['service'],'flop-dashboard')
                     self.assertEqual(health['schema'],'flop-dashboard.v2')
+                    self.assertEqual(health['build'],'flop-dashboard-dynamic-port-v3')
                     self.assertEqual(health['pid'],agent.os.getpid())
                 with self.assertRaises(HTTPError) as raised:
                     urlopen(root + '/unknown?utm_source=chatgpt.com', timeout=3)
