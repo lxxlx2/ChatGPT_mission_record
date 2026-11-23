@@ -140,6 +140,19 @@ def offline_first_test():
     return {'result': 'PASS_OFFLINE', 'tested': ['SQLite', 'GitHub normalization', 'idempotent dedup', 'dashboard state'],
             'real_inference': 'NOT_EXECUTED', 'wallet_payment': 'NOT_EXECUTED', 'airdrop_earned': 'UNVERIFIED'}
 
+def dashboard_health():
+    """Read-only local identity for diagnosing stale listeners; no secrets."""
+    try:
+        cp = subprocess.run(['git','-C',str(ROOT),'rev-parse','HEAD'],
+                            capture_output=True,text=True,timeout=4,check=False)
+        sha=cp.stdout.strip() if cp.returncode==0 else 'UNKNOWN'
+    except (OSError,subprocess.TimeoutExpired):
+        sha='UNKNOWN'
+    return {'service':'flop-dashboard','schema':'flop-dashboard.v2',
+            'pid':os.getpid(),'source_path':str(ROOT.resolve()),
+            'git_head_sha':sha}
+
+
 class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
         route = urlsplit(self.path).path
@@ -156,6 +169,9 @@ class Handler(BaseHTTPRequestHandler):
         elif route == '/api/runtime':
             from runtime import snapshot as runtime_snapshot
             content = json.dumps(runtime_snapshot(), ensure_ascii=False).encode('utf-8')
+            typ = 'application/json; charset=utf-8'
+        elif route == '/api/health':
+            content = json.dumps(dashboard_health(), ensure_ascii=False).encode('utf-8')
             typ = 'application/json; charset=utf-8'
         else:
             self.send_error(404)
