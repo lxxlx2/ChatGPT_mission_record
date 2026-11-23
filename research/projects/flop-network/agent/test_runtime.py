@@ -144,5 +144,16 @@ class RuntimeTests(unittest.TestCase):
         self.assertIn('未确认',msg)
         self.assertIn('已独立核验',msg)
 
+
+    def test_summary_after_wake_catches_previous_bangkok_slot(self):
+        mail.enqueue(self.conn,'first-mail-setup-test','[FLOP] 邮件通道首次验收','mock')
+        self.conn.execute("UPDATE flop_mail SET created_at='2026-11-23T18:00:00+00:00' WHERE mail_key='first-mail-setup-test'")
+        self.conn.commit()
+        with patch.object(runtime,'now_bkk',return_value=datetime(2026,11,24,7,10,tzinfo=runtime.BKK)):
+            self.assertFalse(runtime.queue_summary(self.conn))
+        with patch.object(runtime,'now_bkk',return_value=datetime(2026,11,24,9,12,tzinfo=runtime.BKK)):
+            self.assertTrue(runtime.queue_summary(self.conn))
+            self.assertFalse(runtime.queue_summary(self.conn))
+
 if __name__=='__main__':
     unittest.main()
