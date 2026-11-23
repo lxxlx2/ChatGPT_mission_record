@@ -368,10 +368,20 @@ def digest_slot(now_local=None):
     return effective_date.isoformat(),hour
 
 def queue_summary(conn):
-    if now_bkk().hour not in (8,20):
-        return False
-    today,hour=digest_slot()
+    local_now=now_bkk()
+    today,hour=digest_slot(local_now)
     slot=f'{today}-{hour:02d}'
+    slot_at=datetime.fromisoformat(today+'T'+f'{hour:02d}:00:00').replace(tzinfo=BKK)
+    setup=conn.execute("SELECT created_at FROM flop_mail WHERE mail_key='first-mail-setup-test'").fetchone()
+    # After an actual install, catch up a missed 08/20 slot as soon as Mac
+    # resumes; never send a stale slot predating the initial mail test.
+    if setup:
+        when=datetime.fromisoformat(setup[0])
+        if when.tzinfo is None or slot_at<=when.astimezone(BKK):
+            return False
+    elif local_now.hour not in (8,20):
+        # Offline unit harness without actual verified mail setup.
+        return False
     key='summary-'+slot
     if conn.execute('SELECT 1 FROM flop_mail WHERE mail_key=?',(key,)).fetchone():
         return False
