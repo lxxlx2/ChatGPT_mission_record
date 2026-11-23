@@ -70,6 +70,14 @@ def provider_from_local():
     """Reuse configured authorized OAuth; user stores the path ONLY on Mac."""
     path = os.environ.get('FLOP_GMAIL_EXISTING_OAUTH_FILE') or os.environ.get('FRANK_GMAIL_EXISTING_OAUTH_FILE')
     receiver = os.environ.get('FLOP_GMAIL_RECIPIENT') or os.environ.get('FRANK_GMAIL_RECIPIENT')
+    local_cfg = Path(os.environ.get('FLOP_AGENT_DATA_DIR', '~/.local/share/flop-agent')).expanduser() / 'private-mail.json'
+    if not path and local_cfg.is_file() and not (local_cfg.stat().st_mode & 0o077):
+        try:
+            mailcfg = json.loads(local_cfg.read_text(encoding='utf-8'))
+            path = mailcfg.get('existing_oauth_file')
+            receiver = receiver or mailcfg.get('recipient')
+        except (OSError,ValueError):
+            return None
     if not path or not Path(path).is_file():
         return None
     return OAuthGmail(path, recipient=receiver)
