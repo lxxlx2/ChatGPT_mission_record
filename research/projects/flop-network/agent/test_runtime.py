@@ -44,7 +44,24 @@ class RuntimeTests(unittest.TestCase):
     def test_mail_test_sent_readback_and_idempotent(self):
         mail.enqueue(self.conn,'first-mail-setup-test','[FLOP] 邮件通道首次验收','Offline fake mail content')
         provider=FakeProvider()
-        self.assertEqual(mail.pump(self.conn,provider)['first-mail-setup-test'],'SENT_VERIFIED')
+        result = mail.pump(self.conn,provider)
+        if result.get('first-mail-setup-test') != 'SENT_VERIFIED':
+            import email as _email
+            row = self.conn.execute("SELECT * FROM flop_mail WHERE mail_key='first-mail-setup-test'").fetchone()
+            item = next(iter(provider.messages.values()), None)
+            if item:
+                msg = _email.message_from_bytes(base64.urlsafe_b64decode(item['raw']+'==='), policy=_email.policy.default)
+                body = msg.get_content().replace('\\r\\n','\\n')
+                expected = row['body']+'\\n\\nFLOP-Notification-Key: '+row['mail_key']+'\\nFLOP-Content-SHA256: '+row['content_sha']+'\\n'
+                print('DEBUG_MAIL_SENT', {
+                    'error_code':row['error_code'],
+                    'subject_ok':str(msg['Subject'])==row['subject'],
+                    'key_ok':str(msg['X-Flop-Notification-Key'])==row['mail_key'],
+                    'hash_ok':str(msg['X-Flop-Content-SHA256'])==row['content_sha'],
+                    'body_equal':body==expected,
+                    'body_length':len(body), 'expected_length':len(expected),
+                    'result':result})
+        self.assertEqual(result['first-mail-setup-test'],'SENT_VERIFIED')
         self.assertEqual(provider.count,1)
         self.assertEqual(mail.pump(self.conn,provider),{})
         self.assertEqual(provider.count,1)
@@ -103,7 +120,11 @@ class RuntimeTests(unittest.TestCase):
         row=self.conn.execute("SELECT status FROM flop_mail WHERE mail_key='first-real-test-success'").fetchone()
         self.assertEqual(row[0],'PENDING')
         fake=FakeProvider()
-        self.assertEqual(mail.pump(self.conn,fake)['first-real-test-success'],'SENT_VERIFIED')
+        res=mail.pump(self.conn,fake)
+        if res.get('first-real-test-success') != 'SENT_VERIFIED':
+            row=self.conn.execute("SELECT * FROM flop_mail WHERE mail_key='first-real-test-success'").fetchone()
+            print('DEBUG_FIRST_SUCCESS',{'error_code':row['error_code'],'result':res,'sent_count':fake.count})
+        self.assertEqual(res['first-real-test-success'],'SENT_VERIFIED')
         self.assertEqual(fake.count,1)
         self.assertFalse(runtime.mark_first_success_from_independent_verifier(self.conn,evidence))
         self.assertEqual(fake.count,1)
