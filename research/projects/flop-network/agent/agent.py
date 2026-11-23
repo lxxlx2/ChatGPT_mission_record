@@ -151,6 +151,10 @@ class Handler(BaseHTTPRequestHandler):
             finally:
                 conn.close()
             typ = 'application/json; charset=utf-8'
+        elif self.path == '/api/runtime':
+            from runtime import snapshot as runtime_snapshot
+            content = json.dumps(runtime_snapshot(), ensure_ascii=False).encode('utf-8')
+            typ = 'application/json; charset=utf-8'
         else:
             self.send_error(404)
             return
