@@ -155,5 +155,42 @@ class RuntimeTests(unittest.TestCase):
             self.assertTrue(runtime.queue_summary(self.conn))
             self.assertFalse(runtime.queue_summary(self.conn))
 
+
+    def test_existing_tick_reports_dashboard_failure_by_mail(self):
+        data=Path(self.temp.name)
+        bind=data/'dashboard-bind.json'
+        bind.write_text(json.dumps({'port':18766}))
+        with patch.object(runtime,'DATA',data):
+            def fail(*args,**kwargs):
+                raise OSError('fixture-down')
+            self.assertEqual(runtime.check_dashboard_health_from_tick(self.conn,opener=fail),
+                             'DASHBOARD_UNHEALTHY')
+            before=self.conn.execute("SELECT COUNT(*) FROM flop_mail WHERE subject LIKE '[FLOP] 异常告警%'").fetchone()[0]
+            self.assertEqual(before,1)
+            runtime.check_dashboard_health_from_tick(self.conn,opener=fail)
+            after=self.conn.execute("SELECT COUNT(*) FROM flop_mail WHERE subject LIKE '[FLOP] 异常告警%'").fetchone()[0]
+            self.assertEqual(after,1)
+            self.assertEqual(runtime.get(self.conn,'dashboard_health'),'FAILED_OSError')
+    def test_existing_tick_accepts_only_our_dashboard_identity(self):
+        data=Path(self.temp.name)
+        (data/'dashboard-bind.json').write_text(json.dumps({'port':18766}))
+        expected={'service':'flop-dashboard','build':'flop-dashboard-dynamic-port-v3',
+                  'host':'127.0.0.1','port':18766,
+                  'source_path':str(Path(runtime.__file__).resolve().parent),
+                  'pid':91002}
+        class FakeHttp:
+            status=200
+            def __enter__(self):return self
+            def __exit__(self,*a):return False
+            def read(self,n):return json.dumps(expected).encode('utf-8')
+        with patch.object(runtime,'DATA',data):
+            self.assertEqual(runtime.check_dashboard_health_from_tick(
+                             self.conn,opener=lambda *a,**k:FakeHttp()),
+                             'HTTP_200_IDENTITY_VERIFIED')
+            expected['service']='technocore-dashboard'
+            self.assertEqual(runtime.check_dashboard_health_from_tick(
+                             self.conn,opener=lambda *a,**k:FakeHttp()),
+                             'DASHBOARD_UNHEALTHY')
+
 if __name__=='__main__':
     unittest.main()
