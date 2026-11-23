@@ -35,5 +35,36 @@ class AgentTest(unittest.TestCase):
             self.assertEqual(agent.collect(c,fetch=lambda url:[fixture] if 'releases' in url else [])['new_public_items'],0)
             c.close()
 
+
+    def test_dashboard_http_routes_ignore_tracking_query_strings(self):
+        from threading import Thread
+        from urllib.request import urlopen
+        from urllib.error import HTTPError
+        from unittest.mock import patch
+
+        with tempfile.TemporaryDirectory() as tmp, patch.object(agent, 'DATA', Path(tmp)):
+            server = agent.ThreadingHTTPServer(('127.0.0.1', 0), agent.Handler)
+            thread = Thread(target=server.serve_forever, kwargs={'poll_interval': 0.05}, daemon=True)
+            thread.start()
+            root = f'http://127.0.0.1:{server.server_address[1]}'
+            try:
+                with urlopen(root + '/', timeout=3) as response:
+                    expected = response.read()
+                    self.assertEqual(response.status, 200)
+                with urlopen(root + '/?utm_source=chatgpt.com', timeout=3) as response:
+                    self.assertEqual(response.status, 200)
+                    self.assertEqual(response.read(), expected)
+                with urlopen(root + '/api/state?utm_source=chatgpt.com', timeout=3) as response:
+                    data = json.load(response)
+                    self.assertEqual(response.status, 200)
+                    self.assertEqual(data['execution_mode'], 'NO_SIGNING_NO_PAYMENT')
+                with self.assertRaises(HTTPError) as raised:
+                    urlopen(root + '/unknown?utm_source=chatgpt.com', timeout=3)
+                self.assertEqual(raised.exception.code, 404)
+            finally:
+                server.shutdown()
+                server.server_close()
+                thread.join(timeout=2)
+
 if __name__=='__main__':
     unittest.main()
