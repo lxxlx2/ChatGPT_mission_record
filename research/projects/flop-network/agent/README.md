@@ -1,5 +1,24 @@
 # FLOP / Mac 本地 Agent 收益研究、看板与首次验证
 
+
+## 2026-11-24 当前线上修复：端口冲突与 launchd 退出码 1
+
+实际 Mac 诊断：
+- 8765 和 8766 均有其他或旧进程监听，调用 /api/health 都返回 HTTP 404，不能当作 FLOP Agent 在运行。
+- 原有 FLOP dashboard LaunchAgent 为 spawn scheduled，执行次数 105，最近退出码 1。
+- 禁止再反复改旧端口、kill 未确认进程或重装全部任务。
+
+当前正式修复命令为从 GitHub 固定 SHA 检出后执行 python3 rebind_dashboard.py --apply。它只检查且原位重载已存在的 com.<uid>.flop-agent.dashboard，保留已存在的 tick / Gmail / 测试钱包 / Technocore。脚本从 18766 至 18795 选择当前未占用的本地端口，写入原 dashboard plist 的 FLOP_DASHBOARD_PORT 环境变量。启动后必须证明：
+1. 首页带 ?utm_source=chatgpt.com 返回 HTTP 200。
+2. /api/health 返回 service=flop-dashboard, build=flop-dashboard-dynamic-port-v3, source_path 为稳定 Git checkout, port 等于选择的端口, git_head_sha 为固定 SHA，PID 为正在响应服务的进程。
+3. 验收成功后才写入 chmod 0600 的 ~/.local/share/flop-agent/dashboard-bind.json。失败则恢复旧 dashboard plist 并报告具体状态，绝不宣称服务成功。
+4. 原有每 5 分钟的 tick 任务会根据 dashboard-bind.json 独立检查 HTTP 健康；服务不可用或身份不匹配，生成去重 Gmail 故障告警。摘要及首次测试邮件仍在原先独立 outbox 中。
+
+与其他项目发生端口冲突时，必须优先查询监听 PID 和命令，禁止杀死 Technocore 或其他无关服务。端口由本次实际成功返回决定，不要猜测一定是 18766。
+
+正式一次性 Git 命令以及固定 SHA 以最终对话中的实际已验收提交为准。
+
+
 ## Mac 一次性升级入口（2026-11-24 新版）
 
 一条完整的 Mac 命令块完成一次性更新，基于固定 Git SHA 从 GitHub 建立稳定 checkout。
