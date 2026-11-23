@@ -1,9 +1,9 @@
 # Current monitor execution pointer
-latest_run_at: 2026-11-24T00:04:12+07:00
+latest_run_at: 2026-11-24T00:57:02+07:00
 schedule: Asia/Bangkok HOURLY HH:00
 scheduled_shard: 0
 executed_shard: 0
-run_path: airdrop-tge-monitor/runs/2026-11-24/000412-final.md
+run_path: airdrop-tge-monitor/runs/2026-11-24/005702-final.md
 run_status: PARTIAL_ONLY
 active_registry: 28 (8/6/7/7)
 fixed_urgent: 0
@@ -21,9 +21,9 @@ source_gap_count: 8
 verified_complete: false
 code_gate: CODE_NOT_EXECUTED
 last_verified_complete_at: 2026-10-10T07:52:16+07:00
-last_meaningful_attempt_shard0: 2026-11-24T00:04:12+07:00
+last_meaningful_attempt_shard0: 2026-11-24T00:57:02+07:00
 last_meaningful_attempt_shard1: 2026-11-23T17:55:43+07:00
 last_meaningful_attempt_shard2: 2026-11-23T22:59:45+07:00
 last_meaningful_attempt_shard3: 2026-11-23T19:58:01+07:00
 
-Shard0 PARTIAL_ONLY: 8/8 attempted, 6/8 issuer original pages readable, 0/8 investor rights verified; gaps retained, no ACTION, no Gmail. Final 000412-final.md.
+Shard0 PARTIAL_ONLY: 8/8 attempted; 6/8 issuer original sources read; 0/8 complete issuer+personal rights verification; 0 ACTION; no Gmail. Current final 005702-final.md.
