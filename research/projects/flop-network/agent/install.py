@@ -95,7 +95,7 @@ def install(oauth_file=None, recipient=None):
         raise
     return {'status':'LAUNCHCTL_BOOTSTRAP_ACCEPTED_HEALTH_NOT_YET_VERIFIED','gmail_test':'SENT_VERIFIED',
             'tick_seconds':300,'summary_bangkok':'08:00 & 20:00',
-            'dashboard':'http://127.0.0.1:8765',
+            'dashboard':'http://127.0.0.1:8766',
             'wallet_payment':'PRIVATE_CONFIG_AND_ACTUAL_TESTNET_GATES_ONLY',
             'plists':[str(TICK),str(UI)]}
 
