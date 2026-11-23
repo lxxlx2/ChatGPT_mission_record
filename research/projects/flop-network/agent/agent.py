@@ -193,7 +193,18 @@ def main(argv=None):
     elif args.action == 'preflight':
         output = preflight()
     elif args.action == 'dashboard':
+        import threading
+        import time
+        def watchdog():
+            from runtime import watchdog_tick
+            while True:
+                try:
+                    watchdog_tick()
+                except (OSError, ValueError, sqlite3.Error) as exc:
+                    print('WATCHDOG_OBSERVABILITY_ERROR: '+type(exc).__name__,file=sys.stderr,flush=True)
+                time.sleep(300)
         server = ThreadingHTTPServer(('127.0.0.1', 8765), Handler)
+        threading.Thread(target=watchdog,daemon=True,name='flop-tick-independent-watchdog').start()
         print('Read-only dashboard: http://127.0.0.1:8765', flush=True)
         server.serve_forever()
         return 0
