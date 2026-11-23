@@ -314,6 +314,8 @@ def digest_slot(now_local=None):
     return effective_date.isoformat(),hour
 
 def queue_summary(conn):
+    if now_bkk().hour not in (8,20):
+        return False
     today,hour=digest_slot()
     slot=f'{today}-{hour:02d}'
     key='summary-'+slot
@@ -423,6 +425,8 @@ def snapshot():
     try:
         results=dict(conn.execute('SELECT key,value FROM kv').fetchall())
         results['mail']=mail_status(conn)
+        entry=conn.execute("SELECT status FROM flop_mail WHERE mail_key='first-mail-setup-test'").fetchone()
+        results['mail_setup_test']=entry[0] if entry else 'NOT_EXECUTED'
         results['sessions']=[dict(x) for x in conn.execute(
             'SELECT attempt_id,phase,started_utc,ended_utc,wallet,max_flop,chain_verified,final_spent_flop,chain_tx,last_error FROM session_attempts')]
         results['errors']=[dict(x) for x in conn.execute(
