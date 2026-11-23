@@ -164,6 +164,7 @@ def dashboard_health():
         sha='UNKNOWN'
     return {'service':'flop-dashboard','schema':'flop-dashboard.v2',
             'pid':os.getpid(),'source_path':str(ROOT.resolve()),
+            'build':'flop-dashboard-dynamic-port-v3',
             'host':DASHBOARD_HOST,'port':DASHBOARD_PORT,
             'git_head_sha':sha}
 
