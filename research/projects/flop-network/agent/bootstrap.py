@@ -190,7 +190,7 @@ def launchd_upgrade(cli):
             subprocess.run(['/bin/launchctl','bootstrap',gui,str(p)],capture_output=True,timeout=25)
         raise RuntimeError('FLOP_UPGRADE_FAILED_OLD_PLISTS_RESTORED')
     return {'task_labels':[LABEL+'.tick',LABEL+'.dashboard'],
-            'source_dir':str(ROOT),'task_install':'BOOTSTRAP_ACCEPTED_AWAIT_RUNTIME_HEALTH'}
+            'source_dir':str(ROOT),'dashboard_url':'http://127.0.0.1:8766','task_install':'BOOTSTRAP_ACCEPTED_AWAIT_RUNTIME_HEALTH'}
 
 def setup(apply=False):
     stable=require_stable_source()
