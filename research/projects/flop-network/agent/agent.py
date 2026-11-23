@@ -19,6 +19,8 @@ from urllib.request import Request, urlopen
 from urllib.parse import urlsplit
 
 ROOT = Path(__file__).resolve().parent
+DASHBOARD_HOST = '127.0.0.1'
+DASHBOARD_PORT = 8766  # 8765 belongs to the existing Technocore Close Call dashboard
 DATA = Path(os.environ.get('FLOP_AGENT_DATA_DIR', '~/.local/share/flop-agent')).expanduser()
 ENDPOINTS = {
     'network_commits': 'https://api.github.com/repos/flop-labs/network/commits?per_page=12',
@@ -221,9 +223,9 @@ def main(argv=None):
                 except (OSError, ValueError, sqlite3.Error) as exc:
                     print('WATCHDOG_OBSERVABILITY_ERROR: '+type(exc).__name__,file=sys.stderr,flush=True)
                 time.sleep(300)
-        server = ThreadingHTTPServer(('127.0.0.1', 8765), Handler)
+        server = ThreadingHTTPServer((DASHBOARD_HOST, DASHBOARD_PORT), Handler)
         threading.Thread(target=watchdog,daemon=True,name='flop-tick-independent-watchdog').start()
-        print('Read-only dashboard: http://127.0.0.1:8765', flush=True)
+        print(f'Read-only dashboard: http://{DASHBOARD_HOST}:{DASHBOARD_PORT}', flush=True)
         server.serve_forever()
         return 0
     else:
