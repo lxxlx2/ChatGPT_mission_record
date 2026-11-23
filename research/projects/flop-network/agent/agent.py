@@ -16,6 +16,7 @@ import tempfile
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
+from urllib.parse import urlsplit
 
 ROOT = Path(__file__).resolve().parent
 DATA = Path(os.environ.get('FLOP_AGENT_DATA_DIR', '~/.local/share/flop-agent')).expanduser()
@@ -141,17 +142,18 @@ def offline_first_test():
 
 class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
-        if self.path == '/':
+        route = urlsplit(self.path).path
+        if route == '/':
             content = (ROOT / 'dashboard.html').read_bytes()
             typ = 'text/html; charset=utf-8'
-        elif self.path == '/api/state':
+        elif route == '/api/state':
             conn = db()
             try:
                 content = json.dumps(snapshot(conn), ensure_ascii=False).encode('utf-8')
             finally:
                 conn.close()
             typ = 'application/json; charset=utf-8'
-        elif self.path == '/api/runtime':
+        elif route == '/api/runtime':
             from runtime import snapshot as runtime_snapshot
             content = json.dumps(runtime_snapshot(), ensure_ascii=False).encode('utf-8')
             typ = 'application/json; charset=utf-8'
