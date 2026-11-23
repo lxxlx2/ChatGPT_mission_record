@@ -107,7 +107,7 @@ def matches_sent(row, payload):
         body=msg.get_content().replace('\r\n','\n')
         return (str(msg['Subject'])==row['subject']
                 and str(msg['X-Flop-Notification-Key'])==row['mail_key']
-                and str(msg['X-Flop-Content-SHA256'])==row['content_sha']
+                and ''.join(str(msg['X-Flop-Content-SHA256']).split())==row['content_sha']
                 and body==row['body']+'\n\nFLOP-Notification-Key: '+row['mail_key']+
                      '\nFLOP-Content-SHA256: '+row['content_sha']+'\n')
     except (KeyError,ValueError,TypeError):
