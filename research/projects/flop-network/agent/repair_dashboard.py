@@ -21,11 +21,11 @@ from urllib.error import HTTPError, URLError
 from urllib.request import urlopen
 
 ROOT = Path(__file__).resolve().parent
-PORT = 8765
+PORT = 8766
 UID = os.getuid() if hasattr(os,'getuid') else None
 LABEL = 'com.' + str(UID) + '.flop-agent.dashboard'
 PLIST = Path.home() / 'Library/LaunchAgents' / (LABEL + '.plist')
-API = 'http://127.0.0.1:8765'
+API = 'http://127.0.0.1:8766'
 
 def command(args, timeout=8):
     return subprocess.run(args,capture_output=True,text=True,timeout=timeout,check=False)
@@ -114,7 +114,7 @@ def run(apply=False):
     details=[listener_info(pid) for pid in pids]
     info['listeners']=details
     if any(x['exists'] and not x['ours'] for x in details):
-        info['status']='BLOCKED_UNRECOGNIZED_8765_OWNER'
+        info['status']='BLOCKED_UNRECOGNIZED_8766_OWNER'
         return info
     if not apply:
         info['status']='REPAIR_AVAILABLE_ONLY_FOR_VERIFIED_FLOP_DASHBOARD'
@@ -128,7 +128,7 @@ def run(apply=False):
     details=[listener_info(pid) for pid in pids]
     info['after_kickstart_listeners']=details
     if any(x['exists'] and not x['ours'] for x in details):
-        info['status']='BLOCKED_UNRECOGNIZED_8765_OWNER'
+        info['status']='BLOCKED_UNRECOGNIZED_8766_OWNER'
         return info
     # A stale orphan from the prior temporary checkout is the most likely
     # 404 cause. Only send SIGTERM after inspecting PID, UID and exact script.
