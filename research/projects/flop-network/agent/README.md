@@ -1,5 +1,41 @@
 # FLOP / Mac 本地 Agent 收益研究、看板与首次验证
 
+## Mac 一次性升级入口（2026-11-24 新版）
+
+一条完整的 Mac 命令块完成一次性更新，基于固定 Git SHA 从 GitHub 建立稳定 checkout。
+- 固定源码目录：用户目录的 Library/Application Support/FLOPAgent/mission；
+- 重用现有 ~/.local/share/flop-agent 的 OAuth 指针、独立邮件队列和 SENT_VERIFIED 首次测试，不重复发送相同测试邮件；
+- 首次创建专用、持久、加密的 sr25519 测试网签名账户，密码以 chmod 0600 保存在本机，绝不输出助记词。重复运行不能更换账户；
+- 原位升级现有两个 FLOP launchd 标签，加入 NVM PATH 并将原临时目录更新为固定目录。失败时尝试恢复旧 plist，不创建额外监控；
+- 使用 CLI 0.8.0 的 Network Status JSON：曼谷 14:00 起检查真正的 Testnet。仅官方页面标记为 live、RPC genesis 严格匹配、Faucet ready 且 matches_rpc 后自动尝试首次 Faucet；提交前记录不可重复身份，结果不明确绝不盲重试；
+- 现有看板服务兼任独立健康看门狗：超过 15 分钟没有调度 tick 时发错误邮件。08:00/20:00 摘要在 Mac 睡眠后补发最新未发送时段；
+- 首次真实推理成功邮件要求独立链上 payer、Miner、实际消费、最终结算的完整证据，不能仅依赖 CLI 退出码。
+
+**仍未完成的真实网络环节：** 官方 Testnet 目前仍标 planned，实际可用的 Miner 直连 Endpoint、模型报价、完整 Agent 身份积分归属 API 尚未公布或核实。当前实现可以自动等待开网、创建本地钱包并首次请求 Faucet；实际付费推理、最终性核验和之后的长期有效消费尚未通过，必须在官方发布可验证数据后继续验收，不能声称全部自动赚钱已完成。
+
+一次执行的 Mac 命令（正式完整 SHA 以最终交接消息为准）：
+
+    set -e
+    SHA=REPLACE_WITH_VERIFIED_FULL_SHA
+    DEST="$HOME/Library/Application Support/FLOPAgent/mission"
+    mkdir -p "$(dirname "$DEST")"
+    if [ ! -d "$DEST/.git" ]; then
+      git clone --filter=blob:none --no-checkout https://github.com/lxxlx2/ChatGPT_mission_record.git "$DEST"
+    fi
+    git -C "$DEST" fetch origin "$SHA"
+    git -C "$DEST" checkout --detach "$SHA"
+    cd "$DEST/research/projects/flop-network/agent"
+    python3 -m unittest discover -v -p 'test_*.py'
+    python3 bootstrap.py --apply
+    python3 runtime.py status
+
+如果首次生成账户，结果只输出公开 SS58 地址和状态，无助记词/密码。Mac launchctl 接受启动不等于真实付费推理成功，必须以本地 tick 及有效结算证据为准。无额外 OpenAI、Claude 或 Gemini API 要求。
+
+## 历史分步说明
+
+后文更早的手动操作仅供审核。已有 FLOP launchd 时不要再次执行 install.py --apply；请用上面的 bootstrap.py --apply 原位升级。
+
+
 状态（2026-11-23）：READ_ONLY_OFFLINE_PASSED / REAL_TESTNET_NOT_EXECUTED / NO_DEPLOY。
 这是阶段 A 的只读观察与首次验收工具，还没有通过真实 Testnet 支付与计分验收，不能称作已上线的空投机器人。
 
