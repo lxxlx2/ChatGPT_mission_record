@@ -36,6 +36,11 @@ class AgentTest(unittest.TestCase):
             c.close()
 
 
+    def test_dashboard_uses_separate_port_from_technocore(self):
+        self.assertEqual(agent.DASHBOARD_HOST, '127.0.0.1')
+        self.assertEqual(agent.DASHBOARD_PORT, 8766)
+        self.assertNotEqual(agent.DASHBOARD_PORT, 8765)
+
     def test_dashboard_http_routes_ignore_tracking_query_strings(self):
         from threading import Thread
         from urllib.request import urlopen
