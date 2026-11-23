@@ -48,8 +48,10 @@ def request_initial(conn, confirmed_genesis, *, cli_runner=subprocess.run):
         attempt['return_code']=cp.returncode
         attempt['output_sha256']=hashlib.sha256(cp.stdout.encode()).hexdigest()
         attempt['stderr_sha256']=hashlib.sha256(cp.stderr.encode()).hexdigest()
-        attempt['status']='CLI_ACCEPTED_UNVERIFIED' if cp.returncode==0 and isinstance(response,dict) and response else 'REJECTED_OR_UNKNOWN_NO_RETRY'
-        attempt['response_status']=str(response.get('status','UNKNOWN'))[:65] if isinstance(response,dict) else 'UNKNOWN'
+        reported=(response or {}).get('status','UNKNOWN') if isinstance(response,dict) else 'UNKNOWN'
+        affirmative=str(reported).lower() in ('ok','accepted','success','funded','granted')
+        attempt['status']='CLI_ACCEPTED_UNVERIFIED' if cp.returncode==0 and affirmative else 'REJECTED_OR_UNKNOWN_NO_RETRY'
+        attempt['response_status']=str(reported)[:65]
     except (OSError,subprocess.TimeoutExpired) as exc:
         attempt['status']='OUTCOME_UNKNOWN_NO_RETRY'
         attempt['reason']=type(exc).__name__
