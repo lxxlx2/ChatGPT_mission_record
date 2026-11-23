@@ -48,6 +48,7 @@ def init(conn):
 
 def enqueue(conn, key, subject, body):
     """Immutable notification identities, fixed per launch/test/digest/error key."""
+    init(conn)
     if not re.fullmatch(r'[a-zA-Z0-9_.:-]{4,150}', key):
         raise ValueError('BAD_MAIL_KEY')
     if not subject.startswith('[FLOP]') or not body.strip():
