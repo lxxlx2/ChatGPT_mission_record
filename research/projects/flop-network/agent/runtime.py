@@ -468,6 +468,42 @@ def tick(*, fetch=_json_response, cli_status=cli_network_status, execution=do_di
     finally:
         conn.close()
 
+
+def watchdog_tick():
+    """Called by EXISTING independent dashboard job; no new launchd task."""
+    DATA.mkdir(parents=True,exist_ok=True,mode=0o700)
+    conn=sqlite3.connect(MONITOR,timeout=15)
+    conn.row_factory=sqlite3.Row
+    ensure_state(conn)
+    try:
+        last=get(conn,'last_scheduler_tick_utc')
+        if last:
+            try:
+                at=datetime.fromisoformat(last.replace('Z','+00:00'))
+                if at.tzinfo is None:raise ValueError('NAIVE_HEALTH_TIMESTAMP')
+            except ValueError:
+                at=None
+        else:
+            started=get(conn,'watchdog_started_utc')
+            if not started:
+                put(conn,'watchdog_started_utc',utc())
+                return {'status':'WAIT_FOR_INITIAL_TICK'}
+            try:
+                at=datetime.fromisoformat(started)
+            except ValueError:
+                at=None
+        if at is None:
+            notify_error(conn,'SCHEDULER_HEALTH_TIMESTAMP_INVALID','Unable to read last scheduled tick')
+        else:
+            lag=(now()-at.astimezone(timezone.utc)).total_seconds()
+            if lag > 900:
+                notify_error(conn,'SCHEDULER_STALE','No successful scheduler tick for over 15 minutes')
+            elif get(conn,'current_error')=='SCHEDULER_STALE':
+                clear_error(conn)
+        delivery=pump(conn)
+        return {'status':'WATCHDOG_CHECKED','delivery':delivery}
+    finally:conn.close()
+
 def has_mail_table(conn):
     return bool(conn.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='flop_mail'").fetchone())
 
