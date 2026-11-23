@@ -130,6 +130,19 @@ def verify_mail_test():
         raise RuntimeError('GMAIL_SENT_READBACK_FAILED_NO_SERVICE_INSTALL')
     return {'mail':'SENT_VERIFIED','new_test_mail_sent':True}
 
+def dashboard_port_config():
+    """Preserve port previously verified by existing dashboard migration."""
+    manifest = DATA / 'dashboard-bind.json'
+    if manifest.is_file():
+        try:
+            port = json.loads(manifest.read_text())['port']
+            if type(port) is int and 1024 <= port <= 65535:
+                return port
+        except (OSError, ValueError, KeyError, TypeError):
+            pass
+    return 18766
+
+
 def plist_for(kind,python_path,env):
     label=LABEL+'.'+kind
     if kind=='tick':
@@ -140,7 +153,8 @@ def plist_for(kind,python_path,env):
         interval=None
     else:raise ValueError('INVALID_LABEL')
     p={'Label':label,'ProgramArguments':args,'WorkingDirectory':str(ROOT),
-       'EnvironmentVariables':{'PATH':env['PATH'],'FLOP_AGENT_DATA_DIR':str(DATA)},
+       'EnvironmentVariables':{'PATH':env['PATH'],'FLOP_AGENT_DATA_DIR':str(DATA),
+                               **({'FLOP_DASHBOARD_PORT':str(dashboard_port_config())} if kind=='dashboard' else {})},
        'RunAtLoad':True,
        'StandardOutPath':str(DATA/'logs'/(kind+'.stdout.log')),
        'StandardErrorPath':str(DATA/'logs'/(kind+'.stderr.log'))}
@@ -190,7 +204,7 @@ def launchd_upgrade(cli):
             subprocess.run(['/bin/launchctl','bootstrap',gui,str(p)],capture_output=True,timeout=25)
         raise RuntimeError('FLOP_UPGRADE_FAILED_OLD_PLISTS_RESTORED')
     return {'task_labels':[LABEL+'.tick',LABEL+'.dashboard'],
-            'source_dir':str(ROOT),'dashboard_url':'http://127.0.0.1:8766','task_install':'BOOTSTRAP_ACCEPTED_AWAIT_RUNTIME_HEALTH'}
+            'source_dir':str(ROOT),'dashboard_url':'http://127.0.0.1:'+str(dashboard_port_config()),'task_install':'BOOTSTRAP_ACCEPTED_AWAIT_RUNTIME_HEALTH'}
 
 def setup(apply=False):
     stable=require_stable_source()
