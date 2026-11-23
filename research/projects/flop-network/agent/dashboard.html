@@ -1,15 +1,86 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>FLOP Agent | 本地收益与证据看板</title>
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FLOP Agent / 本地收益与运行看板</title>
 <style>
-:root{color-scheme:dark;font-family:system-ui,-apple-system,sans-serif;background:#101621;color:#e8eef8}body{max-width:1150px;margin:auto;padding:28px 18px}h1{font-size:25px;letter-spacing:-.4px}h2{font-size:17px;margin:0 0 14px}.sub{color:#aabbd2;font-size:13px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(235px,1fr));gap:12px}.card{background:#1b2536;border:1px solid #34425b;border-radius:14px;padding:19px}.big{font-size:29px;font-weight:700;margin-top:12px}.warning{color:#ffce89}.ok{color:#8fe6c1}.tiny{font-size:12px;color:#aabbd2}table{border-collapse:collapse;width:100%;font-size:12px}td,th{padding:10px 8px;border-bottom:1px solid #34425b;text-align:left}th{color:#aabbd2}a{color:#8cc4ff}input{background:#101621;color:#fff;border:1px solid #5b6b85;border-radius:8px;padding:10px;width:115px}button{background:#3969b5;color:#fff;border:0;border-radius:8px;padding:10px;margin-left:8px;cursor:pointer}.pill{display:inline-block;border:1px solid #6f5c38;padding:4px 9px;border-radius:22px;font-size:11px;color:#ffce89}.chart{display:flex;align-items:end;gap:10px;height:100px}.bar{background:linear-gradient(#74b9ff,#2d70b7);min-width:55px;border-radius:6px 6px 0 0;text-align:center;padding-top:6px;font-size:12px}#error{color:#ff9c9c}code{white-space:normal}
+:root{color-scheme:dark;font-family:-apple-system,system-ui,sans-serif;background:#10141f;color:#f0f4fc}
+*{box-sizing:border-box}body{max-width:1040px;margin:0 auto;padding:24px 18px}
+h1{font-size:23px;margin:0 0 8px}h2{font-size:15px;margin:0 0 12px}
+small,.sub{color:#a2b1c9;font-size:13px}.top{margin:14px 0 20px;color:#e6c687;font-size:13px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(218px,1fr));gap:12px}
+.card{border:1px solid #323e55;background:#1b2332;border-radius:12px;padding:16px}
+.value{font-size:26px;font-weight:700;margin-top:10px;overflow-wrap:anywhere}
+.tag{font-size:11px;display:inline-block;border:1px solid #687891;border-radius:12px;padding:4px 9px;margin:4px 3px 0 0}
+.good{color:#92e4bd}.warn{color:#f5c477}.error{color:#ff999b}
+table{width:100%;border-collapse:collapse;font-size:12px}th,td{text-align:left;padding:9px 8px;border-bottom:1px solid #364259;overflow-wrap:anywhere}th{color:#a2b1c9}
+button{background:#395d97;border:0;color:white;border-radius:6px;padding:8px;cursor:pointer}
+.mini{font-size:12px;line-height:1.65}.section{margin-top:12px}
+@media(max-width:640px){.value{font-size:22px}body{padding:18px 12px}table{font-size:11px}}
 </style></head><body>
-<h1>FLOP Agent / 收益与证据看板</h1><p class="sub">仅监听 127.0.0.1。研究和收据追踪，不签名、不付款、不自动刷量。所有空投估值保持未确认。</p><p><span class="pill">Testnet 启动：未核验</span> <span class="pill">协议奖励：未结算</span> <span class="pill">真实交易：禁用</span></p>
-<div class="grid"><section class="card"><div class="sub">已核验 Agent 链上结算</div><div class="big" id="verified">0</div><div class="tiny">尚未接入链上最终性核验，此数不会靠上传文件提高</div></section><section class="card"><div class="sub">导入但未核验的收据</div><div class="big" id="receipts">0</div><div class="tiny">不计入有效空投</div></section><section class="card"><div class="sub">GitHub 原始证据条目</div><div class="big" id="evidence">0</div><div class="tiny">可用于研究任务，不等于推理付款</div></section><section class="card"><div class="sub">可出售的空投估值</div><div class="big warning">未确认</div><div class="tiny">主网价格、配额公式、锁定及退出深度尚不清楚</div></section></div>
-<div class="grid" style="margin-top:13px"><section class="card"><h2>最大有效推理预算规划</h2><div class="sub">使用实际测试网 Faucet 可用额度和单次有效推理报价，计算理论最多可执行次数。不是固定每天 4 次。</div><p><label>可用测试 FLOP <input id="balance" type="number" min="0" step="0.01" placeholder="待实测"></label></p><p><label>单次估算消费 <input id="unit" type="number" min="0" step="0.001" placeholder="待报价"></label> <button onclick="plan()">计算</button></p><div id="budgetResult" class="warning">没有实际配额与报价，无法计算。</div><p class="tiny">正式积分按可归属的钱包、实际结算额、反作弊和未最终确定的分配公式；理论次数不等于奖励。</p></section><section class="card"><h2>验收门槛</h2><p>① 官方 Testnet Genesis 与客户端兼容：<b class="warning">未验证</b></p><p>② 自有钱包直连合格 Miner：<b class="warning">未验证</b></p><p>③ 首笔真实推理和 finalized channel：<b class="warning">未执行</b></p><p>④ 收据付款人、金额和计分归属：<b class="warning">未验证</b></p><p>⑤ 本机每小时自动运行：<b class="warning">未部署</b></p><p class="tiny">启动日计划不是网络实际已上线证明。</p></section></div>
-<section class="card" style="margin-top:13px"><h2>官方代码与版本观察</h2><p class="sub" id="updated">尚未读取</p><div style="overflow-x:auto"><table><thead><tr><th>来源</th><th>内容</th><th>GitHub 链接</th></tr></thead><tbody id="rows"><tr><td colspan="3">运行 python3 agent.py collect 后出现数据</td></tr></tbody></table></div></section>
-<section class="card" style="margin-top:13px"><h2>原始来源可用性</h2><div id="checks" class="sub">等待本地采样</div><p class="sub" id="error"></p></section>
+<h1>FLOP Agent / 收益与执行</h1>
+<div class="sub">实际资金与结算优先。数据来自本机 SQLite，来源不完整时明确显示未知。每 30 秒刷新。</div>
+<div class="top" id="overall">连接本地监控中…</div>
+<div class="grid">
+<section class="card"><small>已核验有效推理消费</small><div class="value" id="spent">0 test FLOP</div><small>仅计最终结算且付款人属自己的会话</small></section>
+<section class="card"><small>链上核验成功会话</small><div class="value" id="success">0</div><small>CLI 返回成功不计入</small></section>
+<section class="card"><small>未知结算与阻塞</small><div class="value warn" id="pending">0</div><small>存在未知结算时不自动付款</small></section>
+<section class="card"><small>Faucet 余额与剩余额度</small><div class="value warn">未核实</div><small>官方 Testnet Faucet 尚无可信额度数据源</small></section>
+<section class="card"><small>最近一次有效成功</small><div class="value" style="font-size:15px" id="last-success">暂无</div><small>UTC 时间戳</small></section>
+<section class="card"><small>邮件送达</small><div class="value" id="mail">未确认</div><small id="mail-extra">Gmail Sent 未回读前不算成功</small></section>
+</div>
+<section class="card section">
+<h2>执行与通知状态</h2>
+<table><tbody>
+<tr><th>网络</th><td id="network">未知</td></tr>
+<tr><th>Agent 执行模式</th><td id="mode">未启动</td></tr>
+<tr><th>上次调度检查</th><td id="last-tick">暂无</td></tr>
+<tr><th>当前异常</th><td id="current-error" class="warn">无</td></tr>
+<tr><th>半日邮件</th><td>08:00 / 20:00（曼谷时间）</td></tr>
+<tr><th>首次邮件测试</th><td id="email-test">未确认</td></tr>
+<tr><th>首笔真实结算</th><td id="real-first">未确认</td></tr>
+<tr><th>代币可兑现价值</th><td class="warn">未知，尚未确认 TGE 与流动性</td></tr>
+</tbody></table>
+</section>
+<section class="card section">
+<h2>最近异常（首错留证）</h2>
+<div id="alerts" class="mini">目前无错误记录</div>
+</section>
+<section class="card section">
+<h2>结算证据</h2>
+<div style="overflow-x:auto"><table><thead><tr><th>开始时间</th><th>阶段</th><th>预留上限</th><th>实际结算</th><th>最终交易</th></tr></thead>
+<tbody id="sessions"><tr><td colspan="5">尚未产生 Testnet 会话</td></tr></tbody></table></div>
+</section>
+<p class="sub" id="refresh-error"></p>
 <script>
-function plan(){let b=Number(document.getElementById('balance').value),u=Number(document.getElementById('unit').value);let e=document.getElementById('budgetResult');if(!Number.isFinite(b)||!Number.isFinite(u)||b<=0||u<=0){e.textContent='需要实际有效的 Faucet 额度和 Miner 报价';return;}e.textContent='理论上限 '+Math.floor(b/u).toLocaleString()+' 次推理，前提是钱包直连成功、单次成本不变且额度全部可以花费。';}
-function td(tr,text){let t=document.createElement('td');t.textContent=text;tr.appendChild(t);return t;}
-async function refresh(){try{let r=await fetch('/api/state',{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);let d=await r.json();document.getElementById('verified').textContent=d.direct_onchain_verified_receipts;document.getElementById('receipts').textContent=d.receipt_records;document.getElementById('evidence').textContent=d.public_evidence_count;document.getElementById('updated').textContent='UTC 更新：'+d.fetched_at_utc+'；推理模式：'+d.execution_mode;let rows=document.getElementById('rows');rows.replaceChildren();for(let x of d.items){let tr=document.createElement('tr');td(tr,x.source);td(tr,x.title);let link=document.createElement('a');link.href=x.url;link.textContent='源码';link.rel='noopener noreferrer';link.target='_blank';let cell=document.createElement('td');cell.appendChild(link);tr.appendChild(cell);rows.appendChild(tr);}let checks=document.getElementById('checks');checks.textContent=d.source_checks.map(x=>x.name+': '+x.outcome).join(' / ')||'尚未运行采集';document.getElementById('error').textContent='';}catch(e){document.getElementById('error').textContent='本地看板读取失败：'+e.message;}}
+const set=(id,v)=>{document.getElementById(id).textContent=String(v)};
+async function refresh(){
+try{
+const r=await fetch('/api/runtime',{cache:'no-store'});
+if(!r.ok)throw Error('HTTP '+r.status);
+const d=await r.json();
+const sessions=d.sessions||[];
+const verified=sessions.filter(x=>x.chain_verified===1);
+const spent=verified.reduce((a,x)=>a+Number(x.final_spent_flop||0),0);
+const unverified=sessions.length-verified.length;
+set('spent',spent.toLocaleString('en-US',{maximumFractionDigits:12})+' test FLOP');
+set('success',verified.length);set('pending',unverified);
+set('last-success',d.last_verified_session_utc||'暂无');
+set('network',d.network_status||'未核验');
+set('mode',d.execution_mode||'未开始');
+set('last-tick',d.last_scheduler_tick_utc||'暂无');
+set('current-error',d.current_error||'无');
+set('overall',(d.network_status||'UNKNOWN')+' | '+(d.execution_mode||'NO_AGENT')+' | 最终性核验后才计分');
+const m=d.mail||{};
+set('mail',String(m.sent_verified||0)+' 已验证');
+set('mail-extra',String(m.pending||0)+' 待发 / '+String(m.unverified||0)+' 送达未确认 / '+String(m.blocked||0)+' 凭据阻塞 / '+String(m.failed||0)+' 永久失败');
+set('email-test',d.mail_setup_test||'以本地 mail-test 结果为准');
+set('real-first',verified.length>0?'FIRST_TEST_CHAIN_VERIFIED':'首笔链上有效结算未核实');
+const tbody=document.getElementById('sessions');tbody.replaceChildren();
+if(!sessions.length){const tr=document.createElement('tr'),td=document.createElement('td');td.colSpan=5;td.textContent='没有已记录的真实会话';tr.appendChild(td);tbody.appendChild(tr);}
+for(const s of sessions){const tr=document.createElement('tr');for(const v of [s.started_utc||'',s.phase||'',s.max_flop||'',s.final_spent_flop||'未核实',s.chain_tx||'未确认']){const cell=document.createElement('td');cell.textContent=v;tr.appendChild(cell);}tbody.appendChild(tr);}
+const alerts=document.getElementById('alerts');alerts.replaceChildren();
+for(const e of d.errors||[]){const p=document.createElement('p');p.textContent=e.at_utc+' | '+e.code+' | '+e.details;alerts.appendChild(p);}
+if(!d.errors||!d.errors.length)alerts.textContent='目前无已记录错误';
+set('refresh-error','');
+}catch(err){set('refresh-error','连接本地数据库或服务失败：'+err.message);}
+}
 refresh();setInterval(refresh,30000);
 </script></body></html>
