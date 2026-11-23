@@ -412,11 +412,25 @@ def tick(*, fetch=_json_response, cli_status=cli_network_status, execution=do_di
                 else:
                     if state['reason'] in ('PLANNED','UNVERIFIED_DOC_FORMAT','BEFORE_OFFICIAL_LAUNCH_TARGET'):
                         put(conn,'execution_mode','WAITING_FOR_CONFIRMED_TESTNET')
+                    elif state['reason']=='PRIVATE_CONFIG_NOT_CONFIGURED' and state.get('genesis'):
+                        from faucet import request_initial
+                        result=request_initial(conn,state['genesis'])
+                        put(conn,'network_status','TESTNET_VERIFIED_NO_DIRECT_MINER')
+                        put(conn,'execution_mode','WAITING_FOR_INDEPENDENT_MINER_AND_MODEL')
+                        if result.get('status') in ('REJECTED_OR_UNKNOWN_NO_RETRY','OUTCOME_UNKNOWN_NO_RETRY'):
+                            notify_error(conn,'FAUCET_RESULT_NEEDS_RECONCILIATION',result['status'])
+                        elif result.get('status')=='BLOCKED_AGENT_IDENTITY_NOT_READY':
+                            notify_error(conn,'TEST_WALLET_NOT_READY',result['status'])
+                        elif result.get('status')=='BLOCKED_CLI_NOT_INSTALLED':
+                            notify_error(conn,'FLOP_CLI_NOT_INSTALLED',result['status'])
                     elif state['reason']!='PRIVATE_CONFIG_NOT_CONFIGURED':
-                        notify_error(conn,'TESTNET_READINESS_GAP',state['reason'])
+                        if state['reason'] not in ('OFFICIAL_PROFILE_PLANNED','PLANNED'):
+                            notify_error(conn,'TESTNET_READINESS_GAP',state['reason'])
+                        else:
+                            put(conn,'execution_mode','WAITING_FOR_CONFIRMED_TESTNET')
                     else:
                         put(conn,'execution_mode','WAITING_FOR_PRIVATE_CONFIG')
-            except (OSError,TimeoutError,ValueError) as exc:
+            except (OSError,TimeoutError,ValueError,subprocess.SubprocessError) as exc:
                 notify_error(conn,'NETWORK_CHECK_FAILED',type(exc).__name__)
         queue_summary(conn)
         delivery=pump(conn)
