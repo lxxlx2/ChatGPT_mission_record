@@ -77,8 +77,9 @@ def install(oauth_file=None, recipient=None):
     tick_data=plist_args('runtime.py',['tick'],every=300)
     ui_data=plist_args('agent.py',['dashboard'],keepalive=True)
     LAUNCH_DIR.mkdir(parents=True,exist_ok=True)
+    if TICK.exists() or UI.exists():
+        raise RuntimeError('EXISTING_FLOP_LAUNCH_AGENT_REQUIRES_MANUAL_REVIEW')
     for path,payload in ((TICK,tick_data),(UI,ui_data)):
-        if path.exists():raise RuntimeError('EXISTING_PLIST_REQUIRES_MANUAL_REVIEW_'+path.name)
         _write_private(path,payload)
     gui='gui/'+str(os.getuid())
     started=[]
@@ -92,7 +93,7 @@ def install(oauth_file=None, recipient=None):
         for path in started:
             subprocess.run(['/bin/launchctl','bootout',gui,str(path)],capture_output=True,timeout=15)
         raise
-    return {'status':'INSTALLED_ON_THIS_MAC','gmail_test':'SENT_VERIFIED',
+    return {'status':'LAUNCHCTL_BOOTSTRAP_ACCEPTED_HEALTH_NOT_YET_VERIFIED','gmail_test':'SENT_VERIFIED',
             'tick_seconds':300,'summary_bangkok':'08:00 & 20:00',
             'dashboard':'http://127.0.0.1:8765',
             'wallet_payment':'PRIVATE_CONFIG_AND_ACTUAL_TESTNET_GATES_ONLY',
