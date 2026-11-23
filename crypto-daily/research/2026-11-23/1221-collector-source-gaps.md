@@ -1,0 +1,12 @@
+# 2026-11-23 12:21 Asia/Bangkok collector audit
+
+Status: PARTIAL_SOURCE_GAPS / NO_DELIVERY_ATTEMPT (12:20 collection-only window). EMAIL_ONLY. No new task or timer.
+
+## Actual source and state checks
+- Gmail life SENT search: after 2026/11/22 before 2026/11/25, to lxx.run688@gmail.com, returned only the Nov22 Crypto recovery message 1a2034b8ca694f60 and a Nov22 US stocks report; no Nov23 Crypto Sent observed in this query. Search was not a complete seven-day body readback. Nov22 must not be resent.
+- Git main rules fetched: PIPELINE_CONTRACT.md blob 29ffbc1d32ca87a744d2990e8d55639ebb84a6f9; EDITORIAL_RULESET.json blob 2ed51528d230508ae4e0015762b1d60c9d72e299; REPORT_ACCEPTANCE.md fetched (SHA available in tool output); DELIVERY_RUNBOOK.md blob 9bf979b608aebc774e7b598c7f5fc2b716019eb3; COLLECTOR_SPEC.md blob 7c0983fbed7f8b6185118e2cb51dd5da8c88a98c. REPORT_SPEC, SECURITY_SOURCE_POLICY, ledger and 7-day Gmail bodies NOT fetched this run. No editorial QA or CI execution.
+- Public English discovery searches executed for Nov23 crypto market/ETF/security; LiteLLM/Node/Laravel/Railway/OAuth; and Galxe/USDT reserves. These yielded mostly older indexed results. Galxe original https://help.galxe.com/en/articles/18361711-galxe-is-integrating-into-gravity-what-you-need-to-know (published Nov9; checked Nov23 around 12:21 ICT) reiterates Dec5/Dec15 deadlines; already alerted in separate TGE mail, so EXCLUDE no novelty. Lookonchain feed https://lookonchain.com/index.aspx/feeds/index.aspx/feeds/67844 checked Nov23 around 12:21 ICT, dated Nov16 market summaries, no verified fresh transaction. Reuters Oct30 Binance hack indexed old, EXCLUDE without material delta.
+- Direct container network attempt to api.github.com failed DNS resolution. Connected GitHub and Gmail operations succeeded. GitHub REST research directory enumeration was not possible from container; this is a tool-access gap, not proof directory empty.
+
+## Mandatory lanes not independently completed
+Official Binance spot BTC/ETH/SOL/BNB/HYPE and perps, Farside BTC/ETH/SOL final issuer rows, SEC/Fed, issuer original TGE and ACTIVE project deployment, six distinct security vendor lanes, Arkham original TX, IPO exchange official venue pages, direct USDT/USD and Tether/Circle reserve updates, official X session, and seven-day full Sent/Git reconciliation: SOURCE_GAP / NOT_CHECKED. Do not claim no news, prices, event novelty or QA pass. This is not a prebuild or a 13-chapter report. No email sent, no notification.
