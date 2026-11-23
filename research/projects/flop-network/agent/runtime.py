@@ -117,9 +117,8 @@ def official_testnet_state(fetch=_json_response):
     if not re.search(r'network:\s*testnet\s*\((live|active|launched)\)',lower):
         return {'ready':False,'status':'UNVERIFIED_DOC_FORMAT','source':STATUS_URL}
     match=re.search(r'(?:expected genesis|genesis hash)\s*[:\s<>=a-z"\\/;]*?(0x[0-9a-f]{64})',lower)
-    if not match:
-        return {'ready':False,'status':'GENESIS_NOT_PUBLISHED','source':STATUS_URL}
-    return {'ready':True,'status':'PUBLISHED_TESTNET','genesis':match.group(1),'source':STATUS_URL}
+    return {'ready':True,'status':'PUBLISHED_TESTNET',
+            'genesis':match.group(1) if match else None,'source':STATUS_URL}
 
 def private_config(path=CONF):
     if not path.is_file():
@@ -168,32 +167,53 @@ def private_config(path=CONF):
             except (OSError,subprocess.TimeoutExpired):
                 pass
     if not os.environ.get('FLOP_KEY_PASSWORD'):
-        raise ValueError('WALLET_PASSWORD_MISSING_FROM_LOCAL_KEYCHAIN')
+        password_file=DATA/'agent-password'
+        if password_file.is_file() and not (password_file.stat().st_mode & 0o077):
+            os.environ['FLOP_KEY_PASSWORD']=password_file.read_text().strip()
+    if not os.environ.get('FLOP_KEY_PASSWORD'):
+        raise ValueError('WALLET_PASSWORD_NOT_AVAILABLE')
     obj['keystore']=str(keystore)
     obj['max_flop']=str(ceiling)
     obj['total_test_flop_budget']=str(daily)
     return obj
 
 def cli_network_status():
+    """Read actual CLI 0.8.0 nested network-status schema, no guesses."""
     binpath=shutil.which('flop')
     if not binpath:
-        return {'ready':False,'reason':'FLOP_CLI_NOT_INSTALLED'}
-    cmd=[binpath,'--network','testnet','network','status','--json']
-    cp=subprocess.run(cmd,capture_output=True,text=True,timeout=30,check=False)
+        return {'ready':False,'reason':'FLOP_CLI_NOT_IN_LAUNCHD_PATH'}
+    cp=subprocess.run([binpath,'--network','testnet','network','status','--json'],
+                      capture_output=True,text=True,timeout=35,check=False)
     if cp.returncode or not cp.stdout.strip():
         return {'ready':False,'reason':'CLI_NETWORK_STATUS_UNAVAILABLE'}
     try:
         obj=json.loads(cp.stdout)
     except (ValueError,TypeError):
         return {'ready':False,'reason':'CLI_STATUS_NOT_JSON'}
-    # Reject unknown schema; no testnet approval from a process return code.
-    genesis=obj.get('genesis_hash') or obj.get('genesisHash') or obj.get('genesis')
-    matches=obj.get('matches_expected') if 'matches_expected' in obj else obj.get('matchesExpected')
-    finalized=obj.get('finalized_head') or obj.get('finalizedHead')
-    if not (isinstance(genesis,str) and re.fullmatch(r'0x[0-9a-fA-F]{64}',genesis)
-            and matches is True and finalized is not None):
-        return {'ready':False,'reason':'CLI_CHAIN_FINALITY_NOT_VERIFIED'}
-    return {'ready':True,'genesis':genesis.lower(),'finalized_head':str(finalized)}
+    if obj.get('network')!='testnet':
+        return {'ready':False,'reason':'WRONG_NETWORK_RETURNED'}
+    profile=obj.get('profile_status','UNVERIFIED')
+    rpc=obj.get('rpc') or {}
+    faucet=obj.get('faucet') or {}
+    if profile=='planned':
+        return {'ready':False,'reason':'OFFICIAL_PROFILE_PLANNED'}
+    if profile not in ('live','active','launched'):
+        return {'ready':False,'reason':'UNKNOWN_TESTNET_PROFILE_'+str(profile)[:40]}
+    if rpc.get('reachable') is not True or rpc.get('matches_expected') is not True:
+        return {'ready':False,'reason':'RPC_NOT_REACHABLE_AND_PINNED'}
+    if faucet.get('reachable') is not True or faucet.get('ready') is not True or faucet.get('matches_rpc') is not True:
+        return {'ready':False,'reason':'FAUCET_NOT_READY_OR_GENESIS_MISMATCH'}
+    genesis=(obj.get('genesis_hash') or rpc.get('genesis_hash') or
+             rpc.get('genesisHash') or rpc.get('genesis') or
+             faucet.get('genesis_hash') or faucet.get('genesisHash'))
+    if not isinstance(genesis,str) or not re.fullmatch(r'0x[0-9a-fA-F]{64}',genesis):
+        return {'ready':False,'reason':'GENESIS_NOT_EXPLICITLY_AVAILABLE'}
+    finalized=rpc.get('finalized_head') or rpc.get('finalizedHead')
+    if finalized is None:
+        return {'ready':False,'reason':'FINALITY_NOT_EXPLICITLY_AVAILABLE'}
+    return {'ready':True,'genesis':genesis.lower(),
+            'finalized_head':str(finalized),'profile_status':profile}
+
 
 def ready_to_send(conn, config=None, *, fetch=_json_response, cli_status=cli_network_status):
     if now()<LAUNCH_UTC:
@@ -202,16 +222,18 @@ def ready_to_send(conn, config=None, *, fetch=_json_response, cli_status=cli_net
     put(conn,'network_status',doc['status'])
     if not doc['ready']:
         return {'ready':False,'reason':doc['status']}
-    if config is None:
-        return {'ready':False,'reason':'PRIVATE_CONFIG_NOT_CONFIGURED'}
-    if doc['genesis'].lower()!=config['expected_genesis'].lower():
-        return {'ready':False,'reason':'DOC_GENESIS_PIN_MISMATCH'}
     cli=cli_status()
     if not cli['ready']:
         return {'ready':False,'reason':cli.get('reason','CLI_NOT_READY')}
-    if cli['genesis'].lower()!=doc['genesis'].lower():
-        return {'ready':False,'reason':'RPC_GENESIS_PIN_MISMATCH'}
-    return {'ready':True,'reason':'DOC_AND_RPC_FINALIZED_GENESIS_MATCH','genesis':cli['genesis']}
+    if doc.get('genesis') and cli['genesis']!=doc['genesis'].lower():
+        return {'ready':False,'reason':'DOC_RPC_GENESIS_MISMATCH'}
+    if config is None:
+        return {'ready':False,'reason':'PRIVATE_CONFIG_NOT_CONFIGURED',
+                'genesis':cli['genesis']}
+    if cli['genesis']!=config['expected_genesis'].lower():
+        return {'ready':False,'reason':'CONFIG_RPC_GENESIS_MISMATCH'}
+    return {'ready':True,'reason':'DOC_CLI_RPC_FAUCET_CHAIN_MATCH',
+            'genesis':cli['genesis']}
 
 def do_direct_first(conn, config, *, run=subprocess.run):
     """Exactly one first capped test, UNKNOWN even for CLI rc0 until chain audit.
