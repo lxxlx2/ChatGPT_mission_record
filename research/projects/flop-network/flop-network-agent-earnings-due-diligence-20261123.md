@@ -1,6 +1,6 @@
 # FLOP Network / Agent 路线经济收益、技术兑现与本地自动化尽调（2026-11-23）
 
-Updated: 2026-11-23 Asia/Bangkok
+Updated: 2026-11-24 00:17 Asia/Bangkok
 Scope: single-project research; GitHub-first implementation is in agent/. This is research and read-only code, NOT permission to sign wallet, spend testnet coins, install launchd, trade or change the original monitoring tasks. Production NO_GO.
 
 ## 1. Current verdict
@@ -9,7 +9,11 @@ WATCH / EARLY_TESTNET_OPPORTUNITY / REWARD_AND_LIQUIDITY_UNVERIFIED.
 
 The investment objective is **realizable cash earnings**, not a vanity count of requests, points, logins or online days. There is no official reliable US-dollar reward per task, FLOP market price, distribution per account, or credible ROI estimate. Do not call any testnet FLOP a dollar asset. Need actual eligible testnet spend, frozen cohort score formula, snapshot, eventual mainnet entitlement, unlock restrictions and executable trading liquidity.
 
-Official Testnet opening is *targeted* 2026-11-24; as of 2026-11-23 there is no independently confirmed active Testnet genesis in this research. Devnet is accessible but earns no airdrop credit.
+Official FLOP account @flop_labs posted on 2026-11-23 that public Testnet is scheduled for **2026-11-24 07:00 UTC / 14:00 Asia/Bangkok**. The announcement also states Agent use does not require an allowlist, daily Testnet faucet use is planned, and old Devnet credits or activity do not carry over. Original first-party announcement: https://x.com/flop_labs ; publicly indexed post text as source recovery: https://zamantika.com/en/profile/flop_labs . Related official docs: https://docs.flop.network/docs/testnet-and-timeline and https://docs.flop.network/docs/agent-onboarding .
+
+**Readiness as checked 2026-11-24 00:17 Asia/Bangkok:** official operator profile https://docs.flop.network/networks/testnet still says "testnet (planned)", next release unreleased and genesis, RPC, bootnodes, gateway and supported releases unavailable. This is a timed issuer announcement, **NOT proof that the network has actually launched**. The starting signal requires published chain identity plus a successful independently verified agent direct-settlement path. Devnet remains ineligible for the public Testnet airdrop.
+
+Do not schedule a local paid Agent to assume launch solely at 14:00. Current Git Stage A agent can only collect public source evidence and show a read-only dashboard. No real Testnet Agent payment module has passed end-to-end acceptance. A user-approved separate Mac setup is needed for actual wallet signing and unattended paid inference.
 
 ## 2. Identity and team
 
