@@ -17,6 +17,12 @@ State: WATCH / TESTNET_LIVE_UNSCORED. This dated section supersedes the historic
 - PM scan 2026-11-25: Polymarket, Kalshi, Limitless and Predict.fun searched; no verifiable project-specific market found.
 - Sources: https://flop.finance/testnet/ ; https://docs.flop.network/docs/network-testnet ; https://ask.flop.finance/networks/testnet ; https://faucet.flop.network/ ; https://github.com/flop-labs/network/releases
 
+## Follow-up — 2026-11-25 06:09 Asia/Bangkok
+
+- USER_CONFIRMED terminal RPC read: correct canonical genesis, Runtime 1014035, 19 peers, syncing false, two distinct finalized heads. Testnet connectivity verified from user's Mac; earlier research-environment DNS failure is not a network outage.
+- Official CLI 0.8.2 release (2026-11-24) includes SDK 0.10.0 and admits Runtime 1014035; 0.8.1 can query network status but refuses incompatible chain commands. Source: https://github.com/flop-labs/network/commit/daaff43a0af4dbc1d5a392a885c0b4ee0bf7d101 . This supersedes the earlier SDK compatibility blocker for the new release, not for the installed 0.8.1.
+- Official opening FAQ still describes unscored operation, no activation block or verified public Testnet Self faucet: https://docs.flop.network/docs/network-testnet . User's installed CLI 0.8.1 independently reports Testnet faucet fetch failure and expected-genesis match null; no wallet funding/settlement verified. Local tick reports 299 runs, interval 300 seconds, last exit 0; these do not prove successful inference or voucher credit. No execution changes made by research.
+
 ## Project (historical background, 2026-09-29)
 
 Flop Labs is building FLOP Network, a proposed Substrate/FRAME blockchain for verified AI inference and agent-to-agent settlement.
