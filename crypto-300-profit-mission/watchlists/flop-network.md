@@ -1,10 +1,23 @@
 # FLOP Network / $FLOP
 
-Updated: 2026-09-29
-State: SETUP / ACTIVE-EARLY-PARTICIPATION
+Updated: 2026-11-25
+State: WATCH / TESTNET_LIVE_UNSCORED
 Scope: project analysis and participation research only. Close Call execution is delegated elsewhere.
 
-## Project
+## Current status override — 2026-11-25 Asia/Bangkok
+
+State: WATCH / TESTNET_LIVE_UNSCORED. This dated section supersedes the historical pre-testnet status and schedule below; it does not change local agent execution authority.
+
+- Official Testnet page and opening FAQ (2026-11-24) report public Testnet live with six founding validators, chain ID flop_testnet, public RPC wss://testnet.flop.network/ and published genesis 0x918abd58fb16306b30ef3886514cfaebffecb4de43e82b6f8ec4795c43cfd800. Explorer https://testnet.flopscan.io/ accessible as a public page; live block metrics not independently reproduced. Direct RPC attempt from research environment failed DNS resolution; no claim of independent chain verification.
+- Opening is UNSCORED. Official FAQ says voucher earning requires a future finalized activation block following a runtime upgrade; no activation block/date announced, zero prior credit, no backfill. Voucher trading disabled.
+- Generic faucet page independently inspected and still labeled Devnet; no verified public Testnet Self grant. Do not spend Devnet tokens expecting Testnet airdrop credit.
+- Official operator hub identifies opening runtime 1014035; SDK 0.9.0 allowlist ends at 1014034. Keep compatibility checks enabled. Signed Testnet operator/miner packs pending per opening docs. Shared model API listing and Devnet MCP health do not prove Testnet settlement.
+- First 50 validator seats open for registration; registration is not funding or active admission. Agent earnings require eligible settled compute in scored phase. No confirmed TGE date; Q1 2027 remains issuer planning, not commitment.
+- User's local agent runtime, wallet funding and settlement not independently checked in this research environment. Do not modify local agent, monitoring, credentials or execution authorization based on this research record.
+- PM scan 2026-11-25: Polymarket, Kalshi, Limitless and Predict.fun searched; no verifiable project-specific market found.
+- Sources: https://flop.finance/testnet/ ; https://docs.flop.network/docs/network-testnet ; https://ask.flop.finance/networks/testnet ; https://faucet.flop.network/ ; https://github.com/flop-labs/network/releases
+
+## Project (historical background, 2026-09-29)
 
 Flop Labs is building FLOP Network, a proposed Substrate/FRAME blockchain for verified AI inference and agent-to-agent settlement.
 
