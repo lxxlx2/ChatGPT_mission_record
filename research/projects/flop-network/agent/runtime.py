@@ -109,17 +109,32 @@ def _json_response(url):
         return response.read(700000).decode('utf-8',errors='replace')
 
 def official_testnet_state(fetch=_json_response):
-    """A planned landing page never grants transaction authorization."""
-    html=fetch(STATUS_URL)
-    lower=html.lower()
-    if 'testnet (planned)' in lower or 'status: planned' in lower or 'next (unreleased)' in lower:
+    """Parse official operator status, not marketing text or script metadata."""
+    from html.parser import HTMLParser
+    class Visible(HTMLParser):
+        def __init__(self):
+            super().__init__()
+            self.parts=[]
+            self.hidden=0
+        def handle_starttag(self,tag,attrs):
+            if tag in ('script','style'): self.hidden+=1
+        def handle_endtag(self,tag):
+            if tag in ('script','style') and self.hidden: self.hidden-=1
+        def handle_data(self,data):
+            if not self.hidden: self.parts.append(data)
+    p=Visible()
+    p.feed(fetch(STATUS_URL))
+    lower=' '.join(' '.join(p.parts).lower().split())
+    if re.search(r'network:\s*testnet\s*\(planned\)|status:\s*planned|release:\s*next\s*\(unreleased\)',lower):
         return {'ready':False,'status':'PLANNED','source':STATUS_URL}
-    # No guessing network identity from marketing copy or a single string.
     if not re.search(r'network:\s*testnet\s*\((live|active|launched)\)',lower):
         return {'ready':False,'status':'UNVERIFIED_DOC_FORMAT','source':STATUS_URL}
-    match=re.search(r'(?:expected genesis|genesis hash)\s*[:\s<>=a-z"\\/;]*?(0x[0-9a-f]{64})',lower)
+    match=re.search(r'(?:expected genesis|genesis hash)\s*:?\s*(0x[0-9a-f]{64})(?![0-9a-f])',lower)
+    if not match:
+        return {'ready':False,'status':'OFFICIAL_GENESIS_NOT_PUBLISHED','source':STATUS_URL}
     return {'ready':True,'status':'PUBLISHED_TESTNET',
-            'genesis':match.group(1) if match else None,'source':STATUS_URL}
+            'genesis':match.group(1),'source':STATUS_URL}
+
 
 def private_config(path=CONF):
     if not path.is_file():
@@ -178,8 +193,61 @@ def private_config(path=CONF):
     obj['total_test_flop_budget']=str(daily)
     return obj
 
-def cli_network_status():
-    """Read actual CLI 0.8.0 nested network-status schema, no guesses."""
+def rpc_finality_observation(expected_genesis):
+    """Read-only Substrate JSON-RPC using Node's built-in WebSocket.
+    This proves a finalized head on the observed chain, not settlement or
+    an independently published genesis pin. No account or signer is loaded.
+    """
+    if not re.fullmatch(r'0x[0-9a-f]{64}',expected_genesis or ''):
+        return None
+    node=shutil.which('node')
+    if not node:
+        return None
+    script=r"""
+const w=new WebSocket('wss://testnet.flop.network');
+const pending=new Map(); let id=0;
+const timer=setTimeout(()=>process.exit(2),12000);
+function rpc(method,params=[]){
+  return new Promise((resolve,reject)=>{
+    const i=++id; pending.set(i,{resolve,reject});
+    w.send(JSON.stringify({jsonrpc:'2.0',id:i,method,params}));
+  });
+}
+w.addEventListener('message',e=>{
+  try { const m=JSON.parse(e.data); const p=pending.get(m.id);
+    if(p){ pending.delete(m.id); m.error?p.reject(Error('rpc')):p.resolve(m.result); }
+  } catch { process.exit(2); }
+});
+w.addEventListener('error',()=>process.exit(2));
+w.addEventListener('open',async()=>{
+  try {
+    const genesis=await rpc('chain_getBlockHash',[0]);
+    const finalized=await rpc('chain_getFinalizedHead');
+    const header=await rpc('chain_getHeader',[finalized]);
+    console.log(JSON.stringify({genesis,finalized,number:header.number}));
+    clearTimeout(timer); w.close(); process.exit(0);
+  } catch { process.exit(2); }
+});
+"""
+    try:
+        cp=subprocess.run([node,'-e',script],capture_output=True,text=True,timeout=16,check=False)
+        if cp.returncode: return None
+        item=json.loads(cp.stdout)
+        if not isinstance(item,dict) or item.get('genesis')!=expected_genesis:
+            return None
+        head=item.get('finalized')
+        number=item.get('number')
+        if not isinstance(head,str) or not re.fullmatch(r'0x[0-9a-fA-F]{64}',head):
+            return None
+        if not isinstance(number,str) or not re.fullmatch(r'0x[0-9a-fA-F]+',number):
+            return None
+        return {'hash':head.lower(),'height':int(number,16)}
+    except (OSError,ValueError,TypeError,subprocess.SubprocessError):
+        return None
+
+
+def cli_network_status(*, finality_probe=rpc_finality_observation):
+    """Preserve observation even when official profile or faucet is not ready."""
     binpath=shutil.which('flop')
     if not binpath:
         return {'ready':False,'reason':'FLOP_CLI_NOT_IN_LAUNCHD_PATH'}
@@ -191,68 +259,92 @@ def cli_network_status():
         obj=json.loads(cp.stdout)
     except (ValueError,TypeError):
         return {'ready':False,'reason':'CLI_STATUS_NOT_JSON'}
-    if obj.get('network')!='testnet':
+    if not isinstance(obj,dict) or obj.get('network')!='testnet':
         return {'ready':False,'reason':'WRONG_NETWORK_RETURNED'}
     profile=obj.get('profile_status','UNVERIFIED')
     rpc=obj.get('rpc') or {}
     faucet=obj.get('faucet') or {}
+    if not isinstance(rpc,dict) or not isinstance(faucet,dict):
+        return {'ready':False,'reason':'CLI_STATUS_SCHEMA_INVALID'}
+    genesis=(rpc.get('genesis_hash') or rpc.get('genesisHash') or rpc.get('genesis'))
+    if not isinstance(genesis,str) or not re.fullmatch(r'0x[0-9a-fA-F]{64}',genesis):
+        genesis=None
+    else:
+        genesis=genesis.lower()
+    obs={'profile_status':profile,'rpc_reachable':rpc.get('reachable') is True,
+         'rpc_genesis_matches_expected':rpc.get('matches_expected'),
+         'observed_genesis':genesis,'rpc_chain':rpc.get('chain'),
+         'rpc_spec_version':rpc.get('spec_version'),
+         'faucet_reachable':faucet.get('reachable') is True,
+         'faucet_ready':faucet.get('ready'),'faucet_matches_rpc':faucet.get('matches_rpc'),
+         'finalized_head':None,'finalized_height':None,'settlement_ready':False}
+    # Do not query any user-overridden endpoint or assume identity from DNS.
+    if obs['rpc_reachable'] and genesis and rpc.get('url')=='wss://testnet.flop.network' and rpc.get('overridden') is False:
+        final=finality_probe(genesis)
+        if final:
+            obs.update(finalized_head=final['hash'],finalized_height=final['height'],
+                       settlement_ready=final['height']>0)
+    def blocked(reason):
+        return {**obs,'ready':False,'reason':reason}
     if profile=='planned':
-        return {'ready':False,'reason':'OFFICIAL_PROFILE_PLANNED'}
+        return blocked('OFFICIAL_PROFILE_PLANNED')
     if profile not in ('live','active','launched'):
-        return {'ready':False,'reason':'UNKNOWN_TESTNET_PROFILE_'+str(profile)[:40]}
-    if rpc.get('reachable') is not True or rpc.get('matches_expected') is not True:
-        return {'ready':False,'reason':'RPC_NOT_REACHABLE_AND_PINNED'}
-    if faucet.get('reachable') is not True or faucet.get('ready') is not True or faucet.get('matches_rpc') is not True:
-        return {'ready':False,'reason':'FAUCET_NOT_READY_OR_GENESIS_MISMATCH'}
-    genesis=(obj.get('genesis_hash') or rpc.get('genesis_hash') or
-             rpc.get('genesisHash') or rpc.get('genesis') or
-             faucet.get('genesis_hash') or faucet.get('genesisHash'))
-    if not isinstance(genesis,str) or not re.fullmatch(r'0x[0-9a-fA-F]{64}',genesis):
-        # In CLI 0.7.0's real observed status, genesis is not exposed before launch.
-        # Only allow pinned official faucet /chain after CLI confirms RPC matches
-        # its expected chain AND faucet matches that same RPC genesis.
-        if faucet.get('url')!='https://faucet.testnet.flop.network':
-            return {'ready':False,'reason':'GENESIS_NOT_EXPLICITLY_AVAILABLE'}
-        try:
-            with urlopen(Request('https://faucet.testnet.flop.network/chain',
-                                 headers={'Accept':'application/json',
-                                          'User-Agent':'flop-agent-testnet/0.1'}),
-                         timeout=HTTP_TIMEOUT) as reply:
-                if reply.status!=200:
-                    return {'ready':False,'reason':'FAUCET_CHAIN_NOT_HTTP_200'}
-                chain=json.loads(reply.read(100000))
-            genesis=chain.get('genesisHash') or chain.get('genesis_hash')
-        except (OSError,TimeoutError,ValueError):
-            return {'ready':False,'reason':'CANONICAL_FAUCET_CHAIN_NOT_AVAILABLE'}
-    if not isinstance(genesis,str) or not re.fullmatch(r'0x[0-9a-fA-F]{64}',genesis):
-        return {'ready':False,'reason':'GENESIS_NOT_VERIFIED'}
-    finalized=rpc.get('finalized_head') or rpc.get('finalizedHead')
-    return {'ready':True,'genesis':genesis.lower(),
-            'finalized_head':str(finalized) if finalized is not None else None,
-            'settlement_ready':finalized is not None,'profile_status':profile}
+        return blocked('UNKNOWN_TESTNET_PROFILE')
+    if not obs['rpc_reachable'] or rpc.get('matches_expected') is not True:
+        return blocked('RPC_NOT_REACHABLE_AND_PINNED')
+    if not obs['faucet_reachable'] or faucet.get('ready') is not True or faucet.get('matches_rpc') is not True:
+        return blocked('FAUCET_NOT_READY_OR_GENESIS_MISMATCH')
+    if not genesis:
+        return blocked('GENESIS_NOT_VERIFIED')
+    if not obs['settlement_ready']:
+        return blocked('CHAIN_FINALITY_NOT_VERIFIED')
+    return {**obs,'ready':True,'genesis':genesis}
 
 
 def ready_to_send(conn, config=None, *, fetch=_json_response, cli_status=cli_network_status):
     if now()<LAUNCH_UTC:
         return {'ready':False,'reason':'BEFORE_OFFICIAL_LAUNCH_TARGET'}
-    doc=official_testnet_state(fetch)
-    put(conn,'network_status',doc['status'])
+    # Always check RPC even if the operator document is still planned.
+    try:
+        doc=official_testnet_state(fetch)
+    except (OSError,TimeoutError,ValueError):
+        doc={'ready':False,'status':'OFFICIAL_DOC_UNAVAILABLE'}
+    try:
+        cli=cli_status()
+    except (OSError,ValueError,subprocess.SubprocessError):
+        cli={'ready':False,'reason':'CLI_NETWORK_STATUS_UNAVAILABLE'}
+    put(conn,'official_document_status',doc['status'])
+    for field in ('profile_status','rpc_reachable','rpc_genesis_matches_expected',
+                  'observed_genesis','rpc_chain','rpc_spec_version','faucet_reachable',
+                  'faucet_ready','faucet_matches_rpc','finalized_head','finalized_height'):
+        value=cli.get(field)
+        put(conn,field,json.dumps(value,ensure_ascii=False) if value is None or isinstance(value,bool) else value)
+    put(conn,'network_observed_at_utc',utc())
     if not doc['ready']:
+        status='RPC_REACHABLE_AWAITING_OFFICIAL_PIN' if cli.get('rpc_reachable') else doc['status']
+        put(conn,'network_status',status)
+        put(conn,'network_blocker',doc['status']+' / '+str(cli.get('reason','CLI_READY')))
         return {'ready':False,'reason':doc['status']}
-    cli=cli_status()
     if not cli['ready']:
+        put(conn,'network_status','AWAITING_TESTNET_READINESS')
+        put(conn,'network_blocker',cli.get('reason','CLI_NOT_READY'))
         return {'ready':False,'reason':cli.get('reason','CLI_NOT_READY')}
-    if doc.get('genesis') and cli['genesis']!=doc['genesis'].lower():
+    if cli['genesis']!=doc['genesis'].lower():
+        put(conn,'network_status','GENESIS_MISMATCH')
+        put(conn,'network_blocker','DOC_RPC_GENESIS_MISMATCH')
         return {'ready':False,'reason':'DOC_RPC_GENESIS_MISMATCH'}
+    put(conn,'network_status','TESTNET_VERIFIED')
+    put(conn,'network_blocker','NONE')
     if config is None:
         return {'ready':False,'reason':'PRIVATE_CONFIG_NOT_CONFIGURED',
                 'genesis':cli['genesis']}
-    if not cli.get('settlement_ready', bool(cli.get('finalized_head'))):
+    if not cli.get('settlement_ready'):
         return {'ready':False,'reason':'CHAIN_FINALITY_NOT_VERIFIED'}
     if cli['genesis']!=config['expected_genesis'].lower():
         return {'ready':False,'reason':'CONFIG_RPC_GENESIS_MISMATCH'}
     return {'ready':True,'reason':'DOC_CLI_RPC_FAUCET_CHAIN_MATCH',
             'genesis':cli['genesis']}
+
 
 def do_direct_first(conn, config, *, run=subprocess.run):
     """Exactly one first capped test, UNKNOWN even for CLI rc0 until chain audit.
@@ -471,7 +563,10 @@ def tick(*, fetch=_json_response, cli_status=cli_network_status, execution=do_di
                         put(conn,'execution_mode','FIRST_SESSION_READY')
                         execution(conn,config)
                 else:
-                    if state['reason'] in ('PLANNED','UNVERIFIED_DOC_FORMAT','BEFORE_OFFICIAL_LAUNCH_TARGET'):
+                    if state['reason'] in ('PLANNED','UNVERIFIED_DOC_FORMAT','OFFICIAL_GENESIS_NOT_PUBLISHED',
+                                           'OFFICIAL_DOC_UNAVAILABLE','OFFICIAL_PROFILE_PLANNED',
+                                           'RPC_NOT_REACHABLE_AND_PINNED','FAUCET_NOT_READY_OR_GENESIS_MISMATCH',
+                                           'CHAIN_FINALITY_NOT_VERIFIED','BEFORE_OFFICIAL_LAUNCH_TARGET'):
                         put(conn,'execution_mode','WAITING_FOR_CONFIRMED_TESTNET')
                     elif state['reason']=='PRIVATE_CONFIG_NOT_CONFIGURED' and state.get('genesis'):
                         from faucet import request_initial
