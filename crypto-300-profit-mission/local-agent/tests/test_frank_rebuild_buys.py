@@ -14,7 +14,7 @@ from mission_agent.frank.rpc import WALLET
 from mission_agent.meme.holder_ranks import _b58
 from mission_agent.mission_control.frank_buys import read_buys
 from mission_agent.mission_control.server import DashboardState, Handler
-from mission_agent.signals.buy_admission import qualification
+from mission_agent.signals.buy_admission import BACKPACK_MINT, qualification
 from mission_agent.signals.classifier import classify
 from mission_agent.signals.engine import Engine
 from mission_agent.signals.policy import USDC, load_policy
@@ -252,3 +252,19 @@ def test_offline_reconciliation_separates_missed_unexpected_pending_and_latency(
     assert sha(backup) == args[1]
     with pytest.raises(ReconciliationError,match="BUY_QUALIFICATION_SHA256_MISMATCH"):
         reconcile_snapshot(*args,scanner_source_id="scanner_fixture",buy_qualifications=(cfg,"0"*64,AS_OF))
+
+def test_exact_official_backpack_exclusion_overrides_a_stale_positive_label(tmp_path, monkeypatch):
+    db, cfg = tmp_path/"db", tmp_path/"qualification.json"
+    ledger = Ledger(db)
+    config(cfg)
+    doc=json.loads(cfg.read_text())
+    doc["records"].append({**doc["records"][0],"mint":BACKPACK_MINT,"name":"BP"})
+    cfg.write_text(json.dumps(doc))
+    put(ledger,1,mint=BACKPACK_MINT)
+    assert read_buys(db,cfg,as_of=AS_OF)["rows"] == []
+    policy = load_policy(Path(__file__).resolve().parents[1]/"config/frank_local_signal_v1.json")
+    def unexpected_evaluation(*_):
+        pytest.fail("known non-Meme must not enter model evaluation")
+    monkeypatch.setattr("mission_agent.signals.engine.evaluate",unexpected_evaluation)
+    Engine(ledger,policy,rebuild_assets=qualification(cfg,AS_OF)).drain()
+    assert ledger.db.execute("SELECT count(*) FROM outbox").fetchone()[0] == 0

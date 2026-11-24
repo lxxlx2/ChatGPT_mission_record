@@ -13,6 +13,12 @@ from .classifier import QUOTE_MINTS, USDT
 from .policy import USDC
 from .reconciliation import _base58_size
 
+# Independently documented non-Meme asset identities. Match the complete mint,
+# never a ticker; a local positive label cannot override known exclusion.
+# https://learn.backpack.exchange/blog/backpack-token-ticker-bp
+BACKPACK_MINT = "BPxxfRCXkUVhig4HS1Lh7kZqV6SPJhzfEk4x6fVBjPCy"
+EXCLUDED_MINTS = QUOTE_MINTS | {BACKPACK_MINT}
+
 
 def exact_mint(mint):
     return valid_pubkey(mint)
@@ -78,7 +84,7 @@ def _units(raw, decimals):
 def admit_buy(event, assets, *, wallet, signature, slot, block_time, raw_hash, mint):
     """Return only facts bound to this classified, archived wallet event."""
     asset = assets.get(mint)
-    if not asset or asset.status != "VERIFIED_MEME" or mint in QUOTE_MINTS or not exact_mint(mint):
+    if not asset or asset.status != "VERIFIED_MEME" or mint in EXCLUDED_MINTS or not exact_mint(mint):
         return None
     if not isinstance(event, dict) or event.get("classification") != "ACTIVE_TRADE":
         return None

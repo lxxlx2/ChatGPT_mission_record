@@ -21,3 +21,5 @@
 在原参数基础上增加 `--buy-qualifications FILE --buy-qualifications-sha256 SHA --buy-qualification-as-of UNIX`。输出分别记录应入、实入匹配、应拦、正确拦截、漏列、误列、错 Mint、未追平和未决。链上确认到检测及入库延迟只按时间字段齐全且匹配的样本计算，实际送达仍未验证。默认标准输出仅显示汇总；需要逐签名证据时沿用已有私有报告选项。
 
 验证：合成备份覆盖正确拦截、漏项、未追平、误列、独立预期缺失、延迟及资格 SHA 不符；未取得可供验证的真实独立钱包区间，S08 实源仍待验收。S09 保留现有 Scanner 恢复测试，尚未视为新产品的真实追赶验证。
+
+S02 补充：[Backpack 官方公告](https://learn.backpack.exchange/blog/backpack-token-ticker-bp) 明示其 Solana 原生交易所代币完整 Mint，因此重做准入按完整地址排除，即使本地资格误标也不能入列或进入模拟通知。验收用真实公开 Mint 和合成交易；未把它写成对具体历史邮件的根因认定。历史邮件须另与对应期间的 Scanner 原件、策略状态及 outbox 逐项绑定，且不能据此估算漏报率。
