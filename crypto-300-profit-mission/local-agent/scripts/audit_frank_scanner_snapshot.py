@@ -15,10 +15,17 @@ def main(argv=None):
     parser.add_argument("--reference-sha256", required=True)
     parser.add_argument("--scanner-source-id", required=True)
     parser.add_argument("--private-report", type=Path, help="New mode-0600 file with per-signature evidence")
+    parser.add_argument("--buy-qualifications", type=Path, help="Optional pinned offline buy qualification file")
+    parser.add_argument("--buy-qualifications-sha256")
+    parser.add_argument("--buy-qualification-as-of", type=int, help="Qualification observation cutoff in Unix seconds")
     args = parser.parse_args(argv)
+    buy_options = (args.buy_qualifications, args.buy_qualifications_sha256, args.buy_qualification_as_of)
+    if any(x is not None for x in buy_options) and not all(x is not None for x in buy_options):
+        parser.error("supply all three buy qualification options or none")
     try:
         result = reconcile_snapshot(args.snapshot, args.snapshot_sha256, args.reference,
-                                    args.reference_sha256, scanner_source_id=args.scanner_source_id)
+                                    args.reference_sha256, scanner_source_id=args.scanner_source_id,
+                                    buy_qualifications=buy_options if args.buy_qualifications is not None else None)
     except ReconciliationError as error:
         print(json.dumps({"status": "INVALID_INPUT", "reason": str(error)}))
         return 2

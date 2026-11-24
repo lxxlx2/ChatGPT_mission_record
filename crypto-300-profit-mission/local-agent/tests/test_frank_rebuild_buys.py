@@ -206,3 +206,49 @@ def test_browser_default_entry_filters_and_prefills_ca(tmp_path):
         finally:
             server.shutdown()
             runner.join()
+
+
+def test_offline_reconciliation_separates_missed_unexpected_pending_and_latency(tmp_path):
+    import sqlite3
+    from datetime import datetime, timezone
+    from mission_agent.signals.reconciliation import ReconciliationError, reconcile_snapshot
+
+    cfg, backup, ref = (tmp_path/name for name in ("qualifications.json","backup.sqlite","reference.json"))
+    config(cfg)
+    ledger = Ledger(tmp_path/"ledger")
+    at = AS_OF-10
+    good = put(ledger,1,at=at)
+    excluded = put(ledger,2,at=at,mint=BP)
+    unexpected = put(ledger,3,at=at)
+    unknown = put(ledger,4,at=at,kind="failed")
+    unseen = _b58((5).to_bytes(64,"big"))
+    pending = _b58((6).to_bytes(64,"big"))
+    ledger.checkpoint(WALLET,pending,14)
+    ledger.db.execute("CREATE TABLE signature_detections(wallet,signature,person_id,slot,seen_at)")
+    ledger.db.execute("INSERT INTO signature_detections VALUES (?,?,?,?,?)",(WALLET,good,"frank",12,at+2.25))
+    ledger.db.execute("UPDATE signatures SET seen_at=? WHERE signature=?",
+                      (datetime.fromtimestamp(at+4,timezone.utc).isoformat(),good))
+    with sqlite3.connect(backup) as target:
+        ledger.db.backup(target)
+        target.execute("PRAGMA journal_mode=DELETE")
+    ref.write_text(json.dumps({"schema_version":1,"chain":"solana","commitment":"finalized","complete":True,
+        "start_slot":12,"end_slot":14,"finalized_through_slot":14,"person_id":"frank","wallet":WALLET,
+        "source_id":"independent_fixture","capture_sha256":"a"*64,"transactions":[
+            {"signature":sig,"slot":slot,**({"expected_frank_buy":want,"expectation_sha256":"b"*64}
+                                         if want is not None else {})}
+            for sig,slot,want in [(good,12,MINT),(excluded,12,False),(unexpected,12,False),
+                                  (unknown,12,None),(unseen,13,MINT),(pending,14,MINT)]
+        ]}))
+    sha = lambda p: hashlib.sha256(p.read_bytes()).hexdigest()
+    args = (backup,sha(backup),ref,sha(ref))
+    result = reconcile_snapshot(*args,scanner_source_id="scanner_fixture",buy_qualifications=(cfg,sha(cfg),AS_OF))
+    buys = result["buy_admission"]
+    assert result["status"] == buys["status"] == "GAPS"
+    assert buys["counts"] == {"EXPECTED_IN":3,"EXPECTED_OUT":2,"MATCHED_IN":1,"MATCHED_OUT":1,
+                             "MISSED":1,"PENDING":1,"UNEXPECTED":1,"UNRESOLVED":1,"WRONG_MINT":0}
+    assert buys["chain_to_detection"]["minimum_seconds"] == 2.25
+    assert buys["chain_to_index"]["maximum_seconds"] == 4
+    assert buys["delivery_timing"] == "NOT_VERIFIED"
+    assert sha(backup) == args[1]
+    with pytest.raises(ReconciliationError,match="BUY_QUALIFICATION_SHA256_MISMATCH"):
+        reconcile_snapshot(*args,scanner_source_id="scanner_fixture",buy_qualifications=(cfg,"0"*64,AS_OF))

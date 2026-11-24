@@ -1,0 +1,100 @@
+"""Offline S08 overlay: compare projected buys against per-signature expectations."""
+from collections import Counter
+from datetime import datetime
+import math
+
+from .buy_admission import admit_buy, exact_mint, qualification
+from .reconciliation import SHA256, ReconciliationError, _matches, _object
+
+
+def _latency(observed, at):
+    if type(at) is not int or at <= 0:
+        return None
+    if isinstance(observed, str):
+        try:
+            stamp = datetime.fromisoformat(observed)
+            observed = stamp.timestamp() if stamp.tzinfo else None
+        except (ValueError, OSError, OverflowError):
+            observed = None
+    if type(observed) not in (int, float) or not math.isfinite(observed) or observed < at:
+        return None
+    return round(observed - at, 3)
+
+
+def _timing(values):
+    known = [value for value in values if value is not None]
+    return {"sample_count": len(known), "unknown_count": len(values) - len(known),
+            "minimum_seconds": min(known, default=None), "maximum_seconds": max(known, default=None)}
+
+
+def audit_buys(db, reference, result, path, sha256, as_of):
+    if reference["person_id"] != "frank":
+        raise ReconciliationError("BUY_AUDIT_FRANK_ONLY")
+    if not _matches(SHA256, sha256) or type(as_of) is not int or not 0 < as_of <= 4_000_000_000:
+        raise ReconciliationError("BUY_QUALIFICATION_PIN_REQUIRED")
+    try:
+        assets = qualification(path, as_of, sha256=sha256)
+    except (ValueError, RecursionError) as error:
+        if str(error) == "QUALIFICATION_SHA256_MISMATCH":
+            raise ReconciliationError("BUY_QUALIFICATION_SHA256_MISMATCH") from None
+        raise ReconciliationError("BUY_QUALIFICATION_INVALID") from None
+
+    tables = {r[0] for r in db.execute("SELECT name FROM sqlite_schema WHERE type='table'")}
+    if "trades" not in tables:
+        raise ReconciliationError("BUY_AUDIT_TRADE_TABLE_REQUIRED")
+    detection_timing = "signature_detections" in tables and "seen_at" in {
+        r[1] for r in db.execute("PRAGMA table_info(signature_detections)")
+    }
+    counts = Counter(dict.fromkeys(("EXPECTED_IN", "EXPECTED_OUT", "MATCHED_IN", "MATCHED_OUT",
+                                   "MISSED", "UNEXPECTED", "WRONG_MINT", "PENDING", "UNRESOLVED"), 0))
+    detection_times, index_times = [], []
+    for tx, row in zip(reference["transactions"], result["rows"], strict=True):
+        explicit = "expected_frank_buy" in tx
+        expected = tx.get("expected_frank_buy")
+        if explicit and (not (expected is False or exact_mint(expected))
+                         or not _matches(SHA256, tx.get("expectation_sha256"))):
+            raise ReconciliationError("BUY_EXPECTATION_MINT_OR_FALSE_AND_SHA256_REQUIRED")
+        if explicit:
+            counts["EXPECTED_OUT" if expected is False else "EXPECTED_IN"] += 1
+        wallet, sig = reference["wallet"], row["signature"]
+        indexed = row["stages"]["indexed"]["status"]
+        actual, source = None, None
+        if indexed == "MATCH":
+            source = db.execute("SELECT * FROM signatures WHERE wallet=? AND signature=?", (wallet, sig)).fetchone()
+            trade = db.execute("SELECT mint FROM trades WHERE wallet=? AND signature=? "
+                               "AND side IN ('BUY','ADD','REENTRY')", (wallet, sig)).fetchone()
+            if trade:
+                actual = admit_buy(_object(source["body"]), assets, wallet=wallet, signature=sig, slot=tx["slot"],
+                                   block_time=source["block_time"], raw_hash=source["raw_hash"], mint=trade["mint"])
+        mint = actual["mint"] if actual else None
+        if not explicit:
+            status = "UNRESOLVED"
+        elif indexed == "UNKNOWN":
+            status = "PENDING"
+        elif indexed != "MATCH":
+            status = "MISSED" if expected is not False and indexed == "MISSING" else "UNRESOLVED"
+        elif expected is False:
+            # A missing/corrupt classifier cannot certify that the negative was recognized.
+            status = "UNEXPECTED" if mint else "MATCHED_OUT" if row["recorded_classification"] else "UNRESOLVED"
+        elif not mint:
+            status = "MISSED"
+        else:
+            status = "MATCHED_IN" if mint == expected else "WRONG_MINT"
+        counts[status] += 1
+        row["buy_admission"] = {"status": status, "expected_mint_or_false": expected, "projected_mint": mint}
+        if status == "MATCHED_IN":
+            detected = None
+            if detection_timing and row["stages"]["detection"]["status"] == "MATCH":
+                detected = db.execute("SELECT seen_at FROM signature_detections WHERE wallet=? AND signature=?",
+                                      (wallet, sig)).fetchone()["seen_at"]
+            at = source["block_time"]
+            detection_times.append(_latency(detected, at))
+            index_times.append(_latency(source["seen_at"], at))
+    status = ("GAPS" if any(counts[k] for k in ("MISSED","UNEXPECTED","WRONG_MINT")) else
+              "PARTIAL" if not result["rows"] or result["unexpected_indexed_signatures"]
+              or any(counts[k] for k in ("PENDING","UNRESOLVED")) else
+              "MATCHED_WITHIN_SUPPLIED_WINDOW")
+    return {"status": status, "counts": dict(counts), "qualifications_sha256": sha256,
+            "qualification_as_of": as_of, "latency_scope": "MATCHED_BUYS_ONLY; SUPPLIED_LOCAL_CLOCKS",
+            "chain_to_detection": _timing(detection_times), "chain_to_index": _timing(index_times),
+            "delivery_timing": "NOT_VERIFIED", "reference_provenance": "CALLER_SUPPLIED_EXPECTATIONS"}

@@ -4,6 +4,7 @@ No symbol, venue, quote mint or classifier verdict alone establishes Meme identi
 Unknown, conflicting and explicitly excluded records fail closed.
 """
 from dataclasses import dataclass
+import hashlib
 import json
 import re
 
@@ -24,12 +25,15 @@ class Asset:
     name: str | None
 
 
-def qualification(path, as_of):
+def qualification(path, as_of, *, sha256=None):
     """Read trusted local observations, never fetch or infer qualification."""
     with path.open("rb") as f:
         payload = f.read(1_048_577)
     if len(payload) > 1_048_576:
         raise ValueError("QUALIFICATION_TOO_LARGE")
+    if sha256 is not None and hashlib.sha256(payload).hexdigest() != sha256:
+        raise ValueError("QUALIFICATION_SHA256_MISMATCH")
+
     def unique(pairs):
         out = {}
         for key, value in pairs:

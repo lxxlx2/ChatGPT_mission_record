@@ -365,7 +365,8 @@ def _audit(db, reference):
     }
 
 
-def reconcile_snapshot(snapshot, snapshot_sha256, reference, reference_sha256, *, scanner_source_id):
+def reconcile_snapshot(snapshot, snapshot_sha256, reference, reference_sha256, *, scanner_source_id,
+                       buy_qualifications=None):
     """Audit a standalone SQLite backup and independently prepared reference file."""
     snapshot, reference = Path(snapshot), Path(reference)
     try:
@@ -383,6 +384,13 @@ def reconcile_snapshot(snapshot, snapshot_sha256, reference, reference_sha256, *
         with closing(sqlite3.connect(snapshot.resolve().as_uri() + "?mode=ro&immutable=1",
                                      uri=True, timeout=3)) as db:
             result = _audit(db, manifest)
+            if buy_qualifications is not None:
+                from .buy_reconciliation import audit_buys
+                result["buy_admission"] = audit_buys(db, manifest, result, *buy_qualifications)
+                if result["buy_admission"]["status"] == "GAPS":
+                    result["status"] = "GAPS"
+                elif result["buy_admission"]["status"] != "MATCHED_WITHIN_SUPPLIED_WINDOW" and result["status"] == "MATCHED_WITHIN_SUPPLIED_WINDOW":
+                    result["status"] = "PARTIAL"
         _snapshot(snapshot, snapshot_sha256)
     except sqlite3.Error:
         raise ReconciliationError("SNAPSHOT_SQLITE_READ_FAILED") from None

@@ -13,3 +13,11 @@
 复现：在 `crypto-300-profit-mission/local-agent` 运行 `python -m pytest -q tests/test_frank_rebuild_buys.py tests/test_frank_local_signals.py tests/test_frank_scanner_source_integrity.py tests/test_frank_scanner_reconciliation.py tests/test_mission_control_dashboard.py tests/test_frank_activity_watch_dashboard.py tests/test_frank_intelligence_dashboard_integration.py` 与 `node --test tests/test_frank_ca_report_render.mjs tests/test_frank_f01_source_only.cjs`。可在隔离机器安装 Playwright 后指定 `FRANK_TEST_CHROMIUM`，测试仅使用临时账本、合成数据与随机本机端口。云端本次真实 Chromium 启动受限；不计作浏览器通过。
 
 保持 **NO_DEPLOY / NO_REAL_RPC / NO_REAL_EMAIL / NO_TRADE**。下一段优先用已存、可审计的交易原件与独立钱包快照量化 S08–S09，再按清单推进 C01–C07、C11–C12。
+
+## S08：离线逐签名对账
+
+既有 `scripts/audit_frank_scanner_snapshot.py` 增加可选的买入准入比对。向原有独立 finalized 钱包窗口逐笔填 `expected_frank_buy`：完整 Mint 表示应入，`false` 表示应拦，省略表示参考侧未核实；明示预期时须填原有的 `expectation_sha256`。编制独立预期时不可把 Scanner 自己的列表当作参考证据。
+
+在原参数基础上增加 `--buy-qualifications FILE --buy-qualifications-sha256 SHA --buy-qualification-as-of UNIX`。输出分别记录应入、实入匹配、应拦、正确拦截、漏列、误列、错 Mint、未追平和未决。链上确认到检测及入库延迟只按时间字段齐全且匹配的样本计算，实际送达仍未验证。默认标准输出仅显示汇总；需要逐签名证据时沿用已有私有报告选项。
+
+验证：合成备份覆盖正确拦截、漏项、未追平、误列、独立预期缺失、延迟及资格 SHA 不符；未取得可供验证的真实独立钱包区间，S08 实源仍待验收。S09 保留现有 Scanner 恢复测试，尚未视为新产品的真实追赶验证。
