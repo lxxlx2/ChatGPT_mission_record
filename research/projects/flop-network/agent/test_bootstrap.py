@@ -74,13 +74,12 @@ class BootstrapTests(unittest.TestCase):
             self.assertEqual(runtime.cli_network_status()['reason'],'OFFICIAL_PROFILE_PLANNED')
     def test_cli_live_requires_exact_genesis_finality_and_faucet(self):
         live={'network':'testnet','profile_status':'live',
-              'rpc':{'reachable':True,'matches_expected':True,'genesis_hash':'0x'+'a'*64,
-                     'finalized_head':123},
+              'rpc':{'url':'wss://testnet.flop.network','overridden':False,'reachable':True,'matches_expected':True,'genesis_hash':'0x'+'a'*64},
               'faucet':{'reachable':True,'ready':True,'matches_rpc':True}}
         def probe():
             cp=type('CP',(),{'returncode':0,'stdout':json.dumps(live)})()
             with patch.object(runtime.shutil,'which',return_value='/fake/flop'),patch.object(runtime.subprocess,'run',return_value=cp):
-                return runtime.cli_network_status()
+                return runtime.cli_network_status(finality_probe=lambda g:{'hash':'0x'+'b'*64,'height':123})
         self.assertTrue(probe()['ready'])
         live['rpc']['matches_expected']=False
         self.assertFalse(probe()['ready'])
