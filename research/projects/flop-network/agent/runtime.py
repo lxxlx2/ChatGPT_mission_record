@@ -328,6 +328,16 @@ def ready_to_send(conn, config=None, *, fetch=_json_response, cli_status=cli_net
     if not cli['ready']:
         put(conn,'network_status','AWAITING_TESTNET_READINESS')
         put(conn,'network_blocker',cli.get('reason','CLI_NOT_READY'))
+        # Only notify once for an actionable mismatch after the published pin
+        # actually agrees with the live observed RPC. Do not auto-install an
+        # unreviewed future CLI release or send recurring planned-state mail.
+        if (cli.get('reason')=='OFFICIAL_PROFILE_PLANNED'
+                and cli.get('observed_genesis')==doc['genesis']
+                and cli.get('rpc_reachable') is True):
+            enqueue(conn,'cli-profile-update-'+doc['genesis'][2:26],
+                    '[FLOP] 官方已公布链身份，CLI 配置仍待更新',
+                    '官方 Genesis 已与 RPC 观察值一致，但当前 CLI 仍标记 planned。'
+                    '请核对官方新发行版本及其网络配置；未升级通过前禁止签名与领取。')
         return {'ready':False,'reason':cli.get('reason','CLI_NOT_READY')}
     if cli['genesis']!=doc['genesis'].lower():
         put(conn,'network_status','GENESIS_MISMATCH')
@@ -488,6 +498,10 @@ def queue_summary(conn):
         '采样时区：Asia/Bangkok',
         '网络：'+net,
         '执行状态：'+mode,
+        '官方文档 / CLI：'+get(conn,'official_document_status','未核实')+' / '+get(conn,'profile_status','未核实'),
+        'RPC 连通 / 最终高度：'+get(conn,'rpc_reachable','未核实')+' / '+get(conn,'finalized_height','未核实'),
+        'Faucet 连通 / 就绪：'+get(conn,'faucet_reachable','未核实')+' / '+get(conn,'faucet_ready','未核实'),
+        '网络阻塞：'+get(conn,'network_blocker','未核实'),
         '已独立核验的 Testnet 推理消费：'+str(spent)+' FLOP',
         '已核验有效结算次数：'+str(sum(int(x['chain_verified']) for x in conn.execute('SELECT chain_verified FROM session_attempts'))),
         '尚未核验/可能已支付的会话：'+str(sum(v for k,v in states.items() if k not in ('DIRECT_CHAIN_VERIFIED',))),
