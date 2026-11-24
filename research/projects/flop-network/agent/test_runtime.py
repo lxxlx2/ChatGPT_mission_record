@@ -192,5 +192,60 @@ class RuntimeTests(unittest.TestCase):
                              self.conn,opener=lambda *a,**k:FakeHttp()),
                              'DASHBOARD_UNHEALTHY')
 
+
+    def test_planned_doc_does_not_hide_reachable_rpc_or_authorize_faucet(self):
+        observed={'ready':False,'reason':'OFFICIAL_PROFILE_PLANNED',
+                  'profile_status':'planned','rpc_reachable':True,
+                  'observed_genesis':'0x'+'a'*64,'rpc_genesis_matches_expected':None,
+                  'faucet_reachable':False,'finalized_height':42}
+        with patch.object(runtime,'now',return_value=datetime(2026,11,24,15,tzinfo=timezone.utc)):
+            result=runtime.ready_to_send(self.conn,fetch=lambda u:'Network: testnet (planned)',
+                                        cli_status=lambda:observed)
+        self.assertFalse(result['ready'])
+        self.assertEqual(runtime.get(self.conn,'network_status'),'RPC_REACHABLE_AWAITING_OFFICIAL_PIN')
+        self.assertEqual(runtime.get(self.conn,'observed_genesis'),'0x'+'a'*64)
+        self.assertEqual(runtime.get(self.conn,'finalized_height'),'42')
+        self.assertEqual(runtime.get(self.conn,'faucet_reachable'),'false')
+
+    def test_published_doc_requires_exact_genesis_and_cli_ready(self):
+        genesis='0x'+'a'*64
+        document='<p>Network: testnet <b>(live)</b></p><dt>Expected genesis</dt><dd><code>'+genesis+'</code></dd><script>status: planned</script>'
+        self.assertEqual(runtime.official_testnet_state(lambda u:document)['genesis'],genesis)
+        self.assertFalse(runtime.official_testnet_state(lambda u:'Network: testnet (live)')['ready'])
+        with patch.object(runtime,'now',return_value=datetime(2026,11,24,15,tzinfo=timezone.utc)):
+            ready={'ready':True,'genesis':genesis,'rpc_reachable':True,'settlement_ready':True}
+            first=runtime.ready_to_send(self.conn,fetch=lambda u:document,cli_status=lambda:ready)
+            self.assertEqual(first['reason'],'PRIVATE_CONFIG_NOT_CONFIGURED')
+            self.assertEqual(first['genesis'],genesis)
+            ready['genesis']='0x'+'b'*64
+            mismatch=runtime.ready_to_send(self.conn,fetch=lambda u:document,cli_status=lambda:ready)
+            self.assertEqual(mismatch['reason'],'DOC_RPC_GENESIS_MISMATCH')
+            self.assertFalse(mismatch['ready'])
+
+    def test_cli_planned_retains_actual_rpc_and_finalized_data(self):
+        genesis='0x'+'a'*64
+        obj={'network':'testnet','profile_status':'planned',
+             'rpc':{'url':'wss://testnet.flop.network','overridden':False,
+                    'reachable':True,'genesis_hash':genesis,'matches_expected':None},
+             'faucet':{'reachable':False,'ready':None,'matches_rpc':None}}
+        cp=type('CP',(),{'returncode':0,'stdout':json.dumps(obj)})()
+        with patch.object(runtime.shutil,'which',return_value='/fake/flop'),\
+             patch.object(runtime.subprocess,'run',return_value=cp):
+            out=runtime.cli_network_status(finality_probe=lambda g:{'hash':'0x'+'b'*64,'height':42})
+        self.assertFalse(out['ready'])
+        self.assertTrue(out['rpc_reachable'])
+        self.assertEqual(out['finalized_height'],42)
+        self.assertEqual(out['observed_genesis'],genesis)
+        self.assertIsNone(out['rpc_genesis_matches_expected'])
+
+    def test_finality_observation_rejects_mismatched_genesis(self):
+        genesis='0x'+'a'*64
+        payload={'genesis':genesis,'finalized':'0x'+'b'*64,'number':'0x2a'}
+        with patch.object(runtime.shutil,'which',return_value='/fake/node'),\
+             patch.object(runtime.subprocess,'run') as run:
+            run.return_value=type('CP',(),{'returncode':0,'stdout':json.dumps(payload)})()
+            self.assertEqual(runtime.rpc_finality_observation(genesis)['height'],42)
+            self.assertIsNone(runtime.rpc_finality_observation('0x'+'c'*64))
+
 if __name__=='__main__':
     unittest.main()
