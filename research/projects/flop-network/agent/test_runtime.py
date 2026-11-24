@@ -247,5 +247,18 @@ class RuntimeTests(unittest.TestCase):
             self.assertEqual(runtime.rpc_finality_observation(genesis)['height'],42)
             self.assertIsNone(runtime.rpc_finality_observation('0x'+'c'*64))
 
+
+    def test_actionable_published_pin_cli_lag_is_notified_once(self):
+        genesis='0x'+'a'*64
+        observed={'ready':False,'reason':'OFFICIAL_PROFILE_PLANNED',
+                  'observed_genesis':genesis,'rpc_reachable':True}
+        document='Network: testnet (live) Expected genesis: '+genesis
+        with patch.object(runtime,'now',return_value=datetime(2026,11,24,15,tzinfo=timezone.utc)):
+            for _ in range(2):
+                result=runtime.ready_to_send(self.conn,fetch=lambda u:document,
+                                            cli_status=lambda:observed)
+                self.assertFalse(result['ready'])
+        self.assertEqual(self.conn.execute("SELECT COUNT(*) FROM flop_mail WHERE mail_key LIKE 'cli-profile-update-%'").fetchone()[0],1)
+
 if __name__=='__main__':
     unittest.main()
