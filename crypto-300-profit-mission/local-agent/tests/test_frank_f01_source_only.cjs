@@ -89,7 +89,7 @@ test('a failed required refresh must invalidate the previously rendered F01 summ
   // Regression: refresh() catch previously updated only runtime, leaving the last
   // successful "近期来源信号 N 条" text on screen as if still current.
   const refreshStart = js.indexOf('async function refresh()');
-  const refreshEnd = js.indexOf('\nrefresh();', refreshStart);
+  const refreshEnd = js.indexOf('\nfunction refreshFrankAudit()', refreshStart);
   assert.ok(refreshStart > 0 && refreshEnd > refreshStart, 'refresh() must exist');
   const body = js.slice(refreshStart, refreshEnd);
   const catchAt = body.indexOf('} catch (e) {');

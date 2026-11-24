@@ -35,6 +35,7 @@ from .payment_evidence import latest_buy_payment_evidence
 from .wallet_watch import from_sqlite as read_frank_watchlist, annotate_known_ata_gaps
 from .wallet_inventory import InventoryEvidenceError, reconcile_watchlist
 from .wallet_d2_ingress import D2IngressError, query_d2
+from .frank_buys import read_buys
 from .wallet_activity import activity as read_signed_activity
 from .wallet_activity_paging import activity_page, KINDS as ACTIVITY_KINDS, CURSOR_ERRORS
 from .evidence_sync import EvidenceSpool, GitEvidencePublisher
@@ -1237,6 +1238,10 @@ class DashboardState:
                 "notification_authorized": False,
             }
 
+    def frank_buys(self, **query):
+        return read_buys(self.frank.database, self.control_root / "frank-buy-qualifications.json",
+                         as_of=int(time.time()), **query)
+
     def frank_signed_activity(self, days=1, *, page_size=None, cursor=None, kind="ALL", mint=None):
         """Complete local indexed ranges; optional pages never cap total history."""
         try:
@@ -1675,6 +1680,20 @@ class Handler(BaseHTTPRequestHandler):
         if not self._allowed_host():
             return self.send_error(421, "loopback Host required")
         path = urlparse(self.path).path
+        if path == "/api/frank-buys":
+            if not self._research_origin():
+                return self._json({"error": "SAME_ORIGIN_READ_REQUIRED"}, 403)
+            try:
+                query = parse_qs(urlparse(self.path).query, keep_blank_values=True, max_num_fields=3)
+                if set(query) - {"days", "mint", "cursor"} or any(len(v) != 1 for v in query.values()):
+                    return self._json({"error": "INVALID_BUY_QUERY"}, 400)
+                return self._json(self.state.frank_buys(**{k: v[0] for k, v in query.items()}))
+            except ValueError as exc:
+                if str(exc) in {"INVALID_BUY_QUERY", "INVALID_OR_STALE_CURSOR"}:
+                    return self._json({"error": str(exc)}, 400)
+                return self._json({"error": "LOCAL_BUY_SOURCE_UNAVAILABLE"}, 503)
+            except (OSError, sqlite3.Error):
+                return self._json({"error": "LOCAL_BUY_SOURCE_UNAVAILABLE"}, 503)
         if path == "/api/frank-notification-audit":
             return self._notification_audit_get()
         if path in {"/api/frank-watch-metadata", "/api/frank-watch-metadata-events"}:

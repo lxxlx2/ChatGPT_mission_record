@@ -6,9 +6,13 @@ from ..hashing import digest
 from .policy import POLICY_SHA256,USDC
 from .evaluator import evaluate,watch_eligible,establish_t0,watch_tick,known_usdc_event
 from .store import quantity
+from .buy_admission import admit_buy
 
 class Engine:
-    def __init__(self,ledger,policy,*,dry_run=True):
+    def __init__(self,ledger,policy,*,dry_run=True,rebuild_assets=None):
+        if rebuild_assets is not None and not dry_run:
+            raise ValueError("REBUILD_ADMISSION_DRY_RUN_ONLY")
+        self.rebuild_assets = rebuild_assets
         self.ledger,self.db,self.policy,self.dry_run=ledger,ledger.db,policy,dry_run
         self.db.executescript('''
         CREATE TABLE IF NOT EXISTS email_content(signal_id TEXT PRIMARY KEY,subject TEXT,body TEXT,content_hash TEXT);
@@ -35,7 +39,20 @@ class Engine:
         r=self.db.execute('SELECT body FROM v1_states WHERE person_id=? AND mint=?',(person,mint)).fetchone()
         return json.loads(r[0]) if r else None
     def _save(self,s):self.db.execute('INSERT OR REPLACE INTO v1_states VALUES(?,?,?)',(s['person_id'],s['mint'],json.dumps(s,sort_keys=True)))
+    def _rebuild_admits(self,row,event,mint):
+        return row["person_id"] == "frank" and admit_buy(
+            event,self.rebuild_assets,wallet=row["wallet"],signature=row["signature"],
+            slot=row["slot"],block_time=row["block_time"],raw_hash=row["raw_hash"],mint=mint)
+
     def _emit(self,s,at,stage):
+        if self.rebuild_assets is not None:
+            trigger=s['events'][-1]
+            if trigger['direction']!='BUY' or not trigger.get('rebuild_wallet'):
+                return None
+            row=self.db.execute("SELECT * FROM signatures WHERE wallet=? AND signature=?",
+                                (trigger['rebuild_wallet'],trigger['signature'])).fetchone()
+            if not row or not self._rebuild_admits(row,json.loads(row['body']),s['mint']):
+                return None
         sid=digest({'policy_id':self.policy['policy_id'],'policy_hash':POLICY_SHA256,'person_id':s['person_id'],'mint':s['mint'],'episode_id':s['episode_id'],'signal_type':stage['signal_type'],'stage':stage['stage']})
         if self.db.execute('SELECT 1 FROM signals WHERE signal_id=?',(sid,)).fetchone():
             self.db.execute("UPDATE v1_meta SET value=CAST(value AS INTEGER)+1 WHERE key='duplicates_suppressed'");return None
@@ -134,6 +151,12 @@ class Engine:
     def process(self,row):
         if self.db.execute('SELECT 1 FROM v1_seen WHERE wallet=? AND signature=?',(row['wallet'],row['signature'])).fetchone():return None
         e=json.loads(row['body']);at=row['block_time']
+        trade=e.get('trade')
+        if (self.rebuild_assets is not None and isinstance(trade,dict) and trade.get('direction')=='BUY'
+                and not self._rebuild_admits(row,e,trade.get('mint'))):
+            with transaction(self.db):
+                self.db.execute('INSERT OR IGNORE INTO v1_seen VALUES(?,?)',(row['wallet'],row['signature']))
+            return None
         if at is not None:self.tick(at)
         result=None
         with transaction(self.db):
@@ -150,7 +173,9 @@ class Engine:
                     amount_predicate=t.get('amount_predicate') or ('USDC_DIRECT_NUMERIC' if t['quote_asset']==USDC else 'UNDETERMINED')
                     if amount_predicate not in {'USDC_DIRECT_NUMERIC','SOL_EVENT_TIME_USDC_VERIFIED','UNDETERMINED'}:
                         raise ValueError('TRADE_AMOUNT_PREDICATE_INVALID')
-                    event={'signature':row['signature'],'at':at,'slot':row['slot'],**t,'quote_quantity':quantity(t['quote_amount_raw'],t['quote_decimals']),'amount_predicate':amount_predicate};s['events'].append(event)
+                    event={'signature':row['signature'],'at':at,'slot':row['slot'],**t,'quote_quantity':quantity(t['quote_amount_raw'],t['quote_decimals']),'amount_predicate':amount_predicate}
+                    if self.rebuild_assets is not None:event['rebuild_wallet']=row['wallet']
+                    s['events'].append(event)
                     amount=int(t['token_amount_raw']);current=int(s['current_raw']) if s['current_raw'] is not None else None
                     if t['direction']=='BUY':
                         if current is not None:s['current_raw']=str(current+amount)

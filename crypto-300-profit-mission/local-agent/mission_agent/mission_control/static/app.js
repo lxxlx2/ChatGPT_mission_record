@@ -1177,18 +1177,34 @@ function invalidateF01OnFailure(e) {
   }
 }
 
-refresh();
-refreshSignedActivity(true);
-refreshFrankIntelligence();
-refreshFrankActivity();
+function refreshFrankAudit() {
+  void refresh();
+  void refreshSignedActivity(true);
+  void refreshFrankIntelligence();
+  void refreshFrankActivity();
+}
+
+let frankAuditTimers=[];
+function startFrankAudit() {
+  if (frankAuditTimers.length) return;
+  refreshFrankAudit();
+  frankAuditTimers=[
+    setInterval(refreshSignedActivity,60000),
+    setInterval(refreshFrankIntelligence,60000),
+    setInterval(refreshFrankActivity,60000)
+  ];
+}
+function stopFrankAudit() {
+  frankAuditTimers.forEach(timer => clearInterval(timer));
+  frankAuditTimers=[];
+}
+if (!$('buys-view')) startFrankAudit();
+const isAuditView = () => !$('buys-view') || window.location.hash === '#signals';
 setInterval(() => {
   frankD2RefreshAge();
   if (typeof window !== 'undefined' && typeof window.frankSourceRefreshAge === 'function') window.frankSourceRefreshAge();
-  void refresh();
+  if (isAuditView()) void refresh();
 },5000);
-setInterval(refreshSignedActivity,60000);
-setInterval(refreshFrankIntelligence,60000);
-setInterval(refreshFrankActivity,60000);
 
 
 const clusterMetricLabel = {
@@ -1391,17 +1407,99 @@ async function loadLatestCluster(mint, silent=false, expectedVersion=clusterPoll
   }
 }
 
+let frankBuyGeneration=0, frankBuyCursor=null, frankBuyQuery=null;
+async function loadFrankBuys(more=false) {
+  const status=$('frank-buy-status'), rows=$('frank-buy-rows'), button=$('frank-buy-more');
+  if (more && !frankBuyCursor) return;
+  const generation=++frankBuyGeneration;
+  const oldCursor=frankBuyCursor;
+  if (!more) {
+    frankBuyCursor=null;
+    frankBuyQuery=new URLSearchParams({days:$('frank-buy-days').value});
+    const mint=$('frank-buy-mint').value.trim();
+    if (mint) {
+      if (!/^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(mint)) {
+        rows.replaceChildren();
+        button.hidden=true;
+        status.textContent='请输入完整的 Solana CA。';
+        return;
+      }
+      frankBuyQuery.set('mint',mint);
+    }
+    rows.replaceChildren();
+  }
+  const query=new URLSearchParams(frankBuyQuery);
+  if (more) query.set('cursor',oldCursor);
+  button.hidden=true;
+  status.textContent='正在读取本地已核实买入…';
+  try {
+    const response=await fetch('/api/frank-buys?' + query,{cache:'no-store',headers:{'X-Frank-Research-Read':'1'}});
+    const result=await response.json();
+    if (generation!==frankBuyGeneration) return;
+    if (!response.ok) {
+      if (result.error==='INVALID_BUY_QUERY') {
+        status.textContent='请输入完整的 Solana CA。';
+        return;
+      }
+      if (result.error==='INVALID_OR_STALE_CURSOR') {
+        frankBuyCursor=null;
+        status.textContent='本地资格记录已变更，请重新筛选。';
+        return;
+      }
+      throw new Error('LOCAL_BUY_READ_FAILED');
+    }
+    if (result.status==='QUALIFICATION_UNAVAILABLE') {
+      status.textContent='尚无可用的代币资格记录，暂不能核实买入。';
+      return;
+    }
+    if (result.status!=='LOCAL_EVIDENCE_ONLY' || !Array.isArray(result.rows)) throw new Error('LOCAL_BUY_READ_FAILED');
+    const html=result.rows.map(item=>`<article class="panel">
+      <strong>${esc(item.name || item.mint)}</strong>
+      <time datetime="${new Date(item.at*1000).toISOString()}">${esc(new Date(item.at*1000).toLocaleString('zh-CN'))}</time>
+      <p>买入 ${esc(item.quantity)} 枚 · 支付 ${esc(item.paid)} ${esc(item.currency)}</p>
+      ${tokenIdentity(item.mint)}
+      <a class="link-btn" href="https://solscan.io/tx/${encodeURIComponent(item.signature)}" target="_blank" rel="noreferrer">原交易 ↗</a>
+    </article>`).join('');
+    rows.insertAdjacentHTML('beforeend',html);
+    frankBuyCursor=result.next_cursor;
+    button.hidden=!frankBuyCursor;
+    status.textContent=rows.childElementCount ? '仅展示本地已索引且证据齐全的买入。'
+      : '所选范围暂未核实买入，不代表链上没有买入。';
+  } catch (_) {
+    if (generation!==frankBuyGeneration) return;
+    button.hidden=!more;
+    status.textContent='暂时无法读取本地买入记录。';
+  }
+}
+
+if ($('buys-view')) {
+  $('frank-buy-filter').addEventListener('submit', event => {
+    event.preventDefault();
+    void loadFrankBuys();
+  });
+  $('frank-buy-more').addEventListener('click', () => void loadFrankBuys(true));
+}
+
 function setView(name) {
-  const view = name === 'cluster' ? 'cluster' : 'signals';
+  const hasBuyView=!!$('buys-view');
+  const view = name === 'cluster' ? 'cluster' : name === 'signals' || !hasBuyView ? 'signals' : 'buys';
+  const previousView=clusterCurrentView;
   clusterCurrentView=view;
   if (view!=='cluster') clusterClearNarrativeSupplement(true);
   const heading=$('product-title');
-  if (heading) heading.textContent=view==='cluster' ? 'CA 链上研究' : 'Frank 信号';
+  if (heading) heading.textContent=view==='cluster' ? 'CA 链上研究' : view==='buys' ? 'Frank 买入' : '历史与审计';
   document.querySelectorAll('.view-tab').forEach(btn => {
     btn.classList.toggle('active', btn.dataset.view === view);
   });
   $('signals-view').classList.toggle('active', view === 'signals');
   $('cluster-view').classList.toggle('active', view === 'cluster');
+  if (hasBuyView) {
+    $('buys-view').classList.toggle('active',view==='buys');
+    $('runtime').hidden=view!=='signals';
+    if (view==='buys' && previousView!=='buys') void loadFrankBuys();
+    if (view==='signals') startFrankAudit();
+    else stopFrankAudit();
+  }
   if (window.location.hash !== '#' + view) history.replaceState(null,'','#' + view);
   if (view==='cluster' && clusterNarrativeSupplementReport && !$('cluster-result').hidden)
     void loadClusterNarrativeSupplement(clusterNarrativeSupplementReport);

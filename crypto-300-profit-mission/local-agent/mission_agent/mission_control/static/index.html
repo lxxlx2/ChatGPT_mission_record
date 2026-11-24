@@ -10,18 +10,37 @@
   <header class="topbar">
     <div>
       <div class="eyebrow">$300 → $3000 MISSION · MEME</div>
-      <h1 id="product-title">Frank 信号</h1>
+      <h1 id="product-title">Frank 买入</h1>
     </div>
     <div class="runtime" id="runtime">正在读取 Frank 状态…</div>
   </header>
 
   <main>
     <nav class="view-tabs" aria-label="Meme 控制台功能">
-      <button class="view-tab active" type="button" data-view="signals">Frank 信号</button>
+      <button class="view-tab active" type="button" data-view="buys">Frank 买入</button>
       <button class="view-tab" type="button" data-view="cluster">CA 链上查询</button>
+      <button class="view-tab" type="button" data-view="signals">历史与审计</button>
     </nav>
 
-    <div id="signals-view" class="view-pane active">
+    <div id="buys-view" class="view-pane active">
+      <section class="panel">
+        <form id="frank-buy-filter" class="cluster-search-row">
+          <label for="frank-buy-days">时间</label>
+          <select id="frank-buy-days">
+            <option value="1">最近 24 小时</option><option value="7" selected>最近 7 天</option>
+            <option value="30">最近 30 天</option><option value="all">全部本地记录</option>
+          </select>
+          <label for="frank-buy-mint">代币 CA</label>
+          <input id="frank-buy-mint" type="search" autocomplete="off" spellcheck="false" placeholder="完整合约地址（可选）">
+          <button type="submit" class="primary-btn">筛选</button>
+        </form>
+        <p id="frank-buy-status" class="frank-watch-footnote" role="status">正在读取本地已核实买入…</p>
+        <div id="frank-buy-rows" class="candidate-list"></div>
+        <button id="frank-buy-more" type="button" class="link-btn" hidden>加载更早买入</button>
+      </section>
+    </div>
+
+    <div id="signals-view" class="view-pane">
     <section class="panel priority-panel" id="follow-opportunities">
       <div class="panel-title">
         <div><h2>Frank 近期来源信号（只读）</h2><p>仅展示近 10 分钟的本地已索引来源 BUY。WAIT / NO_BUY 保留在历史判断里。交易金额和买卖均由用户决定。</p></div>
@@ -489,7 +508,7 @@
   </main>
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
-  <script src="/static/app.js?v=ca-overview-v1"></script>
+  <script src="/static/app.js?v=frank-buys-v1"></script>
   <script src="/static/frank_research.js?v=source-contract-v1"></script>
   <script src="/static/frank_watch_metadata.js?v=watch-metadata-v1"></script>
   <script src="/static/frank_evidence_manifests.js?v=manifest-v2"></script>

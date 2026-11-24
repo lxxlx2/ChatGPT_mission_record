@@ -27,6 +27,8 @@ function harness(options = {}) {
       style:{},dataset:{},listeners:new Map(),
       addEventListener(name,callback){this.listeners.set(name,callback)},
       querySelectorAll:()=>[],appendChild(){},remove(){},focus(){},select(){},
+      replaceChildren(){this.innerHTML='';this.childElementCount=0},
+      insertAdjacentHTML(_,html){this.innerHTML+=html;this.childElementCount+=(html.match(/<article /g)||[]).length},
     });
     return elements.get(id);
   };
@@ -37,7 +39,7 @@ function harness(options = {}) {
       getElementById:element,querySelectorAll:()=>[],
       addEventListener(){},body:{appendChild(){}},createElement:()=>element('__created'),
     },
-    window:{location:{hash:'#cluster'},addEventListener(){}},
+    window:{location:{hash:options.initialView ?? '#cluster'},addEventListener(){}},
     history:{replaceState(){}},
     navigator:{clipboard:{writeText:async()=>{}}},
     localStorage:{
@@ -57,12 +59,13 @@ function harness(options = {}) {
       // Other startup polling must not hit any real external service
       return await new Promise(()=>{});
     },
-    setInterval:()=>0,setTimeout:()=>0,clearTimeout(){},
+    setInterval:()=>0,clearInterval(){},setTimeout:()=>0,clearTimeout(){},
     console:{warn(){},error(){}},
     Date,Math,Number,String,JSON,URL,URLSearchParams,Intl,
   };
   vm.createContext(context);
   if (options.initialMint) element('cluster-mint').value=options.initialMint;
+  element('frank-buy-days').value='7';
   vm.runInContext(source,context,{timeout:2500,filename:'app.js'});
   return {context,element,requests,store,setResponse(fn){responseFor=fn;}};
 }
@@ -1738,4 +1741,26 @@ test('missing launch evidence does not hide the chain-proven Pump creator',()=>{
   assert.match(view,/当前持仓未核实.*卖出未核实/);
   assert.match(view,/开盘覆盖不完整/);
   assert.doesNotMatch(view,/非 Pump.fun/);
+});
+
+test('Frank default buys render as facts without loading market or old signal feeds',async()=>{
+  const paths=[];
+  const h=harness({initialView:'',responseFor:async(url,options)=>{
+    paths.push(url);
+    assert.equal(options.headers['X-Frank-Research-Read'],'1');
+    const rows=url.includes('mint=') ? [] : [{mint,signature:mint,at:1792683606,
+      name:'<b>样例</b>',quantity:'1',paid:'0.5',currency:'USDC'}];
+    return {ok:true,json:async()=>({status:'LOCAL_EVIDENCE_ONLY',rows,next_cursor:null})};
+  }});
+  await new Promise(resolve=>setImmediate(resolve));
+  assert.equal(h.element('product-title').textContent,'Frank 买入');
+  assert.match(h.element('frank-buy-rows').innerHTML,/支付 0.5 USDC/);
+  assert.match(h.element('frank-buy-rows').innerHTML,/&lt;b&gt;样例&lt;\/b&gt;/);
+  assert.match(h.element('frank-buy-rows').innerHTML,/data-cluster-ca/);
+  assert.deepEqual(paths,['/api/frank-buys?days=7']);
+  h.element('frank-buy-mint').value=mint;
+  await h.context.loadFrankBuys();
+  assert.equal(h.element('frank-buy-rows').innerHTML,'');
+  assert.match(h.element('frank-buy-status').textContent,/不代表链上没有买入/);
+  assert.deepEqual(paths,['/api/frank-buys?days=7','/api/frank-buys?days=7&mint='+mint]);
 });
