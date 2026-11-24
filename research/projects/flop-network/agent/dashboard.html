@@ -30,6 +30,11 @@ button{background:#395d97;border:0;color:white;border-radius:6px;padding:8px;cur
 <h2>执行与通知状态</h2>
 <table><tbody>
 <tr><th>网络</th><td id="network">未知</td></tr>
+<tr><th>官方文档 / CLI Profile</th><td id="profile">未知</td></tr>
+<tr><th>RPC / 最终确认区块</th><td id="rpc-state">未核实</td></tr>
+<tr><th>RPC 观察到的 Genesis</th><td id="genesis">未核实</td></tr>
+<tr><th>Faucet 连通 / 就绪</th><td id="faucet-state">未核实</td></tr>
+<tr><th>当前网络阻塞</th><td id="network-blocker">未核实</td></tr>
 <tr><th>Agent 执行模式</th><td id="mode">未启动</td></tr>
 <tr><th>上次调度检查</th><td id="last-tick">暂无</td></tr>
 <tr><th>当前异常</th><td id="current-error" class="warn">无</td></tr>
@@ -64,6 +69,13 @@ set('spent',spent.toLocaleString('en-US',{maximumFractionDigits:12})+' test FLOP
 set('success',verified.length);set('pending',unverified);
 set('last-success',d.last_verified_session_utc||'暂无');
 set('network',d.network_status||'未核验');
+const flag=v=>v==='true'||v===true?'是':v==='false'||v===false?'否':'未核实';
+const known=v=>v===undefined||v===null||v==='null'?'未核实':String(v);
+set('profile',known(d.official_document_status)+' / '+known(d.profile_status));
+set('rpc-state',flag(d.rpc_reachable)+' / '+known(d.finalized_height));
+set('genesis',known(d.observed_genesis)+' | 官方 pin 匹配：'+flag(d.rpc_genesis_matches_expected));
+set('faucet-state',flag(d.faucet_reachable)+' / '+flag(d.faucet_ready));
+set('network-blocker',known(d.network_blocker));
 set('mode',d.execution_mode||'未开始');
 set('last-tick',d.last_scheduler_tick_utc||'暂无');
 set('current-error',d.current_error||'无');
