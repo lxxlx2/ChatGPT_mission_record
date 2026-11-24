@@ -11,12 +11,20 @@ permissions:
 
 jobs:
   offline:
-    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            python: "3.11"
+          - os: macos-latest
+            python: "3.14"
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: ${{ matrix.python }}
       - name: Offline tests, no network or private secrets
         run: |
           python3 -m unittest discover -v -s research/projects/flop-network/agent -p "test_*.py"

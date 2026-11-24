@@ -48,7 +48,7 @@ def existing_plist():
     args=value.get('ProgramArguments')
     if (value.get('Label')!=LABEL or
         not isinstance(args,list) or len(args)!=3 or
-        Path(args[1]).resolve()!=ROOT/'agent.py' or args[2]!='dashboard'):
+        Path(args[1]).resolve()!=(ROOT/'agent.py').resolve() or args[2]!='dashboard'):
         raise RuntimeError('EXISTING_JOB_NOT_FLOP_DASHBOARD')
     env=value.get('EnvironmentVariables')
     if not isinstance(env,dict):

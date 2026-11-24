@@ -74,6 +74,25 @@ class PortMigrationTests(unittest.TestCase):
             self.assertEqual(bootstrap.call_count,1)
             self.assertEqual(json.loads((data/'dashboard-bind.json').read_text())['port'],18766)
             self.assertTrue((data/'dashboard-port-migration-backup.plist').exists())
+    def test_existing_plist_accepts_path_alias_but_rejects_other_script(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root=Path(temp)/'actual'
+            root.mkdir()
+            alias=Path(temp)/'alias'
+            alias.symlink_to(root,target_is_directory=True)
+            file=Path(temp)/'dashboard.plist'
+            props={'Label':rebind.LABEL,
+                   'ProgramArguments':['python3',str(root/'agent.py'),'dashboard'],
+                   'WorkingDirectory':str(root),
+                   'EnvironmentVariables':{}}
+            file.write_bytes(plistlib.dumps(props))
+            with patch.object(rebind,'ROOT',alias),patch.object(rebind,'PLIST',file):
+                self.assertEqual(rebind.existing_plist(),props)
+                props['ProgramArguments'][1]=str(root/'unrelated.py')
+                file.write_bytes(plistlib.dumps(props))
+                with self.assertRaisesRegex(RuntimeError,'EXISTING_JOB_NOT_FLOP_DASHBOARD'):
+                    rebind.existing_plist()
+
     def test_existing_verified_dashboard_no_restarts(self):
         with tempfile.TemporaryDirectory() as temp:
             home=Path(temp)
