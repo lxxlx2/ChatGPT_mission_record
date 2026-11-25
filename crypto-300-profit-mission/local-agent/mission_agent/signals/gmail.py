@@ -10,6 +10,7 @@ from pathlib import Path
 from ..hashing import digest
 from ..db.connection import transaction
 from .store import now
+from .buy_admission import MEME_SCOPE_BLOCKED
 
 TEST_SUBJECT='[TEST] Frank MULTIPLE Gmail Delivery'
 class CredentialBlocked(Exception):pass
@@ -18,8 +19,9 @@ class PermanentError(Exception):pass
 class AmbiguousSend(Exception):pass
 
 class GmailOutbox:
-    def __init__(self,ledger):
+    def __init__(self,ledger,*,delivery_gate=None):
         self.ledger,self.db=ledger,ledger.db
+        self.delivery_gate = delivery_gate
         self.db.executescript('''
         CREATE TABLE IF NOT EXISTS gmail_delivery(
         signal_id TEXT PRIMARY KEY,message_type TEXT NOT NULL,delivery_mode TEXT NOT NULL,
@@ -32,11 +34,23 @@ class GmailOutbox:
         ''')
     def sync(self):
         # gmail_delivery is authoritative once it exists. Never re-render old identities.
-        rows=self.db.execute("SELECT s.body FROM signals s JOIN outbox o USING(signal_id) WHERE o.channel='gmail' AND s.signal_type='FRANK_MULTIPLE_SIGNAL' AND json_extract(s.body,'$.policy_id')='FRANK_LOCAL_SIGNAL_V1'").fetchall()
+        rows=self.db.execute("SELECT s.body,o.status,o.attempts,o.receipt FROM signals s JOIN outbox o USING(signal_id) WHERE o.channel='gmail' AND s.signal_type='FRANK_MULTIPLE_SIGNAL' AND json_extract(s.body,'$.policy_id')='FRANK_LOCAL_SIGNAL_V1'").fetchall()
         has_content=self.db.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='email_content'").fetchone()
         for row in rows:
             signal=json.loads(row[0]);sid=signal['signal_id']
             if self.db.execute('SELECT 1 FROM gmail_delivery WHERE signal_id=?',(sid,)).fetchone():continue
+            mode=signal.get('delivery_mode','DRY_RUN_AUDIT');forbidden=mode!='LIVE' or bool(signal.get('delivery_forbidden'))
+            if self.delivery_gate and mode == 'LIVE':
+                # A transport attempt may have happened before its metadata was
+                # captured. Keep the prior queue record for read-only audit.
+                if row['attempts'] or row['receipt'] or row['status'] in (
+                    'SENDING', 'SENT_UNVERIFIED', 'SENT_VERIFIED', 'MANUAL_REVIEW', MEME_SCOPE_BLOCKED,
+                ):
+                    continue
+                reason = self.delivery_gate.block_reason(self.db, signal)
+                if reason:
+                    self.update(sid, MEME_SCOPE_BLOCKED, reason)
+                    continue
             frozen=self.db.execute('SELECT subject,body,content_hash FROM email_content WHERE signal_id=?',(sid,)).fetchone() if has_content else None
             error='MISSING_FROZEN_EMAIL_CONTENT' if frozen is None else None
             if frozen and digest({'subject':frozen['subject'],'body':frozen['body']})!=frozen['content_hash']:error='INVALID_FROZEN_EMAIL_CONTENT'
@@ -44,7 +58,6 @@ class GmailOutbox:
                 self.db.execute("UPDATE outbox SET status=CASE WHEN status='DRY_RUN_AUDIT' THEN status ELSE 'CREDENTIAL_BLOCKED' END,last_error=? WHERE signal_id=? AND channel='gmail'",(error,sid))
                 continue
             mail={'signal_id':sid,'subject':frozen['subject'],'body':frozen['body'],'content_hash':frozen['content_hash']}
-            mode=signal.get('delivery_mode','DRY_RUN_AUDIT');forbidden=mode!='LIVE' or bool(signal.get('delivery_forbidden'))
             self.enqueue(mail,mode=mode,forbidden=forbidden,created_at=str(signal['triggered_at']))
     def enqueue(self,mail,*,mode,forbidden=False,created_at=None):
         sid=mail['signal_id']
@@ -77,13 +90,28 @@ class GmailOutbox:
     def update(self,sid,status,error=None):
         with transaction(self.db):
             self.db.execute('UPDATE gmail_delivery SET status=?,last_error=? WHERE signal_id=?',(status,error,sid));self.db.execute("UPDATE outbox SET status=?,last_error=? WHERE signal_id=? AND channel='gmail'",(status,error,sid))
+    def _block_reason(self,sid):
+        source = self.db.execute('SELECT body FROM signals WHERE signal_id=?',(sid,)).fetchone()
+        try:
+            signal = json.loads(source[0]) if source else {}
+        except (TypeError, ValueError):
+            signal = {}
+        return self.delivery_gate.block_reason(self.db, signal)
     def drain(self,provider=None,*,allow_test=False):
-        self.sync();rows=self.db.execute("SELECT * FROM gmail_delivery WHERE delivery_forbidden=0 AND status NOT IN ('SENT_VERIFIED','PERMANENT_ERROR','DRY_RUN_AUDIT') ORDER BY created_at,signal_id").fetchall()
+        self.sync();rows=self.db.execute("SELECT * FROM gmail_delivery WHERE delivery_forbidden=0 AND status NOT IN ('SENT_VERIFIED','PERMANENT_ERROR','DRY_RUN_AUDIT','MANUAL_REVIEW','MEME_SCOPE_BLOCKED') ORDER BY created_at,signal_id").fetchall()
         for row in rows:
             r=dict(row);sid=r['signal_id']
             if r['delivery_mode']=='TEST' and not allow_test:continue
-            if provider is None:self.update(sid,'CREDENTIAL_BLOCKED','NO_LOCAL_GMAIL_CREDENTIAL');continue
             uncertain=r['status'] in ('SENDING','SENT_UNVERIFIED') or bool(r['gmail_message_id'])
+            guarded = self.delivery_gate and r['delivery_mode']=='LIVE' and not uncertain
+            if guarded:
+                reason = self._block_reason(sid)
+                if reason:
+                    self.update(sid, MEME_SCOPE_BLOCKED, reason)
+                    continue
+            if provider is None:
+                self.update(sid,'SENT_UNVERIFIED' if uncertain else 'CREDENTIAL_BLOCKED','NO_LOCAL_GMAIL_CREDENTIAL')
+                continue
             try:
                 provider.ready()
                 # Recorded receipt ID is read first. Search also covers crash before its commit.
@@ -96,6 +124,11 @@ class GmailOutbox:
                 if candidates:self.verify(r,candidates[0]);continue
                 if uncertain:self.update(sid,'SENT_UNVERIFIED','SEND_OUTCOME_UNCERTAIN_WAITING_SENT');continue
                 raw=self.wire(r,provider.recipient)
+                if guarded:
+                    reason = self._block_reason(sid)
+                    if reason:
+                        self.update(sid, MEME_SCOPE_BLOCKED, reason)
+                        continue
                 with transaction(self.db):
                     self.db.execute("UPDATE gmail_delivery SET status='SENDING',attempt_count=attempt_count+1,last_attempt_at=?,last_error=NULL WHERE signal_id=?",(now(),sid));self.db.execute("UPDATE outbox SET status='SENDING',attempts=attempts+1,last_error=NULL WHERE signal_id=? AND channel='gmail'",(sid,))
                 response=provider.send(raw)
@@ -129,10 +162,10 @@ def summary_from_db(db):
     return {'pending':sum(counts.get(s,0) for s in ('PENDING','SENDING','RETRYABLE_ERROR')),'sent_verified':counts.get('SENT_VERIFIED',0),'sent_unverified':counts.get('SENT_UNVERIFIED',0),'blocked':counts.get('CREDENTIAL_BLOCKED',0),'failed':counts.get('PERMANENT_ERROR',0)+missing,'historical_forbidden':historical}
 
 _worker_lock=threading.Lock()
-def kick(ledger):
+def kick(ledger,*,delivery_gate=None):
     """No Gmail network call blocks scanner. Worker uses a separate SQLite connection."""
     from .gmail_api import existing_provider
-    outbox=GmailOutbox(ledger);outbox.sync();provider=existing_provider(Path(ledger.db.execute('PRAGMA database_list').fetchone()[2]).parent/'gmail-existing-source.json')
+    outbox=GmailOutbox(ledger,delivery_gate=delivery_gate);outbox.sync();provider=existing_provider(Path(ledger.db.execute('PRAGMA database_list').fetchone()[2]).parent/'gmail-existing-source.json')
     if provider is None:outbox.drain();return outbox.summary()
     if not _worker_lock.acquire(blocking=False):return outbox.summary()
     database=Path(ledger.db.execute('PRAGMA database_list').fetchone()[2])
@@ -149,7 +182,7 @@ def kick(ledger):
                 if config.get('require_daemon_probe'):
                     from mission_agent.gmail_setup.probe import probe
                     if not probe(provider,database.parent,config) or config.get('probe_only'):return
-                GmailOutbox(db).drain(provider)
+                GmailOutbox(db,delivery_gate=delivery_gate).drain(provider)
         finally:
             if db:db.db.close()
             _worker_lock.release()

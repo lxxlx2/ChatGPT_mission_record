@@ -97,6 +97,26 @@ def test_stable_same_second_paging_no_backfill_from_late_insert(tmp_path):
     config(cfg,exclude=True)
     with pytest.raises(ValueError, match="INVALID_OR_STALE_CURSOR"):
         read_buys(db,cfg,as_of=AS_OF,cursor=token)
+    config(cfg)
+    with pytest.raises(ValueError, match="INVALID_OR_STALE_CURSOR"):
+        read_buys(db,cfg,as_of=AS_OF-1,cursor=token)
+
+
+def test_paging_rejects_a_replaced_ledger(tmp_path):
+    db, cfg = tmp_path/"db", tmp_path/"qualification.json"
+    config(cfg)
+    ledger = Ledger(db)
+    for number in range(1, 32):
+        put(ledger, number)
+    token = read_buys(db, cfg, as_of=AS_OF)["next_cursor"]
+    ledger.db.close()
+    replacement = tmp_path/"replacement"
+    other = Ledger(replacement)
+    put(other, 100)
+    other.db.close()
+    replacement.replace(db)
+    with pytest.raises(ValueError, match="INVALID_OR_STALE_CURSOR"):
+        read_buys(db, cfg, as_of=AS_OF, cursor=token)
 
 
 def test_notification_rehearsal_guards_actual_outbox_and_rechecks_identity(tmp_path, monkeypatch):
@@ -223,6 +243,7 @@ def test_offline_reconciliation_separates_missed_unexpected_pending_and_latency(
     unknown = put(ledger,4,at=at,kind="failed")
     unseen = _b58((5).to_bytes(64,"big"))
     pending = _b58((6).to_bytes(64,"big"))
+    unqualified = put(ledger,7,mint=UNKNOWN,at=at)
     ledger.checkpoint(WALLET,pending,14)
     ledger.db.execute("CREATE TABLE signature_detections(wallet,signature,person_id,slot,seen_at)")
     ledger.db.execute("INSERT INTO signature_detections VALUES (?,?,?,?,?)",(WALLET,good,"frank",12,at+2.25))
@@ -237,15 +258,16 @@ def test_offline_reconciliation_separates_missed_unexpected_pending_and_latency(
             {"signature":sig,"slot":slot,**({"expected_frank_buy":want,"expectation_sha256":"b"*64}
                                          if want is not None else {})}
             for sig,slot,want in [(good,12,MINT),(excluded,12,False),(unexpected,12,False),
-                                  (unknown,12,None),(unseen,13,MINT),(pending,14,MINT)]
+                                  (unknown,12,None),(unseen,13,MINT),(pending,14,MINT),
+                                  (unqualified,12,False)]
         ]}))
     sha = lambda p: hashlib.sha256(p.read_bytes()).hexdigest()
     args = (backup,sha(backup),ref,sha(ref))
     result = reconcile_snapshot(*args,scanner_source_id="scanner_fixture",buy_qualifications=(cfg,sha(cfg),AS_OF))
     buys = result["buy_admission"]
     assert result["status"] == buys["status"] == "GAPS"
-    assert buys["counts"] == {"EXPECTED_IN":3,"EXPECTED_OUT":2,"MATCHED_IN":1,"MATCHED_OUT":1,
-                             "MISSED":1,"PENDING":1,"UNEXPECTED":1,"UNRESOLVED":1,"WRONG_MINT":0}
+    assert buys["counts"] == {"EXPECTED_IN":3,"EXPECTED_OUT":3,"MATCHED_IN":1,"MATCHED_OUT":1,
+                             "MISSED":1,"PENDING":1,"UNEXPECTED":1,"UNRESOLVED":2,"WRONG_MINT":0}
     assert buys["chain_to_detection"]["minimum_seconds"] == 2.25
     assert buys["chain_to_index"]["maximum_seconds"] == 4
     assert buys["delivery_timing"] == "NOT_VERIFIED"

@@ -1,6 +1,6 @@
 # Frank 重做技术方案：Meme 买入监控与中文 CA 查询
 
-日期：2026-11-22（Asia/Bangkok）。阶段：方案，本分支尚未改运行代码。基础、历史反例和逐项验收编号见[需求反查](FRANK_REBUILD_REQUIREMENTS_20261122.md)。
+方案冻结于 2026-11-22（Asia/Bangkok）。基础、历史反例和逐项验收编号见[需求反查](FRANK_REBUILD_REQUIREMENTS_20261122.md)。实现、回归和上线缺口见[联动回归记录](FRANK_REBUILD_VALIDATION_20261125.md)。
 
 ## 1. 两个入口
 

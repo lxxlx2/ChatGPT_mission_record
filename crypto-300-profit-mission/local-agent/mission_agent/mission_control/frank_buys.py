@@ -6,6 +6,7 @@ import json
 import re
 
 from .wallet_activity import connect
+from .wallet_activity_paging import _source
 from ..signals.buy_admission import admit_buy, exact_mint, qualification
 
 
@@ -35,12 +36,17 @@ def read_buys(database, qualifications, *, as_of, days="7", mint=None, cursor=No
         assets = qualification(qualifications, as_of)
     except FileNotFoundError:
         return {"status": "QUALIFICATION_UNAVAILABLE", "rows": [], "next_cursor": None}
-    binding = hashlib.sha256(repr((days, mint, sorted(assets.items()))).encode()).hexdigest()
+    source = _source(database)
+    binding = hashlib.sha256(repr((source, days, mint, sorted(assets.items()))).encode()).hexdigest()
     with closing(connect(database)) as db:
         db.execute("BEGIN")
+        if _source(database) != source:
+            raise ValueError("INVALID_OR_STALE_CURSOR")
         where = ["s.person_id='frank'", "t.side IN ('BUY','ADD','REENTRY')"]
         if cursor is not None:
             cutoff, rowmax, at, rowid = _decode(cursor, binding)
+            if cutoff > as_of:
+                raise ValueError("INVALID_OR_STALE_CURSOR")
             where.append("(s.block_time,t.rowid)<(?,?)")
             params = [at, rowid]
         else:

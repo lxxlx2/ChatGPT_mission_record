@@ -6,7 +6,11 @@ Unknown, conflicting and explicitly excluded records fail closed.
 from dataclasses import dataclass
 import hashlib
 import json
+import os
+from pathlib import Path
 import re
+import stat
+import time
 
 from ..meme.holder_ranks import valid_pubkey
 from .classifier import QUOTE_MINTS, USDT
@@ -33,7 +37,14 @@ class Asset:
 
 def qualification(path, as_of, *, sha256=None):
     """Read trusted local observations, never fetch or infer qualification."""
-    with path.open("rb") as f:
+    def open_regular(local_path, flags):
+        fd = os.open(local_path, flags | os.O_NONBLOCK)
+        if not stat.S_ISREG(os.fstat(fd).st_mode):
+            os.close(fd)
+            raise ValueError("QUALIFICATION_FILE_REQUIRED")
+        return fd
+
+    with open(path, "rb", opener=open_regular) as f:
         payload = f.read(1_048_577)
     if len(payload) > 1_048_576:
         raise ValueError("QUALIFICATION_TOO_LARGE")
@@ -68,6 +79,75 @@ def qualification(path, as_of, *, sha256=None):
             raise ValueError("DUPLICATE_ASSET_QUALIFICATION")
         result[mint] = Asset(status, source.strip(), at, name.strip() if name else None)
     return result
+
+
+MEME_SCOPE_BLOCKED = "MEME_SCOPE_BLOCKED"
+
+
+def qualification_path(path=None, *, default=None):
+    configured = path or os.environ.get("FRANK_BUY_QUALIFICATIONS_PATH") or default
+    return Path(configured) if configured else None
+
+
+class BuyDeliveryGate:
+    """Local evidence required for a new Frank notification."""
+
+    def __init__(self, path=None, *, clock=time.time):
+        self.path = qualification_path(path)
+        self.clock = clock
+
+    def block_reason(self, db, signal):
+        return self.assess(db, signal)[1]
+
+    def assess(self, db, signal):
+        if not isinstance(signal, dict):
+            return None, "TRIGGER_IS_NOT_PROVEN_BUY"
+        if signal.get("delivery_mode") != "LIVE" or signal.get("delivery_forbidden"):
+            return None, "HISTORICAL_DELIVERY_FORBIDDEN"
+        if signal.get("person_id") != "frank":
+            return None, "NOT_FRANK_BUY"
+        mint = signal.get("mint")
+        if not exact_mint(mint):
+            return None, "INVALID_SOLANA_MINT"
+        if mint in EXCLUDED_MINTS:
+            return None, "EXCLUDED_NON_MEME_MINT"
+        signature = signal.get("triggering_signature")
+        if (not _base58_size(signature, 64)
+                or signature != signal.get("latest_trade_signature")
+                or signature != signal.get("latest_buy_signature")):
+            return None, "TRIGGER_IS_NOT_PROVEN_BUY"
+        if self.path is None:
+            return None, "MEME_QUALIFICATION_UNAVAILABLE"
+        try:
+            assets = qualification(self.path, int(self.clock()))
+        except (OSError, ValueError, RecursionError):
+            return None, "MEME_QUALIFICATION_UNAVAILABLE"
+        asset = assets.get(mint)
+        if not asset or asset.status != "VERIFIED_MEME":
+            return None, ("MEME_QUALIFICATION_EXCLUDED" if asset and asset.status == "EXCLUDED"
+                          else "MEME_QUALIFICATION_UNPROVEN")
+
+        rows = db.execute(
+            "SELECT wallet, signature, slot, block_time, raw_hash, body FROM signatures "
+            "WHERE person_id = ? AND signature = ? LIMIT 2", ("frank", signature),
+        ).fetchall()
+        if len(rows) == 1:
+            row = rows[0]
+            try:
+                evidence = json.loads(row["body"])
+            except (TypeError, ValueError):
+                evidence = None
+            fact = admit_buy(evidence, assets, wallet=row["wallet"], signature=row["signature"],
+                             slot=row["slot"], block_time=row["block_time"], raw_hash=row["raw_hash"], mint=mint)
+            if fact:
+                frozen = signal.get("verified_buy")
+                if frozen is not None and (
+                    not isinstance(frozen, dict)
+                    or any(frozen.get(key) != value for key, value in fact.items() if key != "name")
+                ):
+                    return None, "FROZEN_BUY_FACT_CONFLICT"
+                return fact, None
+        return None, "TRIGGER_IS_NOT_PROVEN_BUY"
 
 
 def _units(raw, decimals):

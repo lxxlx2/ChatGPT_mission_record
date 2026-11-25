@@ -1409,6 +1409,15 @@ async function loadLatestCluster(mint, silent=false, expectedVersion=clusterPoll
 }
 
 let frankBuyGeneration=0, frankBuyCursor=null, frankBuyQuery=null;
+const frankBuyAmountFormat=new Intl.NumberFormat('zh-CN',{maximumSignificantDigits:6});
+function frankBuyAmount(value) {
+  if (typeof value!=='string' || !/^[0-9]+(?:\.[0-9]+)?$/.test(value)) return '未核实';
+  const amount=Number(value);
+  if (!Number.isFinite(amount) || amount<=0) return '未核实';
+  const display=amount<0.000001 ? amount.toExponential(3) : frankBuyAmountFormat.format(amount);
+  return (display.replaceAll(',','')===value?'':'约 ')+display;
+}
+
 async function loadFrankBuys(more=false) {
   const status=$('frank-buy-status'), rows=$('frank-buy-rows'), button=$('frank-buy-more');
   if (more && !frankBuyCursor) return;
@@ -1444,7 +1453,7 @@ async function loadFrankBuys(more=false) {
       }
       if (result.error==='INVALID_OR_STALE_CURSOR') {
         frankBuyCursor=null;
-        status.textContent='本地资格记录已变更，请重新筛选。';
+        status.textContent='本地账本或资格记录已更新，请重新筛选。';
         return;
       }
       throw new Error('LOCAL_BUY_READ_FAILED');
@@ -1457,7 +1466,7 @@ async function loadFrankBuys(more=false) {
     const html=result.rows.map(item=>`<article class="panel">
       <strong>${esc(item.name || item.mint)}</strong>
       <time datetime="${new Date(item.at*1000).toISOString()}">${esc(new Date(item.at*1000).toLocaleString('zh-CN'))}</time>
-      <p>买入 ${esc(item.quantity)} 枚 · 支付 ${esc(item.paid)} ${esc(item.currency)}</p>
+      <p>买入 ${esc(frankBuyAmount(item.quantity))} 枚 · 支付 ${esc(frankBuyAmount(item.paid))} ${esc(item.currency)}</p>
       ${tokenIdentity(item.mint)}
       <a class="link-btn" href="https://solscan.io/tx/${encodeURIComponent(item.signature)}" target="_blank" rel="noreferrer">原交易 ↗</a>
     </article>`).join('');
@@ -2572,6 +2581,8 @@ function renderClusterWalletReport(report) {
 }
 
 function seriesAddress(v) { return typeof v==='string' && /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(v); }
+let clusterChartPages=[];
+let clusterChartPage=0;
 function clusterSeriesPools(report) {
   const m=report?.market;
   if (!report || report.token_profile?.status!=='OK' || report.token_profile?.is_initialized!==true ||
@@ -2593,6 +2604,9 @@ function clusterSeriesPools(report) {
 function clearClusterSeries() {
   clusterSeriesVersion++;
   clusterSeries=null;
+  clusterChartPages=[];
+  clusterChartPage=0;
+  $('cluster-series-pagination').hidden=true;
   $('cluster-series-chart').innerHTML='';
   $('cluster-series-trades').innerHTML='';
   $('cluster-series-actors').innerHTML='';
@@ -2671,17 +2685,39 @@ function renderClusterSeriesTrades() {
     (entries.length?'<ul>'+entries.map(([who,[buy,sell]])=>'<li><code>'+esc(who)+'</code>：买 '+buy+' · 卖 '+sell+'</li>').join('')+'</ul>':'');
 }
 
-async function loadClusterSeries() {
+function renderClusterChartPage() {
+  const page=clusterChartPages[clusterChartPage];
+  const older=clusterChartPages[clusterChartPage+1] || page?.coverage?.next_before;
+  $('cluster-series-chart').innerHTML=clusterSeriesChart(page);
+  $('cluster-series-pagination').hidden=!page?.rows?.length || (!older && clusterChartPage===0);
+  $('cluster-series-newer').disabled=clusterChartPage===0;
+  $('cluster-series-older').disabled=!older;
+}
+
+async function loadClusterSeries(older=false) {
   const report=clusterVisibleReport,pool=$('cluster-series-pool').value,period=$('cluster-series-period').value;
   if (!clusterSeriesPools(report).includes(pool) || !['5m','1h','1d'].includes(period) ||
       $('cluster-mint').value.trim()!==report.mint || $('cluster-result').hidden) return;
-  clearClusterSeries();
+  older=older===true;
+  let before;
+  if (older) {
+    if (clusterChartPages[clusterChartPage+1]) {
+      clusterChartPage++;
+      renderClusterChartPage();
+      return;
+    }
+    before=clusterChartPages[clusterChartPage]?.coverage?.next_before;
+    if (!Number.isSafeInteger(before) || before<=0) return;
+  } else clearClusterSeries();
   const generation=clusterSeriesVersion;
   const status=$('cluster-series-status'),button=$('cluster-series-load');
   button.disabled=true;
-  status.textContent='正在读取所选池…';
+  $('cluster-series-newer').disabled=true;
+  $('cluster-series-older').disabled=true;
+  status.textContent=older?'正在读取更早的价格走势…':'正在读取所选池…';
   try {
     const query=new URLSearchParams({mint:report.mint,job_id:report.ca_job_id,pool,period});
+    if (older) query.set('before',String(before));
     const response=await fetch('/api/cluster-market-series?'+query,{cache:'no-store',headers:{'X-Frank-Research-Read':'1'}});
     const result=await response.json();
     if (generation!==clusterSeriesVersion || report!==clusterVisibleReport || clusterCurrentView!=='cluster' ||
@@ -2689,19 +2725,46 @@ async function loadClusterSeries() {
         $('cluster-mint').value.trim()!==report.mint || $('cluster-result').hidden) return;
     if (!response.ok || result.mint!==report.mint || result.job_id!==report.ca_job_id || result.pool!==pool ||
         result.period!==period || result.source!=='GECKOTERMINAL_PUBLIC_API' || result.currency!=='USD') throw new Error();
-    clusterSeries=result;
-    $('cluster-series-chart').innerHTML=clusterSeriesChart(result.chart);
-    renderClusterSeriesTrades();
+    if (older) {
+      const chart=result.chart;
+      if (result.before!==before || chart?.coverage?.before!==before ||
+          !['OK','STALE'].includes(chart.status) || !Array.isArray(chart.rows) ||
+          chart.rows.some(row=>!Number.isSafeInteger(row[0]) || row[0]>=before) ||
+          (chart.coverage.next_before!==null && chart.coverage.next_before!==chart.rows[0]?.[0])) throw new Error();
+      if (!chart.rows.length) {
+        clusterChartPages[clusterChartPage]={...clusterChartPages[clusterChartPage],
+          coverage:{...clusterChartPages[clusterChartPage].coverage,next_before:null}};
+        status.textContent='来源未返回更早的 K 线。';
+        return;
+      }
+      clusterChartPages.push(chart);
+      clusterChartPage++;
+    } else {
+      clusterSeries=result;
+      clusterChartPages=result.chart ? [result.chart] : [];
+      renderClusterSeriesTrades();
+    }
     status.textContent='所选池：'+pool+' · GeckoTerminal';
   } catch (_) {
-    if(generation===clusterSeriesVersion) status.textContent='未能读取或核对该池行情。原查询报告保留。';
+    if(generation===clusterSeriesVersion) status.textContent=older
+      ? '更早的 K 线未取得，当前结果保留。' : '未能读取或核对该池行情。原查询报告保留。';
   } finally {
-    if(generation===clusterSeriesVersion) button.disabled=false;
+    if(generation===clusterSeriesVersion) {
+      button.disabled=false;
+      renderClusterChartPage();
+    }
   }
 }
 
 if ($('cluster-series-load')) {
   $('cluster-series-load').addEventListener('click',loadClusterSeries);
+  $('cluster-series-older').addEventListener('click',()=>void loadClusterSeries(true));
+  $('cluster-series-newer').addEventListener('click',()=>{
+    if (clusterChartPage>0) {
+      clusterChartPage--;
+      renderClusterChartPage();
+    }
+  });
   for (const id of ['cluster-series-pool','cluster-series-period']) $(id).addEventListener('change',()=>{
     clearClusterSeries();
     $('cluster-series-load').disabled=false;

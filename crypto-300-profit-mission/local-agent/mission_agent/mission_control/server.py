@@ -36,6 +36,7 @@ from .wallet_watch import from_sqlite as read_frank_watchlist, annotate_known_at
 from .wallet_inventory import InventoryEvidenceError, reconcile_watchlist
 from .wallet_d2_ingress import D2IngressError, query_d2
 from ..meme.ca_market_series import CAMarketSeries, PERIODS, report_pool
+from ..signals.buy_admission import qualification_path
 from .frank_buys import read_buys
 from .wallet_activity import activity as read_signed_activity
 from .wallet_activity_paging import activity_page, KINDS as ACTIVITY_KINDS, CURSOR_ERRORS
@@ -924,8 +925,10 @@ class ClusterJobManager:
             **_ca_query_fields(report),
         }
 
-    def market_series(self, mint, job_id, pool, period):
+    def market_series(self, mint, job_id, pool, period, before=None):
         if period not in PERIODS or not self._valid_job_id(job_id):
+            raise ValueError("INVALID_CA_MARKET_QUERY")
+        if before is not None and not re.fullmatch(r"[1-9][0-9]{0,9}", before):
             raise ValueError("INVALID_CA_MARKET_QUERY")
         report = self.latest(mint, job_id=job_id)
         if not report or report.get("ca_job_id") != job_id or report.get("mint") != mint:
@@ -933,7 +936,8 @@ class ClusterJobManager:
         peer=report_pool(mint,report.get("token_profile") or {},report.get("market") or {},pool)
         if not peer or report.get("query_scope") not in {"overview","full"}:
             return None
-        return {"job_id":job_id,**self.ca_market_series.read(mint,pool,peer,period)}
+        paging={"before":int(before)} if before is not None else {}
+        return {"job_id":job_id,**self.ca_market_series.read(mint,pool,peer,period,**paging)}
 
     def latest(self, mint: str, job_id: str | None = None) -> dict | None:
         mint = self.validate_mint(mint)
@@ -1259,8 +1263,8 @@ class DashboardState:
             }
 
     def frank_buys(self, **query):
-        return read_buys(self.frank.database, self.control_root / "frank-buy-qualifications.json",
-                         as_of=int(time.time()), **query)
+        qualifications = qualification_path(default=self.control_root / "frank-buy-qualifications.json")
+        return read_buys(self.frank.database, qualifications, as_of=int(time.time()), **query)
 
     def frank_signed_activity(self, days=1, *, page_size=None, cursor=None, kind="ALL", mint=None):
         """Complete local indexed ranges; optional pages never cap total history."""
@@ -1712,7 +1716,7 @@ class Handler(BaseHTTPRequestHandler):
                 if str(exc) in {"INVALID_BUY_QUERY", "INVALID_OR_STALE_CURSOR"}:
                     return self._json({"error": str(exc)}, 400)
                 return self._json({"error": "LOCAL_BUY_SOURCE_UNAVAILABLE"}, 503)
-            except (OSError, sqlite3.Error):
+            except (OSError, RecursionError, sqlite3.Error):
                 return self._json({"error": "LOCAL_BUY_SOURCE_UNAVAILABLE"}, 503)
         if path == "/api/frank-notification-audit":
             return self._notification_audit_get()
@@ -1822,8 +1826,9 @@ class Handler(BaseHTTPRequestHandler):
             if not self._research_origin():
                 return self._json({"error":"SAME_ORIGIN_READ_REQUIRED"},403)
             try:
-                qs=parse_qs(urlparse(self.path).query,keep_blank_values=True,max_num_fields=4)
-                if set(qs)!={"job_id","mint","pool","period"} or any(len(v)!=1 for v in qs.values()):
+                qs=parse_qs(urlparse(self.path).query,keep_blank_values=True,max_num_fields=5)
+                required={"job_id","mint","pool","period"}
+                if not required<=set(qs)<=required|{"before"} or any(len(v)!=1 for v in qs.values()):
                     raise ValueError("INVALID_CA_MARKET_QUERY")
                 result=self.state.cluster_jobs.market_series(**{k:v[0] for k,v in qs.items()})
             except ValueError:

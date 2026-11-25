@@ -2,6 +2,7 @@
 import argparse,fcntl,json
 from pathlib import Path
 from mission_agent.signals.store import Ledger
+from mission_agent.signals.buy_admission import BuyDeliveryGate
 from mission_agent.signals.gmail import GmailOutbox,CredentialBlocked
 from mission_agent.signals.gmail_api import existing_provider
 
@@ -15,9 +16,13 @@ def delivery_flags(ledger):
              THEN 0 ELSE 1 END AS delivery_forbidden FROM signals""")
 
 def main():
-    p=argparse.ArgumentParser();p.add_argument('--db',type=Path,required=True);p.add_argument('--check',action='store_true');a=p.parse_args()
+    p=argparse.ArgumentParser()
+    p.add_argument('--db',type=Path,required=True)
+    p.add_argument('--buy-qualifications',type=Path,help='Existing local Meme qualification file; overrides FRANK_BUY_QUALIFICATIONS_PATH.')
+    p.add_argument('--check',action='store_true')
+    a=p.parse_args()
     with a.db.with_suffix('.gmail-delivery.lock').open('a') as lock:
-        fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB);ledger=Ledger(a.db);delivery_flags(ledger);outbox=GmailOutbox(ledger);provider=existing_provider(a.db.parent/'gmail-existing-source.json');outbox.sync()
+        fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB);ledger=Ledger(a.db);delivery_flags(ledger);outbox=GmailOutbox(ledger,delivery_gate=BuyDeliveryGate(a.buy_qualifications));provider=existing_provider(a.db.parent/'gmail-existing-source.json');outbox.sync()
         if a.check:
             ready=False
             if provider:

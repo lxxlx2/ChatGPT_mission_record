@@ -9,10 +9,11 @@ from .store import quantity
 from .buy_admission import admit_buy
 
 class Engine:
-    def __init__(self,ledger,policy,*,dry_run=True,rebuild_assets=None):
+    def __init__(self,ledger,policy,*,dry_run=True,rebuild_assets=None,delivery_gate=None):
         if rebuild_assets is not None and not dry_run:
             raise ValueError("REBUILD_ADMISSION_DRY_RUN_ONLY")
         self.rebuild_assets = rebuild_assets
+        self.delivery_gate = delivery_gate
         self.ledger,self.db,self.policy,self.dry_run=ledger,ledger.db,policy,dry_run
         self.db.executescript('''
         CREATE TABLE IF NOT EXISTS email_content(signal_id TEXT PRIMARY KEY,subject TEXT,body TEXT,content_hash TEXT);
@@ -29,7 +30,7 @@ class Engine:
         # Compatibility recovery may only copy an already frozen delivery.
         # Missing historical content is not safe to reconstruct with today's template.
         has_delivery=self.db.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='gmail_delivery'").fetchone()
-        for row in self.db.execute("SELECT s.signal_id FROM signals s LEFT JOIN email_content m USING(signal_id) WHERE s.signal_type='FRANK_MULTIPLE_SIGNAL' AND json_extract(s.body,'$.policy_id')='FRANK_LOCAL_SIGNAL_V1' AND m.signal_id IS NULL").fetchall():
+        for row in self.db.execute("SELECT s.signal_id FROM signals s LEFT JOIN email_content m USING(signal_id) WHERE s.signal_type='FRANK_MULTIPLE_SIGNAL' AND json_extract(s.body,'$.policy_id')='FRANK_LOCAL_SIGNAL_V1' AND COALESCE(json_extract(s.body,'$.delivery_forbidden'),0)=0 AND m.signal_id IS NULL").fetchall():
             frozen=self.db.execute('SELECT subject,body,content_hash FROM gmail_delivery WHERE signal_id=?',(row['signal_id'],)).fetchone() if has_delivery else None
             if frozen and digest({'subject':frozen['subject'],'body':frozen['body']})==frozen['content_hash']:
                 self.db.execute('INSERT INTO email_content VALUES(?,?,?,?)',(row['signal_id'],frozen['subject'],frozen['body'],frozen['content_hash']))
@@ -106,8 +107,17 @@ class Engine:
             'position':position,'reason_codes':stage['reason_codes'],'usd':'unavailable',
             'delivery_mode':'DRY_RUN_AUDIT' if self.dry_run else 'LIVE'
         }
+        fact, blocked = self.delivery_gate.assess(self.db, body) if self.delivery_gate and not self.dry_run else (None, None)
+        if fact:
+            body["verified_buy"] = fact
+        if blocked:
+            body.update(delivery_forbidden=True, delivery_scope_reason=blocked)
         encoded=json.dumps(body,sort_keys=True);content_hash=digest(body)
         self.db.execute('INSERT INTO signals VALUES(?,?,?,?,?,?,?,?,?)',(sid,s['person_id'],s['mint'],s['episode_id'],stage['signal_type'],stage['stage'],str(at),content_hash,encoded))
+        if stage['signal_type']=='FRANK_ACCUMULATION_SIGNAL':s['accumulation_emitted']=True
+        else:s['multiple_emitted']=True
+        if blocked:
+            return None
         for channel in (['local','gmail'] if stage['signal_type']=='FRANK_MULTIPLE_SIGNAL' else ['local']):self.db.execute('INSERT INTO outbox(signal_id,channel,status) VALUES(?,?,?)',(sid,channel,'DRY_RUN_AUDIT' if self.dry_run else 'PENDING'))
         row=self.db.execute('SELECT body FROM signatures WHERE signature=? AND person_id=?',(body['latest_trade_signature'],s['person_id'])).fetchone()
         if row:
@@ -117,8 +127,6 @@ class Engine:
             from .email import content
             mail=content(body)
             self.db.execute('INSERT INTO email_content VALUES(?,?,?,?)',(sid,mail['subject'],mail['body'],mail['content_hash']))
-        if stage['signal_type']=='FRANK_ACCUMULATION_SIGNAL':s['accumulation_emitted']=True
-        else:s['multiple_emitted']=True
         return sid
     def _evaluate(self,s,at,signature,kind):
         result=evaluate(s,at,self.policy);ids=[]

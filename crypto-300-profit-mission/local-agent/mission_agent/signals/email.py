@@ -43,8 +43,27 @@ def quote_total(values):
     if not values:return UNAVAILABLE
     return '; '.join(amount(v)+' '+label(k) for k,v in sorted(values.items()))
 
+def buy_notice(fact):
+    name = " ".join(fact["name"].split()) if fact["name"] else short(fact["mint"])
+    when = timestamp(fact["at"])
+    minute = when[:10] + " " + when[11:16]
+    subject = f"Frank 买入 {name}"
+    description = f"{minute}（UTC+7） · 买入 {amount(fact['quantity'])} 枚 · 支付 {amount(fact['paid'])} {fact['currency']}"
+    return subject, description
+
+
 def content(signal):
     if signal['signal_type']!='FRANK_MULTIPLE_SIGNAL':raise ValueError('MULTIPLE_EMAIL_ONLY')
+    fact = signal.get("verified_buy")
+    if fact:
+        subject, description = buy_notice(fact)
+        body = "\n".join((
+            description,
+            f"合约地址 {fact['mint']}",
+            f"原始交易 https://solscan.io/tx/{fact['signature']}",
+        ))
+        return {'signal_id':signal['signal_id'],'subject':subject,'body':body,
+                'body_hash':digest(body),'content_hash':digest({'subject':subject,'body':body})}
     p=signal.get('position') or {};mint=text(signal.get('mint'));stage=text(signal.get('stage'))
     symbol=signal.get('symbol');token=inline(symbol) if not unavailable(symbol) else short(mint)
     at=signal.get('triggered_at');when=timestamp(at)

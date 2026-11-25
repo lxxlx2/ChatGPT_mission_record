@@ -457,6 +457,10 @@
           </div>
           <p id="cluster-series-status" role="status"></p>
           <div id="cluster-series-chart"></div>
+          <div class="frank-watch-controls" id="cluster-series-pagination" hidden>
+            <button type="button" class="link-btn" id="cluster-series-newer" disabled>较新 K 线</button>
+            <button type="button" class="link-btn" id="cluster-series-older" disabled>更早 K 线</button>
+          </div>
           <details class="cluster-detail-fold">
             <summary>查看近期成交和交易者</summary>
             <label for="cluster-series-side">方向</label>
@@ -528,7 +532,7 @@
   </main>
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
-  <script src="/static/app.js?v=frank-ca-zh-market-v1"></script>
+  <script src="/static/app.js?v=frank-buy-ca-pages-v1"></script>
   <script src="/static/frank_research.js?v=source-contract-v1"></script>
   <script src="/static/frank_watch_metadata.js?v=watch-metadata-v1"></script>
   <script src="/static/frank_evidence_manifests.js?v=manifest-v2"></script>

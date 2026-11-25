@@ -99,10 +99,79 @@ def test_mismatched_source_and_bad_candles_do_not_hide_other_sections():
     assert out["trades"]["status"]=="OK" and len(out["trades"]["rows"])==1
 
 
+def test_older_candles_page_uses_its_boundary_cache_and_never_reloads_trades():
+    requests=[]
+    def source(request, timeout):
+        url=urlsplit(request.full_url)
+        params=parse_qs(url.query)
+        requests.append((url.path,params))
+        if url.path.endswith("/trades"):
+            return io.BytesIO(b'{"data":[]}')
+        response=candles()
+        cutoff=params.get("before_timestamp",[None])[0]
+        if cutoff is not None:
+            older=int(cutoff)
+            response["data"]["attributes"]["ohlcv_list"]=(
+                [[older,2,3,1,2,80],[older+1,2,3,1,2,95]]
+                if older==AS_OF-401 else []
+            )
+        return io.BytesIO(json.dumps(response).encode())
+
+    client=CAMarketSeries(open_url=source,clock=lambda:AS_OF,monotonic=lambda:0)
+    latest=client.read(MINT,POOL,PEER,"5m")
+    assert latest["chart"]["coverage"]["next_before"]==AS_OF-400
+    older=client.read(MINT,POOL,PEER,"5m",before=AS_OF-400)
+    assert older["before"]==AS_OF-400 and "trades" not in older
+    assert [row[0] for row in older["chart"]["rows"]]==[AS_OF-401]
+    assert requests[2][1]["before_timestamp"]==[str(AS_OF-401)]
+    assert client.read(MINT,POOL,PEER,"5m",before=AS_OF-400)["chart"]["cache"]=="FRESH"
+    last=client.read(MINT,POOL,PEER,"5m",before=AS_OF-401)
+    assert last["chart"]["coverage"]["next_before"] is None
+    assert sum(path.endswith("/trades") for path,_ in requests)==1
+
+
+def test_unusable_trade_page_is_unavailable_but_provider_empty_page_is_valid():
+    trades = [[event(1, pool=OTHER)]]
+
+    def source(req, timeout):
+        payload = candles() if "/ohlcv/" in req.full_url else {"data": trades[0]}
+        return io.BytesIO(json.dumps(payload).encode())
+
+    client = CAMarketSeries(open_url=source, clock=lambda: AS_OF, monotonic=lambda: 0)
+    result = client.read(MINT, POOL, PEER, "5m")
+    assert result["chart"]["status"] == "OK"
+    assert result["trades"]["status"] == "UNAVAILABLE"
+    assert result["trades"]["reason"] == "SOURCE_UNAVAILABLE_OR_MISMATCH"
+    trades[0] = []
+    empty = client.read(MINT, POOL, PEER, "5m")["trades"]
+    assert empty["status"] == "OK"
+    assert empty["rows"] == [] and empty["coverage"]["provider_rows"] == 0
+
+
+def test_unusable_trade_refresh_does_not_replace_verified_same_pool_cache():
+    now = [AS_OF]
+    trades = [[event(1)]]
+
+    def source(req, timeout):
+        payload = candles() if "/ohlcv/" in req.full_url else {"data": trades[0]}
+        return io.BytesIO(json.dumps(payload).encode())
+
+    client = CAMarketSeries(open_url=source, clock=lambda: now[0], monotonic=lambda: now[0])
+    original = client.read(MINT, POOL, PEER, "5m")["trades"]
+    now[0] += 62
+    trades[0] = [event(1), event(1, change={"to_token_amount": "7"})]
+    refresh = client.read(MINT, POOL, PEER, "5m")["trades"]
+    assert refresh["status"] == "STALE"
+    assert refresh["observed_at"] == AS_OF and refresh["rows"] == original["rows"]
+
+
 def test_dashboard_read_is_bound_to_report_scope_and_same_origin(tmp_path):
     jobs=ClusterJobManager(tmp_path)
     seen=[]
-    jobs.ca_market_series=SimpleNamespace(read=lambda *args: seen.append(args) or {"pool":args[1]})
+    def read(*args, **kwargs):
+        seen.append((args, kwargs))
+        return {"pool":args[1]}
+    jobs.ca_market_series=SimpleNamespace(read=read)
     saved={"mint":MINT,"ca_job_id":JOB,"query_scope":"overview","token_profile":PROFILE,"market":MARKET}
     jobs.latest=lambda *args,**kwargs:saved
     handler=Handler.__new__(Handler)
@@ -114,7 +183,14 @@ def test_dashboard_read_is_bound_to_report_scope_and_same_origin(tmp_path):
     assert handler.do_GET()[1]==403
     handler._research_origin=lambda:True
     assert handler.do_GET()==({"job_id":JOB,"pool":POOL},200)
-    assert seen==[(MINT,POOL,PEER,"5m")]
+    assert seen==[((MINT,POOL,PEER,"5m"),{})]
+    base_path=handler.path
+    handler.path+="&before=1796000000"
+    assert handler.do_GET()[1]==200
+    assert seen[-1]==((MINT,POOL,PEER,"5m"),{"before":1796000000})
+    handler.path=base_path+"&before=not-a-timestamp"
+    assert handler.do_GET()[1]==400
+    handler.path=base_path
     handler.path=handler.path.replace(POOL,OTHER)
     assert handler.do_GET()[1]==404
     handler.path=handler.path.replace(OTHER,POOL)
@@ -124,7 +200,7 @@ def test_dashboard_read_is_bound_to_report_scope_and_same_origin(tmp_path):
     saved["query_scope"]="wallet"
     assert handler.do_GET()[1]==404
     handler.path+="&period=1h"
-    assert handler.do_GET()[1]==400 and len(seen)==1
+    assert handler.do_GET()[1]==400 and len(seen)==2
 
 
 def test_chinese_source_is_not_discarded_or_labeled_as_claim():

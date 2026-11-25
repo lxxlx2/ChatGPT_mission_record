@@ -41,7 +41,7 @@ def report_pool(mint, profile, market, pool):
     return next(iter(members)) if len(members) == 1 else None
 
 
-def _parse_chart(payload, mint, peer, now):
+def _parse_chart(payload, mint, peer, now, before=None):
     if not isinstance(payload, dict):
         raise ValueError()
     meta = payload.get("meta")
@@ -67,6 +67,12 @@ def _parse_chart(payload, mint, peer, now):
         o,h,l,c,_=map(Decimal,bounded)
         if not l<=min(o,c)<=max(o,c)<=h:
             raise ValueError()
+        if before is not None and at >= before:
+            # Some responses include the boundary bar. The preceding page
+            # already owns it; anything newer indicates a mismatched page.
+            if at != before:
+                raise ValueError()
+            continue
         kept[at]=[at,*bounded]
     return [kept[at] for at in sorted(kept)]
 
@@ -115,6 +121,8 @@ def _parse_trades(payload,mint,peer,pool,now):
             conflicts.add(key)
         kept[key]=record
     items=sorted((v for k,v in kept.items() if k not in conflicts),key=lambda r:(r["at"],r["id"]),reverse=True)
+    if rows and not items:
+        raise ValueError("NO_VERIFIABLE_TRADE_ROWS")
     return items,{"provider_rows":len(rows),"unusable_rows":skipped+len(conflicts),
                   "earliest":items[-1]["at"] if items else None,"latest":items[0]["at"] if items else None,
                   "scope":"FIRST_PAGE_LAST_24H_ONLY","has_more":len(rows)>=MAX_TRADES or bool(payload.get("links",{}).get("next"))
@@ -151,8 +159,8 @@ class CAMarketSeries:
             raise ValueError()
         return json.loads(raw,parse_float=Decimal)
 
-    def _read_cached(self,mint,pool,peer,kind,period,suffix):
-        key=(mint,pool,peer,kind,period)
+    def _read_cached(self,mint,pool,peer,kind,period,suffix,before=None):
+        key=(mint,pool,peer,kind,period,before)
         with self.lock:
             cached=self.cache.get(key)
             now=self.monotonic()
@@ -168,7 +176,9 @@ class CAMarketSeries:
                     data=self._read(BASE+pool+suffix)
                     observed=int(self.clock())
                     if kind=="chart":
-                        rows,coverage=_parse_chart(data,mint,peer,observed),{"scope":"RECENT_PROVIDER_INTERVALS_ONLY"}
+                        rows=_parse_chart(data,mint,peer,observed,before)
+                        coverage={"scope":"PROVIDER_INTERVAL_PAGE","before":before,
+                                  "next_before":rows[0][0] if rows else None}
                     else:
                         rows,coverage=_parse_trades(data,mint,peer,pool,observed)
                     result={"status":"OK","rows":rows,"coverage":coverage,"observed_at":observed}
@@ -185,14 +195,20 @@ class CAMarketSeries:
                 return {**cached[1],"status":"STALE","reason":reason}
             return {"status":"UNAVAILABLE","rows":[],"reason":reason}
 
-    def read(self,mint,pool,peer,period):
+    def read(self,mint,pool,peer,period,*,before=None):
         if (not all(valid_pubkey(value) for value in (mint,pool,peer)) or len({mint,pool,peer})!=3
-                or period not in PERIODS):
+                or period not in PERIODS or (before is not None and
+                    (type(before) is not int or not 1 < before <= self.clock()+60))):
             raise ValueError("INVALID_MARKET_SERIES_SCOPE")
         frame,aggregate=PERIODS[period]
-        chart_q=urllib.parse.urlencode({"aggregate":aggregate,"limit":MAX_POINTS,"token":mint,"currency":"usd"})
+        params={"aggregate":aggregate,"limit":MAX_POINTS,"token":mint,"currency":"usd"}
+        if before is not None:
+            params["before_timestamp"]=before-1
+        chart_q=urllib.parse.urlencode(params)
         # The public route defaults to 300 trades in one day; both controls are Pro-only.
         trades_q=urllib.parse.urlencode({"token":mint})
-        chart=self._read_cached(mint,pool,peer,"chart",period,"/ohlcv/"+frame+"?"+chart_q)
-        trades=self._read_cached(mint,pool,peer,"trades",None,"/trades?"+trades_q)
-        return {"source":SOURCE,"mint":mint,"pool":pool,"period":period,"currency":"USD","chart":chart,"trades":trades}
+        chart=self._read_cached(mint,pool,peer,"chart",period,"/ohlcv/"+frame+"?"+chart_q,before)
+        out={"source":SOURCE,"mint":mint,"pool":pool,"period":period,"currency":"USD","chart":chart}
+        if before is not None:
+            return {**out,"before":before}
+        return {**out,"trades":self._read_cached(mint,pool,peer,"trades",None,"/trades?"+trades_q)}

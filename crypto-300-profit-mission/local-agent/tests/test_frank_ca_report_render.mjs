@@ -1820,3 +1820,42 @@ test('explicit market panel discards responses after a pool switch and keeps sco
   assert.doesNotMatch(h.element('cluster-series-trades').innerHTML,/>42</);
   assert.ok(h.requests.every(r=>r.method==='GET'));
 });
+
+test('older candle pages preserve trades and navigate back without a second source call', async () => {
+  const h=harness(), pool='11111111111111111111111111111112', peer='11111111111111111111111111111113';
+  const report={...fixture,ca_job_id:jobId,query_scope:'overview',
+    token_profile:{status:'OK',is_initialized:true},
+    market:{status:'OK',chain:'solana',mint,main_pair:{pair_address:pool,base_address:mint,quote_address:peer}}};
+  const latest=1792683600, ancient=latest-300;
+  const result=(before, stamp, price)=>({
+    mint,job_id:jobId,pool,period:'5m',source:'GECKOTERMINAL_PUBLIC_API',currency:'USD',
+    ...(before ? {before} : {trades:{status:'OK',coverage:{},rows:[
+      {wallet:peer,side:'BUY',quantity:'42',at:latest,signature:'1'.repeat(64)}
+    ]}}),
+    chart:{status:'OK',observed_at:latest,rows:stamp?[[stamp,price,price,price,price,'5']]:[],
+      coverage:{before:before||null,next_before:stamp||null}}
+  });
+  h.element('cluster-mint').value=mint;
+  h.context.renderClusterReport(report);
+  h.element('cluster-series-pool').value=pool;
+  h.element('cluster-series-period').value='5m';
+  h.setResponse(url=>{
+    const before=Number(new URL(url,'http://localhost').searchParams.get('before'));
+    return Promise.resolve({ok:true,json:async()=>!before?result(null,latest,'7'):
+      before===latest?result(before,ancient,'3'):result(before,null,null)});
+  });
+  await h.context.loadClusterSeries();
+  assert.match(h.element('cluster-series-chart').innerHTML,/>7</);
+  assert.match(h.element('cluster-series-trades').innerHTML,/>42</);
+  await h.context.loadClusterSeries(true);
+  assert.match(h.element('cluster-series-chart').innerHTML,/>3</);
+  assert.match(h.element('cluster-series-trades').innerHTML,/>42</);
+  await h.context.loadClusterSeries(true);
+  assert.match(h.element('cluster-series-status').textContent,/来源未返回更早/);
+  assert.equal(h.element('cluster-series-older').disabled,true);
+  h.element('cluster-series-newer').listeners.get('click')();
+  assert.match(h.element('cluster-series-chart').innerHTML,/>7</);
+  await h.context.loadClusterSeries(true);
+  assert.match(h.element('cluster-series-chart').innerHTML,/>3</);
+  assert.equal(h.requests.filter(r=>r.url.includes('/api/cluster-market-series')).length,3);
+});
