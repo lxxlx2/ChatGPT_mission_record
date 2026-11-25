@@ -32,6 +32,13 @@ State: WATCH / TESTNET_LIVE_UNSCORED. This dated section supersedes the historic
 - Voucher activation block/date still absent; no backfill, no scored inference. State remains WATCH / TESTNET_LIVE_UNSCORED.
 - PM correction to prior no-market finding: project-specific https://polymarket.com/event/will-flop-launch-a-token-by exists and resolves using official @flop_labs evidence. Cached page read 2026-11-26 shows Dec 31 2026 displayed 15%, March 31 2027 45%, respective cumulative volumes $3,733 and $1,501; wide quoted spreads and non-monotonic later deadlines, not verified live probabilities; gamma API inaccessible. No direct matching market verified from search results for other named venues.
 
+## Follow-up — 2026-11-26 CLI 0.9.0 and faucet dependency verification
+
+- USER_CONFIRMED npm registry CLI 0.9.0 and SDK 0.12.0. Temporary CLI 0.9.0 network status: profile live, expected genesis pinned, RPC matches_expected=true, runtime 1014035, faucet canonical host https://faucet.flop.network and matches_rpc=true. Global CLI remained 0.8.2 at preceding local check.
+- USER_CONFIRMED faucet snapshot 2026-11-25T17:22:04.520Z: reachable but ready=false; /health HTTP 503, indexer_unavailable, signer and funding checks pass. Funding status open is not grant execution readiness. Signed agent lane remains 10 test FLOP per rolling 24h, rollover requires prior spend. No claim executed or verified.
+- Local runtime previously returned HTTP_200_IDENTITY_VERIFIED, last scheduler tick 2026-11-25T17:15:30Z, 5 sent_verified mail records, sessions empty. UNVERIFIED_DOC_FORMAT / OFFICIAL_PROFILE_PLANNED reflects old document parser and old CLI; do not remove safety gates merely to obtain green status. Separate network identity/funding preparation from scored inference. No local code, task or signing changes made here.
+- Official links updated 2026-11-25 explicitly say no Testnet inference gateway published, Devnet endpoints remain Devnet, scoring begins only at a publicly announced finalized activation block (no block or date confirmed), and earlier Q1 2027 estimate based on historical Nov 3 target is not a current launch commitment. TGE date UNCONFIRMED; historical estimate below is superseded. Sources: https://docs.flop.network/docs/official-links ; https://docs.flop.network/docs/testnet-and-timeline ; https://docs.flop.network/docs/network-testnet .
+
 ## Project (historical background, 2026-09-29)
 
 Flop Labs is building FLOP Network, a proposed Substrate/FRAME blockchain for verified AI inference and agent-to-agent settlement.
