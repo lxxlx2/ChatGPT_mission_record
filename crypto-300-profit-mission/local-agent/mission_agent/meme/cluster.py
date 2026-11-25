@@ -1748,7 +1748,22 @@ class WalletClusterAnalyzer:
             and isinstance(token_profile.get("program_id"),str)
             and token_profile.get("program_id") in TOKEN_PROGRAMS else None)
         launch=self.launch_snapshot(token_profile)
-        market=self.market_snapshot()
+        market=({"status":"UNAVAILABLE","reason":"MINT_ACCOUNT_TYPE_UNVERIFIED","chain":"solana","mint":self.mint}
+                if token_profile.get("reason")=="MINT_ACCOUNT_TYPE_UNVERIFIED" else self.market_snapshot())
+        if self.query_scope=="overview" and self.independent_market_client is not None and market.get("reason")=="NO_BASE_TOKEN_PAIR":
+            from .ca_market_series import report_pool
+            for row in market.get("pool_candidates") or []:
+                if not isinstance(row,dict):continue
+                pool=row.get("pair_address")
+                peer=report_pool(self.mint,token_profile,market,pool)
+                if peer and row.get("quote_address")==self.mint:
+                    reverse=self.independent_market_client.pool_snapshot(self.mint,pool,peer)
+                    if reverse.get("status")=="OK":
+                        market={**market,"reverse_market":reverse}
+                        meta=launch.get("metadata") or {}
+                        if meta.get("status")!="VERIFIED_CHAIN_STATE":
+                            market.update(name=row.get("target_name"),symbol=row.get("target_symbol"))
+                    break
         self._launch_metadata=launch.get("metadata")
         if self.query_scope=="overview":
             self._progress("BASE_READY",token_profile=token_profile,market=market,launch_identity=launch)

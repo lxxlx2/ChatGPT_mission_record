@@ -35,6 +35,7 @@ from .payment_evidence import latest_buy_payment_evidence
 from .wallet_watch import from_sqlite as read_frank_watchlist, annotate_known_ata_gaps
 from .wallet_inventory import InventoryEvidenceError, reconcile_watchlist
 from .wallet_d2_ingress import D2IngressError, query_d2
+from ..meme.ca_market_series import CAMarketSeries, PERIODS, report_pool
 from .frank_buys import read_buys
 from .wallet_activity import activity as read_signed_activity
 from .wallet_activity_paging import activity_page, KINDS as ACTIVITY_KINDS, CURSOR_ERRORS
@@ -194,6 +195,7 @@ class ClusterJobManager:
         self.rpc_endpoints=list(dict.fromkeys(self.rpc_endpoints))
         self.rpc_endpoint=self.rpc_endpoints[0]
         self.market_client=DexScreenerMarketClient()
+        self.ca_market_series=CAMarketSeries()
         self.independent_market_client=GeckoTerminalMarketClient()
         self.narrative_client=PublicNarrativeClient()
         self.jupiter=JupiterQuoteClient(os.environ.get("JUPITER_API_KEY"))
@@ -414,18 +416,25 @@ class ClusterJobManager:
                     profile=details.get("token_profile") or {}
                     market=details.get("market") or {}
                     pair=market.get("main_pair") or {}
+                    reverse=market.get("reverse_market") or {}
+                    pair_address=pair.get("pair_address") or reverse.get("pool_address")
+                    market_bound=bool(report_pool(job["mint"],profile,market,pair_address) and (
+                        (market.get("status")=="OK" and pair.get("base_address")==job["mint"])
+                        or (reverse.get("status")=="OK" and reverse.get("mint")==job["mint"]
+                            and reverse.get("pool_address")==pair_address)))
                     job["preview"]={
+                        "market_bound":market_bound,
                         "stage":"BASE_READY", "observed_at":time.time(),
-                        "name":market.get("name"), "symbol":market.get("symbol"),
+                        "name":market.get("name") if market.get("mint")==job["mint"] else None, "symbol":market.get("symbol") if market.get("mint")==job["mint"] else None,
                         "market_status":market.get("status"),
-                        "price_usd":market.get("price_usd"),
+                        "price_usd":market.get("price_usd") if pair else reverse.get("price_usd"),
                         "market_cap_usd":market.get("market_cap_usd"),
                         "fdv_usd":market.get("fdv_usd"),
-                        "liquidity_usd":pair.get("liquidity_usd"),
-                        "pair_address":pair.get("pair_address"),
+                        "liquidity_usd":pair.get("liquidity_usd") if pair else reverse.get("pool_liquidity_usd"),
+                        "pair_address":pair_address,
                         "volume_h24_usd":(pair.get("volume") or {}).get("h24"),
-                        "market_source":market.get("source"),
-                        "market_observed_at":market.get("observed_at"),
+                        "market_source":reverse.get("source") if reverse else market.get("source"),
+                        "market_observed_at":reverse.get("observed_at") if reverse else market.get("observed_at"),
                         "launch_identity":deepcopy(details.get("launch_identity")),
                         "token_status":profile.get("status"),
                         "mint_authority":profile.get("mint_authority"),
@@ -693,7 +702,7 @@ class ClusterJobManager:
                 adaptive_funding_max_pages=opts.get("adaptive_funding_max_pages",1),
                 exhaust_history=opts.get("exhaust_history",False),
                 market_client=source_client("market_client"),
-                independent_market_client=source_client("independent_market_client", opts.get("compare_market_sources")),
+                independent_market_client=source_client("independent_market_client", opts.get("compare_market_sources") or scope=="overview"),
                 compare_market_sources=opts.get("compare_market_sources",False),
                 narrative_client=source_client("narrative_client", opts.get("collect_narrative")),
                 collect_narrative=opts.get("collect_narrative",False),
@@ -914,6 +923,17 @@ class ClusterJobManager:
             "restored_from_saved_report": True,
             **_ca_query_fields(report),
         }
+
+    def market_series(self, mint, job_id, pool, period):
+        if period not in PERIODS or not self._valid_job_id(job_id):
+            raise ValueError("INVALID_CA_MARKET_QUERY")
+        report = self.latest(mint, job_id=job_id)
+        if not report or report.get("ca_job_id") != job_id or report.get("mint") != mint:
+            return None
+        peer=report_pool(mint,report.get("token_profile") or {},report.get("market") or {},pool)
+        if not peer or report.get("query_scope") not in {"overview","full"}:
+            return None
+        return {"job_id":job_id,**self.ca_market_series.read(mint,pool,peer,period)}
 
     def latest(self, mint: str, job_id: str | None = None) -> dict | None:
         mint = self.validate_mint(mint)
@@ -1798,6 +1818,17 @@ class Handler(BaseHTTPRequestHandler):
             job_id = (query.get("job_id") or [""])[0]
             job = self.state.cluster_jobs.get(job_id)
             return self._json(job if job is not None else {"error":"CLUSTER_JOB_NOT_FOUND"}, 200 if job is not None else 404)
+        if path == "/api/cluster-market-series":
+            if not self._research_origin():
+                return self._json({"error":"SAME_ORIGIN_READ_REQUIRED"},403)
+            try:
+                qs=parse_qs(urlparse(self.path).query,keep_blank_values=True,max_num_fields=4)
+                if set(qs)!={"job_id","mint","pool","period"} or any(len(v)!=1 for v in qs.values()):
+                    raise ValueError("INVALID_CA_MARKET_QUERY")
+                result=self.state.cluster_jobs.market_series(**{k:v[0] for k,v in qs.items()})
+            except ValueError:
+                return self._json({"error":"INVALID_CA_MARKET_QUERY"},400)
+            return self._json(result if result is not None else {"error":"CA_REPORT_POOL_NOT_FOUND"},200 if result is not None else 404)
         if path == "/api/cluster-narrative-supplement":
             try:
                 query = parse_qs(urlparse(self.path).query, keep_blank_values=True, max_num_fields=2)

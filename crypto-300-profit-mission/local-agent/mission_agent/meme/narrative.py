@@ -116,14 +116,11 @@ def extract_page_claim(raw,url,mint,observed_at):
     description=parser.meta.get('description') or parser.meta.get('og:description') or parser.meta.get('twitter:description') or ''
     combined=' '.join((title,text,description))
     if any(marker in combined.lower() for marker in ('just a moment','verify you are human','access denied','log in to x','enable javascript')):raise ValueError('ACCESS_WALL_OR_SCRIPT_ONLY')
-    if str(parser.language or '').lower().startswith('zh'):raise ValueError('SOURCE_LANGUAGE_NOT_SELECTED')
     host=urlsplit(url).hostname or ''
     boilerplate=description.lower().strip()
     if (host in {'pump.fun','www.pump.fun'} and boilerplate.startswith(('launch and trade','create and trade'))) or (host in {'x.com','twitter.com','www.x.com','www.twitter.com'} and boilerplate.startswith(('from breaking news','happening now'))):raise ValueError('NO_EXTRACTABLE_CLAIM')
     claim=description.strip() or text.strip()
     if len(claim)<20:raise ValueError('NO_EXTRACTABLE_CLAIM')
-    chinese=sum('\u4e00'<=c<='\u9fff' for c in claim)
-    if chinese>len(claim)*0.2:raise ValueError('SOURCE_LANGUAGE_NOT_SELECTED')
     exact=bool(re.search(r'(?<![1-9A-HJ-NP-Za-km-z])'+re.escape(mint)+r'(?![1-9A-HJ-NP-Za-km-z])',combined))
     published=None
     candidate=parser.meta.get('article:published_time') or parser.meta.get('datepublished')

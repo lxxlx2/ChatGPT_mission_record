@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Meme 研究控制台</title>
-  <link rel="stylesheet" href="/static/styles.css?v=ca-overview-v1">
+  <link rel="stylesheet" href="/static/styles.css?v=frank-ca-zh-market-v1">
 </head>
 <body>
   <header class="topbar">
@@ -446,6 +446,26 @@
         <div id="cluster-full-query-controls" class="cluster-detail-actions" hidden>
           <button type="button" class="link-btn" id="cluster-full-query">继续完整尽调</button>
         </div>
+        <section class="panel" id="cluster-series-panel" hidden>
+          <div class="panel-title"><div><h2>价格走势和近期成交</h2>
+          <p>只查看所选交易池，不会重扫链上历史。</p></div></div>
+          <div class="cluster-search-row">
+            <label for="cluster-series-pool">交易池</label><select id="cluster-series-pool"></select>
+            <label for="cluster-series-period">K 线周期</label>
+            <select id="cluster-series-period"><option value="5m">5 分钟</option><option value="1h">1 小时</option><option value="1d">1 天</option></select>
+            <button type="button" class="link-btn" id="cluster-series-load">读取所选池行情</button>
+          </div>
+          <p id="cluster-series-status" role="status"></p>
+          <div id="cluster-series-chart"></div>
+          <details class="cluster-detail-fold">
+            <summary>查看近期成交和交易者</summary>
+            <label for="cluster-series-side">方向</label>
+            <select id="cluster-series-side"><option value="ALL">全部</option><option value="BUY">买入</option><option value="SELL">卖出</option></select>
+            <label for="cluster-series-wallet">发起地址</label><input id="cluster-series-wallet" type="search" placeholder="完整地址（可选）">
+            <div id="cluster-series-trades"></div>
+            <div id="cluster-series-actors"></div>
+          </details>
+        </section>
         <details class="panel cluster-detail-fold">
           <summary>查看行情来源和池子对照</summary>
           <div id="cluster-market" class="fact-grid"></div>
@@ -508,7 +528,7 @@
   </main>
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
-  <script src="/static/app.js?v=frank-buys-v1"></script>
+  <script src="/static/app.js?v=frank-ca-zh-market-v1"></script>
   <script src="/static/frank_research.js?v=source-contract-v1"></script>
   <script src="/static/frank_watch_metadata.js?v=watch-metadata-v1"></script>
   <script src="/static/frank_evidence_manifests.js?v=manifest-v2"></script>

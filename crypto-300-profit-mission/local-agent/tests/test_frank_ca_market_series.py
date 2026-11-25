@@ -1,0 +1,157 @@
+from datetime import datetime, timezone
+import io
+import json
+from types import SimpleNamespace
+import urllib.error
+from urllib.parse import parse_qs, urlsplit
+
+from mission_agent.meme.ca_market_series import CAMarketSeries, report_pool
+from mission_agent.meme.holder_ranks import _b58
+from mission_agent.meme.narrative import extract_page_claim
+from mission_agent.mission_control.server import ClusterJobManager, Handler
+
+MINT, PEER, POOL, OTHER, ACTOR = [_b58(bytes([n])*32) for n in range(1,6)]
+SIG = _b58(bytes([3])*64)
+JOB = "a"*32
+AS_OF = 1796000500
+PROFILE = {"status":"OK","is_initialized":True}
+REVERSED = {"pair_address":POOL,"base_address":PEER,"quote_address":MINT}
+MARKET = {"chain":"solana","mint":MINT,"pool_candidates":[REVERSED]}
+
+
+def candles(*, base=PEER, quote=MINT):
+    return {"meta":{"base":{"address":base},"quote":{"address":quote}},
+            "data":{"type":"ohlcv_request_response","attributes":{"ohlcv_list":[
+                [AS_OF-100,2,3,1,2.7,80],[AS_OF-400,1,2,1,2,50],
+            ]}}}
+
+
+def event(index, *, receive=True, wallet=ACTOR, pool=POOL, change=None):
+    left,right=(PEER,MINT) if receive else (MINT,PEER)
+    return {"type":"trade","id":f"solana_event_{index}","attributes":{
+        "pool_address":pool,"from_token_address":left,"to_token_address":right,
+        "tx_hash":SIG,"tx_from_address":wallet,"kind":"provider-direction-is-ignored",
+        "block_timestamp":datetime.fromtimestamp(AS_OF-5,timezone.utc).isoformat(),
+        "from_token_amount":"9","to_token_amount":"3","price_from_in_usd":"1.6","price_to_in_usd":"2.1",
+        **(change or {}),
+    }}
+
+
+def test_reverse_pool_binds_only_exact_peers_and_candles_use_exact_mint():
+    assert report_pool(MINT,PROFILE,MARKET,POOL)==PEER
+    assert report_pool(MINT,PROFILE,MARKET,OTHER) is None
+    assert report_pool(MINT,{"status":"OK"},MARKET,POOL) is None
+    assert report_pool(MINT,PROFILE,{**MARKET,"chain":"eth"},POOL) is None
+    assert report_pool(MINT,PROFILE,{**MARKET,"pool_candidates":[REVERSED,{**REVERSED,"base_address":OTHER}]},POOL) is None
+    urls=[]
+    def source(req,timeout):
+        urls.append(req.full_url)
+        return io.BytesIO(json.dumps(candles() if "/ohlcv/" in req.full_url else {"data":[
+            event(1),event(1),event(2,receive=False,wallet=None),event(3,pool=OTHER),
+            event(4),event(4,change={"to_token_amount":"7"}),
+        ]}).encode())
+    series=CAMarketSeries(open_url=source,clock=lambda:AS_OF,monotonic=lambda:0)
+    result=series.read(MINT,POOL,PEER,"5m")
+    q=parse_qs(urlsplit(urls[0]).query)
+    assert q["token"]==[MINT] and q["currency"]==["usd"] and q["aggregate"]==["5"]
+    assert result["chart"]["rows"]==[[AS_OF-400,"1","2","1","2","50"],[AS_OF-100,"2","3","1","2.7","80"]]
+    trades=result["trades"]
+    assert [(r["side"],r["quantity"],r["price_usd"]) for r in trades["rows"]]==[
+        ("SELL","9","1.6"),("BUY","3","2.1")]
+    assert trades["rows"][0]["wallet"] is None
+    assert trades["coverage"]["unusable_rows"]==2
+    assert trades["coverage"]["scope"]=="FIRST_PAGE_LAST_24H_ONLY"
+    assert series.read(MINT,POOL,PEER,"5m")["chart"]["cache"]=="FRESH"
+    changed=series.read(MINT,POOL,PEER,"1h")
+    assert changed["trades"]["cache"]=="FRESH" and len(urls)==3
+
+
+def test_stale_keeps_original_clock_and_never_returns_other_pool_data():
+    now=[AS_OF]
+    urls=[]
+    def source(req,timeout):
+        url=req.full_url
+        urls.append(url)
+        if now[0] > AS_OF:
+            raise urllib.error.HTTPError(url,429,"rate limit",{},None)
+        return io.BytesIO(json.dumps(candles() if "/ohlcv/" in url else {"data":[]}).encode())
+    client=CAMarketSeries(open_url=source,clock=lambda:now[0],monotonic=lambda:now[0])
+    original=client.read(MINT,POOL,PEER,"5m")
+    now[0]+=62
+    refresh=client.read(MINT,POOL,PEER,"5m")
+    assert refresh["chart"]["status"]==refresh["trades"]["status"]=="STALE"
+    assert refresh["chart"]["observed_at"]==original["chart"]["observed_at"]==AS_OF
+    assert len(urls)==3
+    unseen=client.read(MINT,OTHER,PEER,"5m")
+    assert unseen["chart"]["status"]=="UNAVAILABLE" and unseen["chart"]["rows"]==[]
+    assert len(urls)==3
+
+
+def test_mismatched_source_and_bad_candles_do_not_hide_other_sections():
+    def source(req,timeout):
+        return io.BytesIO(json.dumps(candles(base=OTHER) if "/ohlcv/" in req.full_url else {"data":[event(1)]}).encode())
+    client=CAMarketSeries(open_url=source,clock=lambda:AS_OF,monotonic=lambda:0)
+    out=client.read(MINT,POOL,PEER,"5m")
+    assert out["chart"]["status"]=="UNAVAILABLE"
+    assert out["trades"]["status"]=="OK" and len(out["trades"]["rows"])==1
+
+
+def test_dashboard_read_is_bound_to_report_scope_and_same_origin(tmp_path):
+    jobs=ClusterJobManager(tmp_path)
+    seen=[]
+    jobs.ca_market_series=SimpleNamespace(read=lambda *args: seen.append(args) or {"pool":args[1]})
+    saved={"mint":MINT,"ca_job_id":JOB,"query_scope":"overview","token_profile":PROFILE,"market":MARKET}
+    jobs.latest=lambda *args,**kwargs:saved
+    handler=Handler.__new__(Handler)
+    handler._allowed_host=lambda:True
+    handler._research_origin=lambda:False
+    handler._json=lambda value,code=200:(value,code)
+    handler.state=SimpleNamespace(cluster_jobs=jobs)
+    handler.path=f"/api/cluster-market-series?job_id={JOB}&mint={MINT}&pool={POOL}&period=5m"
+    assert handler.do_GET()[1]==403
+    handler._research_origin=lambda:True
+    assert handler.do_GET()==({"job_id":JOB,"pool":POOL},200)
+    assert seen==[(MINT,POOL,PEER,"5m")]
+    handler.path=handler.path.replace(POOL,OTHER)
+    assert handler.do_GET()[1]==404
+    handler.path=handler.path.replace(OTHER,POOL)
+    saved["ca_job_id"]="b"*32
+    assert handler.do_GET()[1]==404
+    saved["ca_job_id"]=JOB
+    saved["query_scope"]="wallet"
+    assert handler.do_GET()[1]==404
+    handler.path+="&period=1h"
+    assert handler.do_GET()[1]==400 and len(seen)==1
+
+
+def test_chinese_source_is_not_discarded_or_labeled_as_claim():
+    raw='<html lang="zh-CN"><title>项目主页</title><p>社区用公开网页训练人工智能模型，内容由项目团队自行说明。</p></html>'.encode()
+    result=extract_page_claim(raw,"https://project.example.org/",MINT,AS_OF)
+    assert "训练人工智能模型" in result["excerpt"]
+    assert result["classification"]=="THIRD_PARTY_CLAIM" and not result["exact_ca_mentioned"]
+    assert result["official_recognition"]=="UNVERIFIED"
+
+
+def test_overview_uses_only_verified_reverse_target_field_and_ignores_wallet_symbol(monkeypatch):
+    from mission_agent.meme.cluster import WalletClusterAnalyzer
+    selected=[]
+    reverse={"status":"OK","source":"GECKOTERMINAL_PUBLIC_API","mint":MINT,"pool_address":POOL,
+             "quote_address":PEER,"price_usd":"0.002","response_sha256":"a"*64}
+    analyzer=WalletClusterAnalyzer(MINT,rpc=object(),special_registry={},query_scope="overview",
+        independent_market_client=SimpleNamespace(pool_snapshot=lambda *args:selected.append(args) or reverse))
+    emitted=[]
+    monkeypatch.setattr(analyzer,"token_profile", lambda: PROFILE)
+    monkeypatch.setattr(analyzer,"launch_snapshot",lambda *args:{})
+    monkeypatch.setattr(analyzer,"market_snapshot",lambda:{**MARKET,"reason":"NO_BASE_TOKEN_PAIR",
+        "pool_candidates":[{**REVERSED,"target_name":"Token fixture"}]})
+    monkeypatch.setattr(analyzer,"narrative_snapshot",lambda *args:{})
+    monkeypatch.setattr(analyzer,"_progress",lambda *args,**kwargs:emitted.append((args,kwargs)))
+    market=analyzer._identity_and_narrative()[2]
+    assert selected==[(MINT,POOL,PEER)]
+    assert market["reverse_market"]["price_usd"]=="0.002" and market["name"]=="Token fixture"
+    assert emitted[0][0]==("BASE_READY",) and emitted[0][1]["market"]==market
+    monkeypatch.setattr(analyzer,"token_profile", lambda: {"status":"UNAVAILABLE","reason":"MINT_ACCOUNT_TYPE_UNVERIFIED"})
+    market_calls=[]
+    monkeypatch.setattr(analyzer,"market_snapshot",lambda:market_calls.append(True))
+    assert analyzer._identity_and_narrative()[2]["status"]=="UNAVAILABLE"
+    assert market_calls==[]

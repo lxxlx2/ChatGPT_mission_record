@@ -84,7 +84,10 @@ class DexScreenerMarketClient:
             quote_address=quote.get("address") if isinstance(quote,dict) else None
             if mint not in (base_address,quote_address):
                 continue
-            pool_candidates.append({"pair_address":item.get("pairAddress"),"base_address":base_address,"quote_address":quote_address})
+            candidate={"pair_address":item.get("pairAddress"),"base_address":base_address,"quote_address":quote_address}
+            if quote_address==mint and base_address!=mint:
+                candidate.update(target_name=quote.get("name"),target_symbol=quote.get("symbol"))
+            pool_candidates.append(candidate)
             if base_address==mint:
                 pairs.append(item)
         if not pairs:

@@ -1279,6 +1279,7 @@ let clusterSubmitting = false;
 let clusterNarrativeSupplementEpoch = 0;
 let clusterNarrativeSupplementReport = null;
 let clusterCurrentView = null;
+let clusterSeriesVersion=0, clusterSeries=null;
 let clusterVisibleReport = null;
 
 function clusterClearNarrativeSupplement(preserveReport=false) {
@@ -1485,7 +1486,10 @@ function setView(name) {
   const view = name === 'cluster' ? 'cluster' : name === 'signals' || !hasBuyView ? 'signals' : 'buys';
   const previousView=clusterCurrentView;
   clusterCurrentView=view;
-  if (view!=='cluster') clusterClearNarrativeSupplement(true);
+  if (view!=='cluster') {
+    clusterClearNarrativeSupplement(true);
+    if (previousView==='cluster' && $('cluster-series-panel')) prepareClusterSeries(clusterVisibleReport);
+  }
   const heading=$('product-title');
   if (heading) heading.textContent=view==='cluster' ? 'CA 链上研究' : view==='buys' ? 'Frank 买入' : '历史与审计';
   document.querySelectorAll('.view-tab').forEach(btn => {
@@ -1641,10 +1645,7 @@ function clusterProgressDetail(job) {
   const p=job.progress || {};
   const stage=p.stage || job.status || 'RUNNING';
   if (stage==='BASE_READY') {
-    const name=[p.name,p.symbol].filter(Boolean).join(' · ') || 'Token 信息已读取';
-    return name + (p.market_cap_usd != null ? ' · MC ' + usd(p.market_cap_usd) : '') +
-      (p.liquidity_usd != null ? ' · LP ' + usd(p.liquidity_usd) : '') +
-      ' · 正在解析 Top20 owner';
+    return '已读取代币基础资料，正在核对持有人与池子。';
   }
   if (stage==='HOLDER_BINARY') return '正在同批读取 Mint 与有界账户的二进制余额；独立提供方仍未核实';
   if (stage==='SPECIAL_ROLES') return '正在同批核对多池金库与持有人账户角色';
@@ -1684,18 +1685,19 @@ function renderClusterPreview(job) {
     : (authRisk || extRisks) ? '存在活动权限或扩展风险'
     : extUnknown ? '部分扩展风险待核实'
     : '已解析权限未发现活动风险';
-  const ready=p.market_status==='OK';
+  const ready=known && p.market_bound===true;
+  const display=caDisplayIdentity(job.mint,p.launch_identity?.metadata,{mint:job.mint,name:p.name,symbol:p.symbol});
   const launch=p.launch_identity?.pump;
   node.hidden=false;
   node.innerHTML=
     '<div class="cluster-preview-head"><strong>' + (job.status==='ERROR' ? '查询未完成，保留已取得的结果' : '已取得的查询结果') + '</strong></div>' +
     '<div class="cluster-story">'+clusterNarrativeHeadline({mint:job.mint,narrative:p.narrative})+'</div>' +
     '<div class="cluster-preview-items">' +
-    fact('代币',esc([p.name,p.symbol].filter(Boolean).join(' / ') || '名称未确认'),'<code>'+esc(job.mint || '')+'</code>') +
+    fact('代币',esc([display.name,display.symbol].filter(Boolean).join(' / ')),'<code>'+esc(job.mint || '')+'</code>') +
     fact('发射',launch?.status==='VERIFIED_CHAIN_STATE' ? 'Pump.fun 链上已核实' : '发射来源尚未核实',
       launch?.status==='VERIFIED_CHAIN_STATE' && launch.creator ? '创建者 '+ownerCell(launch.creator) : '') +
     fact('参考价',ready ? esc(usd(p.price_usd,8)) : '暂不可用') +
-    fact(p.market_cap_usd == null ? 'FDV' : '市值',ready ? esc(usd(p.market_cap_usd ?? p.fdv_usd)) : '暂不可用') +
+    fact('全稀释估值（FDV）',ready ? esc(usd(p.fdv_usd)) : '暂不可用') +
     fact('主池流动性',ready ? esc(usd(p.liquidity_usd)) : '暂不可用',p.pair_address ? '<code>'+esc(short(p.pair_address,8,6))+'</code>' : '') +
     fact('24h 成交额',ready ? esc(usd(p.volume_h24_usd)) : '暂不可用',esc(clusterMarketFreshness(p.market_source,p.market_observed_at))) +
     fact('权限',esc(authority)) +
@@ -1877,22 +1879,37 @@ function clusterNarrativeHeadline(report) {
       typeof post.text==='string' && post.text.trim();
   });
   const pages=Array.isArray(narrative?.evidence) ? narrative.evidence : [];
-  const websiteEvidence=[...pages,origin?.creator_website_evidence].find(row=>
+  const websiteEvidence=[...pages,origin?.creator_website_evidence].filter(row=>
     row?.classification==='THIRD_PARTY_CLAIM' && typeof row.excerpt==='string' && row.excerpt.trim() &&
     digest(row.response_sha256) && clusterPublicEvidenceUrl(row.source_url));
   const creator=origin?.creator_metadata;
   const metadata=typeof creator?.description==='string' && digest(creator.response_sha256) ? creator.description.trim() : '';
   const primaryPost=publicPost.find(post=>post.relation==='LINKED_BY_CREATOR_METADATA') ||
     publicPost.find(post=>['LINKED_BY_MARKET_SOCIAL','LINKED_BY_READ_PAGE'].includes(post.relation));
-  const text=metadata || primaryPost?.text || websiteEvidence?.excerpt;
-  const at=primaryPost?.created_at;
-  const clipped=text ? String(text).trim().replace(/\s+/g,' ') : '';
-  const brief=clipped.length>220 ? clipped.slice(0,219).trimEnd()+'…' : clipped;
-  const source=metadata ? '创建者元数据自述'
-    : primaryPost ? '@'+primaryPost.author+' 原帖 · '+clusterMarketFreshness(null,at)
-    : websiteEvidence ? (websiteEvidence.publisher_host || websiteEvidence.title || '公开页面')+' · 页面陈述'
-    : '';
-  const storyUrl=metadata ? clusterPublicEvidenceUrl(creator.uri) : clusterPublicEvidenceUrl(primaryPost?.url || websiteEvidence?.source_url);
+  const hasChinese=text=>typeof text==='string' && (text.match(/\p{Script=Han}/gu)||[]).length>=4;
+  const sources=[
+    {text:metadata, label:'链上元数据指向的项目自述',url:clusterPublicEvidenceUrl(creator?.uri)},
+    ...[primaryPost,...publicPost.filter(post=>post!==primaryPost && ['LINKED_BY_CREATOR_METADATA','LINKED_BY_MARKET_SOCIAL','LINKED_BY_READ_PAGE'].includes(post.relation))].filter(Boolean).map(post=>({text:post.text,label:'@'+post.author+' 原帖 · '+clusterMarketFreshness(null,post.created_at),url:clusterPublicEvidenceUrl(post.url)})),
+    ...websiteEvidence.map(row=>({text:row.excerpt,label:(row.publisher_host||'公开页面')+' · 页面陈述 · '+clusterMarketFreshness(null,row.first_seen_at),url:clusterPublicEvidenceUrl(row.source_url),row})),
+  ].filter(item=>item.text && item.url);
+  const chinese=sources.find(item=>hasChinese(item.text));
+  const stories=[...pages,origin?.creator_website_evidence].filter(row=>
+    row?.classification==='THIRD_PARTY_CLAIM' && digest(row.response_sha256) &&
+    digest(row.content_sha256) && row.story?.version===1 && row.story.interaction_status==='UNVERIFIED' &&
+    clusterPublicEvidenceUrl(row.source_url));
+  const themeNames=new Set(['AI／模型训练','爬虫／智能体','动物／社区模因','游戏／虚拟世界','文化／艺术','人物／事件关联说法']);
+  const themed=stories.find(row=>Array.isArray(row.story.themes) && row.story.themes.some(theme=>themeNames.has(theme)));
+  const src=chinese || (themed ? {
+    label:(themed.publisher_host||'公开页面')+' · 已读来源 · '+clusterMarketFreshness(null,themed.first_seen_at),
+    url:clusterPublicEvidenceUrl(themed.source_url),
+  } : sources[0]);
+  const clipped=chinese?.text.trim().replace(/\s+/g,' ') || '';
+  const brief=chinese ? (clipped.length>220 ? clipped.slice(0,219).trimEnd()+'…' : clipped)
+    : themed ? '已读来源提及'+[...new Set(themed.story.themes.filter(theme=>themeNames.has(theme)))].join('、')+
+      '。这是来源陈述，实际事件及项目归属需分别核实。'
+    : src ? '已读取原文，暂无可核实的中文摘要。' : '';
+  const source=src?.label || '';
+  const storyUrl=src?.url || '';
   const postsByUrl=new Map(publicPost.map(post=>[clusterPublicEvidenceUrl(post.url),post]));
   const relations=(Array.isArray(origin?.interactions) ? origin.interactions : []).filter(row=>row?.status==='API_REPORTED_STRUCTURAL_RELATION' &&
     ['REPLY','QUOTE'].includes(row.type) && postsByUrl.has(clusterPublicEvidenceUrl(row.from)) &&
@@ -1930,7 +1947,8 @@ function renderNarrativeOrigin(report) {
   const when=t=>Number.isFinite(Number(t))&&Number(t)>0?new Date(Number(t)*1000).toLocaleString('zh-CN'):'未记录';
   const cm=o.creator_metadata;
   const linkStatus={CREATOR_METADATA_LINKS_POST:'创建者写入链上元数据的链接指向下列帖子（创建者自声明，帖子本身未提及 CA）',POST_MENTIONS_EXACT_CA:'已读帖子正文包含精确 CA',UNVERIFIED:'未找到把精确 CA 与帖子绑定的证据'}[o.ca_link_status]||o.ca_link_status;
-  const links=cm?Object.entries(cm.links||{}).map(([k,v])=>{const u=safeHttpUrl(v);return u?'<a class="link-btn" href="'+esc(u)+'" target="_blank" rel="noreferrer">'+esc(k)+' ↗</a>':'';}).join(''):'';
+  const linkLabels={website:'项目网站',twitter:'社交账号',telegram:'社群',createdOn:'发射来源'};
+  const links=cm?Object.entries(cm.links||{}).map(([k,v])=>{const u=safeHttpUrl(v);return u&&Object.hasOwn(linkLabels,k)?'<a class="link-btn" href="'+esc(u)+'" target="_blank" rel="noreferrer">'+esc(linkLabels[k])+' ↗</a>':'';}).join(''):'';
   const posts=(o.posts||[]).map(p=>{const u=safeHttpUrl(p.url);
     const rel={LINKED_BY_CREATOR_METADATA:'链上元数据链接的帖子',LINKED_BY_MARKET_SOCIAL:'市场资料链接的帖子',LINKED_BY_READ_PAGE:'已读页面链接的帖子',QUOTE:'被另一帖引用',REPLY:'被另一帖回复',QUOTED_BY_PREVIOUS:'被上一条帖子引用',REPLIED_TO_BY_PREVIOUS:'被上一条帖子回复'}[p.relation]||'原帖来源';
     return '<article class="cluster-card"><strong>'+esc(rel)+'</strong><p>@'+esc(p.author||'?')+(p.author_verified?'（已认证）':'')+' · 粉丝 '+esc(p.author_followers??'未知')+' · 发布 '+esc(when(p.created_at))+'</p><p>'+esc(p.text||'')+'</p><p>互动：赞 '+esc(p.likes??'-')+' · 转 '+esc(p.reposts??'-')+' · 引用 '+esc(p.quotes??'-')+' · 浏览 '+esc(p.views??'-')+'；'+(p.exact_ca_mentioned?'正文包含精确 CA':'正文未提及 CA')+'</p>'+(u?'<a class="link-btn" href="'+esc(u)+'" target="_blank" rel="noreferrer">原帖 ↗</a>':'')+'</article>';}).join('');
@@ -2553,6 +2571,164 @@ function renderClusterWalletReport(report) {
     renderClusterHistoryWindows(report.coverage || {})+'</details>';
 }
 
+function seriesAddress(v) { return typeof v==='string' && /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(v); }
+function clusterSeriesPools(report) {
+  const m=report?.market;
+  if (!report || report.token_profile?.status!=='OK' || report.token_profile?.is_initialized!==true ||
+      m?.chain!=='solana' || m.mint!==report.mint || !seriesAddress(report.mint) ||
+      !['overview','full'].includes(report.query_scope) || !/^[a-f0-9]{32}$/.test(report.ca_job_id||'')) return [];
+  const candidates=[m.main_pair,...(Array.isArray(m.pool_candidates)?m.pool_candidates:[])].filter(Boolean);
+  const bound=new Map();
+  for (const p of candidates) {
+    if (!seriesAddress(p.pair_address)) continue;
+    const a=p.base_address,b=p.quote_address;
+    const peer=seriesAddress(a) && seriesAddress(b) && new Set([a,b,p.pair_address]).size===3
+      ? a===report.mint ? b : b===report.mint ? a : null : null;
+    if (!bound.has(p.pair_address)) bound.set(p.pair_address,peer);
+    else if (bound.get(p.pair_address)!==peer) bound.set(p.pair_address,null);
+  }
+  return [...bound].filter(([,peer])=>peer).map(([pool])=>pool);
+}
+
+function clearClusterSeries() {
+  clusterSeriesVersion++;
+  clusterSeries=null;
+  $('cluster-series-chart').innerHTML='';
+  $('cluster-series-trades').innerHTML='';
+  $('cluster-series-actors').innerHTML='';
+}
+
+function prepareClusterSeries(report) {
+  if (!$('cluster-series-panel')) return;
+  clearClusterSeries();
+  const pools=clusterSeriesPools(report);
+  $('cluster-series-panel').hidden=!pools.length;
+  $('cluster-series-pool').innerHTML=pools.map((pool,i)=>
+    '<option value="'+esc(pool)+'">'+esc((i===0?'首选 · ':'')+pool)+'</option>').join('');
+  $('cluster-series-load').disabled=false;
+  $('cluster-series-status').textContent='请选择交易池并读取行情。';
+  $('cluster-series-side').value='ALL';
+  $('cluster-series-wallet').value='';
+}
+
+function clusterSeriesChart(chart) {
+  if (!chart || !['OK','STALE'].includes(chart.status)) return '<p>价格走势暂未取得。</p>';
+  const rows=(Array.isArray(chart.rows)?chart.rows:[]).filter(row=>Array.isArray(row)&&row.length===6 &&
+    row.every((v,i)=>Number.isFinite(Number(v)) && (i===5?Number(v)>=0:Number(v)>0)));
+  if (!rows.length) return '<p>此池本窗口未返回 K 线。</p>';
+  const high=Math.max(...rows.map(x=>+x[2])),low=Math.min(...rows.map(x=>+x[3]));
+  const maxV=Math.max(...rows.map(x=>+x[5]),1e-100), first=+rows[0][0], last=+rows.at(-1)[0];
+  const pos=(at)=>last===first ? 380 : 28+Math.max(0,Math.min(1,(at-first)/(last-first)))*704;
+  const y=(p)=>high===low ? 66 : 124-Math.max(0,Math.min(1,(p-low)/(high-low)))*112;
+  const width=Math.max(2,Math.min(8,500/rows.length));
+  const bars=rows.map((row)=>{
+    const [at,o,h,l,c,v]=row.map(Number),x=pos(at),stroke=c>=o?'#37c593':'#ed7883';
+    const label=clusterMarketFreshness(null,at)+' · 开 '+row[1]+' · 高 '+row[2]+' · 低 '+row[3]+' · 收 '+row[4]+' · 成交额 '+row[5]+' USD';
+    return '<g><title>'+esc(label)+'</title><line x1="'+x+'" y1="'+y(h)+'" x2="'+x+'" y2="'+y(l)+'" stroke="'+stroke+'"/>'+
+      '<rect x="'+(x-width/2)+'" y="'+Math.min(y(o),y(c))+'" width="'+width+'" height="'+Math.max(1,Math.abs(y(o)-y(c)))+'" fill="'+stroke+'"/>'+
+      '<rect x="'+(x-width/2)+'" y="'+(158-v/maxV*22)+'" width="'+width+'" height="'+(v/maxV*22)+'" fill="'+stroke+'" opacity=".55"/></g>';
+  }).join('');
+  const values=rows.slice().reverse().map(row=>'<tr><td>'+esc(clusterMarketFreshness(null,row[0]))+'</td>'+
+    row.slice(1).map(v=>'<td>'+esc(v)+'</td>').join('')+'</tr>').join('');
+  return '<p>'+esc((chart.status==='STALE'?'更新失败，保留上次读取 · ':'索引读取 · ')+clusterMarketFreshness(null,chart.observed_at))+
+    ' · USD · 首尾 '+esc(clusterMarketFreshness(null,first)+' 至 '+clusterMarketFreshness(null,last))+'</p>'+
+    '<svg class="cluster-series-svg" viewBox="0 0 760 164" role="img" aria-label="所选池美元价格 K 线及成交额">'+bars+'</svg>'+
+    '<details><summary>逐根 K 线数据</summary><div class="holder-table-wrap"><table class="holder-table">'+
+    '<thead><tr><th>时间</th><th>开盘</th><th>最高</th><th>最低</th><th>收盘</th><th>成交额（USD）</th></tr></thead><tbody>'+values+'</tbody></table></div></details>';
+}
+
+function renderClusterSeriesTrades() {
+  const section=clusterSeries?.trades;
+  if (!section || !['OK','STALE'].includes(section.status)) {
+    $('cluster-series-trades').innerHTML='<p>近期成交暂未取得。</p>';
+    $('cluster-series-actors').innerHTML='';
+    return;
+  }
+  const side=$('cluster-series-side').value,wallet=$('cluster-series-wallet').value.trim();
+  const rows=Array.isArray(section.rows)?section.rows:[];
+  const selected=rows.filter(r=>(side==='ALL'||r.side===side)&&(!wallet||r.wallet===wallet));
+  const actors=new Map();
+  for (const r of selected) {
+    if (!r.wallet) continue;
+    const counts=actors.get(r.wallet)||[0,0];
+    counts[r.side==='BUY'?0:1]++;
+    actors.set(r.wallet,counts);
+  }
+  const entries=[...actors].sort((a,b)=>(b[1][0]+b[1][1])-(a[1][0]+a[1][1])||a[0].localeCompare(b[0]));
+  const coverage=section.coverage || {};
+  const tx=/^[1-9A-HJ-NP-Za-km-z]{64,88}$/;
+  const body=selected.map(r=>'<tr><td>'+esc(clusterMarketFreshness(null,r.at))+'</td><td>'+(r.side==='BUY'?'买入':'卖出')+
+    '</td><td>'+esc(r.quantity)+'</td><td>'+esc(r.price_usd??'未取得')+'</td><td>'+
+    (seriesAddress(r.wallet)?ownerCell(r.wallet):'未知')+'</td><td>'+
+    (tx.test(r.signature)?'<a href="https://solscan.io/tx/'+encodeURIComponent(r.signature)+'" target="_blank" rel="noreferrer">原交易 ↗</a>':'未核实')+'</td></tr>').join('');
+  $('cluster-series-trades').innerHTML='<p>'+esc((section.status==='STALE'?'更新失败，保留上次读取 · ':'')+
+    '所选池最近 24 小时索引首批数据，非完整历史。实际首尾：'+clusterMarketFreshness(null,coverage.earliest)+' 至 '+
+    clusterMarketFreshness(null,coverage.latest)+(coverage.has_more?'；可能仍有未读取记录。':'。')+
+    (coverage.unusable_rows?' 有 '+coverage.unusable_rows+' 条来源记录未通过核对。':''))+'</p>'+
+    (body?'<div class="holder-table-wrap"><table class="holder-table"><thead><tr><th>时间</th><th>方向</th><th>目标币数量</th><th>USD 单价</th><th>发起地址</th><th>交易</th></tr></thead><tbody>'+body+'</tbody></table></div>':'<p>当前范围没有可展示的成交。</p>');
+  $('cluster-series-actors').innerHTML='<h3>本窗口交易者</h3><p>以下只按可归属的发起地址统计；'+
+    esc(selected.filter(r=>!r.wallet).length)+' 条发起地址未知。</p>'+
+    (entries.length?'<ul>'+entries.map(([who,[buy,sell]])=>'<li><code>'+esc(who)+'</code>：买 '+buy+' · 卖 '+sell+'</li>').join('')+'</ul>':'');
+}
+
+async function loadClusterSeries() {
+  const report=clusterVisibleReport,pool=$('cluster-series-pool').value,period=$('cluster-series-period').value;
+  if (!clusterSeriesPools(report).includes(pool) || !['5m','1h','1d'].includes(period) ||
+      $('cluster-mint').value.trim()!==report.mint || $('cluster-result').hidden) return;
+  clearClusterSeries();
+  const generation=clusterSeriesVersion;
+  const status=$('cluster-series-status'),button=$('cluster-series-load');
+  button.disabled=true;
+  status.textContent='正在读取所选池…';
+  try {
+    const query=new URLSearchParams({mint:report.mint,job_id:report.ca_job_id,pool,period});
+    const response=await fetch('/api/cluster-market-series?'+query,{cache:'no-store',headers:{'X-Frank-Research-Read':'1'}});
+    const result=await response.json();
+    if (generation!==clusterSeriesVersion || report!==clusterVisibleReport || clusterCurrentView!=='cluster' ||
+        pool!==$('cluster-series-pool').value || period!==$('cluster-series-period').value ||
+        $('cluster-mint').value.trim()!==report.mint || $('cluster-result').hidden) return;
+    if (!response.ok || result.mint!==report.mint || result.job_id!==report.ca_job_id || result.pool!==pool ||
+        result.period!==period || result.source!=='GECKOTERMINAL_PUBLIC_API' || result.currency!=='USD') throw new Error();
+    clusterSeries=result;
+    $('cluster-series-chart').innerHTML=clusterSeriesChart(result.chart);
+    renderClusterSeriesTrades();
+    status.textContent='所选池：'+pool+' · GeckoTerminal';
+  } catch (_) {
+    if(generation===clusterSeriesVersion) status.textContent='未能读取或核对该池行情。原查询报告保留。';
+  } finally {
+    if(generation===clusterSeriesVersion) button.disabled=false;
+  }
+}
+
+if ($('cluster-series-load')) {
+  $('cluster-series-load').addEventListener('click',loadClusterSeries);
+  for (const id of ['cluster-series-pool','cluster-series-period']) $(id).addEventListener('change',()=>{
+    clearClusterSeries();
+    $('cluster-series-load').disabled=false;
+    $('cluster-series-status').textContent='所选池或周期已更改，请读取行情。';
+  });
+  $('cluster-series-side').addEventListener('change',renderClusterSeriesTrades);
+  $('cluster-series-wallet').addEventListener('input',renderClusterSeriesTrades);
+}
+function verifiedReversedMarket(report) {
+  const m=report.market || {}, r=m.reverse_market;
+  if (report.token_profile?.status!=='OK' || report.token_profile?.is_initialized!==true ||
+      m.chain!=='solana' || m.mint!==report.mint || r?.mint!==report.mint || r.status!=='OK' ||
+      r.source!=='GECKOTERMINAL_PUBLIC_API' || !/^[a-f0-9]{64}$/.test(r.response_sha256 || '')) return null;
+  const candidates=(Array.isArray(m.pool_candidates)?m.pool_candidates:[]).filter(p=>p?.pair_address===r.pool_address);
+  return candidates.length && candidates.every(p=>p.quote_address===report.mint && p.base_address===r.quote_address &&
+    [p.pair_address,p.base_address,p.quote_address].every(seriesAddress) &&
+    new Set([p.pair_address,p.base_address,p.quote_address]).size===3) ? r : null;
+}
+
+function caDisplayIdentity(mint, metadata, market) {
+  const chain=metadata?.status==='VERIFIED_CHAIN_STATE' && metadata.mint===mint ? metadata : null;
+  const index=market?.mint===mint ? market : null;
+  const name=String(chain?.name || index?.name || '').trim();
+  const symbol=String(chain?.symbol || index?.symbol || '').trim();
+  return {name:name || symbol || '名称未核实',symbol:name && symbol && name.toLowerCase()!==symbol.toLowerCase() ? symbol : ''};
+}
+
 function renderClusterReport(report) {
   clusterClearNarrativeSupplement();
   clusterVisibleReport=report;
@@ -2561,6 +2737,7 @@ function renderClusterReport(report) {
   $('cluster-wallet-panel').hidden = true;
   $('cluster-full-query-controls').hidden=report.query_scope!=='overview' || !/^[0-9a-f]{32}$/.test(report.ca_job_id || '');
   $('cluster-story').innerHTML=clusterNarrativeHeadline(report);
+  prepareClusterSeries(report);
   renderClusterOpening(report);
   renderHolderRankings(report);
   renderClusterCompleteness(report);
@@ -2584,16 +2761,28 @@ function renderClusterReport(report) {
     ? new Date(observedAt * 1000).toLocaleString('zh-CN')
     : '时间未知';
   const observedAge = Number.isFinite(observedAt) ? age(observedAt) : '时间未知';
-  const tokenName = market.name || '名称未取到';
-  const tokenSymbol = market.symbol || '—';
+  const {name:tokenName,symbol:tokenSymbol}=caDisplayIdentity(mint,report.launch_identity?.metadata,market);
+  const marketBound=profile.status==='OK' && profile.is_initialized===true && market.status==='OK' &&
+    market.chain==='solana' && market.mint===mint && mainPair.base_address===mint &&
+    /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(mainPair.pair_address || '') &&
+    /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(mainPair.quote_address || '') &&
+    new Set([mint,mainPair.pair_address,mainPair.quote_address]).size===3 &&
+    (!Array.isArray(market.pool_candidates) || market.pool_candidates.filter(p=>p?.pair_address===mainPair.pair_address)
+      .every(p=>(p.base_address===mint && p.quote_address===mainPair.quote_address) ||
+        (p.quote_address===mint && p.base_address===mainPair.quote_address)));
+  const reverse=marketBound ? null : verifiedReversedMarket(report);
+  const price=marketBound ? market.price_usd : reverse?.price_usd;
+  const liquidity=marketBound ? mainPair.liquidity_usd : reverse?.pool_liquidity_usd;
+  const positive=v=>v!==null && v!==undefined && Number.isFinite(Number(v)) && Number(v)>0;
 
   $('cluster-summary').innerHTML = [
-    ['代币', '<span>' + esc(tokenName) + '</span><span class="subvalue">' + esc(tokenSymbol) + '</span>'],
+    ['代币', '<span>' + esc(tokenName) + '</span>' + (tokenSymbol ? '<span class="subvalue">' + esc(tokenSymbol) + '</span>' : '')],
     ['CA', '<code class="summary-ca">' + esc(mint) + '</code>' + copyButton(mint,'复制 CA')],
-    ['参考价', market.status==='OK' && market.price_usd != null ? esc('$'+smallPrice(market.price_usd)) : '<span class="unresolved">不可用</span>'],
-    [market.market_cap_usd==null?'FDV':'市值', esc(usd(market.market_cap_usd ?? market.fdv_usd ?? mainPair.fdv_usd))],
-    ['流动性', esc(usd(mainPair.liquidity_usd))],
-    ['24h 成交额',esc(usd(mainPair.volume?.h24))+'<span class="subvalue">'+esc(clusterMarketFreshness(market.source,market.observed_at))+'</span>'],
+    ['参考价', positive(price) ? esc('$'+smallPrice(price)) : '<span class="unresolved">不可用</span>'],
+    ['全稀释估值（FDV）', esc(usd(marketBound ? (market.fdv_usd ?? mainPair.fdv_usd) : null))],
+    ['流动性', esc(usd(liquidity))],
+    ['24 小时成交额',esc(usd(marketBound ? mainPair.volume?.h24 : null))+'<span class="subvalue">'+
+      esc(marketBound ? clusterMarketFreshness(market.source,market.observed_at) : reverse ? clusterMarketFreshness(reverse.source,reverse.observed_at) : '交易对或代币未核实')+'</span>'],
   ].map(([k,v]) => '<div class="cluster-summary-card"><span>' + k + '</span><strong>' + v + '</strong></div>').join('');
 
   const activeAuthorities = assessment.active_authorities || [];
@@ -2631,10 +2820,10 @@ function renderClusterReport(report) {
   }
 
   let marketConclusion = '当前市场数据未取到。';
-  if (market.status === 'OK') {
+  if (marketBound && positive(price)) {
     const h24 = (mainPair.volume || {}).h24;
     marketConclusion = '参考价 $' + smallPrice(market.price_usd) +
-      ' · MC ' + usd(market.market_cap_usd) +
+      ' · 全稀释估值 ' + usd(market.fdv_usd) +
       ' · 主池流动性 ' + usd(mainPair.liquidity_usd) +
       ' · 24h 成交 ' + usd(h24) + '。';
   }
@@ -2676,15 +2865,17 @@ function renderClusterReport(report) {
     ? '<a class="link-btn compact" href="https://solscan.io/account/' + encodeURIComponent(mainPair.pair_address) + '" target="_blank" rel="noreferrer">Pool ↗</a>'
     : '';
 
-  $('cluster-market').innerHTML =
+  $('cluster-market').innerHTML = (marketBound ?
     fact('查询时参考价','<span>' + (market.status==='OK' && market.price_usd != null ? '$'+smallPrice(market.price_usd) : '<span class="unresolved">不可用</span>') + '</span>','DexScreener 参考价') +
-    fact('Market Cap','<span>' + (market.status==='OK' ? usd(market.market_cap_usd) : '暂无') + '</span>') +
+    fact('全稀释估值（FDV）','<span>' + usd(market.fdv_usd) + '</span>') +
     fact('主池流动性','<span>' + (market.status==='OK' ? usd(mainPair.liquidity_usd) : '暂无') + '</span>') +
     fact('24h 成交额','<span>' + (market.status==='OK' ? usd((mainPair.volume || {}).h24) : '暂无') + '</span>') +
     fact('24h 买 / 卖','<span>' + esc((h24tx.buys ?? '—') + ' / ' + (h24tx.sells ?? '—')) + '</span>') +
     fact('1h 买 / 卖','<span>' + esc((h1tx.buys ?? '—') + ' / ' + (h1tx.sells ?? '—')) + '</span>') +
     fact('价格变化','<span>1h ' + esc(pctText((mainPair.price_change || {}).h1)) + ' · 24h ' + esc(pctText((mainPair.price_change || {}).h24)) + '</span>') +
-    fact('主池 / DEX','<span>' + esc((mainPair.dex_id || '未确认') + ' · ' + short(mainPair.pair_address || '',7,5)) + '</span>',pairLink + ' ' + marketUrl) + renderMarketComparison(market,mint) + renderPoolVaults(report);
+    fact('主池 / DEX','<span>' + esc((mainPair.dex_id || '未确认') + ' · ' + short(mainPair.pair_address || '',7,5)) + '</span>',pairLink + ' ' + marketUrl) + renderMarketComparison(market,mint) :
+    reverse ? fact('目标 CA 的参考价','<span>'+esc(positive(price)?'$'+smallPrice(price):'暂无')+'</span>', '独立索引提供的目标币美元字段') :
+    '<p>未取得可绑定本代币与交易池的市场报价。</p>') + renderPoolVaults(report);
 
   const primary = [
     'RAW_TOP10_PCT','KNOWN_EX_LP_TOP10_PCT','DEV_LINKED_CLUSTER_PCT',

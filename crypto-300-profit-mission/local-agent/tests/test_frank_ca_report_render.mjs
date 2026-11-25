@@ -12,7 +12,7 @@ const jobId='aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
 const fixture={
   mint,observed_at:1792683606,
   coverage:{special_normalization_complete:false,top_accounts_resolved:1,deep_holders_scanned:1,rpc_endpoint_failures:{}},
-  market:{status:'UNAVAILABLE',name:'FIXTURE_REPORT',symbol:'QA',main_pair:{}},
+  market:{status:'UNAVAILABLE',mint,chain:'solana',name:'FIXTURE_REPORT',symbol:'QA',main_pair:{}},
   metrics:{},assessment:{chain_permission_status:'UNRESOLVED',cluster_status:'WALLET_CLUSTER_UNRESOLVED'},
   token_profile:{status:'UNAVAILABLE'},holders:[],limitations:['FIXTURE_ONLY_NOT_CHAIN_DATA'],
   transaction_errors:[],
@@ -911,7 +911,8 @@ test('missing historical proof context never upgrades a close string to confirme
 
 test('market comparison displays same-pool source values and differences without a parity PASS',()=>{
   const h=harness();const report=structuredClone(fixture);const pool='11111111111111111111111111111112',quote='11111111111111111111111111111113';
-  report.market={status:'OK',mint,source:'DEXSCREENER_API',observed_at:100,price_usd:'2',main_pair:{pair_address:pool,base_address:mint,quote_address:quote,liquidity_usd:'1000'},independent_market:{status:'OK',source:'GECKOTERMINAL_PUBLIC_API',attempted:true,pool_address:pool,mint,quote_address:quote,observed_at:102},comparison:{status:'INDEXER_SNAPSHOTS_COMPARED',pool_address:pool,mint,quote_address:quote,retrieval_gap_seconds:2,same_chain_snapshot:false,provider_asof:'UNVERIFIED',metrics:{price_usd:{status:'COMPARED',primary:'2',independent:'2.5',difference:'0.5',difference_pct_of_primary:'25.0000'},pool_liquidity_usd:{status:'COMPARED',primary:'1000',independent:'900',difference:'-100',difference_pct_of_primary:'-10.0000'}}}};
+  report.token_profile={status:'OK',is_initialized:true};
+  report.market={status:'OK',chain:'solana',mint,source:'DEXSCREENER_API',observed_at:100,price_usd:'2',main_pair:{pair_address:pool,base_address:mint,quote_address:quote,liquidity_usd:'1000'},independent_market:{status:'OK',source:'GECKOTERMINAL_PUBLIC_API',attempted:true,pool_address:pool,mint,quote_address:quote,observed_at:102},comparison:{status:'INDEXER_SNAPSHOTS_COMPARED',pool_address:pool,mint,quote_address:quote,retrieval_gap_seconds:2,same_chain_snapshot:false,provider_asof:'UNVERIFIED',metrics:{price_usd:{status:'COMPARED',primary:'2',independent:'2.5',difference:'0.5',difference_pct_of_primary:'25.0000'},pool_liquidity_usd:{status:'COMPARED',primary:'1000',independent:'900',difference:'-100',difference_pct_of_primary:'-10.0000'}}}};
   vm.runInContext('renderClusterReport(__report)',Object.assign(h.context,{__report:report}));
   const html=h.element('cluster-market').innerHTML;
   assert.match(html,/GeckoTerminal/);assert.match(html,/25.0000%/);assert.match(html,/-10.0000%/);
@@ -924,7 +925,8 @@ test('market comparison displays same-pool source values and differences without
 
 test('mismatched comparison identity masks metrics even when its status claims compared',()=>{
   const h=harness();const report=structuredClone(fixture);
-  report.market={status:'OK',main_pair:{pair_address:mint},independent_market:{status:'OK'},comparison:{status:'INDEXER_SNAPSHOTS_COMPARED',mint:'OTHER',pool_address:'OTHER',metrics:{price_usd:{status:'COMPARED',primary:'2',independent:'2.5',difference_pct_of_primary:'999.1234'}}}};
+  report.token_profile={status:'OK',is_initialized:true};
+  report.market={status:'OK',chain:'solana',mint,main_pair:{pair_address:'11111111111111111111111111111112',base_address:mint,quote_address:'11111111111111111111111111111113'},independent_market:{status:'OK'},comparison:{status:'INDEXER_SNAPSHOTS_COMPARED',mint:'OTHER',pool_address:'OTHER',metrics:{price_usd:{status:'COMPARED',primary:'2',independent:'2.5',difference_pct_of_primary:'999.1234'}}}};
   vm.runInContext('renderClusterReport(__report)',Object.assign(h.context,{__report:report}));
   assert.match(h.element('cluster-market').innerHTML,/独立来源身份未核实/);
   assert.doesNotMatch(h.element('cluster-market').innerHTML,/999.1234/);
@@ -1672,7 +1674,8 @@ test('the first view shows a sourced story independently of exact CA recognition
     narrative:report.narrative, token_status:'OK', market_status:'OK', market_cap_usd:123456,
   }});
   const view=h.element('cluster-preview').innerHTML;
-  assert.match(view,/A crawler trains an AI model/);
+  assert.match(view,/AI／模型训练、爬虫／智能体/);
+  assert.doesNotMatch(view,/A crawler trains an AI model/);
   assert.match(view,/href="https:\/\/project\.example\.org\/"/);
   assert.match(view,/CA 认领[\s\S]*已读来源中未找到可验证认领/);
   assert.doesNotMatch(view,/已核实链上资料关联账号/);
@@ -1692,7 +1695,8 @@ test('first view shows source-bound interaction and requires exact Mint and sour
   };
   h.context.renderClusterReport(report);
   const view=h.element('cluster-story').innerHTML;
-  assert.match(view,/cat in space &lt;script&gt;/);
+  assert.doesNotMatch(view,/cat in space|<script>/);
+  assert.match(h.element('cluster-narrative').innerHTML,/cat in space &lt;script&gt;/);
   assert.match(view,/@elonmusk 回复了 @example/);
   assert.match(view,/CA 认领[\s\S]*已核实链上资料关联账号/);
   assert.match(view,/href="https:\/\/x\.com\/example\/status\/123"/);
@@ -1763,4 +1767,56 @@ test('Frank default buys render as facts without loading market or old signal fe
   assert.equal(h.element('frank-buy-rows').innerHTML,'');
   assert.match(h.element('frank-buy-status').textContent,/不代表链上没有买入/);
   assert.deepEqual(paths,['/api/frank-buys?days=7','/api/frank-buys?days=7&mint='+mint]);
+});
+
+test('Chinese CA summary deduplicates chain name and withholds a mismatched market',()=>{
+  const h=harness(), report=storyReport();
+  report.launch_identity={metadata:{status:'VERIFIED_CHAIN_STATE',mint,name:'Agency',symbol:'AGENCY'}};
+  report.market={status:'OK',chain:'solana',mint:pendingMint,name:'错代币',symbol:'错',price_usd:'99'};
+  report.narrative.evidence.push({...report.narrative.evidence[0],excerpt:'该社区用公开网页训练人工智能模型。'});
+  h.context.renderClusterReport(report);
+  const summary=h.element('cluster-summary').innerHTML;
+  assert.equal((summary.match(/Agency/gi)||[]).length,1);
+  assert.doesNotMatch(summary,/错代币|\$99/);
+  assert.match(h.element('cluster-story').innerHTML,/该社区用公开网页训练人工智能模型/);
+});
+
+test('explicit market panel discards responses after a pool switch and keeps scoped close, trades and actors', async()=>{
+  const h=harness(), pool='11111111111111111111111111111112', peer='11111111111111111111111111111113',
+    otherPool='11111111111111111111111111111114';
+  const report={...fixture,ca_job_id:jobId,query_scope:'overview',
+    token_profile:{status:'OK',is_initialized:true},
+    market:{status:'OK',chain:'solana',mint,pool_candidates:[
+      {pair_address:pool,base_address:peer,quote_address:mint},
+      {pair_address:otherPool,base_address:mint,quote_address:peer},
+    ]}};
+  const market=(resolvedPool)=>({mint,job_id:jobId,pool:resolvedPool,period:'5m',source:'GECKOTERMINAL_PUBLIC_API',currency:'USD',
+    chart:{status:'OK',observed_at:1792683606,rows:[[1792683600,'1','2','1','1.7','55']]},
+    trades:{status:'OK',coverage:{scope:'FIRST_PAGE_LAST_24H_ONLY'},rows:[
+      {wallet:peer,side:'BUY',quantity:'42',price_usd:'1.7',at:1792683600,signature:'1'.repeat(64)},
+      {wallet:null,side:'SELL',quantity:'7',price_usd:null,at:1792683600,signature:'2'.repeat(64)},
+    ]}});
+  h.element('cluster-mint').value=mint;
+  h.context.renderClusterReport(report);
+  assert.equal(h.element('cluster-series-panel').hidden,false);
+  assert.equal(h.requests.filter(x=>x.url.includes('/api/cluster-market-series')).length,0);
+  h.element('cluster-series-pool').value=pool;
+  h.element('cluster-series-period').value='5m';
+  const old=deferred();
+  h.setResponse(url=>url.includes(pool)?old.promise:Promise.resolve({ok:true,json:async()=>market(otherPool)}));
+  const pending=h.context.loadClusterSeries();
+  h.element('cluster-series-pool').value=otherPool;
+  h.element('cluster-series-pool').listeners.get('change')();
+  await h.context.loadClusterSeries();
+  old.resolve({ok:true,json:async()=>market(pool)});
+  await pending;
+  assert.match(h.element('cluster-series-status').textContent,new RegExp(otherPool));
+  assert.doesNotMatch(h.element('cluster-series-status').textContent,new RegExp(pool));
+  assert.match(h.element('cluster-series-chart').innerHTML,/逐根 K 线数据/);
+  assert.match(h.element('cluster-series-trades').innerHTML,/非完整历史/);
+  assert.match(h.element('cluster-series-actors').innerHTML,/1 条发起地址未知/);
+  h.element('cluster-series-side').value='SELL';
+  h.element('cluster-series-side').listeners.get('change')();
+  assert.doesNotMatch(h.element('cluster-series-trades').innerHTML,/>42</);
+  assert.ok(h.requests.every(r=>r.method==='GET'));
 });
