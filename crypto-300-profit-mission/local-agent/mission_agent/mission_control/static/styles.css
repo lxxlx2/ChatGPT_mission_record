@@ -501,3 +501,4 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:#d7dce3}
 
 #cluster-series-panel[hidden]{display:none}
 .cluster-series-svg{display:block;width:100%;max-height:260px;background:rgba(15,23,42,.32);border:1px solid var(--line);border-radius:8px}
+.runtime[hidden]{display:none}
