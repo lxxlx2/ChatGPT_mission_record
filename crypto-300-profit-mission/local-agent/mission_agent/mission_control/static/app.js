@@ -1466,7 +1466,8 @@ async function loadFrankBuys(more=false) {
     const html=result.rows.map(item=>`<article class="panel">
       <strong>${esc(item.name || item.mint)}</strong>
       <time datetime="${new Date(item.at*1000).toISOString()}">${esc(new Date(item.at*1000).toLocaleString('zh-CN'))}</time>
-      <p>买入 ${esc(frankBuyAmount(item.quantity))} 枚 · 支付 ${esc(frankBuyAmount(item.paid))} ${esc(item.currency)}</p>
+      <p>买入 ${esc(frankBuyAmount(item.quantity))} 枚${item.paid != null && item.currency != null
+        ? ` · 支付 ${esc(frankBuyAmount(item.paid))} ${esc(item.currency)}` : ''}</p>
       ${tokenIdentity(item.mint)}
       <a class="link-btn" href="https://solscan.io/tx/${encodeURIComponent(item.signature)}" target="_blank" rel="noreferrer">原交易 ↗</a>
     </article>`).join('');

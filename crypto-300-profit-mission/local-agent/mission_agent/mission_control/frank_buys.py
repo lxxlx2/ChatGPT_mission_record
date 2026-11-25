@@ -5,9 +5,10 @@ import hashlib
 import json
 import re
 
+from .archived_wallet_facts import read_archived_classification
 from .wallet_activity import connect
 from .wallet_activity_paging import _source
-from ..signals.buy_admission import admit_buy, exact_mint, qualification
+from ..signals.buy_admission import EXCLUDED_MINTS, admit_buy, exact_mint, qualification
 
 
 def _encode(row):
@@ -29,7 +30,24 @@ def _decode(cursor, binding):
         raise ValueError("INVALID_OR_STALE_CURSOR") from None
 
 
-def read_buys(database, qualifications, *, as_of, days="7", mint=None, cursor=None):
+def _needs_archive_replay(event, identity):
+    if not isinstance(event, dict) or event.get("classification") != "ACTIVE_TRADE":
+        return False
+    trade, evidence = event.get("trade"), event.get("evidence")
+    return (
+        isinstance(trade, dict) and isinstance(evidence, dict)
+        and identity["mint"] not in EXCLUDED_MINTS
+        and trade.get("mint") == identity["mint"] and trade.get("direction") == "BUY"
+        and event.get("frank_is_signer") is True and evidence.get("wallet_is_signer") is True
+        and evidence.get("raw_transaction_sha256") == identity["raw_hash"]
+        and all(source.get(key) == identity[key] for source in (event, evidence)
+                for key in ("wallet", "signature", "slot", "block_time"))
+        and not {"quote_legs", "route_amount_semantics", "route_intermediate_evidence_status"} & trade.keys()
+    )
+
+
+def read_buys(database, qualifications, *, as_of, days="7", mint=None, cursor=None,
+              archive_root=None, legacy_archive_root=None):
     if days not in ("1", "7", "30", "all") or (mint is not None and not exact_mint(mint)):
         raise ValueError("INVALID_BUY_QUERY")
     try:
@@ -37,7 +55,8 @@ def read_buys(database, qualifications, *, as_of, days="7", mint=None, cursor=No
     except FileNotFoundError:
         return {"status": "QUALIFICATION_UNAVAILABLE", "rows": [], "next_cursor": None}
     source = _source(database)
-    binding = hashlib.sha256(repr((source, days, mint, sorted(assets.items()))).encode()).hexdigest()
+    binding = hashlib.sha256(repr((source, days, mint, sorted(assets.items()),
+                                   archive_root, legacy_archive_root)).encode()).hexdigest()
     with closing(connect(database)) as db:
         db.execute("BEGIN")
         if _source(database) != source:
@@ -70,8 +89,15 @@ def read_buys(database, qualifications, *, as_of, days="7", mint=None, cursor=No
                 event = json.loads(row["body"])
             except (ValueError, TypeError):
                 continue
-            item = admit_buy(event, assets, wallet=row["wallet"], signature=row["signature"],
-                             slot=row["slot"], block_time=row["block_time"], raw_hash=row["raw_hash"], mint=row["mint"])
+            identity = {key: row[key] for key in ("wallet", "signature", "slot", "block_time", "raw_hash", "mint")}
+            item = admit_buy(event, assets, **identity, allow_unpriced=True)
+            if item is None and archive_root is not None and _needs_archive_replay(event, identity):
+                replay = read_archived_classification(
+                    archive_root, {"sig": row["signature"], "wallet": row["wallet"], "slot": row["slot"],
+                                   "at": row["block_time"], "raw_sha256": row["raw_hash"]},
+                    legacy_archive_root=legacy_archive_root,
+                )
+                item = admit_buy(replay, assets, **identity, allow_unpriced=True)
             if not item:
                 continue
             if len(rows) == 30:

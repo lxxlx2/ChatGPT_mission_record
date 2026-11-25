@@ -1752,13 +1752,17 @@ test('Frank default buys render as facts without loading market or old signal fe
   const h=harness({initialView:'',responseFor:async(url,options)=>{
     paths.push(url);
     assert.equal(options.headers['X-Frank-Research-Read'],'1');
-    const rows=url.includes('mint=') ? [] : [{mint,signature:mint,at:1792683606,
-      name:'<b>样例</b>',quantity:'1',paid:'0.5',currency:'USDC'}];
+    const rows=url.includes('mint=') ? [] : [
+      {mint,signature:mint,at:1792683606,name:'<b>样例</b>',quantity:'1',paid:'0.5',currency:'USDC'},
+      {mint:pendingMint,signature:pendingMint,at:1792683605,name:'多跳样例',quantity:'42',paid:null,currency:null},
+    ];
     return {ok:true,json:async()=>({status:'LOCAL_EVIDENCE_ONLY',rows,next_cursor:null})};
   }});
   await new Promise(resolve=>setImmediate(resolve));
   assert.equal(h.element('product-title').textContent,'Frank 买入');
   assert.match(h.element('frank-buy-rows').innerHTML,/支付 0.5 USDC/);
+  assert.match(h.element('frank-buy-rows').innerHTML,/<p>买入 42 枚<\/p>/);
+  assert.doesNotMatch(h.element('frank-buy-rows').innerHTML,/支付 未核实|支付 null/);
   assert.match(h.element('frank-buy-rows').innerHTML,/&lt;b&gt;样例&lt;\/b&gt;/);
   assert.match(h.element('frank-buy-rows').innerHTML,/data-cluster-ca/);
   assert.deepEqual(paths,['/api/frank-buys?days=7']);

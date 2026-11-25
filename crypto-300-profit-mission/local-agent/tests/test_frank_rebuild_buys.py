@@ -81,6 +81,51 @@ def test_read_verified_wallet_facts_only(tmp_path):
     assert read_buys(db,tmp_path/"missing",as_of=AS_OF)["status"] == "QUALIFICATION_UNAVAILABLE"
 
 
+@pytest.mark.parametrize("case", ("bound_legacy", "corrupt_archive", "wrong_signature", "modern_failed"))
+def test_dashboard_replays_only_bound_legacy_buy_evidence(tmp_path, case):
+    prod, control = (tmp_path/name for name in ("production", "control"))
+    archive = prod/"raw"
+    archive.mkdir(parents=True)
+    control.mkdir()
+    cfg = control/"frank-buy-qualifications.json"
+    now = int(time.time())
+    config(cfg, as_of=now)
+    db = prod/"forward.sqlite"
+    ledger = Ledger(db)
+    signature = _b58((1).to_bytes(64, "big"))
+    raw = tx()
+    raw["blockTime"] = now-1
+    raw["transaction"]["signatures"] = [
+        _b58((2).to_bytes(64, "big")) if case == "wrong_signature" else signature
+    ]
+    for field in ("preTokenBalances", "postTokenBalances"):
+        raw["meta"][field][0]["mint"] = MINT
+        raw["meta"][field][1]["mint"] = USDC
+    event = classify(signature, raw, WALLET)
+    raw_hash = event["evidence"]["raw_transaction_sha256"]
+    if case != "modern_failed":
+        for field in ("quote_legs", "route_amount_semantics", "route_intermediate_evidence_status"):
+            del event["trade"][field]
+    else:
+        event["evidence"]["tx_err"] = "FAILED"
+    assert ledger.put("frank", event, raw_hash, "must-not-choose-an-archive-location")
+    if case == "corrupt_archive":
+        raw["meta"]["fee"] += 1
+    (archive/(signature+".json.gz")).write_bytes(gzip.compress(json.dumps(raw).encode()))
+
+    assert read_buys(db, cfg, as_of=now)["rows"] == []
+    indexed_body = ledger.db.execute("SELECT body FROM signatures").fetchone()[0]
+    result = DashboardState(prod, control).frank_buys()
+    if case == "bound_legacy":
+        assert result["rows"] == [{"mint": MINT, "name": "样例 Meme", "signature": signature,
+                                   "slot": 12, "at": now-1, "quantity": "1",
+                                   "paid": "0.5", "currency": "USDC"}]
+    else:
+        assert result["rows"] == []
+    assert ledger.db.execute("SELECT body FROM signatures").fetchone()[0] == indexed_body
+    assert ledger.db.execute("SELECT count(*) FROM outbox").fetchone()[0] == 0
+
+
 def test_stable_same_second_paging_no_backfill_from_late_insert(tmp_path):
     db, cfg = tmp_path/"db", tmp_path/"qualification.json"
     ledger = Ledger(db)

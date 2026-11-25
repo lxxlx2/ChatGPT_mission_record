@@ -6,7 +6,7 @@ import pytest
 
 from mission_agent.frank.rpc import WALLET
 from mission_agent.meme.holder_ranks import _b58
-from mission_agent.signals.buy_admission import BACKPACK_MINT, BuyDeliveryGate
+from mission_agent.signals.buy_admission import BACKPACK_MINT, BuyDeliveryGate, admit_buy, qualification
 from mission_agent.signals.delivery import LocalNotifier, drain
 from mission_agent.signals.engine import Engine
 from mission_agent.signals.gmail import GmailOutbox
@@ -68,6 +68,27 @@ def prepare(tmp_path, mints, *, gate_at_enqueue=True, registry=True):
                     delivery_gate=gate if gate_at_enqueue else None)
     assert engine.drain() == len(mints) * 3
     return ledger, cfg, gate, engine
+
+
+def test_routed_receipt_can_show_quantity_without_admitting_notification(tmp_path):
+    ledger, cfg, gate, _ = prepare(tmp_path, [MINT])
+    signal = json.loads(ledger.db.execute("SELECT body FROM signals WHERE signal_type='FRANK_MULTIPLE_SIGNAL'").fetchone()[0])
+    row = ledger.db.execute("SELECT * FROM signatures WHERE signature=?", (signal["latest_buy_signature"],)).fetchone()
+    event = json.loads(row["body"])
+    event["trade"].update(
+        route_intermediate_evidence_status="UNVERIFIED",
+        route_amount_semantics="GROSS_QUOTE_OUT_NOT_EXACT_FINAL_TARGET_COST",
+        route_intermediate_assets=[{"mint": UNKNOWN}],
+    )
+    binding = {key: row[key] for key in ("wallet", "signature", "slot", "block_time", "raw_hash")}
+    assets = qualification(cfg, AS_OF)
+    assert admit_buy(event, assets, mint=MINT, **binding) is None
+    view = admit_buy(event, assets, mint=MINT, allow_unpriced=True, **binding)
+    assert (view["quantity"], view["paid"], view["currency"]) == ("1", None, None)
+    ledger.db.execute("UPDATE signatures SET body=? WHERE signature=?", (json.dumps(event), row["signature"]))
+    assert gate.block_reason(ledger.db, signal) == "TRIGGER_IS_NOT_PROVEN_BUY"
+    event["trade"]["referenced_pre_raw"] = event["trade"]["referenced_post_raw"]
+    assert admit_buy(event, assets, mint=MINT, allow_unpriced=True, **binding) is None
 
 
 def test_real_scanner_policy_and_gmail_accept_only_verified_meme(tmp_path, monkeypatch):

@@ -252,6 +252,66 @@ def _close_refunds(tx, instructions, names, wallet, effect):
     return items
 
 
+class _ArchiveReadError(ValueError):
+    def __init__(self, reason, *, status="UNRESOLVED"):
+        super().__init__(reason)
+        self.status = status
+
+
+def _bound_archive(archive_root, row, legacy_archive_root):
+    if archive_root is None:
+        raise _ArchiveReadError("ARCHIVE_NOT_CONFIGURED", status="UNAVAILABLE")
+    signature, wallet = row.get("sig"), row.get("wallet")
+    expected_hash, slot, at = row.get("raw_sha256"), row.get("slot"), row.get("at")
+    if (not _signature(signature) or not valid_pubkey(wallet) or type(slot) is not int or slot < 0
+            or not isinstance(expected_hash, str) or re.fullmatch(r"[a-f0-9]{64}", expected_hash) is None
+            or (at is not None and type(at) is not int)):
+        raise _ArchiveReadError("INDEX_IDENTITY_INCOMPLETE")
+    try:
+        tx = _read_original(archive_root, signature)
+        tier = "CURRENT"
+        if tx is None and legacy_archive_root is not None and legacy_archive_root != archive_root:
+            tx = _read_original(legacy_archive_root, signature)
+            tier = "LEGACY"
+        encoded = None if tx is None else json.dumps(tx, sort_keys=True, separators=(",", ":"), allow_nan=False).encode()
+    except (gzip.BadGzipFile, EOFError, zlib.error, *SOURCE_ERRORS):
+        raise _ArchiveReadError("ARCHIVE_INVALID_JSON") from None
+    except OSError:
+        raise _ArchiveReadError("ARCHIVE_FILE_UNAVAILABLE", status="UNAVAILABLE") from None
+
+    if encoded is None:
+        raise _ArchiveReadError("ARCHIVE_NOT_FOUND", status="UNAVAILABLE")
+    if hashlib.sha256(encoded).hexdigest() != expected_hash:
+        raise _ArchiveReadError("ARCHIVE_HASH_MISMATCH")
+
+    try:
+        signatures = tx["transaction"]["signatures"]
+        if not isinstance(signatures, list) or not signatures or signatures[0] != signature:
+            raise _ArchiveReadError("ARCHIVE_SIGNATURE_MISMATCH")
+        if type(tx.get("slot")) is not int or tx["slot"] != slot:
+            raise _ArchiveReadError("ARCHIVE_SLOT_MISMATCH")
+        raw_time = tx.get("blockTime")
+        if raw_time != at or (raw_time is not None and type(raw_time) is not int):
+            raise _ArchiveReadError("ARCHIVE_TIME_MISMATCH")
+        names = [key["pubkey"] for key in tx["transaction"]["message"]["accountKeys"]]
+        if names.count(wallet) != 1 or len(set(names)) != len(names):
+            raise _ArchiveReadError("ARCHIVE_WALLET_MISMATCH")
+    except _ArchiveReadError:
+        raise
+    except SOURCE_ERRORS:
+        raise _ArchiveReadError("ARCHIVE_METADATA_UNSUPPORTED") from None
+    return tx, names, tier
+
+
+def read_archived_classification(archive_root, row, *, legacy_archive_root=None):
+    """Replay the classifier only after the archive and indexed identity agree."""
+    try:
+        tx, _, _ = _bound_archive(archive_root, row, legacy_archive_root)
+        return classify(row["sig"], tx, row["wallet"])
+    except SOURCE_ERRORS:
+        return None
+
+
 def read_archived_fact(archive_root, row, *, legacy_archive_root=None):
     """Return a public, independent replay for one wallet_activity projection.
 
@@ -263,48 +323,17 @@ def read_archived_fact(archive_root, row, *, legacy_archive_root=None):
               "indexed_class": indexed_class, "replayed_class": None, "replayed_reason": None, "raw_sha256": None,
               "block_time_status": "UNKNOWN", "archive_tier": None, "fact": None}
 
-    def unavailable(reason):
-        return {**result, "status": "UNAVAILABLE", "reason": reason}
-
     def unresolved(reason):
         return {**result, "status": "UNRESOLVED", "reason": reason}
 
-    if archive_root is None:
-        return unavailable("ARCHIVE_NOT_CONFIGURED")
-    signature, wallet = row.get("sig"), row.get("wallet")
-    expected_hash, slot, at = row.get("raw_sha256"), row.get("slot"), row.get("at")
-    if (not _signature(signature) or not valid_pubkey(wallet) or type(slot) is not int or slot < 0
-            or not isinstance(expected_hash, str) or re.fullmatch(r"[a-f0-9]{64}", expected_hash) is None
-            or (at is not None and type(at) is not int)):
-        return unresolved("INDEX_IDENTITY_INCOMPLETE")
     try:
-        tx = _read_original(archive_root, signature)
-        tier = "CURRENT"
-        if tx is None and legacy_archive_root is not None and legacy_archive_root != archive_root:
-            tx = _read_original(legacy_archive_root, signature)
-            tier = "LEGACY"
-        if tx is None:
-            return unavailable("ARCHIVE_NOT_FOUND")
-        encoded = json.dumps(tx, sort_keys=True, separators=(",", ":"), allow_nan=False).encode()
-        if hashlib.sha256(encoded).hexdigest() != expected_hash:
-            return unresolved("ARCHIVE_HASH_MISMATCH")
-    except (gzip.BadGzipFile, EOFError, zlib.error, *SOURCE_ERRORS):
-        return unresolved("ARCHIVE_INVALID_JSON")
-    except OSError:
-        return unavailable("ARCHIVE_FILE_UNAVAILABLE")
+        tx, names, tier = _bound_archive(archive_root, row, legacy_archive_root)
+    except _ArchiveReadError as error:
+        return {**result, "status": error.status, "reason": str(error)}
 
+    signature, wallet, at = row["sig"], row["wallet"], row.get("at")
+    expected_hash = row["raw_sha256"]
     try:
-        signatures = tx["transaction"]["signatures"]
-        if not isinstance(signatures, list) or not signatures or signatures[0] != signature:
-            return unresolved("ARCHIVE_SIGNATURE_MISMATCH")
-        if type(tx.get("slot")) is not int or tx["slot"] != slot:
-            return unresolved("ARCHIVE_SLOT_MISMATCH")
-        raw_time = tx.get("blockTime")
-        if raw_time != at or (raw_time is not None and type(raw_time) is not int):
-            return unresolved("ARCHIVE_TIME_MISMATCH")
-        names = [key["pubkey"] for key in tx["transaction"]["message"]["accountKeys"]]
-        if names.count(wallet) != 1 or len(set(names)) != len(names):
-            return unresolved("ARCHIVE_WALLET_MISMATCH")
         result["raw_sha256"] = expected_hash
         result["archive_tier"] = tier
         result["block_time_status"] = "MATCHED" if at is not None else "UNKNOWN"

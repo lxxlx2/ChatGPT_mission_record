@@ -50,3 +50,13 @@ Python 专项 224 通过，备用 Chromium 用例跳过。Node 257 通过。Mac 
 在 Mac Chrome 打开同一钱包的 GMGN「活动」，通过页面类型筛选保留买卖。待对账窗口所见 9 行买卖对应 4 个唯一 Solana 交易签名，其中 3 笔买入、1 笔卖出。4 笔均能与冻结账本按完整签名匹配，并用本机归档重新绑定槽位、时间、哈希及钱包经济方向。窗口内本地记录的 3 个买入签名均出现于本次 GMGN 对照。GMGN 对同一签名有重复行和多资产行，不能用行数计算买入笔数。
 
 这一结果覆盖本次实际读到的 GMGN 买卖。页面未提供完整槽位区间及总体覆盖凭据，95 条本地索引的独立验收仍未完成。代币是否属于 Meme 另看完整 Mint 的项目出处。公开记录使用汇总数据，逐笔签名和交易哈希留在 Mac。
+
+## 2026-11-26 确认币种并恢复旧账本买入
+
+本段以 `eb8c0f82c85004a822a356949cbfd3470e392923` 为比较基线。锁定窗口的 ANSEM 和 NIO 均按完整 Solana Mint 核对：The Black Bull 的发行页和 CoinMarketCap 的 Meme 分类指向同一地址。NIO 的 Pump 创建者资料说明源自在社交平台传播的图片和视频，Solscan 对同一地址标为 Meme。用这些证据制作的资格文件供隔离回放。 [ANSEM 发行页](https://pump.fun/coin/9cRCn9rGT8V2imeM2BaKs13yhMEais3ruM3rPvTGpump) · [CoinMarketCap](https://coinmarketcap.com/currencies/the-black-bull/) · [NIO 创建者资料](https://pump.fun/coin/7SL2VnfYsChvog5oQY9Nmtqu1wceaMiQzWoqoLQpump) · [Solscan 同 Mint](https://solscan.io/token/7SL2VnfYsChvog5oQY9Nmtqu1wceaMiQzWoqoLQpump)
+
+旧账本的 3 笔真实买入缺少现版路由字段。加入来源已核实的资格后，基线买入页仍显示 0 笔。候选版本在旧记录有签署买入证据时从可信本机归档只读复算，核对原件哈希、签名、钱包、槽位、时间和同一 Mint，再按买入准入校验。窗口内由 0 笔恢复为 3 笔，其中 2 笔有可核支付金额。1 笔 ANSEM 的多跳原件能核实最终买入数量，支付金额仍未核实，页面省略该字段。该展示规则仅用于买入页。邮件和本地提醒继续使用原支付证明条件。
+
+Solscan Chrome 的钱包原始交易表可以打开，时间列提供 UTC 自定义日期。浏览器操作未取得覆盖完整窗口的分页结果，当前的独立证据仍是此前 GMGN 对上的 3 笔买入和 1 笔卖出。原始证据、资格文件和备份留在 Mac 隔离目录，8766 切换仍待全范围验收。 [Solscan 原始历史说明](https://info.solscan.io/solscan-supports-full-historical-data-search/)
+
+专项回归 `python -B -m pytest -q -p no:cacheprovider tests/test_frank_rebuild_buys.py tests/test_frank_rebuild_delivery.py tests/test_frank_scanner_reconciliation.py tests/test_frank_archived_wallet_facts.py` 为 60 通过、1 项备用浏览器测试跳过。Node 界面回归 257 通过。Mac Chrome 158 使用由 `DashboardState` 从冻结备份读出的 3 笔结果进行隔离回放，验证 2 笔显示原币支付、1 笔只显示数量，以及按完整 Mint 筛选。测试未监听端口，也无外部请求、POST 或页内异常。冻结账本哈希保持一致。

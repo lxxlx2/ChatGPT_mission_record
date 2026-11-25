@@ -161,7 +161,7 @@ def _units(raw, decimals):
     return raw[:-decimals] + ("." + fraction if fraction else "")
 
 
-def admit_buy(event, assets, *, wallet, signature, slot, block_time, raw_hash, mint):
+def admit_buy(event, assets, *, wallet, signature, slot, block_time, raw_hash, mint, allow_unpriced=False):
     """Return only facts bound to this classified, archived wallet event."""
     asset = assets.get(mint)
     if not asset or asset.status != "VERIFIED_MEME" or mint in EXCLUDED_MINTS or not exact_mint(mint):
@@ -193,9 +193,23 @@ def admit_buy(event, assets, *, wallet, signature, slot, block_time, raw_hash, m
     currency = trade.get("quote_asset")
     legs = trade.get("quote_legs")
     if (tokens is None or paid is None or currency not in ("SOL", USDC, USDT)
-            or trade.get("route_intermediate_evidence_status") != "NO_INTERMEDIATE_TRANSFER_OBSERVED"
-            or trade.get("route_amount_semantics") != "DIRECT_OR_SINGLE_TARGET_QUOTE"
             or legs != [{"asset": currency, "raw_delta": "-" + quote_raw, "decimals": quote_decimals}]):
         return None
+    route_evidence = trade.get("route_intermediate_evidence_status")
+    route_amount = trade.get("route_amount_semantics")
+    if route_evidence != "NO_INTERMEDIATE_TRANSFER_OBSERVED" or route_amount != "DIRECT_OR_SINGLE_TARGET_QUOTE":
+        # A routed swap may prove the wallet's single final receipt while its
+        # total outflow cannot be attributed to the target. Only the read-only
+        # buy page can show that receipt without attaching an amount paid.
+        before, after = trade.get("referenced_pre_raw"), trade.get("referenced_post_raw")
+        intermediates = trade.get("route_intermediate_assets")
+        if (not allow_unpriced or route_evidence != "UNVERIFIED"
+                or route_amount != "GROSS_QUOTE_OUT_NOT_EXACT_FINAL_TARGET_COST"
+                or not isinstance(intermediates, list) or not intermediates
+                or not isinstance(before, str) or not isinstance(after, str)
+                or not re.fullmatch(r"[0-9]{1,30}", before) or not re.fullmatch(r"[0-9]{1,30}", after)
+                or int(after) - int(before) != int(trade["token_amount_raw"])):
+            return None
+        paid, currency = None, None
     return {"mint": mint, "name": asset.name, "signature": signature, "slot": slot, "at": block_time,
             "quantity": tokens, "paid": paid, "currency": {USDC: "USDC", USDT: "USDT"}.get(currency, currency)}
