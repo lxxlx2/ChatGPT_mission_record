@@ -54,6 +54,9 @@ def test_reverse_pool_binds_only_exact_peers_and_candles_use_exact_mint():
     result=series.read(MINT,POOL,PEER,"5m")
     q=parse_qs(urlsplit(urls[0]).query)
     assert q["token"]==[MINT] and q["currency"]==["usd"] and q["aggregate"]==["5"]
+    trades_url=urlsplit(urls[1])
+    assert trades_url.path.endswith(f"/pools/{POOL}/trades")
+    assert parse_qs(trades_url.query)=={"token":[MINT]}
     assert result["chart"]["rows"]==[[AS_OF-400,"1","2","1","2","50"],[AS_OF-100,"2","3","1","2.7","80"]]
     trades=result["trades"]
     assert [(r["side"],r["quantity"],r["price_usd"]) for r in trades["rows"]]==[

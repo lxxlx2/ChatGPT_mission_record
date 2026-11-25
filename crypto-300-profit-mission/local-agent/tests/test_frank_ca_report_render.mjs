@@ -1813,7 +1813,7 @@ test('explicit market panel discards responses after a pool switch and keeps sco
   assert.match(h.element('cluster-series-status').textContent,new RegExp(otherPool));
   assert.doesNotMatch(h.element('cluster-series-status').textContent,new RegExp(pool));
   assert.match(h.element('cluster-series-chart').innerHTML,/逐根 K 线数据/);
-  assert.match(h.element('cluster-series-trades').innerHTML,/非完整历史/);
+  assert.match(h.element('cluster-series-trades').innerHTML,/不含来源标记异常的成交，非完整历史/);
   assert.match(h.element('cluster-series-actors').innerHTML,/1 条发起地址未知/);
   h.element('cluster-series-side').value='SELL';
   h.element('cluster-series-side').listeners.get('change')();

@@ -191,7 +191,8 @@ class CAMarketSeries:
             raise ValueError("INVALID_MARKET_SERIES_SCOPE")
         frame,aggregate=PERIODS[period]
         chart_q=urllib.parse.urlencode({"aggregate":aggregate,"limit":MAX_POINTS,"token":mint,"currency":"usd"})
-        trades_q=urllib.parse.urlencode({"token":mint,"per_page":MAX_TRADES,"trading_period":"1d"})
+        # The public route defaults to 300 trades in one day; both controls are Pro-only.
+        trades_q=urllib.parse.urlencode({"token":mint})
         chart=self._read_cached(mint,pool,peer,"chart",period,"/ohlcv/"+frame+"?"+chart_q)
         trades=self._read_cached(mint,pool,peer,"trades",None,"/trades?"+trades_q)
         return {"source":SOURCE,"mint":mint,"pool":pool,"period":period,"currency":"USD","chart":chart,"trades":trades}

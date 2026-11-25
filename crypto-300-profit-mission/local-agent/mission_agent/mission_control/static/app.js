@@ -2662,7 +2662,7 @@ function renderClusterSeriesTrades() {
     (seriesAddress(r.wallet)?ownerCell(r.wallet):'未知')+'</td><td>'+
     (tx.test(r.signature)?'<a href="https://solscan.io/tx/'+encodeURIComponent(r.signature)+'" target="_blank" rel="noreferrer">原交易 ↗</a>':'未核实')+'</td></tr>').join('');
   $('cluster-series-trades').innerHTML='<p>'+esc((section.status==='STALE'?'更新失败，保留上次读取 · ':'')+
-    '所选池最近 24 小时索引首批数据，非完整历史。实际首尾：'+clusterMarketFreshness(null,coverage.earliest)+' 至 '+
+    '所选池最近 24 小时索引首批数据，不含来源标记异常的成交，非完整历史。实际首尾：'+clusterMarketFreshness(null,coverage.earliest)+' 至 '+
     clusterMarketFreshness(null,coverage.latest)+(coverage.has_more?'；可能仍有未读取记录。':'。')+
     (coverage.unusable_rows?' 有 '+coverage.unusable_rows+' 条来源记录未通过核对。':''))+'</p>'+
     (body?'<div class="holder-table-wrap"><table class="holder-table"><thead><tr><th>时间</th><th>方向</th><th>目标币数量</th><th>USD 单价</th><th>发起地址</th><th>交易</th></tr></thead><tbody>'+body+'</tbody></table></div>':'<p>当前范围没有可展示的成交。</p>');
