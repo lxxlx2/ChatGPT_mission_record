@@ -44,3 +44,9 @@ Python 专项 224 通过，备用 Chromium 用例跳过。Node 257 通过。Mac 
 - 锁定一个有多个买入 Mint 的已落库窗口供后续逐笔对账。本地账本在该窗口有 95 条索引、3 条买入候选、2 个 Mint。窗口边界取自同一只读备份，独立侧须覆盖整个槽位区间并提供完整性证据后才能将它用于漏报率。私有文件固定了请求边界和快照摘要，独立参考状态仍是 `NOT_CAPTURED`。
 
 实际执行 `python -B -m pytest -q -p no:cacheprovider tests/test_frank_rebuild_buys.py tests/test_frank_rebuild_delivery.py tests/test_frank_scanner_reconciliation.py -k 'not dashboard_endpoint and not browser'`，36 通过，2 筛除。独立对账和真实渠道验收仍待实际原件，运行切换保持 NO_GO。
+
+### GMGN 钱包活动对照
+
+在 Mac Chrome 打开同一钱包的 GMGN「活动」，通过页面类型筛选保留买卖。待对账窗口所见 9 行买卖对应 4 个唯一 Solana 交易签名，其中 3 笔买入、1 笔卖出。4 笔均能与冻结账本按完整签名匹配，并用本机归档重新绑定槽位、时间、哈希及钱包经济方向。窗口内本地记录的 3 个买入签名均出现于本次 GMGN 对照。GMGN 对同一签名有重复行和多资产行，不能用行数计算买入笔数。
+
+这一结果覆盖本次实际读到的 GMGN 买卖。页面未提供完整槽位区间及总体覆盖凭据，95 条本地索引的独立验收仍未完成。代币是否属于 Meme 另看完整 Mint 的项目出处。公开记录使用汇总数据，逐笔签名和交易哈希留在 Mac。
