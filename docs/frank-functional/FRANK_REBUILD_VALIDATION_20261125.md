@@ -34,3 +34,13 @@ node tests/test_frank_rebuild_browser.cjs
 ```
 
 Python 专项 224 通过，备用 Chromium 用例跳过。Node 257 通过。Mac Chrome 158.0.8127.38 单独运行浏览器脚本通过。两个合成 CA 共触发三次行情 GET，由测试脚本直接返回数据。外部请求、POST、页面异常和监听端口均为 0。
+
+## Mac 本地证据重建
+
+产品代码固定为 `1b9e2c05a973fcf0a621fa53cfc7fe882874fa50`。检索 Mac 的 Frank 验收目录、运行控制目录及可见 Git 分支历史，找到了旧的单代币账户归档、单页和派生转账审计。在检查范围内未找到来源可核的 Meme 正资格，或与当前 Scanner 槽位窗口匹配的完整独立逐笔参考。[旧单账户采集](https://github.com/lxxlx2/ChatGPT_mission_record/commit/3937b125d0dc358419ac73145053bc13012972f7)与[历史回放](https://github.com/lxxlx2/ChatGPT_mission_record/commit/9b101aac1cccda952366a587fa666978ab1a25ce)可用作定点反例。
+
+- 从 Mac 正在运行的 Scanner 账本按 SQLite 只读模式创建独立备份，完整性校验通过。冻结文件只留本机，校验时哈希一致。此快照含 10,895 条已索引签名，125 条本地买入候选涉及 51 个 Mint。候选口径包含有待核对资格的买入。
+- 按现有 Scanner 规则解码原件、复算交易哈希并绑定签名、槽位和时间，对快照内 6 笔 Backpack 买入逐笔复算。6 笔可核原件都与快照匹配，6 笔在故意模拟错误 Meme 资格时仍被拒绝。测试仅涉及准入。私有试验资格文件记录官方来源明确的 BP 排除，余下 50 个 Mint 保留为待核。当前控制目录和运行服务未使用该试验文件。
+- 锁定一个有多个买入 Mint 的已落库窗口供后续逐笔对账。本地账本在该窗口有 95 条索引、3 条买入候选、2 个 Mint。窗口边界取自同一只读备份，独立侧须覆盖整个槽位区间并提供完整性证据后才能将它用于漏报率。私有文件固定了请求边界和快照摘要，独立参考状态仍是 `NOT_CAPTURED`。
+
+实际执行 `python -B -m pytest -q -p no:cacheprovider tests/test_frank_rebuild_buys.py tests/test_frank_rebuild_delivery.py tests/test_frank_scanner_reconciliation.py -k 'not dashboard_endpoint and not browser'`，36 通过，2 筛除。独立对账和真实渠道验收仍待实际原件，运行切换保持 NO_GO。
