@@ -956,10 +956,11 @@ class ClusterJobManager:
             **_ca_query_fields(report),
         }
 
-    def market_series(self, mint, job_id, pool, period, before=None):
+    def market_series(self, mint, job_id, pool, period, before=None, refresh=None):
         if period not in PERIODS or not self._valid_job_id(job_id):
             raise ValueError("INVALID_CA_MARKET_QUERY")
-        if before is not None and not re.fullmatch(r"[1-9][0-9]{0,9}", before):
+        if (refresh is not None and (refresh != "1" or before is not None)
+                or before is not None and not re.fullmatch(r"[1-9][0-9]{0,9}", before)):
             raise ValueError("INVALID_CA_MARKET_QUERY")
         report = self.latest(mint, job_id=job_id)
         if not report or report.get("ca_job_id") != job_id or report.get("mint") != mint:
@@ -968,6 +969,8 @@ class ClusterJobManager:
         if not peer or report.get("query_scope") not in {"overview","full"}:
             return None
         paging={"before":int(before)} if before is not None else {}
+        if refresh == "1":
+            paging["refresh"] = True
         return {"job_id":job_id,**self.ca_market_series.read(mint,pool,peer,period,**paging)}
 
     def latest(self, mint: str, job_id: str | None = None) -> dict | None:
@@ -1863,7 +1866,7 @@ class Handler(BaseHTTPRequestHandler):
             try:
                 qs=parse_qs(urlparse(self.path).query,keep_blank_values=True,max_num_fields=5)
                 required={"job_id","mint","pool","period"}
-                if not required<=set(qs)<=required|{"before"} or any(len(v)!=1 for v in qs.values()):
+                if not required<=set(qs)<=required|{"before","refresh"} or any(len(v)!=1 for v in qs.values()):
                     raise ValueError("INVALID_CA_MARKET_QUERY")
                 result=self.state.cluster_jobs.market_series(**{k:v[0] for k,v in qs.items()})
             except ValueError:

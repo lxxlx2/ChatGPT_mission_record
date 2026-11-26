@@ -2650,11 +2650,24 @@ function prepareClusterSeries(report) {
   $('cluster-series-wallet').value='';
 }
 
+function clusterSeriesReadNotice(section) {
+  if (!section || typeof section.source_attempted!=='boolean') return '';
+  const time=clusterKnownTime(section.observed_at);
+  const observed=time?' · 本数据读取于 '+time:'';
+  let message='';
+  if (section.status==='STALE') message=(section.source_attempted?'本次来源未返回可用数据':'本次未访问来源')+'，显示上次数据'+observed;
+  else if (section.cache==='FRESH') message='本次读取本机缓存'+observed;
+  else if (section.source_attempted) message=section.status==='OK'?'本次访问来源'+observed:'本次访问来源，未取得数据';
+  else if (section.reason==='RATE_LIMIT') message='来源限流，本次未访问来源';
+  return message?'<p>'+esc(message)+'</p>':'';
+}
+
 function clusterSeriesChart(chart) {
-  if (!chart || !['OK','STALE'].includes(chart.status)) return '<p>价格走势暂未取得。</p>';
+  const notice=clusterSeriesReadNotice(chart);
+  if (!chart || !['OK','STALE'].includes(chart.status)) return notice+'<p>价格走势暂未取得。</p>';
   const rows=(Array.isArray(chart.rows)?chart.rows:[]).filter(row=>Array.isArray(row)&&row.length===6 &&
     row.every((v,i)=>Number.isFinite(Number(v)) && (i===5?Number(v)>=0:Number(v)>0)));
-  if (!rows.length) return '<p>此池本窗口未返回 K 线。</p>';
+  if (!rows.length) return notice+'<p>此池本窗口未返回 K 线。</p>';
   const high=Math.max(...rows.map(x=>+x[2])),low=Math.min(...rows.map(x=>+x[3]));
   const maxV=Math.max(...rows.map(x=>+x[5]),1e-100), first=+rows[0][0], last=+rows.at(-1)[0];
   const pos=(at)=>last===first ? 345 : 24+Math.max(0,Math.min(1,(at-first)/(last-first)))*638;
@@ -2680,7 +2693,7 @@ function clusterSeriesChart(chart) {
   }).join('');
   const values=rows.slice().reverse().map(row=>'<tr><td>'+esc(clusterMarketFreshness(null,row[0]))+'</td>'+
     row.slice(1).map(v=>'<td>'+esc(v)+'</td>').join('')+'</tr>').join('');
-  return (chart.status==='STALE' ? '<p>上次更新 '+esc(clusterKnownTime(chart.observed_at))+'</p>' : '')+
+  return (notice || (chart.status==='STALE' ? '<p>上次更新 '+esc(clusterKnownTime(chart.observed_at))+'</p>' : ''))+
     '<svg class="cluster-series-svg" viewBox="0 0 760 184" role="img" aria-label="所选池美元价格 K 线及成交额">'+grid+bars+times+'</svg>'+
     '<details><summary>逐根 K 线数据</summary><div class="holder-table-wrap"><table class="holder-table">'+
     '<thead><tr><th>时间</th><th>开盘</th><th>最高</th><th>最低</th><th>收盘</th><th>成交额（USD）</th></tr></thead><tbody>'+values+'</tbody></table></div></details>';
@@ -2688,8 +2701,9 @@ function clusterSeriesChart(chart) {
 
 function renderClusterSeriesTrades() {
   const section=clusterSeries?.trades;
+  const notice=clusterSeriesReadNotice(section);
   if (!section || !['OK','STALE'].includes(section.status)) {
-    $('cluster-series-trades').innerHTML='<p>近期成交暂未取得。</p>';
+    $('cluster-series-trades').innerHTML=notice+'<p>近期成交暂未取得。</p>';
     $('cluster-series-actors').innerHTML='';
     return;
   }
@@ -2712,8 +2726,8 @@ function renderClusterSeriesTrades() {
     (tx.test(r.signature)?'<a href="https://solscan.io/tx/'+encodeURIComponent(r.signature)+'" target="_blank" rel="noreferrer">原交易 ↗</a>':'未核实')+'</td></tr>').join('');
   const first=clusterKnownTime(coverage.earliest), last=clusterKnownTime(coverage.latest);
   const window=first && last ? first+' 至 '+last : '';
-  $('cluster-series-trades').innerHTML=(window || section.status==='STALE' ?
-    '<p>'+esc([section.status==='STALE' ? '上次更新 '+clusterKnownTime(section.observed_at) : '',window].filter(Boolean).join('　'))+'</p>' : '')+
+  $('cluster-series-trades').innerHTML=notice+(window || (!notice && section.status==='STALE') ?
+    '<p>'+esc([!notice && section.status==='STALE' ? '上次更新 '+clusterKnownTime(section.observed_at) : '',window].filter(Boolean).join('　'))+'</p>' : '')+
     (body?'<div class="holder-table-wrap"><table class="holder-table"><thead><tr><th>时间</th><th>方向</th><th>目标币数量</th><th>USD 单价</th><th>发起地址</th><th>交易</th></tr></thead><tbody>'+body+'</tbody></table></div>':'<p>当前范围没有可展示的成交。</p>');
   $('cluster-series-actors').innerHTML=entries.length ?
     '<details><summary>本池近期交易者</summary><ul>'+
@@ -2729,7 +2743,7 @@ function renderClusterChartPage() {
   $('cluster-series-older').disabled=!older;
 }
 
-async function loadClusterSeries(older=false) {
+async function loadClusterSeries(older=false,refresh=false) {
   const report=clusterVisibleReport,pool=$('cluster-series-pool').value,period=$('cluster-series-period').value;
   if (!clusterSeriesPools(report).includes(pool) || !['5m','1h','1d'].includes(period) ||
       $('cluster-mint').value.trim()!==report.mint || $('cluster-result').hidden || clusterCurrentView!=='cluster') return;
@@ -2753,6 +2767,7 @@ async function loadClusterSeries(older=false) {
   try {
     const query=new URLSearchParams({mint:report.mint,job_id:report.ca_job_id,pool,period});
     if (older) query.set('before',String(before));
+    else if (refresh===true) query.set('refresh','1');
     const response=await fetch('/api/cluster-market-series?'+query,{cache:'no-store',headers:{'X-Frank-Research-Read':'1'}});
     const result=await response.json();
     if (generation!==clusterSeriesVersion || report!==clusterVisibleReport || clusterCurrentView!=='cluster' ||
@@ -2792,7 +2807,7 @@ async function loadClusterSeries(older=false) {
 }
 
 if ($('cluster-series-load')) {
-  $('cluster-series-load').addEventListener('click',loadClusterSeries);
+  $('cluster-series-load').addEventListener('click',()=>void loadClusterSeries(false,true));
   $('cluster-series-older').addEventListener('click',()=>void loadClusterSeries(true));
   $('cluster-series-newer').addEventListener('click',()=>{
     if (clusterChartPage>0) {

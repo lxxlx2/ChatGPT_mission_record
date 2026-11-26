@@ -234,3 +234,65 @@ def test_overview_uses_only_verified_reverse_target_field_and_ignores_wallet_sym
     monkeypatch.setattr(analyzer,"market_snapshot",lambda:market_calls.append(True))
     assert analyzer._identity_and_narrative()[2]["status"]=="UNAVAILABLE"
     assert market_calls==[]
+
+
+def test_explicit_market_refresh_uses_source_boundary_and_preserves_prior_observation():
+    now = [AS_OF]
+    calls = []
+    throttle = [False]
+
+    def source(request, timeout):
+        calls.append(request.full_url)
+        if throttle[0]:
+            raise urllib.error.HTTPError(request.full_url, 429, "fixture throttle", {}, None)
+        payload = candles() if "/ohlcv/" in request.full_url else {"data": [event(1)]}
+        return io.BytesIO(json.dumps(payload).encode())
+
+    client = CAMarketSeries(open_url=source, clock=lambda: now[0], monotonic=lambda: now[0])
+    first = client.read(MINT, POOL, PEER, "5m")
+    assert len(calls) == 2 and all(first[k]["source_attempted"] for k in ("chart", "trades"))
+    now[0] += 1
+    warm = client.read(MINT, POOL, PEER, "5m")
+    assert len(calls) == 2
+    assert all(warm[k]["cache"] == "FRESH" and warm[k]["source_attempted"] is False for k in ("chart", "trades"))
+    assert warm["chart"]["observed_at"] == AS_OF
+    refreshed = client.read(MINT, POOL, PEER, "5m", refresh=True)
+    assert len(calls) == 4 and refreshed["chart"]["observed_at"] == AS_OF + 1
+    assert all(refreshed[k]["source_attempted"] for k in ("chart", "trades"))
+    throttle[0] = True
+    now[0] += 1
+    blocked = client.read(MINT, POOL, PEER, "5m", refresh=True)
+    assert len(calls) == 5
+    assert blocked["chart"]["source_attempted"] is True and blocked["chart"]["reason"] == "HTTP_429"
+    assert blocked["trades"]["source_attempted"] is False and blocked["trades"]["reason"] == "RATE_LIMIT"
+    assert all(blocked[k]["status"] == "STALE" and blocked[k]["observed_at"] == AS_OF + 1
+               for k in ("chart", "trades"))
+    assert blocked["chart"]["rows"] == refreshed["chart"]["rows"]
+    assert blocked["trades"]["rows"] == refreshed["trades"]["rows"]
+    unseen = client.read(MINT, OTHER, PEER, "5m", refresh=True)
+    assert all(unseen[k]["status"] == "UNAVAILABLE" and not unseen[k]["source_attempted"]
+               for k in ("chart", "trades"))
+    assert len(calls) == 5
+
+
+def test_market_refresh_http_parameter_is_explicit_and_disallowed_for_historical_pages(tmp_path):
+    jobs = ClusterJobManager(tmp_path)
+    calls = []
+    jobs.ca_market_series = SimpleNamespace(read=lambda *args, **kw: calls.append((args, kw)) or {})
+    jobs.latest = lambda *_a, **_k: {"mint": MINT, "ca_job_id": JOB, "query_scope": "overview",
+                                    "token_profile": PROFILE, "market": MARKET}
+    handler = Handler.__new__(Handler)
+    handler._allowed_host = handler._research_origin = lambda: True
+    handler._json = lambda value, code=200: code
+    handler.state = SimpleNamespace(cluster_jobs=jobs)
+    base = f"/api/cluster-market-series?job_id={JOB}&mint={MINT}&pool={POOL}&period=5m"
+    try:
+        for suffix in ("&refresh=0", "&refresh=", "&refresh=1&refresh=1", "&refresh=1&before=1796000000"):
+            handler.path = base + suffix
+            assert handler.do_GET() == 400
+        assert calls == []
+        handler.path = base + "&refresh=1"
+        assert handler.do_GET() == 200
+        assert calls == [((MINT, POOL, PEER, "5m"), {"refresh": True})]
+    finally:
+        jobs.shutdown()

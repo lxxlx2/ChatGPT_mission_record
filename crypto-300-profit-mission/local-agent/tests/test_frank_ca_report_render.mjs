@@ -1909,3 +1909,35 @@ test('a priced reverse fallback becomes the initial chart and trade pool, withou
   assert.match(h.element('cluster-summary').innerHTML,/\$0\.007/);
   assert.ok(h.requests.some(({url,method})=>method==='GET' && url.includes('pool='+priced)));
 });
+
+test('market refresh explicitly attempts the source and labels cache and throttled fallback separately', async()=>{
+  const h=harness(), pool='11111111111111111111111111111112', peer='11111111111111111111111111111113';
+  const report={...fixture,ca_job_id:jobId,query_scope:'overview',
+    token_profile:{status:'OK',is_initialized:true},
+    market:{status:'OK',chain:'solana',mint,main_pair:{pair_address:pool,base_address:mint,quote_address:peer}}};
+  h.element('cluster-mint').value=mint;
+  h.context.renderClusterReport(report);
+  h.element('cluster-series-pool').value=pool;
+  h.element('cluster-series-period').value='5m';
+  const seen=[];
+  h.setResponse(url=>{
+    const refresh=new URL(url,'http://localhost').searchParams.get('refresh');
+    seen.push(refresh);
+    const common={observed_at:1792683606};
+    return {ok:true,json:async()=>({mint,job_id:jobId,pool,period:'5m',
+      source:'GECKOTERMINAL_PUBLIC_API',currency:'USD',
+      chart:{...common,status:'OK',cache:refresh?undefined:'FRESH',source_attempted:!!refresh,
+        rows:[[1792683600,'1','2','1','1.7','55']]},
+      trades:{...common,status:refresh?'STALE':'OK',cache:refresh?'STALE':'FRESH',
+        source_attempted:false,reason:refresh?'RATE_LIMIT':undefined,rows:[]},
+    })};
+  });
+  await h.context.loadClusterSeries();
+  assert.match(h.element('cluster-series-chart').innerHTML,/本次读取本机缓存/);
+  h.element('cluster-series-load').listeners.get('click')();
+  await new Promise(resolve=>setImmediate(resolve));
+  assert.deepEqual(seen,[null,'1']);
+  assert.match(h.element('cluster-series-chart').innerHTML,/本次访问来源.*本数据读取于/);
+  assert.match(h.element('cluster-series-trades').innerHTML,/本次未访问来源，显示上次数据/);
+  assert.ok(h.requests.every(r=>r.method==='GET'));
+});
