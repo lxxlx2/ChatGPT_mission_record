@@ -43,7 +43,7 @@ def consume(rpc, method, params, ttl):
 
 
 def _fetch(rpc, signatures):
-    rpc._check_job_budget(); endpoint = rpc._next_endpoint(); rpc._check_job_budget()
+    rpc._check_job_budget(); endpoint = rpc._next_endpoint(); rpc._reserve_shared(endpoint); rpc._check_job_budget()
     timeout = 20.0
     if rpc.max_elapsed_seconds is not None:
         timeout = min(timeout, rpc.max_elapsed_seconds - (rpc._monotonic() - rpc._budget_started_at))
@@ -77,7 +77,7 @@ def _fetch(rpc, signatures):
             if 'error' in row:
                 failed = True
                 if rpc._rpc_rate_limited(row['error']):
-                    rpc._cooldown_until[endpoint] = max(rpc._cooldown_until[endpoint], rpc._monotonic()+1.5)
+                    rpc._extend_cooldown(endpoint, 1.5)
                 continue
             # Nulls retain the existing individual fallback/recovery behavior.
             if row['result'] is not None: rpc._transaction_prefetched[signature] = row['result']
@@ -90,12 +90,12 @@ def _fetch(rpc, signatures):
     except urllib.error.HTTPError as exc:
         rpc.last_wire_error_code = 'HTTP_'+str(exc.code)
         rpc.endpoint_failures[endpoint] += 1; rpc._transaction_batch_stats['fallbacks'] += 1
-        rpc._cooldown_until[endpoint] = max(rpc._cooldown_until[endpoint], rpc._monotonic()+max(rpc._retry_after(exc), 1.5))
+        rpc._extend_cooldown(endpoint, max(rpc._retry_after(exc), 1.5))
         if exc.code in {400, 403, 404, 405}: rpc._transaction_batches_disabled = True
     except (urllib.error.URLError, TimeoutError, OSError, ValueError) as exc:
         rpc.last_wire_error_code = rpc._safe_wire_error_code(exc)
         rpc.endpoint_failures[endpoint] += 1; rpc._transaction_batch_stats['fallbacks'] += 1
-        rpc._cooldown_until[endpoint] = max(rpc._cooldown_until[endpoint], rpc._monotonic()+1.0)
+        rpc._extend_cooldown(endpoint, 1.0)
         # Invalid envelopes cannot be used as transaction evidence. Disable this
         # optional optimization for the job and read every item individually.
         if isinstance(exc, ValueError): rpc._transaction_batches_disabled = True

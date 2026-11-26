@@ -286,6 +286,7 @@ class SolanaReadOnlyRPC:
         before_wire=None,
         transport_updated=None,
         transaction_batches=True,
+        shared_pacing=None,
     ):
         endpoints=[endpoint]
         endpoints.extend(DEFAULT_RPC_FALLBACKS if fallback_endpoints is None else fallback_endpoints)
@@ -325,6 +326,7 @@ class SolanaReadOnlyRPC:
         self.endpoint_failures=defaultdict(int)
         self._last_by_endpoint=defaultdict(float)
         self._cooldown_until=defaultdict(float)
+        self.shared_pacing=shared_pacing
         self.transaction_batches=transaction_batches is True
         self._transaction_batches_disabled=False;self._transaction_plan=[];self._transaction_prefetched={}
         self._transaction_plan_ttl=None
@@ -341,13 +343,26 @@ class SolanaReadOnlyRPC:
         from .transaction_batch import prepare
         prepare(self,signatures,ttl)
 
+    def _effective_cooldown(self, endpoint):
+        shared = self.shared_pacing.cooldown_until(endpoint) if self.shared_pacing is not None else 0.0
+        return max(shared, self._cooldown_until[endpoint])
+
+    def _reserve_shared(self, endpoint):
+        if self.shared_pacing is not None:
+            self.shared_pacing.reserve(endpoint, self.min_interval, sleep=self.sleep, check=self._check_job_budget)
+
+    def _extend_cooldown(self, endpoint, seconds):
+        self._cooldown_until[endpoint] = max(self._cooldown_until[endpoint], self._monotonic() + seconds)
+        if self.shared_pacing is not None:
+            self.shared_pacing.cool_down(endpoint, seconds)
+
     def _next_endpoint(self):
         if self.transport_updated is not None:self.transport_updated()
         now=self._monotonic()
         primary=self.endpoints[0]
         # Keep the official/configured primary as the normal source. Only move to
         # fallbacks while the primary is in an error cooldown window.
-        primary_cooldown=self._cooldown_until[primary]
+        primary_cooldown=self._effective_cooldown(primary)
         if primary_cooldown<=now:
             endpoint=primary
             ready=max(now,self._last_by_endpoint[endpoint]+self.min_interval)
@@ -355,7 +370,7 @@ class SolanaReadOnlyRPC:
             ranked=[]
             for priority,endpoint in enumerate(self.endpoints[1:],1):
                 ready=max(
-                    self._cooldown_until[endpoint],
+                    self._effective_cooldown(endpoint),
                     self._last_by_endpoint[endpoint]+self.min_interval,
                 )
                 ranked.append((ready,priority,endpoint))
@@ -444,6 +459,7 @@ class SolanaReadOnlyRPC:
         for attempt in range(max_attempts):
             self._check_job_budget()
             endpoint=self._next_endpoint()
+            self._reserve_shared(endpoint)
             # Backoff may have exhausted the deadline; do not start another wire request.
             self._check_job_budget()
             timeout=20.0
@@ -481,10 +497,7 @@ class SolanaReadOnlyRPC:
                     error=value.get("error") or {}
                     if self._rpc_rate_limited(error):
                         self.endpoint_failures[endpoint]+=1
-                        self._cooldown_until[endpoint]=max(
-                            self._cooldown_until[endpoint],
-                            self._monotonic()+min(30.0,1.5*(2**min(attempt,4))),
-                        )
+                        self._extend_cooldown(endpoint, min(30.0,1.5*(2**min(attempt,4))))
                         last_error=RPCError("RPC_RATE_LIMITED")
                         self.last_wire_error_code="RPC_RATE_LIMITED"
                         self._check_job_budget()
@@ -507,18 +520,17 @@ class SolanaReadOnlyRPC:
             except urllib.error.HTTPError as exc:
                 last_error=RPCError("HTTP_"+str(exc.code));self.endpoint_failures[endpoint]+=1
                 self.last_wire_error_code=self._safe_wire_error_code(last_error)
-                self._check_job_budget()
-                if exc.code not in self.RETRYABLE_HTTP:raise last_error
+                if exc.code not in self.RETRYABLE_HTTP:
+                    self._check_job_budget()
+                    raise last_error
                 retry=max(self._retry_after(exc),min(30.0,1.5*(2**min(attempt,4))))
-                self._cooldown_until[endpoint]=max(self._cooldown_until[endpoint],self._monotonic()+retry)
+                self._extend_cooldown(endpoint, retry)
+                self._check_job_budget()
             except (urllib.error.URLError,TimeoutError,OSError,ValueError) as exc:
                 last_error=RPCError(type(exc).__name__);self.endpoint_failures[endpoint]+=1
                 self.last_wire_error_code=self._safe_wire_error_code(exc)
                 self._check_job_budget()
-                self._cooldown_until[endpoint]=max(
-                    self._cooldown_until[endpoint],
-                    self._monotonic()+min(10.0,1.0*(2**min(attempt,3))),
-                )
+                self._extend_cooldown(endpoint, min(10.0,1.0*(2**min(attempt,3))))
         # The final permitted failed attempt must not escape as recoverable RPCError.
         self._check_job_budget()
         raise last_error or RPCError("RPC_FAILED")
