@@ -6,6 +6,7 @@ and wallet-cluster conclusions never depend on this client.
 from __future__ import annotations
 
 import json
+import threading
 import time
 import urllib.error
 import urllib.parse
@@ -30,7 +31,18 @@ class DexScreenerMarketClient:
     def __init__(self, *, open_url=urllib.request.urlopen,clock=time.time):
         self.open_url=open_url
         self.clock=clock
-        self.last_response_evidence=None
+        # The shared client is called by multiple independent jobs. The
+        # follow-up evidence read belongs to the calling worker, not the
+        # most recent HTTP response from any worker.
+        self._response_state=threading.local()
+
+    @property
+    def last_response_evidence(self):
+        return getattr(self._response_state,"evidence",None)
+
+    @last_response_evidence.setter
+    def last_response_evidence(self,value):
+        self._response_state.evidence=value
 
     def _evidence(self,mint,raw,observed_at,route=None):
         # Local import keeps this transport usable without importing server or

@@ -202,3 +202,41 @@ def test_dexscreener_alternative_social_type_url_fields_are_preserved_as_unverif
     out=DexScreenerMarketClient(open_url=lambda *a,**k:Response(payload)).token_snapshot('Mint')
     assert out['socials'][0]['platform']=='twitter'
     assert out['socials'][0]['url']=='https://x.com/fixture'
+
+
+def test_shared_dexscreener_client_keeps_parallel_raw_receipts_bound_to_each_mint():
+    from concurrent.futures import ThreadPoolExecutor
+    from threading import Event
+
+    from mission_agent.meme.holder_ranks import _b58
+
+    first, second = (_b58(n.to_bytes(32, "big")) for n in (700, 701))
+    a_complete, b_complete = Event(), Event()
+    client = DexScreenerMarketClient(
+        open_url=lambda request, **_: Response([{"fixture_mint": request.full_url.rsplit("/", 1)[1]}]),
+        clock=lambda: 1792683600.0,
+    )
+
+    def a():
+        snapshot, = client.token_snapshots([first])
+        a_complete.set()
+        if not b_complete.wait(2):
+            raise AssertionError("second receipt never completed")
+        return snapshot, client.last_response_evidence
+
+    def b():
+        if not a_complete.wait(2):
+            raise AssertionError("first receipt never completed")
+        snapshot = client.token_snapshot(second)
+        result = snapshot, client.last_response_evidence
+        b_complete.set()
+        return result
+
+    with ThreadPoolExecutor(max_workers=2) as workers:
+        fa, fb = workers.submit(a), workers.submit(b)
+        for mint, requested, future in [(first, [first], fa), (second, second, fb)]:
+            snapshot, evidence = future.result(timeout=3)
+            assert snapshot["mint"] == mint
+            assert evidence["request_params"]["mint"] == requested
+            assert snapshot["source_ref"] == evidence["source_ref"]
+            assert json.loads(evidence["response_bytes"]) == [{"fixture_mint": mint}]
