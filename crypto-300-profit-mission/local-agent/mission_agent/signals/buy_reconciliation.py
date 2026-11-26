@@ -3,7 +3,8 @@ from collections import Counter
 from datetime import datetime
 import math
 
-from .buy_admission import EXCLUDED_MINTS, admit_buy, exact_mint, qualification
+from ..mission_control.archived_wallet_facts import read_archived_classification
+from .buy_admission import EXCLUDED_MINTS, admit_buy, exact_mint, needs_archive_replay, qualification
 from .reconciliation import SHA256, ReconciliationError, _matches, _object
 
 
@@ -22,9 +23,13 @@ def _latency(observed, at):
 
 
 def _timing(values):
-    known = [value for value in values if value is not None]
-    return {"sample_count": len(known), "unknown_count": len(values) - len(known),
-            "minimum_seconds": min(known, default=None), "maximum_seconds": max(known, default=None)}
+    known = sorted(value for value in values if value is not None)
+    count = len(known)
+    return {"sample_count": count, "unknown_count": len(values) - count,
+            "minimum_seconds": known[0] if count else None,
+            "p50_seconds": known[(count+1)//2-1] if count else None,
+            "p95_seconds": known[(95*count+99)//100-1] if count else None,
+            "maximum_seconds": known[-1] if count else None}
 
 
 def _recognized_exclusion(event, assets):
@@ -43,7 +48,8 @@ def _recognized_exclusion(event, assets):
     return mint in EXCLUDED_MINTS or bool(asset and asset.status == "EXCLUDED")
 
 
-def audit_buys(db, reference, result, path, sha256, as_of):
+def audit_buys(db, reference, result, path, sha256, as_of, *,
+               archive_root=None, legacy_archive_root=None):
     if reference["person_id"] != "frank":
         raise ReconciliationError("BUY_AUDIT_FRANK_ONLY")
     if not _matches(SHA256, sha256) or type(as_of) is not int or not 0 < as_of <= 4_000_000_000:
@@ -75,14 +81,31 @@ def audit_buys(db, reference, result, path, sha256, as_of):
         wallet, sig = reference["wallet"], row["signature"]
         indexed = row["stages"]["indexed"]["status"]
         event, actual, source = {}, None, None
+        unresolved_reason = None
         if indexed == "MATCH":
             source = db.execute("SELECT * FROM signatures WHERE wallet=? AND signature=?", (wallet, sig)).fetchone()
             event = _object(source["body"]) or {}
             trade = db.execute("SELECT mint FROM trades WHERE wallet=? AND signature=? "
                                "AND side IN ('BUY','ADD','REENTRY')", (wallet, sig)).fetchone()
             if trade:
-                actual = admit_buy(event, assets, wallet=wallet, signature=sig, slot=tx["slot"],
-                                   block_time=source["block_time"], raw_hash=source["raw_hash"], mint=trade["mint"])
+                identity = {"wallet": wallet, "signature": sig, "slot": tx["slot"],
+                            "block_time": source["block_time"], "raw_hash": source["raw_hash"],
+                            "mint": trade["mint"]}
+                actual = admit_buy(event, assets, **identity)
+                if not actual and not _recognized_exclusion(event, assets) and needs_archive_replay(event, identity):
+                    replay = read_archived_classification(
+                        archive_root, {"sig": sig, "wallet": wallet, "slot": tx["slot"],
+                                       "at": source["block_time"], "raw_sha256": source["raw_hash"]},
+                        legacy_archive_root=legacy_archive_root,
+                    ) if archive_root is not None else None
+                    if replay is None:
+                        unresolved_reason = "LEGACY_BUY_ARCHIVE_UNAVAILABLE"
+                    else:
+                        actual = admit_buy(replay, assets, **identity)
+                        if not actual and admit_buy(replay, assets, **identity, allow_unpriced=True):
+                            unresolved_reason = "LEGACY_BUY_PAYMENT_UNPROVEN"
+                elif not actual and admit_buy(event, assets, **identity, allow_unpriced=True):
+                    unresolved_reason = "BUY_PAYMENT_UNPROVEN"
         mint = actual["mint"] if actual else None
         if not explicit:
             status = "UNRESOLVED"
@@ -90,6 +113,8 @@ def audit_buys(db, reference, result, path, sha256, as_of):
             status = "PENDING"
         elif indexed != "MATCH":
             status = "MISSED" if expected is not False and indexed == "MISSING" else "UNRESOLVED"
+        elif unresolved_reason is not None:
+            status = "UNRESOLVED"
         elif expected is False:
             # A missing/corrupt classifier cannot certify that the negative was recognized.
             status = "UNEXPECTED" if mint else "MATCHED_OUT" if _recognized_exclusion(event, assets) else "UNRESOLVED"
@@ -99,6 +124,8 @@ def audit_buys(db, reference, result, path, sha256, as_of):
             status = "MATCHED_IN" if mint == expected else "WRONG_MINT"
         counts[status] += 1
         row["buy_admission"] = {"status": status, "expected_mint_or_false": expected, "projected_mint": mint}
+        if unresolved_reason is not None:
+            row["buy_admission"]["reason"] = unresolved_reason
         if status == "MATCHED_IN":
             detected = None
             if detection_timing and row["stages"]["detection"]["status"] == "MATCH":

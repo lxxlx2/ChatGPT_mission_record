@@ -193,6 +193,22 @@ def _units(raw, decimals):
     return raw[:-decimals] + ("." + fraction if fraction else "")
 
 
+def needs_archive_replay(event, identity):
+    if not isinstance(event, dict) or event.get("classification") != "ACTIVE_TRADE":
+        return False
+    trade, evidence = event.get("trade"), event.get("evidence")
+    return (
+        isinstance(trade, dict) and isinstance(evidence, dict)
+        and identity["mint"] not in EXCLUDED_MINTS
+        and trade.get("mint") == identity["mint"] and trade.get("direction") == "BUY"
+        and event.get("frank_is_signer") is True and evidence.get("wallet_is_signer") is True
+        and evidence.get("raw_transaction_sha256") == identity["raw_hash"]
+        and all(source.get(key) == identity[key] for source in (event, evidence)
+                for key in ("wallet", "signature", "slot", "block_time"))
+        and not {"quote_legs", "route_amount_semantics", "route_intermediate_evidence_status"} & trade.keys()
+    )
+
+
 def admit_buy(event, assets, *, wallet, signature, slot, block_time, raw_hash, mint, allow_unpriced=False):
     """Return only facts bound to this classified, archived wallet event."""
     asset = assets.get(mint)

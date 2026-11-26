@@ -105,3 +105,41 @@ FRANK_TEST_CHROMIUM="/Applications/Google Chrome.app/Contents/MacOS/Google Chrom
   tests/test_frank_ca_market_series.py tests/test_frank_ca_scoped_analyzer.py \
   tests/test_frank_ca_launch_flow.py
 ```
+
+## 2026-11-26 三线联测
+
+| 范围 | 固定源码和基线 | 交付 |
+| --- | --- | --- |
+| 买入与人物隔离 | `07fd624e8c9d85104c5324452ea03633737171bc` 基于 `efb233a1306716cf9b5f879b6f8448f0950092bd` | [Draft PR #255](https://github.com/lxxlx2/ChatGPT_mission_record/pull/255) |
+| CA 分流与行情刷新 | `cd9d341bd9fa538ba7487dbe45c72e567a6ba8e6` 基于 `07fd624e8c9d85104c5324452ea03633737171bc` | [Draft PR #256](https://github.com/lxxlx2/ChatGPT_mission_record/pull/256) |
+| 联测与时效证据 | `278dcb5eec0597f8338525ed8fe1de5c06a7eb88` 基于 `cd9d341bd9fa538ba7487dbe45c72e567a6ba8e6` | [Draft PR #257](https://github.com/lxxlx2/ChatGPT_mission_record/pull/257) |
+
+### Mac 隔离回归
+
+在固定 SHA 的 `crypto-300-profit-mission/local-agent` 中执行。命令使用本机离线依赖缓存，`FRANK_PLAYWRIGHT_MODULE` 指向本机已装的 Node Playwright。也可省略该变量，使用当前 Node 环境可解析的 `playwright`。
+
+```zsh
+uv run --isolated --offline --no-project --with pytest==8.3.5 --with playwright \
+  python -B -m scripts.accept_frank_rebuild \
+  --source-sha 278dcb5eec0597f8338525ed8fe1de5c06a7eb88 --chrome
+```
+
+- Python 328 项通过。覆盖真实 Scanner 解析路径的合成签名、同签名多钱包、对象时钟和游标隔离、BP 模拟投递零尝试、迟到资格不释放旧通知，以及完整尽调阻塞时概览和钱包任务完成。
+- 机器矩阵 Node 207 项通过。Mac Chrome 158 的真实本机 HTTP 测试通过 1 项。另一个 Chrome 隔离会话使用两枚合成 CA，通过切池、切周期、显式刷新、双向分页与 A→B→A 切换，覆盖桌面、320/390 像素和键盘焦点。该会话没有监听端口，截获外部请求或写请求数为 0。
+- 使用 `--require-wallet-window` 且缺失独立窗口时，程序以 2 退出。错误源码 SHA 以 1 退出。钱包参考不齐时报告 `BLOCKED`，未设置阈值时 SLA 为 `NOT_SCORED`。
+- 补跑 `node --test --test-reporter=spec tests/*.mjs` 时，260 项通过，旧 `test_frank_ca_browser.mjs` 在启动阶段等待历史入口可见时超时。对基线 `efb233a1306716cf9b5f879b6f8448f0950092bd` 单跑该脚本复现相同超时。该脚本当前断言历史按钮默认可见，现有页面把它收在默认折叠区。此项仍失败。
+
+### 结果与待补证据
+
+使用本次候选再次只读复算冻结账本内 6 笔真实 Backpack 买入。逐笔解压既有原件，绑定签名、槽位、时间与规范化交易 SHA-256，再经候选分类器及买入准入重算。6/6 与快照相符，故意传入错误 Meme 资格后仍拒绝 6/6。此检查使用既有交易原件和本地 SQLite 的 immutable 只读连接。
+
+本机定向回归通过。可信源文件可供分类和美元计算，当前缺少一条持续提供新币分类和成交秒美元观察的免费来源链路。已找到 Scanner 备份、窗口请求和前次 GMGN 的 4 个匹配签名，完整独立对账窗口仍标记 `NOT_CAPTURED`。真实行情耗时、持有人与池的同槽对账以及收件端证据仍缺。总状态 `PARTIAL`，生产 `NO_GO`。
+
+## 2026-11-27 旧账本对账与浏览器恢复
+
+集成基线为 `4e3d7cfa121305b5dd3a6609fdf1cf5b71b01ee4`，本轮验收源码为 `81598661499e7df3a3fe4d88eb3f35671d8a3a73`。集成分支的 CoinGecko 原始类别回执仍可在本地买入页读取。与另一路已有类别证据冲突时待核，手工资格和硬排除优先。CoinGecko 文件的应用范围仍是买入历史。
+
+- 旧版对账直接读取账本中的分类字段。对 3 笔之前在 GMGN 看到且与冻结账本匹配的买入，旧路由没有现版所需字段，不能据此判定漏报。新路径通过显式可信归档根目录取原件，核对完整签名、钱包、槽位、时间和哈希后重新分类。3 笔中 2 笔通过严格准入，另 1 笔收到代币但支付金额没有充分证据，记为待核。缺失和损坏的原件都保留为待核。两个本地验收入口均支持可选的 `--buy-archive-root` 和 `--buy-legacy-archive-root`。
+- 冻结账本使用已有资格证据读出 6 个 Mint 的 34 笔买入，其中 26 笔有支付金额证据，成交时美元字段仍为 0 笔。3 个已与 GMGN 匹配的买入均有本机检测和入库时间，检测 P50 为 10.734 秒、P95 为 30.441 秒，入库 P50 为 10.939 秒、P95 为 30.623 秒。这组时间只覆盖三个可见样本，完整窗口仍待捕获。账本 SHA-256 保持一致。
+- 修正旧 Chrome 脚本的实际 Manager 初始化、临时 HTTP 服务和现行折叠入口。通过真实 Handler 和模拟来源验证已提交任务的恢复、失败后续查、切换旧报告、来源错误的安全显示。测试使用临时随机回环端口，结束后释放。统一脚本 `--chrome` 同时运行该检查、买入 HTTP 检查和合成多 CA 页面检查。
+- 当前隔离进程未配置既有 CoinGecko Demo 变量。历史美元转换和同槽持有人比较已有离线解析器，仍需要对应的真实来源原件。完整独立钱包窗口、实源 CA 耗时、链上同槽核对和生产收件未完成。总状态 `PARTIAL`，生产 `NO_GO`。

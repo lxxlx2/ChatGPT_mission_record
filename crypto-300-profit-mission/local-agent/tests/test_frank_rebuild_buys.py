@@ -527,6 +527,15 @@ def test_dashboard_imports_exact_category_receipts_without_manual_prefill(tmp_pa
     dashboard = DashboardState(prod, control)
     row, = dashboard.frank_buys()["rows"]
     assert row["mint"] == MINT and row["name"] == "Same Name" and row["paid"] == "0.5"
+    from mission_agent.signals.buy_source_evidence import CAPTURE_NAME
+
+    normalized = control / CAPTURE_NAME
+    normalized.write_text(json.dumps({"version": 1, "captures": [{
+        "kind": "EXACT_MINT_CATEGORY", "chain": "solana", "mint": MINT, "category": "NON_MEME",
+        "observed_at": now, "source": "fixture source", "source_sha256": "a"*64,
+    }]}))
+    assert dashboard.frank_buys()["rows"] == []
+    normalized.unlink()
     evidence[0]["sha256"] = "0"*64
     write(evidence)
     assert dashboard.frank_buys()["rows"] == []
@@ -587,3 +596,59 @@ def test_source_captures_without_preseed_and_subject_cursor_isolation(tmp_path):
     assert read()["rows"][0]["spent_usd"] is None
     config(cfg, exclude=True)
     assert [row["mint"] for row in read()["rows"]] == [third_mint]
+
+
+@pytest.mark.parametrize("archive_state, expected_status", [
+    ("missing", "UNRESOLVED"),
+    ("corrupt", "UNRESOLVED"),
+    ("bound", "MATCHED_IN"),
+])
+def test_reconciliation_replays_legacy_trade_from_bound_original(tmp_path, archive_state, expected_status):
+    import sqlite3
+    from mission_agent.signals.reconciliation import reconcile_snapshot
+
+    cfg = tmp_path / "qualification.json"
+    backup = tmp_path / "backup.sqlite"
+    reference = tmp_path / "reference.json"
+    archive = tmp_path / "archive"
+    archive.mkdir()
+    config(cfg)
+    ledger = Ledger(tmp_path / "db")
+    signature = _b58((17).to_bytes(64, "big"))
+    original = tx()
+    original["blockTime"] = AS_OF - 1
+    original["transaction"]["signatures"] = [signature]
+    for field in ("preTokenBalances", "postTokenBalances"):
+        original["meta"][field][0]["mint"] = MINT
+        original["meta"][field][1]["mint"] = USDC
+    event = classify(signature, original, WALLET)
+    for field in ("quote_legs", "route_amount_semantics", "route_intermediate_evidence_status"):
+        del event["trade"][field]
+    assert ledger.put("frank", event, event["evidence"]["raw_transaction_sha256"],
+                      str(tmp_path / "wrong-path"), advance=True)
+    if archive_state != "missing":
+        if archive_state == "corrupt":
+            original["meta"]["fee"] += 1
+        (archive / (signature + ".json.gz")).write_bytes(gzip.compress(json.dumps(original).encode()))
+    with sqlite3.connect(backup) as target:
+        ledger.db.backup(target)
+        target.execute("PRAGMA journal_mode=DELETE")
+    reference.write_text(json.dumps({
+        "schema_version": 1, "chain": "solana", "commitment": "finalized", "complete": True,
+        "start_slot": 12, "end_slot": 12, "finalized_through_slot": 12, "person_id": "frank",
+        "wallet": WALLET, "source_id": "independent_fixture", "capture_sha256": "a"*64,
+        "transactions": [{"signature": signature, "slot": 12, "expected_frank_buy": MINT,
+                          "expectation_sha256": "b"*64}],
+    }))
+
+    def sha(path):
+        return hashlib.sha256(path.read_bytes()).hexdigest()
+    report = reconcile_snapshot(backup, sha(backup), reference, sha(reference),
+                                scanner_source_id="scanner_fixture", buy_qualifications=(cfg, sha(cfg), AS_OF),
+                                buy_archive_root=archive)
+    row, = report["rows"]
+    assert row["buy_admission"]["status"] == expected_status
+    assert report["buy_admission"]["counts"]["MISSED"] == 0
+    assert report["buy_admission"]["counts"][expected_status] == 1
+    if archive_state != "bound":
+        assert row["buy_admission"]["reason"] == "LEGACY_BUY_ARCHIVE_UNAVAILABLE"

@@ -1,11 +1,9 @@
 """Temporary CA browser fixture: real Handler/manager, synthetic analyzer, no network.
 
 Invoked only by test_frank_ca_browser.mjs. No DashboardState/production root,
-provider clients, keys or production files. The fixture exits when stdin closes.
+keys or production files. The fixture exits when stdin closes.
 """
-from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
-from http.server import ThreadingHTTPServer
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from types import SimpleNamespace
@@ -30,12 +28,9 @@ def offline_audit(event, args):
 sys.addaudithook(offline_audit)
 
 
-class FixtureRPC:
-    def __init__(self, *args, **kwargs):
-        self.calls = 0
-
-    def assert_can_publish(self):
-        pass
+class FixtureRPC(server.SolanaReadOnlyRPC):
+    def call(self, *args, **kwargs):
+        raise AssertionError('FIXTURE_ANALYZER_MUST_NOT_CALL_REAL_RPC')
 
 
 def fixture_holder_binary(mint):
@@ -180,8 +175,8 @@ class FixtureAnalyzer:
                     'publisher_host':'project.example.org','title':'Fixture project story','excerpt':'A fictional cat explores distant planets.',
                     'exact_ca_mentioned':False,'published_at_claim':None,'first_seen_at':100,'response_sha256':'a'*64}],
                 'attempts':[{'kind':'LAUNCHPAD_PAGE','status':'UNAVAILABLE','reason':'HTTP_403','requested':True}]},
-            'holders': [], 'metrics': {}, 'assessment': {}, 'token_profile': {},
-            'market': {'status':'OK','source':'DEXSCREENER_API','name':name,'symbol':'FIXTURE','mint':self.mint,'observed_at':100,
+            'holders': [], 'metrics': {}, 'assessment': {}, 'token_profile': {'status':'OK','is_initialized':True},
+            'market': {'status':'OK','chain':'solana','source':'DEXSCREENER_API','name':name,'symbol':'FIXTURE','mint':self.mint,'observed_at':100,
                 'price_usd':'2','main_pair':{'pair_address':pool_addr,'base_address':self.mint,'quote_address':'1'*31+'6','liquidity_usd':'1000'},
                 'independent_market':{'status':'OK','source':'GECKOTERMINAL_PUBLIC_API','attempted':True,'mint':self.mint,'pool_address':pool_addr,'quote_address':'1'*31+'6','observed_at':102,'target_orientation':'BASE','price_quote_units':'1.9','price_quote_units_field':'base_token_price_quote_token','response_sha256':'b'*64},
                 'comparison':{'status':'INDEXER_SNAPSHOTS_COMPARED','mint':self.mint,'pool_address':pool_addr,'quote_address':'1'*31+'6','same_chain_snapshot':False,'provider_asof':'UNVERIFIED','retrieval_gap_seconds':2,
@@ -206,20 +201,9 @@ server.WalletClusterAnalyzer = FixtureAnalyzer
 server.load_registry = lambda _: {}
 
 with TemporaryDirectory(prefix='frank-ca-browser-') as scratch:
-    # Deliberately do not call DashboardState or manager __init__ (providers).
-    manager = object.__new__(server.ClusterJobManager)
-    manager.lock = threading.Lock()
-    manager.jobs = {}
-    manager.max_retained_jobs = 64
-    manager.report_root = Path(scratch) / 'reports'
-    manager.report_root.mkdir()
-    manager.cache_path = Path(scratch) / 'cache.sqlite'
-    manager.rpc_endpoints = ['https://disabled.invalid']
-    manager.rpc_endpoint = manager.rpc_endpoints[0]
-    manager.registry_path = Path(scratch) / 'registry.json'
-    manager.market_client = None
-    manager.evidence_enabled = False
-    manager.executor = ThreadPoolExecutor(max_workers=1)
+    # The real manager initializes the same executors as the product. Network
+    # is forbidden by the audit hook above and the RPC and analyzer are fakes.
+    manager = server.ClusterJobManager(Path(scratch))
 
     # Explicit synthetic D2 data only, served through the product's real
     # same-origin GET handler. No private source import or RPC is involved.
@@ -269,7 +253,7 @@ with TemporaryDirectory(prefix='frank-ca-browser-') as scratch:
             # The only POST exercises the real submit/worker with the analyzer replaced above.
             return super().do_POST()
 
-    httpd = ThreadingHTTPServer(('127.0.0.1', 0), FixtureHandler)
+    httpd = server.DashboardHTTPServer(('127.0.0.1', 0), FixtureHandler)
     thread = threading.Thread(target=httpd.serve_forever, daemon=True)
     thread.start()
     print(json.dumps({'port': httpd.server_port, 'pid': __import__('os').getpid()}), flush=True)
@@ -279,4 +263,5 @@ with TemporaryDirectory(prefix='frank-ca-browser-') as scratch:
         httpd.shutdown()
         httpd.server_close()
         thread.join(timeout=3)
-        manager.executor.shutdown(wait=True)
+        for executor in (manager.executor, manager.overview_executor, manager.wallet_executor):
+            executor.shutdown(wait=True)
