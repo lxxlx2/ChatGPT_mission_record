@@ -52,6 +52,12 @@ State: WATCH / TESTNET_LIVE_UNSCORED. This dated section supersedes the historic
 - Existing wallet balance query returned 10 free Test FLOP and zero reserved/frozen; previous first grant nonce result unresolved. No independently finalized grant transaction, direct inference settlement, rollover grant or new email delivery confirmed by this log. Do not classify this as full unattended participation success.
 - Official guide https://flop.network/llms.txt and https://docs.flop.network/docs/network-testnet rechecked 2026-11-26: unscored phase, no activation block/date and no registered Testnet models/miners or usable inference gateway reported. User's earlier CLI 0.9.0 help and successful installation supersede guide's stale statement that no released signed-claim CLI command exists. Recurring execution adapter remains live-unverified. No new scheduler, wallet or deployment action performed by this verification.
 
+## Follow-up — 2026-11-26 16:41 Asia/Bangkok
+
+- Official release dated Nov 26 04:32 UTC: Testnet early.1 includes raw chain spec, node archive and validator joining bundle; public validator admission up to 50 seats, sequential approval and sponsorship. No public miner pack verified. Source https://github.com/flop-labs/network/releases .
+- Official Faucet /limits snapshot 2026-11-26T09:25:16.766Z: miner sponsorship reports six active, four uncalibrated, automatic_full; these are sponsor counters, not evidence of inference-ready registered miners or settled agent work. GitHub issue intake shows fresh miner sponsor allowlist requests on Nov 26. Official agent guide and links still say Testnet inference unavailable and no announced scoring activation block. Sources https://faucet.flop.network/limits ; https://github.com/flop-labs/network/issues ; https://flop.network/llms.txt ; https://docs.flop.network/docs/official-links .
+- Local agent development branch still at 801d8e2ac95de9e164c3d5be310bd383abed0c22. No new Mac runtime or email delivery evidence; last user-reported wallet balance 10 test FLOP. Health and session-offer endpoints inaccessible from research browser, so current actual offer count and health not verified. No execution, code or scheduler changes. State remains WATCH / TESTNET_LIVE_UNSCORED.
+
 ## Project (historical background, 2026-09-29)
 
 Flop Labs is building FLOP Network, a proposed Substrate/FRAME blockchain for verified AI inference and agent-to-agent settlement.
