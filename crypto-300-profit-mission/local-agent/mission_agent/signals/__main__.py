@@ -12,8 +12,15 @@ def inspect(db,signature):
         value=dict(r);value['body']=json.loads(value['body'])
         trade=db.execute('SELECT body FROM trades WHERE wallet=? AND signature=?',(r['wallet'],r['signature'])).fetchone()
         value['trade_record']=json.loads(trade[0]) if trade else None
-        value['signals']=[json.loads(x[0]) for x in db.execute("SELECT body FROM signals WHERE json_extract(body,'$.latest_trade_signature')=?",(signature,))]
-        value['delivery_state']=[dict(x) for x in db.execute("SELECT * FROM outbox WHERE signal_id IN (SELECT signal_id FROM signals WHERE json_extract(body,'$.latest_trade_signature')=?)",(signature,))]
+        value['signals']=[json.loads(x[0]) for x in db.execute(
+            "SELECT body FROM signals WHERE person_id=? AND json_extract(body,'$.latest_trade_signature')=?",
+            (r['person_id'],signature),
+        )]
+        value['delivery_state']=[dict(x) for x in db.execute(
+            "SELECT * FROM outbox WHERE signal_id IN (SELECT signal_id FROM signals "
+            "WHERE person_id=? AND json_extract(body,'$.latest_trade_signature')=?)",
+            (r['person_id'],signature),
+        )]
         for delivery in value['delivery_state']:
             if delivery['receipt']:delivery['receipt']=json.loads(delivery['receipt'])
         results.append(value)
@@ -36,7 +43,7 @@ def main():
     sub=p.add_subparsers(dest='command',required=True)
     a=sub.add_parser('audit-frank');a.add_argument('--last',type=int,default=50)
     a=sub.add_parser('inspect-tx');a.add_argument('signature')
-    a=sub.add_parser('replay');a.add_argument('--source-db',type=Path,required=True);a.add_argument('--raw',type=Path,action='append',required=True);a.add_argument('--registry',type=Path,required=True);a.add_argument('--since',type=int,default=0);a.add_argument('--policy',type=Path,default=Path(__file__).resolve().parents[2]/'config/frank_local_signal_v1.json')
+    a=sub.add_parser('replay');a.add_argument('--source-db',type=Path,required=True);a.add_argument('--raw',type=Path,action='append',required=True);a.add_argument('--registry',type=Path,required=True);a.add_argument('--since',type=int,default=0);a.add_argument('--multiple-subjects',action='store_true');a.add_argument('--policy',type=Path,default=Path(__file__).resolve().parents[2]/'config/frank_local_signal_v1.json')
     args=p.parse_args()
     if args.command in ('audit-frank','inspect-tx'):
         db=sqlite3.connect('file:'+str(args.db)+'?mode=ro',uri=True);db.row_factory=sqlite3.Row
@@ -45,7 +52,7 @@ def main():
             for row in audit(db,args.last):print(row[1],row[2],row[3],'alert='+row[4],row[5])
         db.close();return
     if args.db.exists():raise ValueError('REPLAY_REQUIRES_NEW_ISOLATED_DB')
-    _,wallets=load(args.registry);ledger=Ledger(args.db)
+    _,wallets=load(args.registry, isolated=args.multiple_subjects);ledger=Ledger(args.db)
     src=sqlite3.connect('file:'+str(args.source_db)+'?mode=ro',uri=True);counts=Counter();missing=[]
     for sig,body in src.execute('SELECT signature,evidence_json FROM frank_transactions WHERE block_time>=? ORDER BY block_time,slot,signature',(args.since,)):
         old=json.loads(body);wallet=old['wallet']

@@ -466,3 +466,56 @@ def test_installer_authorized_path_in_isolated_mock_sandbox(tmp_path):
     assert log.is_file()
     assert "--live-delivery" in (app/"mission-loop.sh").read_text()
     assert (app/"approved_policy_sha256").read_text().strip()==approved
+
+
+def test_isolated_subjects_can_catch_up_without_advancing_another_subjects_clock(tmp_path):
+    from mission_agent.signals.engine import Engine
+    from mission_agent.signals.policy import load_policy
+
+    wallet2 = "2" * 32
+    first_at, second_at = 1795000000, 1795007200
+    subjects = {WALLET: "frank", wallet2: "other"}
+    registry = tmp_path / "registry"
+    registry.write_text(json.dumps({"persons": [
+        {"person_id": person, "enabled": True, "wallets": [{"address": wallet, "chain": "solana"}]}
+        for wallet, person in subjects.items()
+    ]}))
+    assert load(registry, isolated=True)[1] == subjects
+    with pytest.raises(ValueError, match="FRANK_ONLY"):
+        load(registry)
+
+    class SubjectRPC(RPC):
+        def __init__(self, wallet, at, *, gap=False):
+            super().__init__(gap)
+            self.wallet, self.at = wallet, at
+
+        def finalized_clock(self):
+            return {"block_time": self.at}
+
+        def transaction(self, sig):
+            data = json.loads(json.dumps(super().transaction(sig)).replace(WALLET, self.wallet))
+            data["blockTime"] = self.at
+            return data
+
+    ledger = Ledger(tmp_path / "db")
+    for wallet in subjects:
+        ledger.checkpoint(wallet, "seed", 11)
+    first, second = SubjectRPC(WALLET, first_at, gap=True), SubjectRPC(wallet2, second_at)
+    engine = Engine(ledger, load_policy(Path(__file__).parents[1] / "config/frank_local_signal_v1.json"), dry_run=True)
+    scanner = Scanner(ledger, subjects, tmp_path/"raw", {WALLET: first, wallet2: second})
+    # Both wallets can see the same transaction. Use the same bytes when the second one fills its gap.
+    assert scanner.cycle_subjects(engine)["frank"]["status"] == "RETRY_PENDING"
+    assert engine._clock("frank") is None and engine._clock("other") == second_at
+    assert ledger.cursor(WALLET)["signature"] == "seed"
+    assert ledger.cursor(wallet2)["signature"] == "new"
+    first.gap = False
+    assert scanner.cycle_subjects(engine)["frank"]["processed"] == 0
+    assert engine._clock("frank") == first_at
+    assert engine._clock("other") == second_at
+    first.at = second_at
+    assert scanner.cycle_subjects(engine)["frank"]["processed"] == 1
+    assert scanner.cycle_subjects(engine)["frank"]["processed"] == 0
+    assert {tuple(row) for row in ledger.db.execute("SELECT wallet,signature FROM v1_seen")} == {
+        (WALLET, "new"), (wallet2, "new"),
+    }
+    assert ledger.db.execute("SELECT count(*) FROM outbox WHERE status='PENDING'").fetchone()[0] == 0

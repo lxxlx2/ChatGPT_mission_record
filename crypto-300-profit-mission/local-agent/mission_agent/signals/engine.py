@@ -41,7 +41,7 @@ class Engine:
         return json.loads(r[0]) if r else None
     def _save(self,s):self.db.execute('INSERT OR REPLACE INTO v1_states VALUES(?,?,?)',(s['person_id'],s['mint'],json.dumps(s,sort_keys=True)))
     def _rebuild_admits(self,row,event,mint):
-        return row["person_id"] == "frank" and admit_buy(
+        return admit_buy(
             event,self.rebuild_assets,wallet=row["wallet"],signature=row["signature"],
             slot=row["slot"],block_time=row["block_time"],raw_hash=row["raw_hash"],mint=mint)
 
@@ -52,7 +52,7 @@ class Engine:
                 return None
             row=self.db.execute("SELECT * FROM signatures WHERE wallet=? AND signature=?",
                                 (trigger['rebuild_wallet'],trigger['signature'])).fetchone()
-            if not row or not self._rebuild_admits(row,json.loads(row['body']),s['mint']):
+            if not row or row["person_id"] != s["person_id"] or not self._rebuild_admits(row,json.loads(row['body']),s['mint']):
                 return None
         sid=digest({'policy_id':self.policy['policy_id'],'policy_hash':POLICY_SHA256,'person_id':s['person_id'],'mint':s['mint'],'episode_id':s['episode_id'],'signal_type':stage['signal_type'],'stage':stage['stage']})
         if self.db.execute('SELECT 1 FROM signals WHERE signal_id=?',(sid,)).fetchone():
@@ -119,10 +119,16 @@ class Engine:
         if blocked:
             return None
         for channel in (['local','gmail'] if stage['signal_type']=='FRANK_MULTIPLE_SIGNAL' else ['local']):self.db.execute('INSERT INTO outbox(signal_id,channel,status) VALUES(?,?,?)',(sid,channel,'DRY_RUN_AUDIT' if self.dry_run else 'PENDING'))
-        row=self.db.execute('SELECT body FROM signatures WHERE signature=? AND person_id=?',(body['latest_trade_signature'],s['person_id'])).fetchone()
-        if row:
-            audit=json.loads(row[0]);audit['signal_ids']=sorted(set(audit.get('signal_ids',[])+[sid]))
-            self.db.execute("UPDATE signatures SET body=?,alert_state='YES',alert_reason='DETERMINISTIC_STAGE_UPGRADE' WHERE signature=? AND person_id=?",(json.dumps(audit,sort_keys=True),body['latest_trade_signature'],s['person_id']))
+        trigger = s["events"][-1]
+        source_wallet = trigger.get("wallet") or trigger.get("rebuild_wallet")
+        matched = self.db.execute(
+            "SELECT wallet,body FROM signatures WHERE signature=? AND person_id=? AND (? IS NULL OR wallet=?) LIMIT 2",
+            (trigger["signature"],s["person_id"],source_wallet,source_wallet),
+        ).fetchall()
+        if len(matched)==1:
+            wallet, encoded = matched[0]
+            audit=json.loads(encoded);audit['signal_ids']=sorted(set(audit.get('signal_ids',[])+[sid]))
+            self.db.execute("UPDATE signatures SET body=?,alert_state='YES',alert_reason='DETERMINISTIC_STAGE_UPGRADE' WHERE signature=? AND wallet=? AND person_id=?",(json.dumps(audit,sort_keys=True),trigger["signature"],wallet,s["person_id"]))
         if stage['signal_type']=='FRANK_MULTIPLE_SIGNAL':
             from .email import content
             mail=content(body)
@@ -137,25 +143,35 @@ class Engine:
         eid=digest({'episode':s['episode_id'],'at':at,'signature':signature,'kind':kind})
         self.db.execute('INSERT OR IGNORE INTO v1_evaluations VALUES(?,?,?,?,?,?,?)',(eid,s['person_id'],s['mint'],s['episode_id'],at,signature,json.dumps(result,sort_keys=True)))
         return result
-    def tick(self,at):
-        old=self.db.execute("SELECT value FROM v1_meta WHERE key='last_time'").fetchone()
-        last=int(old[0]) if old else at
-        if at<last:return
-        tick=watch_tick(last)+3600
-        while tick<=at:
+    def _clock_key(self, person):
+        # Keep the original key for already-installed Frank ledgers.
+        return "last_time" if person == "frank" else "last_time:" + person
+
+    def _clock(self, person):
+        row = self.db.execute("SELECT value FROM v1_meta WHERE key=?", (self._clock_key(person),)).fetchone()
+        return int(row[0]) if row else None
+
+    def tick(self, at, *, person="frank"):
+        last = self._clock(person)
+        if last is not None and at < last:
+            return
+        tick = watch_tick(at if last is None else last) + 3600
+        while tick <= at:
             with transaction(self.db):
-                rows=self.db.execute('SELECT body FROM v1_states').fetchall()
-                for r in rows:
-                    s=json.loads(r[0])
-                    if s['state']!='OPEN':continue
-                    latest=s['events'][-1]['at']
-                    # No active sequence with >3h of no fresh buy can newly qualify.
-                    if tick-latest>self.policy['mapping']['FRANK_MULTIPLE_SIGNAL']['stale_after_seconds']:continue
-                    self._evaluate(s,tick,s['events'][-1]['signature'],'HOURLY_29')
-                    s['watch_at']=tick if watch_eligible(s,tick,self.policy) else None;self._save(s)
-                self.db.execute("INSERT OR REPLACE INTO v1_meta VALUES('last_time',?)",(str(tick),))
-            tick+=3600
-        self.db.execute("INSERT OR REPLACE INTO v1_meta VALUES('last_time',?)",(str(at),))
+                rows = self.db.execute("SELECT body FROM v1_states WHERE person_id=?", (person,)).fetchall()
+                for row in rows:
+                    state = json.loads(row[0])
+                    if state["state"] != "OPEN":
+                        continue
+                    latest = state["events"][-1]
+                    if tick-latest["at"] > self.policy["mapping"]["FRANK_MULTIPLE_SIGNAL"]["stale_after_seconds"]:
+                        continue
+                    self._evaluate(state, tick, latest["signature"], "HOURLY_29")
+                    state["watch_at"] = tick if watch_eligible(state, tick, self.policy) else None
+                    self._save(state)
+                self.db.execute("INSERT OR REPLACE INTO v1_meta VALUES(?,?)", (self._clock_key(person),str(tick)))
+            tick += 3600
+        self.db.execute("INSERT OR REPLACE INTO v1_meta VALUES(?,?)", (self._clock_key(person),str(at)))
     def process(self,row):
         if self.db.execute('SELECT 1 FROM v1_seen WHERE wallet=? AND signature=?',(row['wallet'],row['signature'])).fetchone():return None
         e=json.loads(row['body']);at=row['block_time']
@@ -165,7 +181,7 @@ class Engine:
             with transaction(self.db):
                 self.db.execute('INSERT OR IGNORE INTO v1_seen VALUES(?,?)',(row['wallet'],row['signature']))
             return None
-        if at is not None:self.tick(at)
+        if at is not None:self.tick(at, person=row["person_id"])
         result=None
         with transaction(self.db):
             t=e.get('trade') if e['classification']=='ACTIVE_TRADE' else None
@@ -182,6 +198,7 @@ class Engine:
                     if amount_predicate not in {'USDC_DIRECT_NUMERIC','SOL_EVENT_TIME_USDC_VERIFIED','UNDETERMINED'}:
                         raise ValueError('TRADE_AMOUNT_PREDICATE_INVALID')
                     event={'signature':row['signature'],'at':at,'slot':row['slot'],**t,'quote_quantity':quantity(t['quote_amount_raw'],t['quote_decimals']),'amount_predicate':amount_predicate}
+                    event['wallet']=row['wallet']
                     if self.rebuild_assets is not None:event['rebuild_wallet']=row['wallet']
                     s['events'].append(event)
                     amount=int(t['token_amount_raw']);current=int(s['current_raw']) if s['current_raw'] is not None else None
@@ -199,8 +216,8 @@ class Engine:
                     # A proven complete round trip inside the canonical approximate 20m reference.
                     if s['state']=='CLOSED' and at-s['events'][0]['at']<=m['rapid_roundtrip_reference_seconds']:s['hft']=True
                     if t['direction']=='BUY':establish_t0(s,self.policy)
-                    clock=self.db.execute("SELECT value FROM v1_meta WHERE key='last_time'").fetchone()
-                    evaluated_at=max(at,int(clock[0]) if clock else at)
+                    clock=self._clock(person)
+                    evaluated_at=max(at,clock if clock is not None else at)
                     result=self._evaluate(s,evaluated_at,row['signature'],'ACTIVE_TRADE');self._save(s)
                     ids=result['signal_ids'];body={**e,'signal_ids':sorted(set(e.get('signal_ids',[])+ids)),'v1_evaluation':result,'amount_predicate':event['amount_predicate']}
                     self.db.execute('UPDATE signatures SET body=?,alert_state=?,alert_reason=? WHERE wallet=? AND signature=?',(json.dumps(body,sort_keys=True),'YES' if body['signal_ids'] else 'NO','DETERMINISTIC_STAGE_UPGRADE' if ids else 'V1_PREDICATES:'+json.dumps(result['predicates'],sort_keys=True),row['wallet'],row['signature']))
@@ -209,10 +226,19 @@ class Engine:
             if t and at is None:self.db.execute("UPDATE signatures SET alert_reason='V1_BLOCK_TIME_UNDETERMINED' WHERE wallet=? AND signature=?",(row['wallet'],row['signature']))
             self.db.execute('INSERT INTO v1_seen VALUES(?,?)',(row['wallet'],row['signature']))
         return result
-    def drain(self,*,until=None):
-        rows=self.db.execute('SELECT s.* FROM signatures s LEFT JOIN v1_seen v USING(wallet,signature) WHERE v.signature IS NULL ORDER BY s.block_time,s.slot,s.signature').fetchall()
-        for row in rows:self.process(row)
-        if until is not None:self.tick(until)
+    def drain(self, *, until=None, person=None):
+        cutoff = until if person is not None else None
+        rows = self.db.execute(
+            "SELECT s.* FROM signatures s LEFT JOIN v1_seen v USING(wallet,signature) "
+            "WHERE v.signature IS NULL AND (? IS NULL OR s.person_id=?) "
+            "AND (? IS NULL OR s.block_time IS NULL OR s.block_time<=?) "
+            "ORDER BY s.block_time,s.slot,s.signature,s.wallet",
+            (person, person, cutoff, cutoff),
+        ).fetchall()
+        for row in rows:
+            self.process(row)
+        if until is not None:
+            self.tick(until,person=person or "frank")
         return len(rows)
     def summary(self):
         counts=dict(self.db.execute('SELECT signal_type,count(*) FROM signals GROUP BY signal_type'))

@@ -14,6 +14,7 @@ import time
 
 from ..meme.holder_ranks import valid_pubkey
 from .classifier import QUOTE_MINTS, USDT
+from .buy_source_evidence import CAPTURE_NAME, load_captures
 from .policy import USDC
 from .reconciliation import _base58_size
 
@@ -81,6 +82,27 @@ def qualification(path, as_of, *, sha256=None):
     return result
 
 
+def qualified_assets(path, observations, as_of, *, receipts=None):
+    assets = None
+    if path is not None:
+        try:
+            assets = qualification(path, as_of)
+        except FileNotFoundError:
+            pass
+    if assets is None and not observations and not receipts:
+        raise FileNotFoundError("MEME_QUALIFICATION_UNAVAILABLE")
+    derived = {mint: Asset(*record) for mint,record in observations.items()
+               if record is not None and mint not in EXCLUDED_MINTS}
+    for mint, receipt in (receipts or {}).items():
+        local = derived.get(mint)
+        if mint in observations and (local is None or local.status != receipt.status):
+            derived[mint] = Asset("PENDING", "CATEGORY_EVIDENCE_CONFLICT",
+                                  max(receipt.observed_at, local.observed_at if local else 0), None)
+        else:
+            derived[mint] = receipt
+    return {**derived, **(assets or {})}
+
+
 MEME_SCOPE_BLOCKED = "MEME_SCOPE_BLOCKED"
 
 
@@ -92,8 +114,10 @@ def qualification_path(path=None, *, default=None):
 class BuyDeliveryGate:
     """Local evidence required for a new Frank notification."""
 
-    def __init__(self, path=None, *, clock=time.time):
+    def __init__(self, path=None, *, capture_path=None, clock=time.time):
         self.path = qualification_path(path)
+        self.capture_path = (capture_path if capture_path is not None or self.path is None
+                             else self.path.with_name(CAPTURE_NAME))
         self.clock = clock
 
     def block_reason(self, db, signal):
@@ -116,10 +140,10 @@ class BuyDeliveryGate:
                 or signature != signal.get("latest_trade_signature")
                 or signature != signal.get("latest_buy_signature")):
             return None, "TRIGGER_IS_NOT_PROVEN_BUY"
-        if self.path is None:
-            return None, "MEME_QUALIFICATION_UNAVAILABLE"
         try:
-            assets = qualification(self.path, int(self.clock()))
+            observed = int(self.clock())
+            captured, _, _ = load_captures(self.capture_path, observed)
+            assets = qualified_assets(self.path, captured, observed)
         except (OSError, ValueError, RecursionError):
             return None, "MEME_QUALIFICATION_UNAVAILABLE"
         asset = assets.get(mint)
