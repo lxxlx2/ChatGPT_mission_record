@@ -4,9 +4,11 @@ Public service: https://support.coingecko.com/articles/6867086195-does-geckoterm
 Pool schema: https://docs.coingecko.com/reference/pool-address
 Only the keyless GeckoTerminal public host is used, never the paid Pro host.
 """
+from collections import deque
 import hashlib
 import json
 import math
+import threading
 import time
 import urllib.error
 import urllib.request
@@ -37,13 +39,39 @@ def number(value):
     except (InvalidOperation,ValueError,TypeError):return None
 
 
+class GeckoTerminalRequestBudget:
+    """Share the existing eight-requests/minute ceiling across a dashboard."""
+    def __init__(self, monotonic=time.monotonic):
+        self._clock = monotonic
+        self._lock = threading.Lock()
+        self._requests = deque()
+        self._backoff_until = 0
+
+    def admit(self):
+        with self._lock:
+            now = self._clock()
+            while self._requests and now - self._requests[0] >= 60:
+                self._requests.popleft()
+            if now < self._backoff_until or len(self._requests) >= 8:
+                return False
+            self._requests.append(now)
+            return True
+
+    def rate_limited(self):
+        with self._lock:
+            self._backoff_until = max(self._backoff_until, self._clock() + 60)
+
+
 class GeckoTerminalMarketClient:
-    def __init__(self,*,open_url=_open,clock=time.time,monotonic=time.monotonic):
+    def __init__(self,*,open_url=_open,clock=time.time,monotonic=time.monotonic,request_budget=None):
+        self.request_budget=request_budget
         self.open_url=open_url;self.clock=clock;self.monotonic=monotonic
     def pool_snapshot(self,mint,pool,quote):
         out={'source':'GECKOTERMINAL_PUBLIC_API','status':'UNAVAILABLE','attempted':False,'observed_at':self.clock()}
         if not all(valid_pubkey(v) for v in (mint,pool,quote)) or mint==quote:
             return {**out,'reason':'IDENTITY_INVALID'}
+        if self.request_budget is not None and not self.request_budget.admit():
+            return {**out,'reason':'RATE_LIMIT'}
         out['attempted']=True
         request=urllib.request.Request(BASE+pool,headers={'Accept':'application/json','User-Agent':'mission-meme-research/3'},method='GET')
         try:
@@ -61,7 +89,10 @@ class GeckoTerminalMarketClient:
             out['observed_at']=self.clock()
             if len(raw)>MAX_RESPONSE_BYTES:return {**out,'reason':'RESPONSE_LIMIT'}
             payload=json.loads(raw,parse_float=Decimal)
-        except urllib.error.HTTPError as exc:return {**out,'reason':'HTTP_'+str(exc.code)}
+        except urllib.error.HTTPError as exc:
+            if exc.code == 429 and self.request_budget is not None:
+                self.request_budget.rate_limited()
+            return {**out,'reason':'HTTP_'+str(exc.code)}
         except (urllib.error.URLError,OSError,TimeoutError,ValueError,TypeError,RecursionError):return {**out,'reason':'NETWORK_OR_RESPONSE_INVALID'}
         data=payload.get('data') if isinstance(payload,dict) else None
         attrs=data.get('attributes') if isinstance(data,dict) else None

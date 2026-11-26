@@ -1,5 +1,5 @@
 """Explicit same-report, same-pool public GeckoTerminal reads; no RPC or execution."""
-from collections import OrderedDict, deque
+from collections import OrderedDict
 from datetime import datetime
 from decimal import Decimal
 import json
@@ -11,7 +11,7 @@ import urllib.parse
 import urllib.request
 
 from .holder_ranks import valid_pubkey
-from .market_parity import BASE, MAX_RESPONSE_BYTES, _open, number
+from .market_parity import BASE, MAX_RESPONSE_BYTES, GeckoTerminalRequestBudget, _open, number
 from ..signals.reconciliation import _base58_size
 
 SOURCE = "GECKOTERMINAL_PUBLIC_API"
@@ -130,12 +130,11 @@ def _parse_trades(payload,mint,peer,pool,now):
 
 
 class CAMarketSeries:
-    def __init__(self, *, open_url=_open, clock=time.time, monotonic=time.monotonic):
+    def __init__(self, *, open_url=_open, clock=time.time, monotonic=time.monotonic, request_budget=None):
         self.open_url,self.clock,self.monotonic=open_url,clock,monotonic
         self.cache=OrderedDict()
         self.lock=threading.Lock()
-        self.requests=deque()
-        self.backoff_until=0
+        self.request_budget=request_budget if request_budget is not None else GeckoTerminalRequestBudget(monotonic)
 
     def _read(self,url):
         req=urllib.request.Request(url,headers={"Accept":"application/json;version=20230203",
@@ -166,12 +165,9 @@ class CAMarketSeries:
             now=self.monotonic()
             if cached and now-cached[0]<60:
                 return {**cached[1],"cache":"FRESH"}
-            while self.requests and now-self.requests[0]>=60:
-                self.requests.popleft()
-            if now<self.backoff_until or len(self.requests)>=8:
+            if not self.request_budget.admit():
                 reason="RATE_LIMIT"
             else:
-                self.requests.append(now)
                 try:
                     data=self._read(BASE+pool+suffix)
                     observed=int(self.clock())
@@ -188,7 +184,7 @@ class CAMarketSeries:
                     return result
                 except urllib.error.HTTPError as error:
                     reason="HTTP_"+str(error.code)
-                    if error.code==429:self.backoff_until=self.monotonic()+60
+                    if error.code==429:self.request_budget.rate_limited()
                 except (ValueError,TypeError,TimeoutError,OSError,RecursionError):
                     reason="SOURCE_UNAVAILABLE_OR_MISMATCH"
             if cached and now-cached[0]<1800:

@@ -1781,7 +1781,7 @@ class WalletClusterAnalyzer:
                         if meta.get("status")!="VERIFIED_CHAIN_STATE":
                             market.update(name=row.get("target_name"),symbol=row.get("target_symbol"))
                         break
-                    if reverse.get("reason") == "HTTP_429" or len(attempted) >= 2:
+                    if reverse.get("reason") in {"HTTP_429", "RATE_LIMIT"} or len(attempted) >= 2:
                         break
         self._launch_metadata=launch.get("metadata")
         if self.query_scope=="overview":

@@ -23,7 +23,8 @@ from urllib.parse import parse_qs, urlparse
 from ..meme.cluster import RpcCache, RPCJobBudgetExceeded, SolanaReadOnlyRPC, WalletClusterAnalyzer, load_registry, markdown, report_completeness
 from ..meme.job_checkpoint import JobCheckpoint, CheckpointRPC, CheckpointSecondaryRPC, CheckpointClient, CheckpointError, canonical, digest, source_fingerprint
 from ..meme.market import DexScreenerMarketClient
-from ..meme.market_parity import GeckoTerminalMarketClient
+from ..meme.market_parity import GeckoTerminalMarketClient, GeckoTerminalRequestBudget
+from ..meme.provider_pacing import SharedProviderPacing
 from ..meme.narrative import PublicNarrativeClient
 from .db import open_control_ro
 from .delivery_review import summarize_manual_reviews
@@ -170,7 +171,7 @@ CLUSTER_PRESETS = {
 
 
 class ClusterJobManager:
-    def __init__(self, control_root: Path, production_root: Path | None = None):
+    def __init__(self, control_root: Path, production_root: Path | None = None, *, parallel_ca_scopes: bool = False):
         self.control_root = Path(control_root)
         self.report_root = self.control_root / "cluster-reports"
         self.report_root.mkdir(parents=True, exist_ok=True)
@@ -196,12 +197,20 @@ class ClusterJobManager:
         self.rpc_endpoints=list(dict.fromkeys(self.rpc_endpoints))
         self.rpc_endpoint=self.rpc_endpoints[0]
         self.market_client=DexScreenerMarketClient()
-        self.ca_market_series=CAMarketSeries()
-        self.independent_market_client=GeckoTerminalMarketClient()
+        # Constructor-only staging opt-in. The production Dashboard still uses
+        # the existing serial scheduler until measured acceptance.
+        gecko_budget = GeckoTerminalRequestBudget() if parallel_ca_scopes else None
+        self.ca_market_series=CAMarketSeries(request_budget=gecko_budget)
+        self.independent_market_client=GeckoTerminalMarketClient(request_budget=gecko_budget)
+        self._shared_rpc_pacing = SharedProviderPacing() if parallel_ca_scopes else None
         self.narrative_client=PublicNarrativeClient()
         self.jupiter=JupiterQuoteClient(os.environ.get("JUPITER_API_KEY"))
         self.frank=FrankReader(production_root) if production_root is not None else None
         self.executor = ThreadPoolExecutor(max_workers=1, thread_name_prefix="meme-cluster")
+        self._scope_executors = {
+            scope: ThreadPoolExecutor(max_workers=1, thread_name_prefix="meme-ca-" + scope)
+            for scope in ("overview", "wallet")
+        } if parallel_ca_scopes else {}
         self.lock = threading.Lock()
         self.jobs: dict[str, dict] = {}
         self.max_retained_jobs = 64
@@ -230,6 +239,21 @@ class ClusterJobManager:
                                  if k != "execution_quote_30_usdc"}
         return public
 
+    def _queue_job_locked(self, job):
+        scope = job.get("query_scope", "full")
+        executor = getattr(self, "_scope_executors", {}).get(scope, self.executor)
+        job["future"] = executor.submit(self._run, job["job_id"])
+
+    def shutdown(self):
+        for executor in (self.executor, *self._scope_executors.values()):
+            executor.shutdown()
+        if self.evidence_executor is not None:
+            self.evidence_executor.shutdown()
+
+    def _rpc_pacing_kwargs(self):
+        pacing = getattr(self, "_shared_rpc_pacing", None)
+        return {"shared_pacing": pacing} if pacing is not None else {}
+
     def _prune_jobs_locked(self):
         finished=[
             job for job in self.jobs.values()
@@ -237,7 +261,9 @@ class ClusterJobManager:
         ]
         finished.sort(key=lambda x: x.get("finished_at") or x.get("created_at") or 0, reverse=True)
         keep={x["job_id"] for x in finished[:self.max_retained_jobs]}
-        active={x["job_id"] for x in self.jobs.values() if x["status"] in {"QUEUED","RUNNING"}}
+        active={x["job_id"] for x in self.jobs.values()
+                if x["status"] in {"QUEUED","RUNNING"}
+                or (x.get("future") is not None and not x["future"].done())}
         for job_id in list(self.jobs):
             if job_id not in keep and job_id not in active:
                 self.jobs.pop(job_id,None)
@@ -289,13 +315,15 @@ class ClusterJobManager:
                 return self._public_job(current)
             if self._saved_job_report(job_id) is not None:
                 raise ValueError("CA_JOB_ALREADY_DONE")
+            if current and current.get("future") is not None and not current["future"].done():
+                raise ValueError("CA_JOB_NOT_RESUMABLE")
             paused = self._paused_job(job_id)
             if paused is None or paused["mint"] != mint or not paused["resume_available"]:
                 raise ValueError("CA_JOB_NOT_RESUMABLE")
             job = {**paused, "status": "QUEUED", "resume_available": False,
                    "progress": {"stage": "QUEUED", "updated_at": time.time()}}
             self.jobs[job_id] = job
-            job["future"] = self.executor.submit(self._run, job_id)
+            self._queue_job_locked(job)
             return self._public_job(job)
 
     def _independent_rpc(self):
@@ -310,7 +338,7 @@ class ClusterJobManager:
         # No separate aggregate quota: each logical transport read still has
         # finite retries and timeouts, so access failures terminate normally.
         def create():
-            try:return SolanaReadOnlyRPC(url,fallback_endpoints=[])
+            try:return SolanaReadOnlyRPC(url,fallback_endpoints=[],**self._rpc_pacing_kwargs())
             except ValueError:return None
         return create
 
@@ -372,7 +400,7 @@ class ClusterJobManager:
                 JobCheckpoint.create(self.checkpoint_root, job, self._checkpoint_binding(preset, query),
                                      CLUSTER_RPC_JOB_BUDGETS[preset])
             self.jobs[job_id] = job
-            job["future"] = self.executor.submit(self._run, job_id)
+            self._queue_job_locked(job)
             return self._public_job(job)
 
     def _frank_snapshot(self, mint: str) -> dict:
@@ -661,9 +689,9 @@ class ClusterJobManager:
             query = _ca_query_fields(job)
             scope = query.get("query_scope", "full")
             checkpoint_enabled = job.get("checkpoint_version") == 1
-        cache = RpcCache(self.cache_path)
-        checkpoint = None
+        cache = checkpoint = None
         try:
+            cache = RpcCache(self.cache_path)
             opts = CLUSTER_PRESETS[preset]
             wire_budget = CLUSTER_RPC_JOB_BUDGETS[preset]
             binding = self._checkpoint_binding(preset, query) if checkpoint_enabled else None
@@ -678,6 +706,7 @@ class ClusterJobManager:
                 fallback_endpoints=self.rpc_endpoints[1:],
                 cache=cache,
                 **active_budget,
+                **self._rpc_pacing_kwargs(),
             )
             if checkpoint is not None:rpc = CheckpointRPC(checkpoint, rpc)
             def source_client(name, enabled=True):
@@ -850,7 +879,8 @@ class ClusterJobManager:
                 job["progress"] = {"stage":"ERROR","updated_at":job["finished_at"]}
                 self._prune_jobs_locked()
         finally:
-            try:cache.close()
+            try:
+                if cache is not None:cache.close()
             finally:
                 if checkpoint is not None:
                     try:
