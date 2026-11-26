@@ -555,7 +555,11 @@ def queue_summary(conn):
         '钱包地址：'+get(conn,'wallet_address','未核实'),
         '钱包可用余额（Test FLOP）：'+get(conn,'wallet_free_flop','未核实'),
         '钱包资金状态：'+get(conn,'wallet_funding_state','未核实'),
-        '正式计分状态：'+get(conn,'scoring_status','未核实'),
+        '正式计分状态：'+get(conn,'cycle_scoring',get(conn,'scoring_status','未核实')),
+        '自动循环：'+get(conn,'cycle_status','未核实'),
+        '矿工/报价发现：'+get(conn,'discovery_status','未核实')+' / '+get(conn,'offer_count','未核实')+' / 合格 '+get(conn,'eligible_offer_count','未核实'),
+        '链上核验阻塞：'+get(conn,'cycle_verify_reason','未记录'),
+        '下一次领取最早时间（UTC Unix秒）：'+get(conn,'next_claim_eligible_after_utc_epoch','未确认'),
         '钱包锁定余额（Test FLOP）：'+get(conn,'wallet_reserved_flop','未核实'),
         '钱包余额采样时间：'+get(conn,'wallet_balance_at','未核实'),
         '首次领取状态：'+get(conn,'faucet_claim_status','未记录'),
@@ -630,41 +634,9 @@ def tick(*, fetch=_json_response, cli_status=cli_network_status, execution=do_di
                     config=None
                     notify_error(conn,'PRIVATE_CONFIG_NOT_READY',type(exc).__name__+': '+str(exc))
                 state=ready_to_send(conn,config,fetch=fetch,cli_status=cli_status)
-                if state['ready']:
-                    if not mail_preflight or mail_preflight[0]!='SENT_VERIFIED':
-                        notify_error(conn,'EMAIL_TEST_NOT_VERIFIED','Run mail-test and verify Gmail Sent before initiating paid Testnet session')
-                    elif not conn.execute('SELECT 1 FROM session_attempts LIMIT 1').fetchone():
-                        put(conn,'execution_mode','FIRST_SESSION_READY')
-                        execution(conn,config)
-                else:
-                    if state['reason'] in ('PLANNED','UNVERIFIED_DOC_FORMAT','OFFICIAL_GENESIS_NOT_PUBLISHED',
-                                           'OFFICIAL_DOC_UNAVAILABLE','OFFICIAL_PROFILE_PLANNED',
-                                           'RPC_NOT_REACHABLE_AND_PINNED','FAUCET_NOT_READY_OR_GENESIS_MISMATCH',
-                                           'CHAIN_FINALITY_NOT_VERIFIED','BEFORE_OFFICIAL_LAUNCH_TARGET'):
-                        put(conn,'execution_mode','WAITING_FOR_CONFIRMED_TESTNET')
-                    elif state['reason'] in ('PRIVATE_CONFIG_NOT_CONFIGURED','WAITING_FOR_VERIFIED_SCORING') and state.get('genesis'):
-                        from faucet import request_initial
-                        if not mail_preflight or mail_preflight[0]!='SENT_VERIFIED':
-                            notify_error(conn,'EMAIL_TEST_NOT_VERIFIED','Verify existing mail setup before requesting a Testnet grant')
-                            result={'status':'BLOCKED_EMAIL_NOT_VERIFIED'}
-                        else:
-                            result=request_initial(conn,state['genesis'])
-                        put(conn,'faucet_claim_status',result.get('status','UNVERIFIED'))
-                        put(conn,'network_status','TESTNET_VERIFIED_NO_DIRECT_MINER')
-                        put(conn,'execution_mode','WAITING_FOR_INDEPENDENT_MINER_AND_MODEL')
-                        if result.get('status') in ('REJECTED_OR_UNKNOWN_NO_RETRY','OUTCOME_UNKNOWN_NO_RETRY','BLOCKED_LEGACY_ATTEMPT','REFUSED_NO_AUTO_RETRY'):
-                            notify_error(conn,'FAUCET_RESULT_NEEDS_RECONCILIATION',result['status'])
-                        elif result.get('status')=='BLOCKED_AGENT_IDENTITY_NOT_READY':
-                            notify_error(conn,'TEST_WALLET_NOT_READY',result['status'])
-                        elif result.get('status')=='BLOCKED_CLI_NOT_INSTALLED':
-                            notify_error(conn,'FLOP_CLI_NOT_INSTALLED',result['status'])
-                    elif state['reason']!='PRIVATE_CONFIG_NOT_CONFIGURED':
-                        if state['reason'] not in ('OFFICIAL_PROFILE_PLANNED','PLANNED'):
-                            notify_error(conn,'TESTNET_READINESS_GAP',state['reason'])
-                        else:
-                            put(conn,'execution_mode','WAITING_FOR_CONFIRMED_TESTNET')
-                    else:
-                        put(conn,'execution_mode','WAITING_FOR_PRIVATE_CONFIG')
+                # Legacy single-session branch is retired. The cycle runs after
+                # funding observations; it has independent funding and spend gates.
+                put(conn,'execution_mode','CHECKING_TESTNET_CYCLE')
             except (OSError,TimeoutError,ValueError,subprocess.SubprocessError) as exc:
                 notify_error(conn,'NETWORK_CHECK_FAILED',type(exc).__name__)
         from faucet import funding_observation
@@ -673,6 +645,13 @@ def tick(*, fetch=_json_response, cli_status=cli_network_status, execution=do_di
             'rpc_genesis_matches_expected':get(conn,'rpc_genesis_matches_expected')=='true'
                 and get(conn,'rpc_reachable')=='true'
                 and get(conn,'profile_status')=='live'})
+        if now()>=LAUNCH_UTC and mail_preflight and mail_preflight[0]=='SENT_VERIFIED':
+            from cycle import run_tick
+            try:
+                run_tick(conn,fetch)
+            except (OSError,TimeoutError,ValueError,TypeError,KeyError,subprocess.SubprocessError) as exc:
+                put(conn,'cycle_status','CYCLE_CHECK_FAILED')
+                notify_error(conn,'CYCLE_CHECK_FAILED',type(exc).__name__)
         dashboard_state=check_dashboard_health_from_tick(conn)
         queue_summary(conn)
         delivery=pump(conn)

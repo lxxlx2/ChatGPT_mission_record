@@ -38,6 +38,10 @@ button{background:#395d97;border:0;color:white;border-radius:6px;padding:8px;cur
 <tr><th>领取状态</th><td id="claim-state">未记录</td></tr>
 <tr><th>领取交易</th><td id="claim-tx">未确认</td></tr>
 <tr><th>领取原因 / 请求时间</th><td id="claim-error">未记录</td></tr>
+<tr><th>自动循环</th><td id="cycle">未核实</td></tr>
+<tr><th>矿工报价发现</th><td id="discovery">未核实</td></tr>
+<tr><th>正式计分</th><td id="scoring">未核实</td></tr>
+<tr><th>链上核验阻塞</th><td id="verify-reason">未记录</td></tr>
 <tr><th>当前网络阻塞</th><td id="network-blocker">未核实</td></tr>
 <tr><th>Agent 执行模式</th><td id="mode">未启动</td></tr>
 <tr><th>上次调度检查</th><td id="last-tick">暂无</td></tr>
@@ -85,6 +89,8 @@ set('wallet-balance',known(d.wallet_free_flop)+' Test FLOP | '+known(d.wallet_fu
 set('claim-state',known(d.faucet_claim_status)+'（CLI 回执不等于独立链上核验）');
 set('claim-tx',known(d.faucet_claim_tx));
 set('claim-error',known(d.faucet_claim_reason)+' / '+known(d.faucet_claim_at));
+set('cycle',known(d.cycle_status));set('discovery',known(d.discovery_status)+' | 报价 '+known(d.offer_count)+' | 合格 '+known(d.eligible_offer_count));
+set('scoring',known(d.cycle_scoring||d.scoring_status));set('verify-reason',known(d.cycle_verify_reason));
 set('network-blocker',known(d.network_blocker));
 set('mode',d.execution_mode||'未开始');
 set('last-tick',d.last_scheduler_tick_utc||'暂无');

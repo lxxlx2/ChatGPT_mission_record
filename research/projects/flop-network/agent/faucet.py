@@ -24,7 +24,7 @@ def funding_observation(conn, *, fetch, cli_status, runner=subprocess.run):
         conn.execute('INSERT OR REPLACE INTO kv VALUES (?,?)',(k,str(v)))
     for k in ('faucet_pool_flop','faucet_daily_remaining_flop','faucet_pending_grants',
               'faucet_grant_flop','faucet_limits_asof','wallet_free_flop','wallet_reserved_flop',
-              'wallet_balance_at','wallet_address'):
+              'wallet_balance_at','wallet_address','faucet_signer'):
         save(k,'UNVERIFIED')
     save('funding_observed_at',utc())
     save('wallet_funding_state','UNVERIFIED')
@@ -37,7 +37,7 @@ def funding_observation(conn, *, fetch, cli_status, runner=subprocess.run):
         if not isinstance(address,str) or not re.fullmatch(r'[1-9A-HJ-NP-Za-km-z]{42,55}',address):
             raise ValueError('INVALID_ADDRESS')
         save('wallet_address',address)
-        key='initial-faucet-'+hashlib.sha256((GENESIS+':'+address).encode()).hexdigest()[:24]
+        key=active_claim_key(conn,address)
         row=conn.execute('SELECT value FROM kv WHERE key=?',(key,)).fetchone()
         if row:
             claim=json.loads(row[0])
@@ -53,6 +53,9 @@ def funding_observation(conn, *, fetch, cli_status, runner=subprocess.run):
         if chain.get('network')!='testnet' or chain.get('genesisHash')!=GENESIS or limits.get('network')!='testnet' or limits.get('stale') is not False:
             raise ValueError('FAUCET_IDENTITY_OR_FRESHNESS')
         f=limits['faucet']
+        signer=f.get('signer')
+        if isinstance(signer,str) and re.fullmatch(r'[1-9A-HJ-NP-Za-km-z]{42,55}',signer):
+            save('faucet_signer',signer)
         for k,v in (('faucet_pool_flop',f.get('balanceFlop')),
                     ('faucet_daily_remaining_flop',f.get('dailyCap',{}).get('remainingFlop')),
                     ('faucet_pending_grants',f.get('pendingGrants')),
@@ -96,6 +99,19 @@ def funding_observation(conn, *, fetch, cli_status, runner=subprocess.run):
     conn.commit()
 
 
+def base_claim_key(address):
+    return 'initial-faucet-'+hashlib.sha256((GENESIS+':'+address).encode()).hexdigest()[:24]
+
+def active_claim_key(conn,address):
+    base=base_claim_key(address)
+    row=conn.execute("SELECT value FROM kv WHERE key='cycle_active_claim_key'").fetchone()
+    if row:
+        key=row[0]
+        if key!=base and not re.fullmatch(re.escape(base)+r'-cycle-[1-9][0-9]{0,9}',key):
+            raise ValueError('ACTIVE_CLAIM_KEY_WRONG_WALLET')
+        return key
+    return base
+
 def request_initial(conn, confirmed_genesis, *, cli_runner=subprocess.run, clock=time.time):
     if confirmed_genesis!=GENESIS:
         return {'status':'BLOCKED_NETWORK_GENESIS_NOT_VERIFIED'}
@@ -115,14 +131,14 @@ def request_initial(conn, confirmed_genesis, *, cli_runner=subprocess.run, clock
             return {'status':'BLOCKED_AGENT_IDENTITY_NOT_READY'}
     except (OSError,ValueError,TypeError,AttributeError):
         return {'status':'BLOCKED_AGENT_IDENTITY_NOT_READY'}
-    key='initial-faucet-'+hashlib.sha256((confirmed_genesis+':'+address).encode()).hexdigest()[:24]
+    key=active_claim_key(conn,address)
     old=conn.execute('SELECT value FROM kv WHERE key=?',(key,)).fetchone()
     now=int(clock())
     if old:
         attempt=json.loads(old[0])
         if not attempt.get('nonce'):
             return {'status':'BLOCKED_LEGACY_ATTEMPT'}
-        if attempt.get('status') in ('CLI_FINALIZED_REPORTED','REFUSED_NO_AUTO_RETRY'):
+        if attempt.get('status') in ('CLI_FINALIZED_REPORTED','CHAIN_FINALIZED','REFUSED_NO_AUTO_RETRY'):
             return {'status':attempt['status'],'receipt':attempt}
         if now < attempt.get('retry_at',0):
             return {'status':'SAME_NONCE_BACKOFF'}
@@ -139,6 +155,9 @@ def request_initial(conn, confirmed_genesis, *, cli_runner=subprocess.run, clock
             return {'status':'BLOCKED_CLI_VERSION_REVIEW_REQUIRED'}
     except (OSError,subprocess.TimeoutExpired):
         return {'status':'BLOCKED_CLI_VERSION_REVIEW_REQUIRED'}
+    signer=conn.execute("SELECT value FROM kv WHERE key='faucet_signer'").fetchone()
+    if signer and re.fullmatch(r'[1-9A-HJ-NP-Za-km-z]{42,55}',signer[0]):
+        attempt.setdefault('faucet_signer',signer[0])
     attempt.update(status='OUTCOME_UNKNOWN_PRECOMMITTED',retry_at=now+RECHECK_SECONDS)
     conn.execute('INSERT OR REPLACE INTO kv(key,value) VALUES (?,?)',(key,json.dumps(attempt)))
     conn.commit()
@@ -158,6 +177,11 @@ def request_initial(conn, confirmed_genesis, *, cli_runner=subprocess.run, clock
                     break
             except (ValueError,TypeError):
                 pass
+        # Only named response wrappers; never infer tx identity from random hex.
+        for name in ('result','data','receipt','grant'):
+            inner=response.get(name)
+            if isinstance(inner,dict):
+                response={**response,**inner}
         reason=response.get('reason') or response.get('code')
         if isinstance(reason,str) and re.fullmatch(r'[A-Za-z0-9_.:-]{1,100}',reason):
             attempt['reason']=reason
@@ -167,6 +191,16 @@ def request_initial(conn, confirmed_genesis, *, cli_runner=subprocess.run, clock
         tx=response.get('tx_hash') or response.get('txHash')
         if isinstance(tx,str) and re.fullmatch(r'0x[0-9a-fA-F]{64}',tx):
             attempt['tx_hash']=tx
+        for field in ('blockHash','block_hash','finalizedBlockHash'):
+            value=response.get(field)
+            if isinstance(value,str) and re.fullmatch(r'0x[0-9a-fA-F]{64}',value):
+                attempt['block_hash']=value
+                break
+        for field in ('blockNumber','block_number','blockHeight','block_height'):
+            value=response.get(field)
+            if type(value) in (str,int) and re.fullmatch(r'[0-9]{1,12}',str(value)):
+                attempt['block_number']=int(value)
+                break
         if cp.returncode==0 and (response.get('finalized') is True or response.get('status')=='finalized') and attempt.get('tx_hash'):
             attempt['status']='CLI_FINALIZED_REPORTED'
         elif response.get('action') in ('fix_request','report_to_operator'):
@@ -184,12 +218,12 @@ def request_initial(conn, confirmed_genesis, *, cli_runner=subprocess.run, clock
         password=''
     conn.execute('UPDATE kv SET value=? WHERE key=?',(json.dumps(attempt),key))
     conn.commit()
-    if attempt['status']=='CLI_FINALIZED_REPORTED':
+    if attempt['status']=='CLI_FINALIZED_REPORTED' and not conn.execute('SELECT 1 FROM flop_mail WHERE mail_key=?',('faucet-finalized-'+hashlib.sha256(key.encode()).hexdigest()[:15],)).fetchone():
         enqueue(conn,'faucet-finalized-'+hashlib.sha256(key.encode()).hexdigest()[:15],
                 '[FLOP] 首次 Testnet Faucet 返回 finalized',
                 'CLI reported finalized; independent chain verification still required. '
                 'Testnet grant is not voucher credit. Transaction: '+attempt['tx_hash'])
-    elif attempt.get('tx_hash'):
+    elif attempt.get('tx_hash') and not conn.execute('SELECT 1 FROM flop_mail WHERE mail_key=?',('faucet-tx-'+hashlib.sha256(key.encode()).hexdigest()[:15],)).fetchone():
         enqueue(conn,'faucet-tx-'+hashlib.sha256(key.encode()).hexdigest()[:15],
                 '[FLOP] 首次 Faucet 已返回交易｜等待最终核验',
                 '交易哈希：'+attempt['tx_hash']+'\n尚未确认最终到账；不会另起 nonce。')
