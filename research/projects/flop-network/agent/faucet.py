@@ -18,13 +18,13 @@ GENESIS='0x918abd58fb16306b30ef3886514cfaebffecb4de43e82b6f8ec4795c43cfd800'
 RECHECK_SECONDS=900
 
 
-def funding_observation(conn, *, fetch, cli_status, runner=subprocess.run):
+def funding_observation(conn, *, fetch, cli_status, runner=subprocess.run, chain_reader=None):
     """Read-only observations, never infer a grant from balance alone."""
     def save(k,v):
         conn.execute('INSERT OR REPLACE INTO kv VALUES (?,?)',(k,str(v)))
     for k in ('faucet_pool_flop','faucet_daily_remaining_flop','faucet_pending_grants',
               'faucet_grant_flop','faucet_limits_asof','wallet_free_flop','wallet_reserved_flop',
-              'wallet_balance_at','wallet_address','faucet_signer','faucet_lane_status','faucet_claim_path','faucet_rollover_requires_spend'):
+              'wallet_balance_at','wallet_balance_source','wallet_balance_error','wallet_balance_height','wallet_address','faucet_signer','faucet_lane_status','faucet_claim_path','faucet_rollover_requires_spend'):
         save(k,'UNVERIFIED')
     save('funding_observed_at',utc())
     save('wallet_funding_state','UNVERIFIED')
@@ -74,10 +74,27 @@ def funding_observation(conn, *, fetch, cli_status, runner=subprocess.run):
             cli=shutil.which('flop')
             if not cli:
                 raise ValueError('NO_CLI')
-            cp=runner([cli,'--network','testnet','balance',address,'--json'],capture_output=True,text=True,timeout=35,check=False)
-            if cp.returncode:
-                raise ValueError('BALANCE_FAILED')
-            bal=json.loads(cp.stdout)
+            source='CLI'
+            try:
+                cp=runner([cli,'--network','testnet','balance',address,'--json'],capture_output=True,text=True,timeout=35,check=False)
+                if cp.returncode:
+                    raise ValueError('RUNTIME_INCOMPATIBLE' if 'RUNTIME_INCOMPATIBLE' in (cp.stdout+cp.stderr) else 'CLI_BALANCE_FAILED')
+                bal=json.loads(cp.stdout)
+            except (OSError,ValueError,TypeError,subprocess.SubprocessError) as exc:
+                code=str(exc)
+                code=code if code in ('RUNTIME_INCOMPATIBLE','CLI_BALANCE_FAILED') else 'CLI_BALANCE_UNAVAILABLE'
+                save('wallet_balance_error',code)
+                if chain_reader is None:
+                    from cycle import chain_check
+                    reader=chain_check
+                else:
+                    reader=chain_reader
+                bal=reader('balance',{'wallet':address})
+                if not bal.get('ok') or bal.get('finalized') is not True or bal.get('genesis')!=GENESIS:
+                    save('wallet_balance_error',code+' / '+str(bal.get('code','FINALIZED_BALANCE_UNVERIFIED'))[:80])
+                    raise ValueError('FINALIZED_BALANCE_UNVERIFIED')
+                source='FINALIZED_RPC'
+                save('wallet_balance_height',bal.get('height','UNVERIFIED'))
             # CLI reports chain base units, 18 decimals. No heuristic unit conversion.
             if not isinstance(bal,dict) or bal.get('address')!=address:
                 raise ValueError('BALANCE_SCHEMA_OR_ADDRESS_MISMATCH')
@@ -89,7 +106,11 @@ def funding_observation(conn, *, fetch, cli_status, runner=subprocess.run):
             reserved=Decimal(str(bal['reserved']))/Decimal(10**18)
             save('wallet_free_flop',format(free,'f'))
             save('wallet_reserved_flop',format(reserved,'f'))
-            save('wallet_balance_at',utc())
+            stamp=utc()
+            save('wallet_balance_at',stamp)
+            save('wallet_balance_source',source)
+            save('wallet_last_known_free_flop',format(free,'f'))
+            save('wallet_last_known_at',stamp)
             save('wallet_funding_state','POSITIVE_BALANCE_OBSERVED' if free>0 else 'ZERO_FREE_BALANCE_OBSERVED')
             if free>0 and conn.execute("SELECT 1 FROM sqlite_master WHERE name='flop_mail'").fetchone():
                 mailkey='first-funded-wallet-'+hashlib.sha256((GENESIS+':'+address).encode()).hexdigest()[:24]
@@ -141,7 +162,7 @@ def request_initial(conn, confirmed_genesis, *, cli_runner=subprocess.run, clock
         attempt=json.loads(old[0])
         if not attempt.get('nonce'):
             return {'status':'BLOCKED_LEGACY_ATTEMPT'}
-        if attempt.get('status') in ('CHAIN_FINALIZED','REFUSED_NO_AUTO_RETRY') or (attempt.get('status')=='CLI_FINALIZED_REPORTED' and not recheck_reported):
+        if attempt.get('status') in ('CHAIN_FINALIZED','REFUSED_NO_AUTO_RETRY') or (attempt.get('status')=='CLI_FINALIZED_REPORTED' and (attempt.get('tx_hash') or not recheck_reported)):
             return {'status':attempt['status'],'receipt':attempt}
         if now < attempt.get('retry_at',0):
             return {'status':'SAME_NONCE_BACKOFF'}

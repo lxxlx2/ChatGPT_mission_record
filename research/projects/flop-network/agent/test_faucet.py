@@ -82,6 +82,22 @@ class FaucetTests(unittest.TestCase):
         self.assertEqual(runtime.get(self.db,'wallet_funding_state'),'POSITIVE_BALANCE_OBSERVED')
         faucet.funding_observation(self.db,fetch=read,cli_status={'observed_genesis':faucet.GENESIS,'rpc_genesis_matches_expected':True},runner=bal)
         self.assertEqual(self.db.execute("SELECT COUNT(*) FROM flop_mail WHERE mail_key LIKE 'first-funded-wallet-%'").fetchone()[0],1)
+    def test_runtime_incompatible_reads_finalized_balance_without_signing(self):
+        def read(url):
+            if url.endswith('/chain'):
+                return json.dumps({'network':'testnet','genesisHash':faucet.GENESIS})
+            return json.dumps({'network':'testnet','stale':False,'faucet':{'agent':{'grantFlop':10}}})
+        def bal(argv,**kw):
+            return SimpleNamespace(returncode=1,stdout='',stderr='RUNTIME_INCOMPATIBLE')
+        def chain(kind,params):
+            self.assertEqual(kind,'balance')
+            self.assertEqual(params,{'wallet':ADDR})
+            return {'ok':True,'finalized':True,'genesis':faucet.GENESIS,'address':ADDR,'height':42,'free':'10000000000000000000','reserved':'0'}
+        faucet.funding_observation(self.db,fetch=read,cli_status={'observed_genesis':faucet.GENESIS,'rpc_genesis_matches_expected':True},runner=bal,chain_reader=chain)
+        self.assertEqual(runtime.get(self.db,'wallet_free_flop'),'10')
+        self.assertEqual(runtime.get(self.db,'wallet_balance_source'),'FINALIZED_RPC')
+        self.assertEqual(runtime.get(self.db,'wallet_balance_error'),'RUNTIME_INCOMPATIBLE')
+
     def test_current_official_format(self):
         doc='FLOP Testnet went live on 24 November 2026. This opening is unscored. Genesis block hash '+faucet.GENESIS
         r=runtime.official_testnet_state(lambda _:doc)

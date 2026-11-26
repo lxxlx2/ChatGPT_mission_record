@@ -4,6 +4,7 @@ Discovery schemas are conservative; missing fields never mean zero or ready.
 """
 from __future__ import annotations
 from decimal import Decimal, InvalidOperation
+from datetime import datetime
 import hashlib
 import ipaddress
 import json
@@ -287,15 +288,42 @@ def run_tick(c,fetch,*,clock=time.time,verifier=chain_check,runner=subprocess.ru
         if grant and valid_hash(grant.get('tx_hash')):
             signer=grant.get('faucet_signer') or get(c,'faucet_signer')
             loc=locate(fetch,grant['tx_hash'],grant)
+            if not loc:
+                try:
+                    stamp=datetime.fromisoformat(grant['at'].replace('Z','+00:00'))
+                    if stamp.tzinfo is None:raise ValueError('NAIVE_GRANT_TIME')
+                    search={'tx_hash':grant['tx_hash'],'request_ms':int(stamp.timestamp()*1000)}
+                    cursor=integer(grant.get('search_next_height'))
+                    if cursor is not None:search['cursor']=cursor
+                    found=verifier('locate_grant',search)
+                    if found.get('ok') and found.get('genesis')==GENESIS:
+                        if found.get('found') is True and integer(found.get('block_number')) is not None and valid_hash(found.get('block_hash')):
+                            loc={'block_number':int(found['block_number']),'block_hash':found['block_hash']}
+                            grant.update(loc)
+                            put(c,key,json.dumps(grant))
+                        elif found.get('found') is False and integer(found.get('next_height')) is not None:
+                            grant['search_next_height']=int(found['next_height'])
+                            put(c,key,json.dumps(grant))
+                            put(c,'cycle_verify_reason','LOCATING_GRANT_FINALIZED_BLOCK')
+                    else:
+                        put(c,'cycle_verify_reason',found.get('code','GRANT_BLOCK_LOCATION_UNVERIFIED'))
+                except (ValueError,TypeError,KeyError,AttributeError):
+                    put(c,'cycle_verify_reason','GRANT_BLOCK_LOCATION_UNVERIFIED')
             if loc and isinstance(signer,str) and ADDRESS.fullmatch(signer):
                 ev=verifier('grant',{'tx_hash':grant['tx_hash'],'wallet':wallet,'signer':signer,'amount_raw':str(10*UNIT),**loc})
                 if ev.get('ok') and ev.get('finalized') is True and ev.get('wallet')==wallet and ev.get('genesis')==GENESIS and ev.get('amount_raw')==str(10*UNIT) and ev.get('tx_hash')==grant['tx_hash'].lower() and integer(ev.get('timestamp_ms')) is not None:
                     grant.update(ev,status='CHAIN_FINALIZED',key=key)
+                    if 'reason' in grant:grant['previous_reason']=grant.pop('reason')
                     put(c,key,json.dumps(grant));put(c,'faucet_claim_status','CHAIN_FINALIZED')
+                    put(c,'faucet_claim_reason','NONE')
                     emit(c,'grant-chain-'+hashlib.sha256(key.encode()).hexdigest()[:24],
                          '[FLOP] 测试币领取已链上最终确认','到账 10 Test FLOP\n钱包：'+wallet+'\n交易：'+grant['tx_hash']+'\n不代表空投积分。')
                     return status(c,'GRANT_FINALIZED_READY_FOR_DISCOVERY')
                 put(c,'cycle_verify_reason',ev.get('code','GRANT_EVIDENCE_MISMATCH'))
+        if grant and grant.get('status')=='CLI_FINALIZED_REPORTED' and valid_hash(grant.get('tx_hash')):
+            put(c,'faucet_claim_status','CLI_FINALIZED_REPORTED')
+            put(c,'faucet_claim_reason','RECEIPT_FINALIZED_REPORTED_CHAIN_CHECK_PENDING')
+            return status(c,'WAITING_GRANT_CHAIN_VERIFICATION')
         if grant and grant.get('status')=='REFUSED_NO_AUTO_RETRY':
             return status(c,'GRANT_REFUSED_REQUIRES_REVIEW')
         if ready:
@@ -353,6 +381,8 @@ def run_tick(c,fetch,*,clock=time.time,verifier=chain_check,runner=subprocess.ru
     except ValueError:return status(c,'WAITING_WALLET_BALANCE')
     offers=discovery(c,fetch,height,wallet,free,runner=runner)
     if not offers:return status(c,'WAITING_VERIFIED_TESTNET_MINER_MODEL')
+    if 'RUNTIME_INCOMPATIBLE' in get(c,'wallet_balance_error',''):
+        return status(c,'CLI_RUNTIME_UPGRADE_REQUIRED_NO_PAYMENT')
     # Verify our independent adapter can actually decode current runtime before
     # permitting first payment; future schemas still fail closed.
     probe=verifier('probe',{})

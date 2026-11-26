@@ -51,6 +51,27 @@ class CycleTests(unittest.TestCase):
         self.assertEqual(c.execute('SELECT COUNT(*) FROM session_attempts').fetchone()[0],0)
         c.close()
 
+    def test_finalized_report_locates_block_without_request_resend(self):
+        c=sqlite3.connect(':memory:');c.row_factory=sqlite3.Row
+        runtime.ensure_state(c);mail.init(c)
+        key=faucet.base_claim_key(W)
+        for k,v in {'rpc_genesis_matches_expected':'true','observed_genesis':G,'rpc_reachable':'true','profile_status':'live',
+            'finalized_height':'100','wallet_address':W,'faucet_ready':'true','faucet_matches_rpc':'true',
+            'faucet_lane_status':'open','faucet_claim_path':'/v1/testnet/agent-claims','faucet_rollover_requires_spend':'true',
+            'faucet_signer':M,'faucet_grant_flop':'10','faucet_daily_remaining_flop':'100',
+            key:json.dumps({'status':'CLI_FINALIZED_REPORTED','nonce':'123','address':W,'genesis':G,'at':'2026-11-26T01:15:59+00:00','tx_hash':H,'faucet_signer':M,'reason':'FAUCET_REFUSED'})}.items():cycle.put(c,k,v)
+        def verify(kind,data):
+            if kind=='locate_grant':return {'ok':True,'genesis':G,'found':True,'block_number':42,'block_hash':'0x'+'b'*64}
+            self.assertEqual(kind,'grant');self.assertEqual(data['block_number'],42)
+            return {'ok':True,'finalized':True,'genesis':G,'wallet':W,'signer':M,'amount_raw':str(10*cycle.UNIT),'tx_hash':H,'block_number':42,'timestamp_ms':1795655759000}
+        with patch.object(faucet,'request_initial') as req:
+            self.assertEqual(cycle.run_tick(c,lambda _: 'No block or date is announced.',verifier=verify),'GRANT_FINALIZED_READY_FOR_DISCOVERY')
+            req.assert_not_called()
+        grant=json.loads(cycle.get(c,key))
+        self.assertEqual(grant['status'],'CHAIN_FINALIZED')
+        self.assertEqual(grant['previous_reason'],'FAUCET_REFUSED')
+        c.close()
+
     def test_unverified_sources_never_become_empty(self):
         with self.assertRaises(ValueError):cycle.rows({'unknown':[]})
         self.assertEqual(cycle.rows({'data':[]}),[])

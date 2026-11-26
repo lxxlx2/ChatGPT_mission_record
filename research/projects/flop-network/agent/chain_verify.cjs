@@ -17,6 +17,45 @@ async function main(){
     if((await api.rpc.chain.getBlockHash(0)).toHex()!==PIN)throw Error('GENESIS_MISMATCH');
     const head=await api.rpc.chain.getFinalizedHead();
     const height=(await api.rpc.chain.getHeader(head)).number.toNumber();
+    if(q.kind==='balance'){
+      const at=await api.at(head);
+      const {data}=await at.query.system.account(q.wallet);
+      if(api.registry.chainDecimals[0]!==18||data.free===undefined||data.reserved===undefined)throw Error('ACCOUNT_SCHEMA_UNVERIFIED');
+      return {ok:true,genesis:PIN,finalized:true,height,address:q.wallet,free:data.free.toString(),reserved:data.reserved.toString()};
+    }
+    if(q.kind==='locate_grant'){
+      if(!HASH.test(q.tx_hash)||!Number.isSafeInteger(q.request_ms))throw Error('GRANT_SEARCH_INPUT');
+      async function blockAt(n){
+        const h=await api.rpc.chain.getBlockHash(n);
+        const b=await api.rpc.chain.getBlock(h);
+        if(b.block.header.number.toNumber()!==n)throw Error('BLOCK_HEIGHT_MISMATCH');
+        return {h,b};
+      }
+      function blockTime(b){
+        const t=b.block.extrinsics.find(e=>norm(e.method.section)==='timestamp'&&norm(e.method.method)==='set');
+        const ms=Number(t?.method?.args?.[0]?.toString());
+        if(!Number.isSafeInteger(ms)||ms<1)throw Error('HISTORICAL_TIMESTAMP_UNVERIFIED');
+        return ms;
+      }
+      let start=q.cursor;
+      if(!Number.isSafeInteger(start)||start<1){
+        let lo=1,hi=height;
+        while(lo<hi){
+          const mid=Math.floor((lo+hi)/2);
+          const {b}=await blockAt(mid);
+          if(blockTime(b)<q.request_ms-30000)lo=mid+1;else hi=mid;
+        }
+        start=Math.max(1,lo-2);
+      }
+      if(start>height)return {ok:true,genesis:PIN,found:false,next_height:start};
+      const stop=Math.min(height,start+23);
+      for(let n=start;n<=stop;n++){
+        const {h,b}=await blockAt(n);
+        if(b.block.extrinsics.some(e=>e.hash.toHex()===q.tx_hash.toLowerCase()))
+          return {ok:true,genesis:PIN,found:true,block_number:n,block_hash:h.toHex()};
+      }
+      return {ok:true,genesis:PIN,found:false,next_height:stop+1};
+    }
     if(q.kind==='probe'){
       const event=api.events.computeChannel?.Settled;
       const names=event?.meta?.fields?.map(f=>norm(f.name.isSome?f.name.unwrap().toString():''));
