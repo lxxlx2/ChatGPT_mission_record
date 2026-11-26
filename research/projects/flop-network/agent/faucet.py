@@ -87,9 +87,10 @@ def funding_observation(conn, *, fetch, cli_status, runner=subprocess.run):
             save('wallet_funding_state','POSITIVE_BALANCE_OBSERVED' if free>0 else 'ZERO_FREE_BALANCE_OBSERVED')
             if free>0 and conn.execute("SELECT 1 FROM sqlite_master WHERE name='flop_mail'").fetchone():
                 mailkey='first-funded-wallet-'+hashlib.sha256((GENESIS+':'+address).encode()).hexdigest()[:24]
-                enqueue(conn,mailkey,'[FLOP] 首次检测到钱包测试币余额',
-                        '钱包：'+address+'\n实际可用余额：'+format(free,'f')+
-                        ' Test FLOP\n已读链上余额；领取交易来源和最终确认需另行核验。尚不代表空投积分。')
+                if not conn.execute('SELECT 1 FROM flop_mail WHERE mail_key=?',(mailkey,)).fetchone():
+                    enqueue(conn,mailkey,'[FLOP] 首次检测到钱包测试币余额',
+                            '钱包：'+address+'\n实际可用余额：'+format(free,'f')+
+                            ' Test FLOP\n已读链上余额；领取交易来源和最终确认需另行核验。尚不代表空投积分。')
         except (OSError,ValueError,TypeError,subprocess.SubprocessError):
             pass
     conn.commit()
