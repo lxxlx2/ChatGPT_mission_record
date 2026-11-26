@@ -37,7 +37,9 @@ from .wallet_inventory import InventoryEvidenceError, reconcile_watchlist
 from .wallet_d2_ingress import D2IngressError, query_d2
 from ..meme.ca_market_series import CAMarketSeries, PERIODS, report_pool
 from ..signals.buy_admission import qualification_path
+from ..signals.buy_source_evidence import CAPTURE_NAME
 from .frank_buys import read_buys
+from ..signals.registry import load as load_subject_registry
 from .wallet_activity import activity as read_signed_activity
 from .wallet_activity_paging import activity_page, KINDS as ACTIVITY_KINDS, CURSOR_ERRORS
 from .evidence_sync import EvidenceSpool, GitEvidencePublisher
@@ -1263,13 +1265,22 @@ class DashboardState:
                 "notification_authorized": False,
             }
 
-    def frank_buys(self, **query):
+    def frank_buys(self, *, person_id="frank", **query):
+        wallets = None
+        if person_id != "frank":
+            try:
+                _, assignment = load_subject_registry(self.control_root / "frank_local_registry.json", isolated=True)
+            except FileNotFoundError:
+                raise ValueError("INVALID_BUY_QUERY") from None
+            wallets = [wallet for wallet, owner in assignment.items() if owner == person_id]
         qualifications = qualification_path(default=self.control_root / "frank-buy-qualifications.json")
         return read_buys(self.frank.database, qualifications, as_of=int(time.time()),
                          archive_root=self.evidence_manifests.archive_root,
                          legacy_archive_root=self.evidence_manifests.legacy_archive_root,
                          usd_evidence_path=self.control_root / "frank-buy-usd-evidence.json",
-                         category_evidence_path=self.control_root / "frank-buy-category-evidence.json", **query)
+                         person_id=person_id, wallets=wallets,
+                         category_evidence_path=self.control_root / "frank-buy-category-evidence.json",
+                         capture_path=self.control_root / CAPTURE_NAME, **query)
 
     def frank_signed_activity(self, days=1, *, page_size=None, cursor=None, kind="ALL", mint=None):
         """Complete local indexed ranges; optional pages never cap total history."""
@@ -1713,8 +1724,8 @@ class Handler(BaseHTTPRequestHandler):
             if not self._research_origin():
                 return self._json({"error": "SAME_ORIGIN_READ_REQUIRED"}, 403)
             try:
-                query = parse_qs(urlparse(self.path).query, keep_blank_values=True, max_num_fields=3)
-                if set(query) - {"days", "mint", "cursor"} or any(len(v) != 1 for v in query.values()):
+                query = parse_qs(urlparse(self.path).query, keep_blank_values=True, max_num_fields=4)
+                if set(query) - {"days", "mint", "cursor", "person_id"} or any(len(v) != 1 for v in query.values()):
                     return self._json({"error": "INVALID_BUY_QUERY"}, 400)
                 return self._json(self.state.frank_buys(**{k: v[0] for k, v in query.items()}))
             except ValueError as exc:

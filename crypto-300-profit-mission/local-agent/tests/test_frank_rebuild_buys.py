@@ -39,7 +39,7 @@ def config(path, *, exclude=False, as_of=AS_OF):
     ]}))
 
 
-def put(ledger, number, *, mint=MINT, kind="buy", at=AS_OF-1, person="frank", quote=USDC, token_raw="1000000"):
+def put(ledger, number, *, mint=MINT, kind="buy", at=AS_OF-1, person="frank", quote=USDC, token_raw="1000000", wallet=WALLET):
     signature = _b58(number.to_bytes(64, "big"))
     raw = tx()
     if kind == "passive":
@@ -55,7 +55,9 @@ def put(ledger, number, *, mint=MINT, kind="buy", at=AS_OF-1, person="frank", qu
             raw["meta"]["preTokenBalances"], raw["meta"]["postTokenBalances"] = (
                 raw["meta"]["postTokenBalances"], raw["meta"]["preTokenBalances"])
     raw["blockTime"] = at
-    event = classify(signature, raw, WALLET)
+    if wallet != WALLET:
+        raw = json.loads(json.dumps(raw).replace(WALLET, wallet))
+    event = classify(signature, raw, wallet)
     raw_hash = event["evidence"]["raw_transaction_sha256"]
     if kind == "mismatched":
         raw_hash = "a"*64
@@ -535,3 +537,53 @@ def test_dashboard_imports_exact_category_receipts_without_manual_prefill(tmp_pa
     config(manual, exclude=True, as_of=now)
     assert dashboard.frank_buys()["rows"] == []
     assert hashlib.sha256(db.read_bytes()).hexdigest() == before
+
+
+def test_source_captures_without_preseed_and_subject_cursor_isolation(tmp_path):
+    db, cfg, source = (tmp_path / n for n in ("ledger", "qualifications", "captures"))
+    ledger = Ledger(db)
+    second_wallet, third_wallet, third_mint = [_b58(bytes([n]) * 32) for n in (19, 20, 21)]
+    wallets = [second_wallet, third_wallet]
+    shared = put(ledger, 1)
+    assert put(ledger, 1, person="second", wallet=second_wallet) == shared
+    for i in range(2, 34):
+        put(ledger, i, person="second", wallet=wallets[i % 2])
+    put(ledger, 80, mint=BACKPACK_MINT)
+    put(ledger, 81, mint=UNKNOWN)
+    put(ledger, 82, mint=third_mint, at=AS_OF-10)
+
+    common = {"observed_at": AS_OF, "source": "synthetic existing capture", "source_sha256": "b"*64}
+    def category(mint, value):
+        return {**common, "kind": "EXACT_MINT_CATEGORY", "chain": "solana", "mint": mint,
+                "category": value}
+    rate = {**common, "kind": "QUOTE_USD_OBSERVATION", "asset": USDC, "quote_time": AS_OF-1,
+            "usd_per_unit": "0.98"}
+    rows = [category(MINT, "MEME"), category(BACKPACK_MINT, "MEME"),
+            category(UNKNOWN, "MEME"), category(UNKNOWN, "NON_MEME"),
+            category(third_mint, "MEME"), rate]
+
+    def write(extra=()):
+        source.write_text(json.dumps({"version": 1, "captures": rows + list(extra)}))
+
+    def read(**query):
+        return read_buys(db, cfg, as_of=AS_OF, capture_path=source, **query)
+
+    write()
+    frank = read()["rows"]
+    assert [row["mint"] for row in frank] == [MINT, third_mint]
+    assert frank[0]["spent_usd"] == frank[0]["entry_price_usd"] == "0.49"
+    assert frank[1]["spent_usd"] is frank[1]["entry_price_usd"] is None
+    page = read(person_id="second", wallets=wallets)
+    tail = read(person_id="second", wallets=list(reversed(wallets)), cursor=page["next_cursor"])
+    assert len(page["rows"]) == 30 and len(tail["rows"]) == 3
+    assert tail["rows"][-1]["signature"] == shared
+    with pytest.raises(ValueError, match="INVALID_OR_STALE_CURSOR"):
+        read(cursor=page["next_cursor"])
+    with pytest.raises(ValueError, match="INVALID_OR_STALE_CURSOR"):
+        read(person_id="second", wallets=wallets[:1], cursor=page["next_cursor"])
+    with pytest.raises(ValueError, match="INVALID_BUY_QUERY"):
+        read(person_id="second")
+    write(({**rate, "usd_per_unit": "1"},))
+    assert read()["rows"][0]["spent_usd"] is None
+    config(cfg, exclude=True)
+    assert [row["mint"] for row in read()["rows"]] == [third_mint]

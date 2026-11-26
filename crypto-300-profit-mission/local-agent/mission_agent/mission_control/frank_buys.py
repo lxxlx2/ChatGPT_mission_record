@@ -12,11 +12,13 @@ from .archived_wallet_facts import read_archived_classification
 from .wallet_activity import connect
 from .wallet_activity_paging import _source
 from ..meme.market_parity import number
-from ..signals.buy_admission import EXCLUDED_MINTS, admit_buy, exact_mint, qualification
+from ..signals.buy_admission import EXCLUDED_MINTS, admit_buy, exact_mint, qualified_assets
 from ..signals.category_evidence import read_category_evidence
 from ..signals.classifier import USDT
 from ..signals.policy import USDC
 from ..signals.reconciliation import _unique_pairs
+from ..signals.registry import valid_person_id
+from ..signals.buy_source_evidence import load_captures
 
 
 _TRADE_IDENTITY = ("wallet", "signature", "slot", "block_time", "raw_hash", "mint")
@@ -74,9 +76,12 @@ def _read_usd_evidence(path):
     return observations, hashlib.sha256(raw).hexdigest()
 
 
-def _buy_usd(item, identity, observations):
+def _buy_usd(item, identity, observations, quote_observations):
     key = tuple(identity[field] for field in _TRADE_IDENTITY) + (_QUOTE_ASSET.get(item["currency"]),)
     observation = observations.get(key)
+    if key not in observations:
+        rate = quote_observations.get((key[-1], identity["block_time"]))
+        observation = ("usd_per_quote_unit", rate) if rate is not None else None
     if observation is None or item["paid"] is None:
         return {"spent_usd": None, "entry_price_usd": None}
     field, value = observation
@@ -125,40 +130,45 @@ def _needs_archive_replay(event, identity):
 
 def read_buys(database, qualifications, *, as_of, days="7", mint=None, cursor=None,
               archive_root=None, legacy_archive_root=None, usd_evidence_path=None,
-              category_evidence_path=None):
-    if days not in ("1", "7", "30", "all") or (mint is not None and not exact_mint(mint)):
+              person_id="frank", wallets=None, capture_path=None, category_evidence_path=None):
+    if (days not in ("1", "7", "30", "all") or (mint is not None and not exact_mint(mint))
+            or not valid_person_id(person_id) or (wallets is None and person_id != "frank")
+            or (wallets is not None and (not wallets or any(not exact_mint(w) for w in wallets)))):
         raise ValueError("INVALID_BUY_QUERY")
-    assets = read_category_evidence(category_evidence_path, as_of)
+    wallet_filter = sorted(wallets) if wallets is not None else None
+    categories, quotes, capture_sha = load_captures(capture_path, as_of)
     try:
-        # Deliberate manual choices, including PENDING, take precedence.
-        assets.update(qualification(qualifications, as_of))
+        assets = qualified_assets(qualifications, categories, as_of,
+                                  receipts=read_category_evidence(category_evidence_path, as_of))
     except FileNotFoundError:
-        if not assets:
-            return {"status": "QUALIFICATION_UNAVAILABLE", "rows": [], "next_cursor": None}
+        return {"status": "QUALIFICATION_UNAVAILABLE", "rows": [], "next_cursor": None}
     observations, evidence_sha = _read_usd_evidence(usd_evidence_path)
     source = _source(database)
     binding = hashlib.sha256(repr((source, days, mint, sorted(assets.items()),
-                                   archive_root, legacy_archive_root, evidence_sha)).encode()).hexdigest()
+                                   archive_root, legacy_archive_root, evidence_sha, person_id, wallet_filter, capture_sha)).encode()).hexdigest()
     with closing(connect(database)) as db:
         db.execute("BEGIN")
         if _source(database) != source:
             raise ValueError("INVALID_OR_STALE_CURSOR")
-        where = ["s.person_id='frank'", "t.side IN ('BUY','ADD','REENTRY')"]
+        where = ["s.person_id=?", "t.side IN ('BUY','ADD','REENTRY')"]
         if cursor is not None:
             cutoff, rowmax, at, rowid = _decode(cursor, binding)
             if cutoff > as_of:
                 raise ValueError("INVALID_OR_STALE_CURSOR")
             where.append("(s.block_time,t.rowid)<(?,?)")
-            params = [at, rowid]
+            params = [person_id, at, rowid]
         else:
             cutoff = as_of
             rowmax = db.execute("SELECT coalesce(max(rowid),0) FROM trades").fetchone()[0]
-            params = []
+            params = [person_id]
         where.extend(["s.block_time BETWEEN ? AND ?", "t.rowid<=?"])
         params.extend([1 if days == "all" else cutoff - int(days)*86400, cutoff, rowmax])
         if mint is not None:
             where.append("t.mint=?")
             params.append(mint)
+        if wallet_filter is not None:
+            where.append("s.wallet IN (SELECT value FROM json_each(?))")
+            params.append(json.dumps(wallet_filter))
         where.append("t.mint IN (SELECT value FROM json_each(?))")
         params.append(json.dumps([m for m, a in assets.items() if a.status == "VERIFIED_MEME"]))
         records = db.execute(
@@ -185,6 +195,6 @@ def read_buys(database, qualifications, *, as_of, days="7", mint=None, cursor=No
             if len(rows) == 30:
                 next_cursor = _encode([1, binding, cutoff, rowmax, last["block_time"], last["trade_id"]])
                 break
-            rows.append({**item, **_buy_usd(item, identity, observations)})
+            rows.append({**item, **_buy_usd(item, identity, observations, quotes)})
             last = row
         return {"status": "LOCAL_EVIDENCE_ONLY", "as_of": cutoff, "rows": rows, "next_cursor": next_cursor}

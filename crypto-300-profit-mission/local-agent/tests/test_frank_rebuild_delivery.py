@@ -271,3 +271,37 @@ def test_enqueue_bound_qualification_may_follow_chain_time_without_being_a_repla
     provider = Provider()
     assert GmailOutbox(ledger, delivery_gate=gate).drain(provider)["sent_verified"] == 1
     assert len(provider.sent) == 1
+
+
+@pytest.mark.parametrize("preexisting_pending", (False, True))
+def test_captured_category_obeys_pre_send_bp_and_late_protection(tmp_path, preexisting_pending):
+    from mission_agent.signals.buy_source_evidence import CAPTURE_NAME
+
+    cfg = tmp_path / "qualification.json"
+    capture = tmp_path / CAPTURE_NAME
+    gate = BuyDeliveryGate(cfg, clock=lambda: AS_OF)
+    ledger = Ledger(tmp_path / "db")
+    indexed_buys(ledger, tmp_path/"raw", [MINT, BACKPACK_MINT])
+
+    def publish_evidence():
+        capture.write_text(json.dumps({"version": 1, "captures": [
+            {"kind": "EXACT_MINT_CATEGORY", "chain": "solana", "mint": mint, "category": "MEME",
+             "observed_at": AS_OF, "source": "synthetic source", "source_sha256": "a"*64}
+            for mint in (MINT, BACKPACK_MINT)
+        ]}))
+
+    if not preexisting_pending:
+        publish_evidence()
+    Engine(ledger, load_policy(POLICY), dry_run=False,
+           delivery_gate=None if preexisting_pending else gate).drain()
+    if preexisting_pending:
+        publish_evidence()
+    notifier = Provider()
+    box = GmailOutbox(ledger, delivery_gate=gate)
+    box.drain(notifier)
+    box.drain(notifier)
+    assert len(notifier.sent) == (0 if preexisting_pending else 1)
+    assert ledger.db.execute(
+        "SELECT count(*) FROM gmail_delivery g JOIN signals s USING(signal_id) "
+        "WHERE s.mint=? AND g.attempt_count>0", (BACKPACK_MINT,),
+    ).fetchone()[0] == 0

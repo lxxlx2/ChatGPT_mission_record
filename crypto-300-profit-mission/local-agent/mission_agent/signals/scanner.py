@@ -43,9 +43,33 @@ class Scanner:
         if 'person_id' not in {r[1] for r in ledger.db.execute('PRAGMA table_info(signature_detections)')}:ledger.db.execute('ALTER TABLE signature_detections ADD COLUMN person_id TEXT')
         self.raw_root.mkdir(parents=True,exist_ok=True,mode=0o700)
         self.rpcs=rpcs or {w:WalletRPC(w) for w in wallets}
+    def cycle_subjects(self, engine):
+        """Exercise multi-person catch-up through an isolated, delivery-disabled model."""
+        if self.mode == "LIVE" or not engine.dry_run or engine.ledger is not self.ledger:
+            raise ValueError("ISOLATED_SUBJECT_POLL_REQUIRED")
+        results = {}
+        for person in dict.fromkeys(self.wallets.values()):
+            group = [wallet for wallet, owner in self.wallets.items() if owner == person]
+            try:
+                clocks = [self.rpcs[wallet].finalized_clock()["block_time"] for wallet in group]
+                for wallet in group:
+                    self.cycle(wallet)
+            except (OSError, RuntimeError, ValueError, KeyError, TypeError):
+                results[person] = {"status": "RETRY_PENDING"}
+                continue
+            results[person] = {"status": "RUNNING_SHADOW_DELIVERY_DISABLED",
+                               "processed": engine.drain(person=person, until=min(clocks))}
+        return results
+
     def cycle(self,wallet):
         db=self.ledger.db;rpc=self.rpcs[wallet];cursor=self.ledger.cursor(wallet)
         if not cursor:raise ValueError('EXPLICIT_DURABLE_CHECKPOINT_REQUIRED')
+        foreign = db.execute(
+            "SELECT 1 FROM signatures WHERE wallet=? AND person_id<>? LIMIT 1",
+            (wallet, self.wallets[wallet]),
+        ).fetchone()
+        if foreign:
+            raise ValueError("WALLET_SUBJECT_CONFLICT")
         pending=[];before=None;head=None;seen={};found=False;last_slot=None
         try:
             for _ in range(1000):
