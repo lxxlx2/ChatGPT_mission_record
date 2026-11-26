@@ -1890,3 +1890,22 @@ test('older candle pages preserve trades and navigate back without a second sour
   assert.match(h.element('cluster-series-chart').innerHTML,/>3</);
   assert.equal(h.requests.filter(r=>r.url.includes('/api/cluster-market-series')).length,3);
 });
+
+test('a priced reverse fallback becomes the initial chart and trade pool, without hiding the first candidate',()=>{
+  const h=harness();
+  const first='11111111111111111111111111111112', peer='11111111111111111111111111111113';
+  const priced='11111111111111111111111111111114';
+  const report={...fixture,ca_job_id:jobId,query_scope:'overview',token_profile:{status:'OK',is_initialized:true},
+    market:{status:'UNAVAILABLE',reason:'NO_BASE_TOKEN_PAIR',chain:'solana',mint,pool_candidates:[
+      {pair_address:first,base_address:peer,quote_address:mint},
+      {pair_address:priced,base_address:peer,quote_address:mint},
+    ],reverse_market:{status:'OK',source:'GECKOTERMINAL_PUBLIC_API',response_sha256:'a'.repeat(64),mint,
+      pool_address:priced,quote_address:peer,target_orientation:'QUOTE',price_usd:'0.007'}}};
+  h.element('cluster-mint').value=mint;
+  h.context.clusterPresentReport(report);
+  const select=h.element('cluster-series-pool');
+  assert.equal(select.value,priced);
+  assert.ok(select.innerHTML.includes(first) && select.innerHTML.includes(priced));
+  assert.match(h.element('cluster-summary').innerHTML,/\$0\.007/);
+  assert.ok(h.requests.some(({url,method})=>method==='GET' && url.includes('pool='+priced)));
+});

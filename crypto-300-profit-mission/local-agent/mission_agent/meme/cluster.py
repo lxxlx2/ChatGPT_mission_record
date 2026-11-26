@@ -26,7 +26,7 @@ from ..signals.classifier import classify, CHAIN_METADATA_REASONS
 from .history_classification import resolve_history_classification, resolution_record
 from ..market.sol_usd import USDC, WSOL
 from .market import DexScreenerMarketClient
-from .market_parity import attach_market_comparison
+from .market_parity import attach_market_comparison, number
 from .historical_accounts import observe_token_accounts, HistoricalAccountEvidenceError, MAX_OBSERVATIONS
 from .holder_ranks import collect_mint_holder_ranks, valid_pubkey, valid_enumeration_query, HolderRankSourceError, MAX_RESPONSE_BYTES, TOKEN_2022_PROGRAM
 
@@ -1753,18 +1753,24 @@ class WalletClusterAnalyzer:
                 if token_profile.get("reason")=="MINT_ACCOUNT_TYPE_UNVERIFIED" else self.market_snapshot())
         if self.query_scope=="overview" and self.independent_market_client is not None and market.get("reason")=="NO_BASE_TOKEN_PAIR":
             from .ca_market_series import report_pool
+            # One alternate at most: keep overview latency bounded and honor provider backoff.
+            attempted = set()
             for row in market.get("pool_candidates") or []:
                 if not isinstance(row,dict):continue
                 pool=row.get("pair_address")
                 peer=report_pool(self.mint,token_profile,market,pool)
-                if peer and row.get("quote_address")==self.mint:
+                if peer and row.get("quote_address")==self.mint and pool not in attempted:
+                    attempted.add(pool)
                     reverse=self.independent_market_client.pool_snapshot(self.mint,pool,peer)
-                    if reverse.get("status")=="OK":
+                    price = number(reverse.get("price_usd"))
+                    if reverse.get("status")=="OK" and price is not None and Decimal(price) > 0:
                         market={**market,"reverse_market":reverse}
                         meta=launch.get("metadata") or {}
                         if meta.get("status")!="VERIFIED_CHAIN_STATE":
                             market.update(name=row.get("target_name"),symbol=row.get("target_symbol"))
-                    break
+                        break
+                    if reverse.get("reason") == "HTTP_429" or len(attempted) >= 2:
+                        break
         self._launch_metadata=launch.get("metadata")
         if self.query_scope=="overview":
             self._progress("BASE_READY",token_profile=token_profile,market=market,launch_identity=launch)

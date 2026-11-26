@@ -2626,6 +2626,12 @@ function prepareClusterSeries(report) {
   if (!$('cluster-series-panel')) return;
   clearClusterSeries();
   const pools=clusterSeriesPools(report);
+  // Keep the initial chart and trades aligned with the pool that priced the summary.
+  const reverse=report?.market?.reason==='NO_BASE_TOKEN_PAIR' ? verifiedReversedMarket(report) : null;
+  if (reverse && Number.isFinite(Number(reverse.price_usd)) && Number(reverse.price_usd)>0) {
+    const index=pools.indexOf(reverse.pool_address);
+    if (index>0) pools.unshift(pools.splice(index,1)[0]);
+  }
   $('cluster-series-panel').hidden=!pools.length;
   const select=$('cluster-series-pool');
   const market=report?.market;

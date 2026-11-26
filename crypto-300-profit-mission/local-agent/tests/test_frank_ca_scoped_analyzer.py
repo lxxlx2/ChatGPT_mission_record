@@ -188,3 +188,60 @@ def test_wallet_scope_can_read_small_ranked_owner_without_expanding_other_wallet
     assert out["wallet_detail"]["first_acquisition"]["signature"] == "opening"
     assert {address for address, _ in rpc.history} == {small_account, small_owner}
     assert all(window["owner"] == small_owner for window in out["coverage"]["history_windows"])
+
+
+@pytest.mark.parametrize("how,quote", [
+    ("wrong_pool", "0.004"), ("missing_price", None), ("zero_price", "0"),
+    ("rate_limited", None), ("request_cap", None), ("first_good", "0.009"),
+])
+def test_overview_uses_next_valid_reverse_pool_with_bounded_reads(monkeypatch, how, quote):
+    import urllib.error
+
+    from mission_agent.meme.market_parity import GeckoTerminalMarketClient
+    from test_meme_market_parity import POOL, QUOTE, Reply, payload
+
+    second, third = key(703), key(704)
+    calls = []
+    def open_url(request, timeout):
+        pool = request.full_url.rpartition("/")[2]
+        calls.append(pool)
+        raw = payload(reverse=True)
+        if pool == POOL and how == "rate_limited":
+            raise urllib.error.HTTPError(request.full_url, 429, "fixture", {}, None)
+        if pool == POOL and how != "wrong_pool":
+            raw["data"]["attributes"]["quote_token_price_usd"] = quote
+        elif pool == POOL:
+            raw["data"]["attributes"]["address"] = third
+        else:
+            raw["data"]["id"] = "solana_" + pool
+            raw["data"]["attributes"]["address"] = pool
+            raw["data"]["attributes"]["quote_token_price_usd"] = (
+                None if how == "request_cap" and pool == second else "0.007"
+            )
+        return Reply(raw)
+
+    events = []
+    review, rpc = analyzer(
+        monkeypatch, query_scope="overview",
+        independent_market_client=GeckoTerminalMarketClient(open_url=open_url, clock=lambda: 200),
+        progress_callback=lambda stage, detail: events.append((stage, detail)),
+    )
+    candidate = lambda p: {"pair_address": p, "base_address": QUOTE, "quote_address": MINT,
+                           "target_name": "Fixture " + p[-4:]}
+    review.market_snapshot = lambda: {
+        "status": "UNAVAILABLE", "reason": "NO_BASE_TOKEN_PAIR", "mint": MINT,
+        "chain": "solana", "pool_candidates": [candidate(POOL), candidate(POOL), candidate(second), candidate(third)],
+    }
+    review.launch_snapshot = lambda profile: {}
+    result = review.analyze()
+    market = result["market"]
+    expected = POOL if how == "first_good" else None if how in {"rate_limited", "request_cap"} else second
+    expected_calls = [POOL] if how in {"rate_limited", "first_good"} else [POOL, second]
+    assert calls == expected_calls
+    assert market.get("reverse_market", {}).get("pool_address") == expected
+    if expected:
+        assert market["reverse_market"]["price_usd"] == ("0.009" if expected == POOL else "0.007")
+        assert market["reverse_market"]["target_orientation"] == "QUOTE"
+        assert market["name"] == candidate(expected)["target_name"]
+    assert dict(events)["BASE_READY"]["market"] == market
+    assert rpc.requests == [] and rpc.history == []
