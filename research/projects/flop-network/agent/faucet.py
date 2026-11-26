@@ -27,6 +27,7 @@ def funding_observation(conn, *, fetch, cli_status, runner=subprocess.run):
               'wallet_balance_at','wallet_address'):
         save(k,'UNVERIFIED')
     save('funding_observed_at',utc())
+    save('wallet_funding_state','UNVERIFIED')
     save('faucet_claim_status','NOT_ATTEMPTED_OR_NOT_RECORDED')
     for k in ('faucet_claim_at','faucet_claim_nonce','faucet_claim_tx','faucet_claim_reason','faucet_claim_retry_at'):
         save(k,'UNVERIFIED')
@@ -72,14 +73,23 @@ def funding_observation(conn, *, fetch, cli_status, runner=subprocess.run):
                 raise ValueError('BALANCE_FAILED')
             bal=json.loads(cp.stdout)
             # CLI reports chain base units, 18 decimals. No heuristic unit conversion.
-            if not isinstance(bal,dict):
-                raise ValueError('BALANCE_SCHEMA')
-            for field,k in (('free','wallet_free_flop'),('reserved','wallet_reserved_flop')):
-                value=bal.get(field)
-                if type(value) in (int,str) and re.fullmatch(r'[0-9]{1,40}',str(value)):
-                    from decimal import Decimal
-                    save(k,format(Decimal(str(value))/Decimal(10**18),'f'))
+            if not isinstance(bal,dict) or bal.get('address')!=address:
+                raise ValueError('BALANCE_SCHEMA_OR_ADDRESS_MISMATCH')
+            from decimal import Decimal
+            for field in ('free','reserved'):
+                if type(bal.get(field)) not in (int,str) or not re.fullmatch(r'[0-9]{1,40}',str(bal[field])):
+                    raise ValueError('BALANCE_UNITS_UNVERIFIED')
+            free=Decimal(str(bal['free']))/Decimal(10**18)
+            reserved=Decimal(str(bal['reserved']))/Decimal(10**18)
+            save('wallet_free_flop',format(free,'f'))
+            save('wallet_reserved_flop',format(reserved,'f'))
             save('wallet_balance_at',utc())
+            save('wallet_funding_state','POSITIVE_BALANCE_OBSERVED' if free>0 else 'ZERO_FREE_BALANCE_OBSERVED')
+            if free>0 and conn.execute("SELECT 1 FROM sqlite_master WHERE name='flop_mail'").fetchone():
+                mailkey='first-funded-wallet-'+hashlib.sha256((GENESIS+':'+address).encode()).hexdigest()[:24]
+                enqueue(conn,mailkey,'[FLOP] 首次检测到钱包测试币余额',
+                        '钱包：'+address+'\n实际可用余额：'+format(free,'f')+
+                        ' Test FLOP\n已读链上余额；领取交易来源和最终确认需另行核验。尚不代表空投积分。')
         except (OSError,ValueError,TypeError,subprocess.SubprocessError):
             pass
     conn.commit()

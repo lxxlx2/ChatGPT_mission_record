@@ -248,6 +248,24 @@ class RuntimeTests(unittest.TestCase):
             self.assertIsNone(runtime.rpc_finality_observation('0x'+'c'*64))
 
 
+    def test_https_finality_fallback_requires_matching_genesis(self):
+        genesis='0x'+'a'*64
+        head='0x'+'b'*64
+        calls=[]
+        class Resp:
+            def __init__(self,value):self.value=value
+            def __enter__(self):return self
+            def __exit__(self,*args):pass
+            def read(self,*args):return json.dumps({'result':self.value}).encode()
+        def opener(req,**kwargs):
+            method=json.loads(req.data)['method']
+            calls.append(method)
+            return Resp({'chain_getBlockHash':genesis,'chain_getFinalizedHead':head,
+                         'chain_getHeader':{'number':'0x2a'}}[method])
+        self.assertEqual(runtime.https_finality_observation(genesis,opener=opener),{'hash':head,'height':42})
+        self.assertIsNone(runtime.https_finality_observation('0x'+'c'*64,opener=opener))
+        self.assertEqual(calls[-1],'chain_getBlockHash')
+
     def test_actionable_published_pin_cli_lag_is_notified_once(self):
         genesis='0x'+'a'*64
         observed={'ready':False,'reason':'OFFICIAL_PROFILE_PLANNED',

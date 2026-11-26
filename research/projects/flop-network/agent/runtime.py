@@ -194,6 +194,32 @@ def private_config(path=CONF):
     obj['total_test_flop_budget']=str(daily)
     return obj
 
+def https_finality_observation(expected_genesis, *, opener=urlopen):
+    """Official HTTPS JSON-RPC fallback, never treat a mismatch as readiness."""
+    def rpc(method,params):
+        req=Request('https://testnet.flop.network/',data=json.dumps({
+            'jsonrpc':'2.0','id':1,'method':method,'params':params}).encode(),
+            headers={'Content-Type':'application/json','Accept':'application/json'})
+        with opener(req,timeout=8) as response:
+            item=json.loads(response.read(65536))
+        if not isinstance(item,dict) or item.get('error') or 'result' not in item:
+            raise ValueError('RPC_BAD_RESPONSE')
+        return item['result']
+    try:
+        if rpc('chain_getBlockHash',[0])!=expected_genesis:
+            return None
+        head=rpc('chain_getFinalizedHead',[])
+        if not isinstance(head,str) or not re.fullmatch(r'0x[0-9a-fA-F]{64}',head):
+            return None
+        header=rpc('chain_getHeader',[head])
+        number=header.get('number')
+        if not isinstance(number,str) or not re.fullmatch(r'0x[0-9a-fA-F]+',number):
+            return None
+        return {'hash':head.lower(),'height':int(number,16)}
+    except (OSError,ValueError,TypeError,AttributeError,KeyError):
+        return None
+
+
 def rpc_finality_observation(expected_genesis):
     """Read-only Substrate JSON-RPC using Node's built-in WebSocket.
     This proves a finalized head on the observed chain, not settlement or
@@ -203,7 +229,7 @@ def rpc_finality_observation(expected_genesis):
         return None
     node=shutil.which('node')
     if not node:
-        return None
+        return https_finality_observation(expected_genesis)
     script=r"""
 const w=new WebSocket('wss://testnet.flop.network');
 const pending=new Map(); let id=0;
@@ -232,7 +258,7 @@ w.addEventListener('open',async()=>{
 """
     try:
         cp=subprocess.run([node,'-e',script],capture_output=True,text=True,timeout=16,check=False)
-        if cp.returncode: return None
+        if cp.returncode: return https_finality_observation(expected_genesis)
         item=json.loads(cp.stdout)
         if not isinstance(item,dict) or item.get('genesis')!=expected_genesis:
             return None
@@ -244,7 +270,7 @@ w.addEventListener('open',async()=>{
             return None
         return {'hash':head.lower(),'height':int(number,16)}
     except (OSError,ValueError,TypeError,subprocess.SubprocessError):
-        return None
+        return https_finality_observation(expected_genesis)
 
 
 def cli_network_status(*, finality_probe=rpc_finality_observation):
@@ -280,7 +306,7 @@ def cli_network_status(*, finality_probe=rpc_finality_observation):
          'faucet_ready':faucet.get('ready'),'faucet_matches_rpc':faucet.get('matches_rpc'),
          'finalized_head':None,'finalized_height':None,'settlement_ready':False}
     # Do not query any user-overridden endpoint or assume identity from DNS.
-    if obs['rpc_reachable'] and genesis and rpc.get('url')=='wss://testnet.flop.network' and rpc.get('overridden') is False:
+    if obs['rpc_reachable'] and genesis and rpc.get('url') in ('wss://testnet.flop.network','wss://testnet.flop.network/') and rpc.get('overridden') is False:
         final=finality_probe(genesis)
         if final:
             obs.update(finalized_head=final['hash'],finalized_height=final['height'],
@@ -528,6 +554,8 @@ def queue_summary(conn):
         '最后一次成功：'+latest,
         '钱包地址：'+get(conn,'wallet_address','未核实'),
         '钱包可用余额（Test FLOP）：'+get(conn,'wallet_free_flop','未核实'),
+        '钱包资金状态：'+get(conn,'wallet_funding_state','未核实'),
+        '正式计分状态：'+get(conn,'scoring_status','未核实'),
         '钱包锁定余额（Test FLOP）：'+get(conn,'wallet_reserved_flop','未核实'),
         '钱包余额采样时间：'+get(conn,'wallet_balance_at','未核实'),
         '首次领取状态：'+get(conn,'faucet_claim_status','未记录'),

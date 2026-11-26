@@ -81,7 +81,7 @@ set('genesis',known(d.observed_genesis)+' | 官方 pin 匹配：'+flag(d.rpc_gen
 set('faucet-state',flag(d.faucet_reachable)+' / '+flag(d.faucet_ready));
 set('faucet-quota',known(d.faucet_pool_flop)+' / '+known(d.faucet_daily_remaining_flop));
 set('faucet-pending','待处理 '+known(d.faucet_pending_grants)+' | '+known(d.faucet_limits_asof));
-set('wallet-balance',known(d.wallet_free_flop)+' Test FLOP | '+known(d.wallet_balance_at));
+set('wallet-balance',known(d.wallet_free_flop)+' Test FLOP | '+known(d.wallet_funding_state)+' | '+known(d.wallet_balance_at));
 set('claim-state',known(d.faucet_claim_status)+'（CLI 回执不等于独立链上核验）');
 set('claim-tx',known(d.faucet_claim_tx));
 set('claim-error',known(d.faucet_claim_reason)+' / '+known(d.faucet_claim_at));

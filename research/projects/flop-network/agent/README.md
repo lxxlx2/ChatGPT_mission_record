@@ -161,3 +161,7 @@ Pinned official CLI 0.9.0 supports signed D10 faucet request with --nonce. Exist
 ## 2026-11-26: claim visibility
 
 08:00 and 20:00 Bangkok digests and the current dashboard show the persisted first-claim status, transaction hash, reason, wallet balance sampled via pinned CLI, public faucet budget and pending grants. A reported balance or a CLI-finalized receipt does not prove independently verified transfer attribution. No new scheduler or new wallet. When the HTML page cannot be parsed, the canonical faucet chain and limits plus pinned CLI may establish funding readiness only; no scoring or paid inference promotion. Prior ad164086 isolated Mac tests: user supplied 44 PASS; new changes not yet tested. Deployment of prior SHA and faucet recovery reported by user; first grant not verified.
+
+## 2026-11-26: first funded balance and finality fallback
+
+User local CLI reported 10 free Test FLOP; initial nonce receipt still unresolved (exit 1). This proves a reported positive wallet balance, not independently finalized faucet transfer attribution. The WS finality probe had no observation; the official HTTPS RPC is now a fallback with fresh genesis/head/header verification. Positive balance produces a deduplicated first-funding notification distinct from claim finality. Existing same-nonce-only policy, schedule and wallet preserved. New tests authored, not run here. Previous deployment b0b855bf confirmed by user; no new claim or spending executed from research.
