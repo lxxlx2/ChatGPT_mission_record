@@ -1,0 +1,2709 @@
+"""Free, read-only Solana wallet-cluster analysis for Meme CA research.
+
+The analyzer prefers raw finalized JSON-RPC evidence over third-party labels.
+It never upgrades a graph link to common ownership without the explicit
+multi-evidence rules in WALLET_CLUSTER_ANALYSIS_SPEC.md.
+"""
+from __future__ import annotations
+
+import hashlib
+import inspect
+import json
+import re
+import math
+import sqlite3
+import time
+import urllib.error
+import urllib.request
+from collections import Counter, defaultdict
+from copy import deepcopy
+from dataclasses import dataclass
+from decimal import Decimal, InvalidOperation
+from pathlib import Path
+
+from ..frank.parser import DEX_PROGRAMS, INFRA_PROGRAMS
+from ..signals.classifier import classify, CHAIN_METADATA_REASONS
+from .history_classification import resolve_history_classification, resolution_record
+from ..market.sol_usd import USDC, WSOL
+from .market import DexScreenerMarketClient
+from .market_parity import attach_market_comparison, number
+from .historical_accounts import observe_token_accounts, HistoricalAccountEvidenceError, MAX_OBSERVATIONS
+from .holder_ranks import collect_mint_holder_ranks, valid_pubkey, valid_enumeration_query, HolderRankSourceError, MAX_RESPONSE_BYTES, TOKEN_2022_PROGRAM
+
+DEFAULT_RPC = "https://api.mainnet.solana.com"
+DEFAULT_RPC_FALLBACKS = (
+    "https://solana-rpc.publicnode.com",
+    "https://api.mainnet-beta.solana.com",
+    "https://rpc.ankr.com/solana",
+)
+# CA research uses this only to order candidate signatures in the cutoff slot.
+CA_BLOCK_SIGNATURE_OPTIONS = {
+    "commitment": "finalized",
+    "encoding": "json",
+    "transactionDetails": "signatures",
+    "maxSupportedTransactionVersion": 0,
+    "rewards": False,
+}
+SYSTEM_PROGRAM = "11111111111111111111111111111111"
+TOKEN_PROGRAMS = {
+    "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+    "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+}
+SENSITIVE_EXTENSION_WORDS = (
+    "transferfee","transferhook","permanentdelegate","pausable",
+    "confidentialtransfer","defaultaccountstate",
+)
+SPECIAL_ROLES = {
+    "LP", "AMM_POOL", "PROTOCOL_VAULT", "ESCROW", "VESTING", "LOCK",
+    "BURN", "CEX", "BRIDGE", "ROUTER", "PUBLIC_INFRA", "PUBLIC_PROGRAM", "MARKET_MAKER",
+}
+DEV_ROLES = {"DEV", "CREATOR", "TREASURY"}
+
+def _extension_name(value):
+    return str(value or "").lower().replace("_","").replace("-","")
+
+def _config_values(value, wanted):
+    found=[]
+    if isinstance(value,dict):
+        for key,child in value.items():
+            if _extension_name(key) in wanted:found.append(child)
+            found.extend(_config_values(child,wanted))
+    elif isinstance(value,list):
+        for child in value:found.extend(_config_values(child,wanted))
+    return found
+
+def _authority_active(value):
+    return value not in (None,"","11111111111111111111111111111111")
+
+def _decimal_value(value):
+    try:
+        number=Decimal(str(value))
+    except (InvalidOperation,ValueError,TypeError):
+        return None
+    return number if number.is_finite() else None
+
+def _positive_number(value):
+    number=_decimal_value(value)
+    return number is not None and number>0
+
+def _authority_state(value):
+    if value in (None,"","11111111111111111111111111111111"):
+        return "REVOKED"
+    if isinstance(value,str):
+        return "ACTIVE"
+    return "INVALID"
+
+def _all_valid_nonnegative(values):
+    if not values:return False
+    parsed=[_decimal_value(value) for value in values]
+    return all(value is not None and value>=0 for value in parsed)
+
+def _direct_alias_values(mapping, aliases):
+    if not isinstance(mapping,dict):
+        return []
+    return [
+        value for key,value in mapping.items()
+        if _extension_name(key) in aliases
+    ]
+
+def _fee_schedule(config, schedule_name):
+    schedules=_config_values(config,{schedule_name})
+    if not schedules:
+        return {"status":"INCOMPLETE"}
+    if len(schedules)!=1 or not isinstance(schedules[0],dict):
+        return {"status":"INVALID"}
+    schedule=schedules[0]
+    basis=_direct_alias_values(schedule,{"transferfeebasispoints","basispoints"})
+    maximum=_direct_alias_values(schedule,{"maximumfee","maxfee"})
+    if not basis or not maximum:
+        return {"status":"INCOMPLETE"}
+    if len(basis)!=1 or len(maximum)!=1:
+        return {"status":"INVALID"}
+    basis_value=_decimal_value(basis[0]);maximum_value=_decimal_value(maximum[0])
+    if (
+        basis_value is None or maximum_value is None
+        or basis_value<0 or maximum_value<0
+    ):
+        return {"status":"INVALID"}
+    return {
+        "status":"VALID",
+        "basis_points":basis_value,
+        "maximum_fee":maximum_value,
+    }
+
+def _extension_risk(extension):
+    if not isinstance(extension,dict):
+        return {"name":str(extension),"status":"UNRESOLVED","reason":"EXTENSION_CONFIG_UNAVAILABLE","config":extension}
+    name=extension.get("extension") or extension.get("type") or "UNKNOWN"
+    normalized=_extension_name(name)
+    config={k:v for k,v in extension.items() if k not in {"extension","type"}}
+    status="UNRESOLVED";reason="SENSITIVE_EXTENSION_STATE_UNRESOLVED"
+    authorities=_config_values(config,{"authority","transferfeeconfigauthority","withdrawwithheldauthority"})
+    active_authority=any(_authority_active(v) for v in authorities)
+    if "transferfee" in normalized:
+        config_authorities=_config_values(config,{"transferfeeconfigauthority"})
+        withdraw_authorities=_config_values(config,{"withdrawwithheldauthority"})
+        authority_values=config_authorities+withdraw_authorities
+        authority_states=[_authority_state(v) for v in authority_values]
+        older=_fee_schedule(config,"oldertransferfee")
+        newer=_fee_schedule(config,"newertransferfee")
+        positive_fee=any(
+            schedule.get("status")=="VALID"
+            and (schedule["basis_points"]>0 or schedule["maximum_fee"]>0)
+            for schedule in (older,newer)
+        )
+        # A directly parseable positive fee elsewhere in an incomplete payload
+        # is still sufficient to remain fail-closed as active risk.
+        if not positive_fee:
+            raw_fee_values=_config_values(config,{"transferfeebasispoints","basispoints","maximumfee","maxfee"})
+            positive_fee=any(_positive_number(v) for v in raw_fee_values)
+        if "ACTIVE" in authority_states or positive_fee:
+            status="ACTIVE_RISK";reason="TRANSFER_FEE_ACTIVE_OR_MUTABLE"
+        else:
+            authorities_complete=len(config_authorities)==1 and len(withdraw_authorities)==1
+            authorities_valid=(
+                authorities_complete
+                and all(state=="REVOKED" for state in authority_states)
+            )
+            schedules=(older,newer)
+            schedules_complete=all(item["status"]!="INCOMPLETE" for item in schedules)
+            schedules_valid=all(item["status"]=="VALID" for item in schedules)
+            schedules_zero=(
+                schedules_valid
+                and all(
+                    item["basis_points"]==0 and item["maximum_fee"]==0
+                    for item in schedules
+                )
+            )
+            if authorities_valid and schedules_zero:
+                status="INACTIVE";reason="TRANSFER_FEE_ZERO_AND_AUTHORITIES_REVOKED"
+            elif not authorities_complete or not schedules_complete:
+                reason="TRANSFER_FEE_CONFIG_INCOMPLETE"
+            else:
+                reason="TRANSFER_FEE_CONFIG_INVALID"
+    elif "transferhook" in normalized:
+        hook_authorities=_config_values(config,{"authority"})
+        programs=_config_values(config,{"programid","programidpubkey"})
+        authority_states=[_authority_state(v) for v in hook_authorities]
+        program_states=[_authority_state(v) for v in programs]
+        if "ACTIVE" in authority_states or "ACTIVE" in program_states:
+            status="ACTIVE_RISK";reason="TRANSFER_HOOK_ACTIVE_OR_MUTABLE"
+        elif (
+            len(hook_authorities)==1 and len(programs)==1
+            and authority_states==["REVOKED"]
+            and program_states==["REVOKED"]
+        ):
+            status="INACTIVE";reason="TRANSFER_HOOK_DISABLED_AND_AUTHORITY_REVOKED"
+        elif not hook_authorities or not programs:
+            reason="TRANSFER_HOOK_CONFIG_INCOMPLETE"
+        else:
+            reason="TRANSFER_HOOK_CONFIG_INVALID"
+    elif "permanentdelegate" in normalized:
+        delegates=_config_values(config,{"delegate"})
+        if any(_authority_active(v) for v in delegates):
+            status="ACTIVE_RISK";reason="PERMANENT_DELEGATE_ACTIVE"
+        elif delegates:
+            status="INACTIVE";reason="PERMANENT_DELEGATE_REVOKED"
+    elif "pausable" in normalized:
+        paused=_config_values(config,{"paused","ispaused"})
+        if active_authority or any(v is True or str(v).lower()=="true" for v in paused):
+            status="ACTIVE_RISK";reason="PAUSABLE_ACTIVE_OR_MUTABLE"
+        elif authorities or paused:
+            status="INACTIVE";reason="PAUSABLE_NOT_PAUSED_AND_AUTHORITY_REVOKED"
+    elif "defaultaccountstate" in normalized:
+        states=[str(v).lower() for v in _config_values(config,{"state","accountstate"}) if v is not None]
+        if any("frozen" in v for v in states):
+            status="ACTIVE_RISK";reason="DEFAULT_ACCOUNT_STATE_FROZEN"
+        elif states and all("initialized" in v for v in states):
+            status="INACTIVE";reason="DEFAULT_ACCOUNT_STATE_INITIALIZED"
+    elif "confidentialtransfer" in normalized:
+        if active_authority:
+            status="ACTIVE_RISK";reason="CONFIDENTIAL_TRANSFER_MUTABLE_AUTHORITY"
+        elif authorities:
+            status="UNRESOLVED";reason="CONFIDENTIAL_TRANSFER_PRESENT_AUTHORITY_REVOKED_OTHER_STATE_UNRESOLVED"
+    return {"name":str(name),"status":status,"reason":reason,"config":config}
+STRONG = {"COMMON_FUNDER_EOA", "BATCH_FUNDING", "COMMON_SIGNER", "COMMON_CONSOLIDATION"}
+BEHAVIOR = {"SYNC_BUY", "SYNC_SELL", "IDENTICAL_SIZE", "SAME_EXECUTION_PROGRAM", "REPEATED_SYNC_BEHAVIOR"}
+
+
+def _hash(value) -> str:
+    return hashlib.sha256(json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode()).hexdigest()
+
+
+class RPCError(RuntimeError):
+    pass
+
+
+class RPCJobBudgetExceeded(RPCError):
+    """Job-level network-attempt/time budget exhausted; never downgrade to partial DONE."""
+
+
+class _NoRPCRedirectHandler(urllib.request.HTTPRedirectHandler):
+    """Never follow a JSON-RPC redirect to another host/method behind one counted attempt."""
+
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        raise RPCError("RPC_REDIRECT_FORBIDDEN")
+
+
+class RpcCache:
+    def __init__(self, path: Path):
+        self.path = Path(path)
+        self.path.parent.mkdir(parents=True, exist_ok=True)
+        self.db = sqlite3.connect(self.path)
+        self.db.execute("CREATE TABLE IF NOT EXISTS rpc_cache(key TEXT PRIMARY KEY,method TEXT,created_at REAL,expires_at REAL,content_hash TEXT,body TEXT)")
+    def close(self):
+        self.db.close()
+    def get(self, method, params, now):
+        key=_hash({"method":method,"params":params})
+        row=self.db.execute("SELECT body,expires_at,content_hash FROM rpc_cache WHERE key=?",(key,)).fetchone()
+        if not row or row[1] < now:return None
+        try:value=json.loads(row[0])
+        except (TypeError,ValueError):return None
+        if row[2]!=_hash(value):return None
+        return value
+    def put(self, method, params, body, ttl, now):
+        key=_hash({"method":method,"params":params})
+        self.db.execute("INSERT OR REPLACE INTO rpc_cache VALUES(?,?,?,?,?,?)",(key,method,now,now+ttl,_hash(body),json.dumps(body,sort_keys=True)))
+        self.db.commit()
+
+
+class SolanaReadOnlyRPC:
+    ALLOWED={"getTokenSupply","getTokenLargestAccounts","getMultipleAccounts","getAccountInfo","getSignaturesForAddress","getTransaction","getProgramAccounts","getBlock"}
+    RETRYABLE_HTTP={403,429,500,502,503,504}
+
+    def __init__(
+        self,
+        endpoint=DEFAULT_RPC,
+        *,
+        fallback_endpoints=None,
+        open_url=None,
+        sleep=time.sleep,
+        min_interval=.45,
+        cache:RpcCache|None=None,
+        max_wire_attempts:int|None=None,
+        max_elapsed_seconds:float|None=None,
+        monotonic=time.monotonic,
+        before_wire=None,
+        transport_updated=None,
+        transaction_batches=True,
+        shared_pacing=None,
+    ):
+        endpoints=[endpoint]
+        endpoints.extend(DEFAULT_RPC_FALLBACKS if fallback_endpoints is None else fallback_endpoints)
+        self.endpoints=[]
+        from urllib.parse import urlsplit
+        for value in endpoints:
+            if not value:continue
+            if not isinstance(value,str) or any(c.isspace() for c in value):
+                raise ValueError("RPC_ENDPOINT_INVALID")
+            parsed=urlsplit(value)
+            if parsed.scheme!="https" or not parsed.hostname or parsed.username or parsed.password or parsed.fragment:
+                raise ValueError("RPC_ENDPOINT_INVALID")
+            if value not in self.endpoints:self.endpoints.append(value)
+        self.endpoint=self.endpoints[0]
+        # The shipped transport must reject redirects before any second wire request.
+        # Injected open_url is for controlled offline testing only.
+        self.open_url=open_url if open_url is not None else urllib.request.build_opener(_NoRPCRedirectHandler()).open
+        self.sleep=sleep
+        self.min_interval=float(min_interval)
+        self.cache=cache
+        self.before_wire=before_wire
+        self.transport_updated=transport_updated
+        self.cache_hits=0
+        self.calls=0
+        if max_wire_attempts is not None and (type(max_wire_attempts) is not int or max_wire_attempts <= 0):
+            raise ValueError("RPC_JOB_WIRE_BUDGET_INVALID")
+        if max_elapsed_seconds is not None and (not math.isfinite(float(max_elapsed_seconds)) or float(max_elapsed_seconds) <= 0):
+            raise ValueError("RPC_JOB_TIME_BUDGET_INVALID")
+        self.max_wire_attempts=max_wire_attempts
+        self.max_elapsed_seconds=float(max_elapsed_seconds) if max_elapsed_seconds is not None else None
+        self._monotonic=monotonic
+        self._budget_started_at=self._monotonic()
+        self._budget_terminal_reason=None
+        self._last_wire_succeeded=None
+        self.last_wire_error_code=None
+        self.endpoint_calls=defaultdict(int)
+        self.endpoint_failures=defaultdict(int)
+        self._last_by_endpoint=defaultdict(float)
+        self._cooldown_until=defaultdict(float)
+        self.shared_pacing=shared_pacing
+        self.transaction_batches=transaction_batches is True
+        self._transaction_batches_disabled=False;self._transaction_plan=[];self._transaction_prefetched={}
+        self._transaction_plan_ttl=None
+        self._transaction_batch_stats={'http_batch_attempts':0,'transaction_subrequests':0,'fallbacks':0}
+
+    @property
+    def supports_transaction_batches(self):
+        return self.transaction_batches and not self._transaction_batches_disabled and self.max_wire_attempts is None and self.max_elapsed_seconds is None
+
+    @property
+    def transaction_batch_stats(self):return dict(self._transaction_batch_stats)
+
+    def prefetch_transactions(self,signatures,*,ttl):
+        from .transaction_batch import prepare
+        prepare(self,signatures,ttl)
+
+    def _effective_cooldown(self, endpoint):
+        shared = self.shared_pacing.cooldown_until(endpoint) if self.shared_pacing is not None else 0.0
+        return max(shared, self._cooldown_until[endpoint])
+
+    def _reserve_shared(self, endpoint):
+        if self.shared_pacing is not None:
+            self.shared_pacing.reserve(endpoint, self.min_interval, sleep=self.sleep, check=self._check_job_budget)
+
+    def _extend_cooldown(self, endpoint, seconds):
+        self._cooldown_until[endpoint] = max(self._cooldown_until[endpoint], self._monotonic() + seconds)
+        if self.shared_pacing is not None:
+            self.shared_pacing.cool_down(endpoint, seconds)
+
+    def _next_endpoint(self):
+        if self.transport_updated is not None:self.transport_updated()
+        now=self._monotonic()
+        primary=self.endpoints[0]
+        # Keep the official/configured primary as the normal source. Only move to
+        # fallbacks while the primary is in an error cooldown window.
+        primary_cooldown=self._effective_cooldown(primary)
+        if primary_cooldown<=now:
+            endpoint=primary
+            ready=max(now,self._last_by_endpoint[endpoint]+self.min_interval)
+        else:
+            ranked=[]
+            for priority,endpoint in enumerate(self.endpoints[1:],1):
+                ready=max(
+                    self._effective_cooldown(endpoint),
+                    self._last_by_endpoint[endpoint]+self.min_interval,
+                )
+                ranked.append((ready,priority,endpoint))
+            if ranked:
+                ready,_,endpoint=min(ranked,key=lambda x:(x[0],x[1]))
+            else:
+                endpoint=primary;ready=max(primary_cooldown,self._last_by_endpoint[primary]+self.min_interval)
+        delay=ready-now
+        if delay>0:self.sleep(delay)
+        self.endpoint=endpoint
+        return endpoint
+
+    @staticmethod
+    def _retry_after(exc):
+        try:return min(60.0,max(0.0,float(exc.headers.get("Retry-After","0"))))
+        except (TypeError,ValueError,AttributeError):return 0.0
+
+    @staticmethod
+    def _rpc_rate_limited(error):
+        if not isinstance(error,dict):return False
+        code=error.get("code")
+        message=str(error.get("message") or "").lower()
+        return code in {-32005,-32429,429} or "rate limit" in message or "too many request" in message
+
+    @staticmethod
+    def _safe_wire_error_code(error):
+        # Keep only fixed transport categories, never response text or URLs.
+        code=str(error)
+        if re.fullmatch(r'(?:HTTP_[0-9]{3}|RPC_-?[0-9]+|RPC_RATE_LIMITED|RPC_ENVELOPE_INVALID|RPC_POOL_RESPONSE_LIMIT|RPC_HOLDER_RANK_RESPONSE_LIMIT)',code):return code
+        name=type(error).__name__
+        if name=='RPCError':return 'RPC_ERROR'
+        return name if name in {'URLError','TimeoutError','OSError','ValueError','JSONDecodeError'} else 'SOURCE_UNAVAILABLE'
+
+    def _stop_job_budget(self, reason):
+        self._budget_terminal_reason=reason
+        raise RPCJobBudgetExceeded(reason)
+
+    def _check_job_deadline(self):
+        if self._budget_terminal_reason:
+            raise RPCJobBudgetExceeded(self._budget_terminal_reason)
+        if self.max_elapsed_seconds is not None and self._monotonic()-self._budget_started_at >= self.max_elapsed_seconds:
+            self._stop_job_budget("RPC_JOB_TIME_BUDGET_EXHAUSTED")
+
+    def _check_job_budget(self):
+        self._check_job_deadline()
+        if self.max_wire_attempts is not None and self.calls >= self.max_wire_attempts:
+            self._stop_job_budget("RPC_JOB_WIRE_BUDGET_EXHAUSTED")
+
+    def assert_can_publish(self):
+        """No successful report after a failed final wire attempt or an expired deadline."""
+        self._check_job_deadline()
+        # Covers non-retryable RPC errors swallowed upstream by legacy best-effort
+        # holder/funding handlers. Exhausting calls alone is allowed on success.
+        if (self.max_wire_attempts is not None
+                and self.calls >= self.max_wire_attempts
+                and self._last_wire_succeeded is False):
+            self._stop_job_budget("RPC_JOB_WIRE_BUDGET_EXHAUSTED")
+
+    def call(self, method, params, *, ttl=0):
+        if method not in self.ALLOWED:raise ValueError("READ_ONLY_METHOD_ALLOWLIST")
+        if method=="getBlock":
+            if (not isinstance(params,list) or len(params)!=2 or type(params[0]) is not int
+                    or not 0<=params[0]<2**64 or not isinstance(params[1],dict)
+                    or params[1]!=CA_BLOCK_SIGNATURE_OPTIONS or params[1]["rewards"] is not False
+                    or type(params[1]["maxSupportedTransactionVersion"]) is not int):
+                raise ValueError("CA_FINALIZED_BLOCK_SIGNATURE_QUERY_INVALID")
+        pool_discovery_query=False
+        if method=="getProgramAccounts":
+            from .pool_discovery import valid_pool_discovery_query
+            pool_discovery_query=valid_pool_discovery_query(params)
+            if not pool_discovery_query and not valid_enumeration_query(params):raise ValueError("HOLDER_ENUMERATION_QUERY_INVALID")
+        self._check_job_budget()
+        now=time.time()
+        if ttl and self.cache:
+            hit=self.cache.get(method,params,now)
+            if hit is not None:self.cache_hits+=1;return hit
+
+        from .transaction_batch import consume
+        prefetched,result=consume(self,method,params,ttl)
+        if prefetched:return result
+
+        body=json.dumps({"jsonrpc":"2.0","id":1,"method":method,"params":params}).encode()
+        last_error=None
+        null_seen=0
+        max_attempts=max(6,len(self.endpoints)*3)
+        for attempt in range(max_attempts):
+            self._check_job_budget()
+            endpoint=self._next_endpoint()
+            self._reserve_shared(endpoint)
+            # Backoff may have exhausted the deadline; do not start another wire request.
+            self._check_job_budget()
+            timeout=20.0
+            if self.max_elapsed_seconds is not None:
+                remaining=self.max_elapsed_seconds-(self._monotonic()-self._budget_started_at)
+                if remaining <= 0:raise RPCJobBudgetExceeded("RPC_JOB_TIME_BUDGET_EXHAUSTED")
+                timeout=min(timeout,remaining)
+            req=urllib.request.Request(endpoint,data=body,headers={
+                "Content-Type":"application/json",
+                "User-Agent":"mission-meme-cluster/2",
+            })
+            # Persist a job reservation before transport, outside retry catches.
+            # A local checkpoint failure must never start an uncounted request.
+            if self.before_wire is not None:self.before_wire(endpoint)
+            try:
+                self._last_by_endpoint[endpoint]=self._monotonic()
+                self.calls+=1;self.endpoint_calls[endpoint]+=1
+                self._last_wire_succeeded=False
+                self.last_wire_error_code=None
+                with self.open_url(req,timeout=timeout) as response:
+                    if method=="getProgramAccounts":
+                        from .pool_vaults import MAX_RPC_BYTES
+                        limit=MAX_RPC_BYTES if pool_discovery_query else MAX_RESPONSE_BYTES
+                        payload=response.read(limit+1)
+                        if len(payload)>limit:raise RPCError("RPC_POOL_RESPONSE_LIMIT" if pool_discovery_query else "RPC_HOLDER_RANK_RESPONSE_LIMIT")
+                        value=json.loads(payload)
+                    elif method in {"getAccountInfo","getMultipleAccounts"} and isinstance(params[-1],dict) and params[-1].get("encoding")=="base64":
+                        from .pool_vaults import MAX_RPC_BYTES
+                        payload=response.read(MAX_RPC_BYTES+1)
+                        if len(payload)>MAX_RPC_BYTES:raise RPCError("RPC_POOL_RESPONSE_LIMIT")
+                        value=json.loads(payload)
+                    else:value=json.loads(response.read())
+                self._check_job_deadline()
+                if value.get("error"):
+                    error=value.get("error") or {}
+                    if self._rpc_rate_limited(error):
+                        self.endpoint_failures[endpoint]+=1
+                        self._extend_cooldown(endpoint, min(30.0,1.5*(2**min(attempt,4))))
+                        last_error=RPCError("RPC_RATE_LIMITED")
+                        self.last_wire_error_code="RPC_RATE_LIMITED"
+                        self._check_job_budget()
+                        continue
+                    failure=RPCError("RPC_"+str(error.get("code","ERROR")))
+                    self.last_wire_error_code=self._safe_wire_error_code(failure)
+                    raise failure
+                if "result" not in value:
+                    self.last_wire_error_code="RPC_ENVELOPE_INVALID"
+                    raise RPCError("RPC_ENVELOPE_INVALID")
+                result=value["result"]
+                if method=="getTransaction" and result is None and len(self.endpoints)>1 and null_seen<1:
+                    null_seen+=1
+                    self._check_job_budget()
+                    continue
+                if ttl and self.cache and result is not None:
+                    self.cache.put(method,params,result,ttl,time.time())
+                self._last_wire_succeeded=True
+                return result
+            except urllib.error.HTTPError as exc:
+                last_error=RPCError("HTTP_"+str(exc.code));self.endpoint_failures[endpoint]+=1
+                self.last_wire_error_code=self._safe_wire_error_code(last_error)
+                if exc.code not in self.RETRYABLE_HTTP:
+                    self._check_job_budget()
+                    raise last_error
+                retry=max(self._retry_after(exc),min(30.0,1.5*(2**min(attempt,4))))
+                self._extend_cooldown(endpoint, retry)
+                self._check_job_budget()
+            except (urllib.error.URLError,TimeoutError,OSError,ValueError) as exc:
+                last_error=RPCError(type(exc).__name__);self.endpoint_failures[endpoint]+=1
+                self.last_wire_error_code=self._safe_wire_error_code(exc)
+                self._check_job_budget()
+                self._extend_cooldown(endpoint, min(10.0,1.0*(2**min(attempt,3))))
+        # The final permitted failed attempt must not escape as recoverable RPCError.
+        self._check_job_budget()
+        raise last_error or RPCError("RPC_FAILED")
+
+
+def _instructions(tx):
+    if not isinstance(tx,dict):return []
+    meta=tx.get("meta")
+    # Parsed instructions remain present after a transaction rolls back. They
+    # prove transfers only when RPC metadata explicitly confirms success.
+    if not isinstance(meta,dict) or "err" not in meta or meta["err"] is not None:return []
+    msg=tx.get("transaction",{}).get("message",{})
+    out=list(msg.get("instructions") or [])
+    for group in meta.get("innerInstructions") or []:out.extend(group.get("instructions") or [])
+    return out
+
+
+def _signers(tx):
+    return [k.get("pubkey") for k in tx.get("transaction",{}).get("message",{}).get("accountKeys",[]) if isinstance(k,dict) and k.get("signer")]
+
+
+def _native_transfers(tx):
+    rows=[]
+    for ix in _instructions(tx):
+        p=ix.get("parsed")
+        if not isinstance(p,dict) or p.get("type")!="transfer":continue
+        info=p.get("info") or {}
+        src=info.get("source");dst=info.get("destination")
+        if src and dst and "lamports" in info:
+            rows.append({"source":src,"destination":dst,"lamports":str(info["lamports"])})
+    return rows
+
+
+def _native_funders(tx, target):
+    return [(x["source"],x["lamports"]) for x in _native_transfers(tx) if x["destination"]==target]
+
+
+def _direct_quote_funders(tx,target):
+    """Bind direct USDC/WSOL transfers to the signing source Owner and target."""
+    quote_decimals={USDC:6,WSOL:9}
+    instructions=_instructions(tx)
+    if not instructions or any(ix.get("programId") in DEX_PROGRAMS for ix in instructions):return
+    message=tx["transaction"]["message"]
+    names=[row.get("pubkey") if isinstance(row,dict) else row for row in message.get("accountKeys") or []]
+    signers=set(_signers(tx));accounts=defaultdict(set)
+    for balances in (tx["meta"].get("preTokenBalances") or [],tx["meta"].get("postTokenBalances") or []):
+        for balance in balances:
+            index=balance.get("accountIndex");ui_token=balance.get("uiTokenAmount") or {}
+            if type(index) is int and 0<=index<len(names):
+                accounts[names[index]].add((balance.get("owner"),balance.get("mint"),ui_token.get("decimals")))
+    for index,instruction in enumerate(message.get("instructions") or []):
+        if instruction.get("programId") not in TOKEN_PROGRAMS:continue
+        parsed=instruction.get("parsed") or {}
+        if parsed.get("type") not in {"transfer","transferChecked"}:continue
+        info=parsed.get("info") or {}
+        source,destination=info.get("source"),info.get("destination")
+        source_ids,destination_ids=accounts.get(source,set()),accounts.get(destination,set())
+        if len(source_ids)!=1 or len(destination_ids)!=1:continue
+        owner,mint,decimals=next(iter(source_ids))
+        if (mint not in quote_decimals or decimals!=quote_decimals[mint] or
+                destination_ids!={(target,mint,decimals)} or owner==target or
+                not valid_pubkey(owner) or info.get("authority")!=owner or owner not in signers):continue
+        amount=info.get("amount")
+        if parsed["type"]=="transferChecked":
+            token=info.get("tokenAmount") or {}
+            if info.get("mint")!=mint or token.get("decimals")!=decimals:continue
+            amount=token.get("amount")
+        if not isinstance(amount,str) or not re.fullmatch(r"[0-9]{1,20}",amount) or not 0<int(amount)<2**64:continue
+        yield {"source":owner,"asset":mint,"decimals":decimals,"amount_raw":str(int(amount)),
+               "basis":"DIRECT_SIGNER_BOUND_SPL_TRANSFER","source_token_account":source,
+               "destination_token_account":destination,"instruction_index":index}
+
+
+def _token_account_meta(tx):
+    keys=tx.get("transaction",{}).get("message",{}).get("accountKeys",[])
+    names=[x.get("pubkey") if isinstance(x,dict) else x for x in keys]
+    out={}
+    balances=(tx.get("meta",{}).get("preTokenBalances") or [])+(tx.get("meta",{}).get("postTokenBalances") or [])
+    for row in balances:
+        try:address=names[int(row["accountIndex"])]
+        except (KeyError,IndexError,TypeError,ValueError):continue
+        owner=row.get("owner");mint=row.get("mint")
+        if address and owner and mint:out[address]={"owner":owner,"mint":mint}
+    return out
+
+
+def _owner_token_transfers(tx):
+    instructions=_instructions(tx)
+    if not instructions:return []
+    meta=_token_account_meta(tx);rows=[]
+    for ix in instructions:
+        p=ix.get("parsed")
+        if not isinstance(p,dict) or p.get("type") not in {"transfer","transferChecked"}:continue
+        info=p.get("info") or {};src=info.get("source");dst=info.get("destination")
+        sm=meta.get(src) or {};dm=meta.get(dst) or {}
+        mint=info.get("mint") or sm.get("mint") or dm.get("mint")
+        so=sm.get("owner");do=dm.get("owner")
+        if not mint or not so or not do or so==do:continue
+        amount=(info.get("tokenAmount") or {}).get("amount") or info.get("amount")
+        rows.append({"source_owner":so,"destination_owner":do,"mint":mint,"amount_raw":str(amount) if amount is not None else None})
+    return rows
+
+
+class UnionFind:
+    def __init__(self, values):self.p={x:x for x in values}
+    def find(self,x):
+        while self.p[x]!=x:self.p[x]=self.p[self.p[x]];x=self.p[x]
+        return x
+    def union(self,a,b):
+        a,b=self.find(a),self.find(b)
+        if a!=b:self.p[b]=a
+    def groups(self):
+        out=defaultdict(list)
+        for x in self.p:out[self.find(x)].append(x)
+        return list(out.values())
+
+
+@dataclass
+class Holder:
+    token_account:str
+    owner:str
+    raw:int
+    decimals:int
+    role:str
+    role_source:str
+    account_program:str|None=None
+    @property
+    def quantity(self):return Decimal(self.raw)/(Decimal(10)**self.decimals)
+
+
+class WalletClusterAnalyzer:
+    def __init__(
+        self,mint:str,*,rpc:SolanaReadOnlyRPC,special_registry:dict|None=None,
+        history_per_holder=30,deep_holders=10,funding_lookback=12,
+        material_pct=Decimal("1"),market_client:DexScreenerMarketClient|None=None,
+        adaptive_history_per_holder=None,adaptive_funding_lookback=None,
+        progress_callback=None,
+        enumerate_holder_ranks=False,independent_market_client=None,compare_market_sources=None,narrative_client=None,collect_narrative=None,read_pool_vaults=False,audit_holder_binary=False,
+        history_max_pages=1,funding_max_pages=1,independent_rpc=None,read_launch_identity=False,
+        adaptive_history_max_pages=1,adaptive_funding_max_pages=1,exhaust_history=False,
+        query_scope="full",focus_owner=None,wallet_base=None,read_launch_flow=False,
+    ):
+        if query_scope not in ("full", "overview", "wallet"):
+            raise ValueError("INVALID_CA_QUERY_SCOPE")
+        if query_scope=="wallet":
+            if not valid_pubkey(focus_owner) or not isinstance(wallet_base,dict) or wallet_base.get("mint")!=mint:
+                raise ValueError("WALLET_SCOPE_REQUIRES_BOUND_REPORT")
+        elif focus_owner is not None or wallet_base is not None:
+            raise ValueError("UNEXPECTED_WALLET_SCOPE_INPUT")
+        self.query_scope=query_scope
+        self.focus_owner=focus_owner
+        self.wallet_base=wallet_base
+        self.mint=mint;self.rpc=rpc;self.registry=special_registry or {};self.history_per_holder=int(history_per_holder);self.deep_holders=int(deep_holders);self.funding_lookback=int(funding_lookback);self.material_pct=Decimal(material_pct)
+        self.audit_holder_binary=audit_holder_binary is True
+        self.independent_rpc=independent_rpc
+        self.read_launch_identity=read_launch_identity is True
+        self.read_launch_flow=read_launch_flow is True and query_scope=="full"
+        self.read_pool_vaults=read_pool_vaults is True
+        self.market_client=market_client
+        self.narrative_client=narrative_client if collect_narrative is not False else None
+        self.independent_market_client=independent_market_client if compare_market_sources is not False else None
+        self.adaptive_history_per_holder=int(adaptive_history_per_holder) if adaptive_history_per_holder else None
+        self.adaptive_funding_lookback=int(adaptive_funding_lookback) if adaptive_funding_lookback else None
+        self.progress_callback=progress_callback
+        self.edges=[];self.trades=[];self.funding=[];self.consolidations=[];self.tx_errors=[]
+        self._funding_transfers={}
+        self.adaptive_deepened_owners=[]
+        self.exhaust_history=exhaust_history is True
+        self._history_streams={};self._holder_firsts={}
+        self._protocol_pool_accounts=set();self._protocol_history_owners=set()
+        self._snapshot_slots={}
+        self._top_account_context_errors=[]
+        self._expected_mint_program=None
+        for pages in (history_max_pages,funding_max_pages,adaptive_history_max_pages,adaptive_funding_max_pages):
+            if type(pages) is not int or not 1<=pages<=8:raise ValueError("HISTORY_PAGE_BOUND_INVALID")
+        self.history_max_pages=history_max_pages;self.funding_max_pages=funding_max_pages
+        self.adaptive_history_max_pages=adaptive_history_max_pages
+        self.adaptive_funding_max_pages=adaptive_funding_max_pages
+        self._history_page_limit=history_max_pages;self._funding_page_limit=funding_max_pages
+        self.history_coverage={}
+        self.history_attempts=[]
+        self.enumerate_holder_ranks=enumerate_holder_ranks is True
+        self._owner_history_candidates={};self._owner_history_selection={}
+        self._extra_history_accounts=set();self._classified_holder_transactions={}
+        self._classified_holder_contexts={};self._history_classification_resolutions={}
+        self._owner_account_source="OBSERVED_TOP20_ACCOUNTS"
+        self.historical_accounts=[];self.historical_account_scans=[]
+        self._historical_context_seen=set();self._historical_retention_index={}
+        self._historical_valid_observations=0;self._historical_compacted_observations=0
+        self._historical_limit_rejected_observations=0
+        self._historical_errors=defaultdict(int);self._historical_evidence_limited=False
+        self._historical_scan_active=False;self._history_decimals=0
+
+    def _progress(self,stage,**details):
+        if not self.progress_callback:return
+        try:self.progress_callback(stage,details)
+        except Exception:
+            # UI progress must never alter evidence collection or report correctness.
+            return
+
+    @staticmethod
+    def _accepts_optional_limit(method, positional_without_limit):
+        """Keep compatibility with old tests/local overrides that use the pre-v3 signature."""
+        try:
+            params=list(inspect.signature(method).parameters.values())
+        except (TypeError,ValueError):
+            return True
+        if any(p.kind==inspect.Parameter.VAR_POSITIONAL for p in params):
+            return True
+        positional=[
+            p for p in params
+            if p.kind in (inspect.Parameter.POSITIONAL_ONLY,inspect.Parameter.POSITIONAL_OR_KEYWORD)
+        ]
+        return len(positional)>positional_without_limit
+
+    def _scan_holder_bounded(self,holder,account_to_owner,top_owners,limit,max_pages=None):
+        method=self._scan_holder
+        original=self.history_per_holder;original_pages=self._history_page_limit
+        error_start=len(self.tx_errors)
+        self._history_page_limit=self.history_max_pages if max_pages is None else max_pages
+        try:
+            if self._accepts_optional_limit(method,3):
+                return method(holder,account_to_owner,top_owners,limit)
+            self.history_per_holder=int(limit)
+            return method(holder,account_to_owner,top_owners)
+        finally:
+            for error in self.tx_errors[error_start:]:
+                if isinstance(error,dict) and str(error.get('phase','')).startswith('holder'):
+                    error['owner']=holder.owner
+                    error['token_account']=holder.token_account
+            self.history_per_holder=original;self._history_page_limit=original_pages
+
+    @staticmethod
+    def _classification_gap_reason(result):
+        reason=result.get('classification_reason')
+        allowed={'INSUFFICIENT_MARKET_EXCHANGE_EVIDENCE','WALLET_MINT_DECIMALS_CONFLICT',
+                 'AMBIGUOUS_USER_EXCHANGE_ASSETS','WALLET_NOT_SIGNER_AUTHORITY_UNPROVEN'}
+        allowed.update('INCOMPLETE_CHAIN_METADATA:'+name for name in ('IncompleteTransaction','KeyError','TypeError','ValueError','IndexError'))
+        details=result.get('classification_details')
+        chain=details.get('chain_metadata_reason') if isinstance(details,dict) else None
+        return {'classification_reason':reason if isinstance(reason,str) and reason in allowed else 'UNCLASSIFIED',
+                **({'chain_metadata_reason':chain} if isinstance(chain,str) and chain in CHAIN_METADATA_REASONS else {})}
+
+    def _classification_gap_coverage(self):
+        rows=[e for e in self.tx_errors if e.get('error')=='CLASSIFICATION_UNRESOLVED'
+              and str(e.get('phase','')).startswith('holder')]
+        unique={}
+        for e in rows:unique.setdefault((e.get('owner'),e.get('signature')),e)
+        return {'version':1,'observation_records':len(rows),'unique_owner_signatures':len(unique),
+                'unique_signatures':len({e.get('signature') for e in rows}),
+                'affected_owners':len({e['owner'] for e in rows if e.get('owner')}),
+                'unscoped_records':sum(not e.get('owner') for e in rows),
+                'reason_counts':dict(Counter(e.get('chain_metadata_reason') or e.get('classification_reason','UNCLASSIFIED') for e in unique.values()))}
+
+    def _prepare_owner_account_history(self,holders,rankings):
+        # Reuse the validated current-mint enumeration, including zero balances.
+        # A failed balance/slot reconciliation never promotes an account set.
+        candidates={}
+        for h in holders:candidates.setdefault(h.owner,{})[h.token_account]=h
+        if rankings.get("status")=="COMPLETE_SNAPSHOT" and isinstance(rankings.get("accounts"),list):
+            current_owners={r["token_account"]:r["owner"] for r in rankings["accounts"]}
+            if any(current_owners.get(h.token_account)!=h.owner for h in holders):
+                self._owner_account_source="SNAPSHOT_OWNER_CONFLICT"
+                self._owner_history_candidates=candidates
+                return
+            self._owner_account_source="VERIFIED_CURRENT_MINT_ACCOUNTS"
+            roles={r["owner"]:r for r in rankings.get("owners") or []}
+            for row in rankings["accounts"]:
+                owner=row["owner"];role=roles.get(owner) or {}
+                candidates.setdefault(owner,{})[row["token_account"]]=Holder(
+                    row["token_account"],owner,int(row["raw"]),row["decimals"],
+                    role.get("role","UNRESOLVED"),role.get("role_source","FULL_MINT_ACCOUNT_SOURCE"))
+        self._owner_history_candidates=candidates
+
+    def _additional_material_holders(self,supply,sample_owners):
+        if not self.exhaust_history or self._owner_account_source!="VERIFIED_CURRENT_MINT_ACCOUNTS" or supply<=0:
+            return []
+        representatives=[]
+        for owner,accounts in self._owner_history_candidates.items():
+            if owner in sample_owners:continue
+            raw=sum(h.raw for h in accounts.values())
+            if raw and Decimal(raw)*100>=self.material_pct*Decimal(supply):
+                holder=min(accounts.values(),key=lambda h:(-h.raw,h.token_account))
+                representatives.append((raw,holder))
+        return [holder for _,holder in sorted(representatives,key=lambda x:(-x[0],x[1].owner))]
+
+    @staticmethod
+    def _earlier_buy(previous,current):
+        if not isinstance(current,dict):return previous
+        if not isinstance(previous,dict):return current
+        before,after=previous.get("slot"),current.get("slot")
+        if type(before) is int and type(after) is int:
+            if before!=after:return previous if before<after else current
+            signatures=set(previous.get("same_slot_buy_signatures") or [previous["signature"]])
+            signatures.update(current.get("same_slot_buy_signatures") or [current["signature"]])
+            if len(signatures)>1:
+                representative=min((previous,current),key=lambda row:row["signature"])
+                return {**representative,"same_slot_buy_signatures":sorted(signatures)}
+            return previous
+        def order(row):
+            stamp=row.get("block_time")
+            return (stamp if type(stamp) in (int,float) and math.isfinite(stamp) else float("inf"),str(row.get("signature","")))
+        return min((previous,current),key=order)
+
+    def _scan_owner_history(self,holder,mapping,owners,limit,max_pages=None):
+        if not self.enumerate_holder_ranks:
+            return self._scan_holder_bounded(holder,mapping,owners,limit,max_pages)
+        owner=holder.owner
+        if owner not in self._owner_history_selection:
+            candidates=self._owner_history_candidates.get(owner) or {holder.token_account:holder}
+            selected=[holder];reason="ALL_OBSERVED_SELECTED"
+            for candidate in sorted(candidates.values(),key=lambda h:(-h.raw,h.token_account)):
+                if candidate.token_account==holder.token_account:continue
+                if not self.exhaust_history and len(selected)>=4:
+                    reason="OWNER_ACCOUNT_LIMIT";break
+                if not self.exhaust_history and len(self._extra_history_accounts)>=12:
+                    reason="REPORT_EXTRA_ACCOUNT_LIMIT";break
+                selected.append(candidate);self._extra_history_accounts.add(candidate.token_account)
+            self._owner_history_selection[owner]={"holders":selected,"reason":reason,"observed":len(candidates)}
+        first=None
+        plan=self._owner_history_selection[owner]
+        applicable=[h for h in plan['holders'] if not self.exhaust_history or (owner,h.token_account) not in self._protocol_pool_accounts]
+        plan['protocol_accounts_not_applicable']=[h.token_account for h in plan['holders'] if h not in applicable]
+        if plan['holders'] and not applicable:self._protocol_history_owners.add(owner)
+        for account in applicable:
+            first=self._earlier_buy(first,self._scan_holder_bounded(account,mapping,owners,limit,max_pages))
+        return first
+
+    def _reject_conflicting_transaction_context(self,tx,signature,expected_slot,phase):
+        # Historical-account discovery must not be the only consumer protected
+        # from a contradictory response. Reject explicit slot/signature conflicts
+        # before transfers, classification or prefunding can use this payload.
+        # Legacy inputs without these fields remain unverified by the existing
+        # discovery checks; absence alone is not promoted to a verified context.
+        reason=None
+        if isinstance(tx,dict):
+            if "slot" in tx:
+                if type(tx["slot"]) is not int or tx["slot"]<=0:
+                    reason="TRANSACTION_CONTEXT_UNAVAILABLE"
+                elif expected_slot is not None and (type(expected_slot) is not int or expected_slot!=tx["slot"]):
+                    reason="TRANSACTION_SLOT_CONFLICT"
+            transaction=tx.get("transaction")
+            if reason is None and isinstance(transaction,dict) and "signatures" in transaction:
+                signatures=transaction["signatures"]
+                if not isinstance(signatures,list) or not signatures or signatures[0]!=signature:
+                    reason="TRANSACTION_IDENTITY_MISMATCH"
+        if reason:
+            self.tx_errors.append({"signature":signature,"phase":phase+"_context","error":reason})
+        return reason is not None
+
+    def _observe_historical_accounts(self,tx,signature,owner,expected_slot=None):
+        if not self.enumerate_holder_ranks or (owner,signature) in self._historical_context_seen:return
+        self._historical_context_seen.add((owner,signature))
+        try:rows=observe_token_accounts(tx,signature,self.mint,owner,self._history_decimals,expected_slot=expected_slot)
+        except HistoricalAccountEvidenceError as exc:
+            self._historical_errors[str(exc)]+=1
+            return
+        self._historical_valid_observations+=len(rows)
+        for row in rows:
+            # Discovery needs distinct transaction-bound account proofs, not
+            # hundreds of snapshots of an already represented current account.
+            # Keep the oldest slot, retaining the first observed proof on equal
+            # slots; this does not establish transaction order within a slot.
+            # An independently confirmed closure and a different historical
+            # owner must never be overwritten by an earlier nonclosure proof.
+            identity=(owner,row["account"],row["balance_phase"],row["closure_at_transaction_end"])
+            index=self._historical_retention_index.get(identity)
+            if index is not None:
+                self._historical_compacted_observations+=1
+                if row["slot"]<self.historical_accounts[index]["slot"]:
+                    self.historical_accounts[index]=row
+                continue
+            if not self.exhaust_history and len(self.historical_accounts)>=MAX_OBSERVATIONS:
+                self._historical_evidence_limited=True
+                self._historical_limit_rejected_observations+=1
+                continue
+            self._historical_retention_index[identity]=len(self.historical_accounts)
+            self.historical_accounts.append(row)
+
+    def _historical_retention_coverage(self):
+        return {"version":1,"mode":"OLDEST_VALID_PER_OWNER_ACCOUNT_PHASE_CLOSURE_STATUS",
+                "raw_valid_observations":self._historical_valid_observations,
+                "retained_observations":len(self.historical_accounts),
+                "compacted_observations":self._historical_compacted_observations,
+                "limit_rejected_observations":self._historical_limit_rejected_observations,
+                "represented_owner_accounts":len({(r["owner"],r["account"]) for r in self.historical_accounts}),
+                "max_observations":None if self.exhaust_history else MAX_OBSERVATIONS,"complete_history":False}
+
+    def _historical_frontier(self):
+        grouped={}
+        for row in self.historical_accounts:
+            identity=(row["owner"],row["account"])
+            if identity not in grouped or row["slot"]<grouped[identity]["slot"]:grouped[identity]=row
+        return sorted(grouped.values(),key=lambda row:(row["owner"],row["slot"],row["account"]))
+
+    def _scan_historical_account_frontier(self,firsts,mapping,owners,representatives):
+        if self.exhaust_history:
+            return self._scan_discovered_account_histories(firsts,mapping,owners,representatives)
+        # One fixed discovery frontier per report. Accounts found during this
+        # pass or its new funding reads are recorded but never recurse.
+        selected=defaultdict(list);handled=set();changed=set()
+        for row in self._historical_frontier():
+            owner=row["owner"];address=row["account"];handled.add((owner,address))
+            plan=self._owner_history_selection.get(owner)
+            if plan is None:continue
+            current={h.token_account for h in plan["holders"]}
+            reason=None
+            if address in current:reason="CURRENT_ACCOUNT_ALREADY_SELECTED"
+            elif address in self._owner_history_candidates.get(owner,{}):reason="CURRENT_ACCOUNT_NOT_SELECTED"
+            elif len(current)+len(selected.get(owner,[]))>=4:reason="OWNER_ACCOUNT_LIMIT"
+            elif address not in self._extra_history_accounts and len(self._extra_history_accounts)>=12:reason="REPORT_EXTRA_ACCOUNT_LIMIT"
+            record={"owner":owner,"account":address,"discovery_signature":row["signature"],
+                    "discovery_slot":row["slot"],"selected":reason is None,
+                    "stop_reason":reason or "SELECTED_BOUNDED_HISTORY","history_complete":False}
+            self.historical_account_scans.append(record)
+            if reason:continue
+            selected[owner].append(address);self._extra_history_accounts.add(address)
+            self._progress("HISTORICAL_ACCOUNT_SCAN",owner=owner,address=address)
+            self._historical_scan_active=True
+            try:
+                first=self._scan_holder_bounded(Holder(address,owner,0,self._history_decimals,"UNRESOLVED","TRANSACTION_BOUND_HISTORICAL_OWNER"),mapping,owners,self.history_per_holder,1)
+            finally:self._historical_scan_active=False
+            record["window_stop_reason"]=self.history_coverage.get(("holder",address,None),{}).get("stop_reason","NOT_RECORDED")
+            previous=firsts.get(owner)
+            firsts[owner]=self._earlier_buy(previous,first)
+            if firsts[owner]!=previous:changed.add(owner)
+        for owner in sorted(changed):
+            self._scan_funding_bounded(representatives[owner],firsts.get(owner),owners,self.funding_lookback,1)
+        for row in self._historical_frontier():
+            if (row["owner"],row["account"]) not in handled:
+                self.historical_account_scans.append({"owner":row["owner"],"account":row["account"],
+                    "discovery_signature":row["signature"],"discovery_slot":row["slot"],
+                    "selected":False,"stop_reason":"CURRENT_ACCOUNT_ALREADY_SELECTED" if any(h.token_account==row["account"] for h in (self._owner_history_selection.get(row["owner"]) or {}).get("holders",[])) else "FRONTIER_LIMIT","history_complete":False})
+
+    def _scan_discovered_account_histories(self,firsts,mapping,owners,representatives):
+        """Drain transaction-proven accounts to the provider's end, once per Owner.
+
+        Newly observed accounts form the next frontier. A closed account or a
+        different historical owner is still only a transaction-bound association;
+        no current-owner or lifetime first-buy claim follows from discovery.
+        """
+        handled=set();funded=set()
+        while True:
+            pending=[r for r in self._historical_frontier() if (r['owner'],r['account']) not in handled]
+            for row in pending:
+                owner,address=row['owner'],row['account'];handled.add((owner,address))
+                plan=self._owner_history_selection.get(owner)
+                if plan is None:continue
+                current={h.token_account for h in plan['holders']}
+                selected=address not in current
+                record={'owner':owner,'account':address,'discovery_signature':row['signature'],
+                        'discovery_slot':row['slot'],'selected':selected,
+                        'stop_reason':'SELECTED_SOURCE_DRIVEN_HISTORY' if selected else 'CURRENT_ACCOUNT_ALREADY_SELECTED',
+                        'history_complete':False}
+                self.historical_account_scans.append(record)
+                if not selected:continue
+                self._extra_history_accounts.add(address)
+                self._progress('HISTORICAL_ACCOUNT_SCAN',owner=owner,address=address)
+                self._historical_scan_active=True
+                holder=Holder(address,owner,0,self._history_decimals,'UNRESOLVED','TRANSACTION_BOUND_HISTORICAL_OWNER')
+                try:first=self._scan_holder_bounded(holder,mapping,owners,self.history_per_holder)
+                finally:self._historical_scan_active=False
+                state=self.history_coverage.get(self._history_window_key(holder,address,None,'holder'),{})
+                record['window_stop_reason']=state.get('stop_reason','NOT_RECORDED')
+                firsts[owner]=self._earlier_buy(firsts.get(owner),first)
+            # Funding history can reveal further target-token accounts too. Each
+            # distinct earliest-buy anchor is consumed once; repeated frontiers
+            # cannot restart a successfully exhausted funding window.
+            anchors=[(owner,first) for owner,first in firsts.items()
+                     if isinstance(first,dict) and owner in representatives
+                     and (owner,first.get('signature')) not in funded]
+            for owner,first in anchors:
+                funded.add((owner,first.get('signature')))
+                self._scan_funding_bounded(representatives[owner],first,owners,self.funding_lookback)
+            if not any((r['owner'],r['account']) not in handled for r in self._historical_frontier()):break
+
+    def _owner_account_history_coverage(self):
+        rows=[]
+        for owner,plan in self._owner_history_selection.items():
+            selected=[h.token_account for h in plan["holders"]]
+            queried={w["address"] for w in self.history_attempts if w["phase"]=="holder" and w["owner"]==owner}
+            rows.append({"owner":owner,"account_source_status":self._owner_account_source,
+                         "current_accounts_observed":plan["observed"],"accounts_selected":selected,
+                         "accounts_with_windows":[address for address in selected if address in queried],
+                         "protocol_accounts_not_applicable":plan.get('protocol_accounts_not_applicable',[]),
+                         "accounts_not_selected":plan["observed"]-len(selected),
+                         "account_selection_complete":self._owner_account_source=="VERIFIED_CURRENT_MINT_ACCOUNTS" and len(selected)==plan["observed"],
+                         "selection_stop_reason":plan["reason"],
+                         "closed_account_history":"PARTIAL_TRANSACTION_DISCOVERY" if any(r["owner"]==owner and r["closure_at_transaction_end"]=="CONFIRMED_CLOSED_AT_TRANSACTION_END" for r in self.historical_accounts) else "NOT_ENUMERATED","history_complete":False})
+        return rows
+
+    def _scan_funding_bounded(self,holder,first,top_owners,limit,max_pages=None):
+        method=self._scan_funding
+        original=self.funding_lookback;original_pages=self._funding_page_limit
+        self._funding_page_limit=self.funding_max_pages if max_pages is None else max_pages
+        try:
+            if self._accepts_optional_limit(method,3):
+                return method(holder,first,top_owners,limit)
+            self.funding_lookback=int(limit)
+            return method(holder,first,top_owners)
+        finally:
+            self.funding_lookback=original;self._funding_page_limit=original_pages
+
+    def _entry(self,address):
+        token_cfg=(self.registry.get("tokens") or {}).get(self.mint) or {}
+        return (token_cfg.get("addresses") or {}).get(address) or (self.registry.get("addresses") or {}).get(address)
+
+    def _role(self,address,account_info):
+        explicit=self._entry(address)
+        if explicit:return explicit.get("role","UNRESOLVED"),explicit.get("source","LOCAL_REGISTRY")
+        launch=getattr(self,"_launch_roles",{}).get(address)
+        if launch:return launch
+        value=(account_info or {}).get("value") if isinstance(account_info,dict) else None
+        if not value:
+            if isinstance(account_info,dict) and "value" in account_info and account_info["value"] is None:
+                from .holder_ranks import on_ed25519_curve
+                curve=on_ed25519_curve(address)
+                if curve is True:return "ORDINARY","RPC_NO_ACCOUNT_ON_CURVE_KEYPAIR"
+                if curve is False:return "UNRESOLVED","RPC_NO_ACCOUNT_OFF_CURVE_PDA"
+            return "UNRESOLVED","ACCOUNT_INFO_UNAVAILABLE"
+        program=value.get("owner")
+        if value.get("executable"):return "PUBLIC_PROGRAM","RPC_EXECUTABLE_ACCOUNT"
+        if program==SYSTEM_PROGRAM:return "ORDINARY","RPC_SYSTEM_OWNED"
+        if program in DEX_PROGRAMS:return "PROGRAM_OWNED_UNRESOLVED","RPC_DEX_PROGRAM_OWNER_NOT_VAULT_PROOF:"+str(program)
+        if program in TOKEN_PROGRAMS:return "TOKEN_ACCOUNT_OWNER_UNRESOLVED","RPC_TOKEN_PROGRAM_OWNED"
+        return "PROGRAM_OWNED_UNRESOLVED","RPC_PROGRAM_OWNER:"+str(program)
+
+    def token_profile(self):
+        source = "SOLANA_FINALIZED_JSON_RPC"
+        try:
+            result=self.rpc.call("getAccountInfo",[self.mint,{"encoding":"jsonParsed","commitment":"finalized"}],ttl=60)
+        except RPCJobBudgetExceeded:
+            raise
+        except Exception as exc:
+            return {"status":"UNAVAILABLE","source":"SOLANA_FINALIZED_JSON_RPC","reason":type(exc).__name__}
+        value = result.get("value") if isinstance(result, dict) else None
+        if not isinstance(value, dict):
+            return {"status": "UNAVAILABLE", "source": source, "reason": "MINT_ACCOUNT_UNAVAILABLE"}
+        parsed=((value.get("data") or {}).get("parsed") or {}) if isinstance(value.get("data"),dict) else {}
+        info = parsed.get("info") if isinstance(parsed, dict) else None
+        program = value.get("owner")
+        if (not isinstance(program, str) or program not in TOKEN_PROGRAMS
+                or value.get("executable") is not False or not isinstance(info, dict)
+                or parsed.get("type") != "mint"):
+            return {"status": "UNAVAILABLE", "source": source, "reason": "MINT_ACCOUNT_TYPE_UNVERIFIED"}
+        context = result.get("context")
+        slot = context.get("slot") if isinstance(context, dict) else None
+        decimals, supply = info.get("decimals"), info.get("supply")
+        authorities = ("mintAuthority", "freezeAuthority")
+        if (type(slot) is not int or slot <= 0 or type(decimals) is not int or not 0 <= decimals <= 255
+                or not isinstance(supply, str) or not re.fullmatch(r"(?:0|[1-9][0-9]{0,19})", supply)
+                or int(supply) >= 2**64 or info.get("isInitialized") is not True
+                or any(key not in info or (info[key] is not None and not valid_pubkey(info[key]))
+                       for key in authorities)):
+            return {"status": "UNAVAILABLE", "source": source, "reason": "MINT_STATE_UNVERIFIED"}
+        extensions = info.get("extensions", [])
+        if not isinstance(extensions, list):
+            return {"status": "UNAVAILABLE", "source": source, "reason": "MINT_EXTENSIONS_UNVERIFIED"}
+        # An extended Mint with an empty or unparseable extension list cannot
+        # rule out MintCloseAuthority. The program can close such a Mint at zero.
+        mint_close_authority_excluded = program != TOKEN_2022_PROGRAM or (
+            (value.get("space") == 82 and not extensions)
+            or (bool(extensions) and all(
+                isinstance(extension, dict)
+                and isinstance(extension.get("extension"), str)
+                and _extension_name(extension["extension"]) not in {
+                    "", "mintcloseauthority", "unparseableextension", "uninitialized",
+                }
+                for extension in extensions))
+        )
+        if program==TOKEN_2022_PROGRAM:token_program="SPL Token-2022"
+        else:token_program="SPL Token"
+        found_update, update_authority = False, None
+        extension_names=[];extension_details=[];token_metadata=None
+        metadata_states = [
+            extension.get("state") for extension in extensions
+            if isinstance(extension, dict) and extension.get("extension") == "tokenMetadata"
+        ]
+        if program == TOKEN_2022_PROGRAM and len(metadata_states) == 1:
+            st = metadata_states[0]
+            if isinstance(st, dict) and st.get("mint") == self.mint:
+                authority = st.get("updateAuthority")
+                found_update = "updateAuthority" in st and (authority is None or valid_pubkey(authority))
+                update_authority = authority if found_update else None
+                if found_update and isinstance(st.get("uri"), str) and len(st["uri"]) <= 512:
+                    token_metadata = {"name": str(st.get("name") or "")[:64], "symbol": str(st.get("symbol") or "")[:32],
+                                      "uri": st["uri"].strip(), "update_authority": authority, "mint": self.mint}
+        for extension in extensions:
+            if isinstance(extension,dict):
+                name=extension.get("extension") or extension.get("type")
+                if name:extension_names.append(str(name))
+                normalized=_extension_name(name)
+                if any(word in normalized for word in SENSITIVE_EXTENSION_WORDS):
+                    extension_details.append(_extension_risk(extension))
+            elif extension:
+                extension_names.append(str(extension))
+                normalized=_extension_name(extension)
+                if any(word in normalized for word in SENSITIVE_EXTENSION_WORDS):
+                    extension_details.append(_extension_risk(extension))
+        sensitive=[row["name"] for row in extension_details]
+        active_extension_risks=[row for row in extension_details if row["status"]=="ACTIVE_RISK"]
+        inactive_sensitive_extensions=[row for row in extension_details if row["status"]=="INACTIVE"]
+        unresolved_sensitive_extensions=[row for row in extension_details if row["status"]=="UNRESOLVED"]
+        risk_flags=[]
+        if info.get("mintAuthority"):risk_flags.append("MINT_AUTHORITY_ACTIVE")
+        if info.get("freezeAuthority"):risk_flags.append("FREEZE_AUTHORITY_ACTIVE")
+        risk_flags.extend("ACTIVE_EXTENSION:"+row["name"]+":"+row["reason"] for row in active_extension_risks)
+        return {
+            "status":"OK",
+            "source":source,
+            "slot":slot,
+            "token_program":token_program,
+            "program_id":program,
+            "mint_authority":info.get("mintAuthority"),
+            "mint_close_authority_excluded":mint_close_authority_excluded,
+            "freeze_authority":info.get("freezeAuthority"),
+            "decimals":info.get("decimals"),
+            "supply_raw":str(info.get("supply")) if info.get("supply") is not None else None,
+            "is_initialized":info.get("isInitialized"),
+            "metadata_update_authority":update_authority if found_update else "UNAVAILABLE",
+            "metadata_update_authority_status":"CHAIN_PARSED" if found_update else "UNAVAILABLE",
+            "extensions":extension_names,
+            "sensitive_extensions":sensitive,
+            "sensitive_extension_details":extension_details,
+            "active_extension_risks":active_extension_risks,
+            "inactive_sensitive_extensions":inactive_sensitive_extensions,
+            "unresolved_sensitive_extensions":unresolved_sensitive_extensions,
+            "risk_flags":risk_flags,
+            "token_metadata":token_metadata,
+        }
+
+    def launch_snapshot(self,token_profile):
+        """Pump.fun bonding curve/creator and on-chain metadata URI (3 reads max)."""
+        from .launch_identity import collect_pump_launch,collect_token_metadata
+        self._launch_roles={}
+        out={"version":1}
+        if not self.read_launch_identity:return {**out,"status":"NOT_REQUESTED"}
+        for name,fn in (("pump",lambda:collect_pump_launch(self.mint,self.rpc)),("metadata",lambda:collect_token_metadata(self.mint,token_profile,self.rpc))):
+            try:out[name]=fn()
+            except RPCJobBudgetExceeded:raise
+            except Exception as exc:out[name]={"version":1,"status":"UNAVAILABLE","reason":type(exc).__name__}
+        pump=out.get("pump") or {}
+        if pump.get("status")=="VERIFIED_CHAIN_STATE":
+            self._launch_roles[pump["bonding_curve"]]=("PROTOCOL_VAULT","PUMP_BONDING_CURVE_PDA_VERIFIED")
+            if valid_pubkey(pump.get("creator")):self._launch_roles[pump["creator"]]=("CREATOR","PUMP_BONDING_CURVE_CREATOR_FIELD")
+        return out
+
+    def market_snapshot(self):
+        if self.market_client is None:
+            return {"status":"UNAVAILABLE","source":"DEXSCREENER_API","reason":"MARKET_CLIENT_DISABLED"}
+        try:
+            primary=self.market_client.token_snapshot(self.mint)
+            if self.query_scope=="full" and self.independent_market_client is not None:
+                return attach_market_comparison(self.mint,primary,self.independent_market_client)
+            return primary
+        except RPCJobBudgetExceeded:raise
+        except Exception as exc:
+            return {"status":"UNAVAILABLE","source":"DEXSCREENER_API","reason":type(exc).__name__}
+
+    def pool_vault_snapshot(self,market):
+        from .pool_vaults import collect_pool_vault_snapshot
+        if not self.read_pool_vaults:return {"version":1,"status":"NOT_REQUESTED","reason":"NOT_ENABLED"}
+        self._progress("POOL_VAULTS",scanned=0)
+        try:
+            result=collect_pool_vault_snapshot(self.mint,market,self.rpc)
+            from .pool_market import compare_pool_quote_ratio
+            result["market_comparison"]=compare_pool_quote_ratio(self.mint,market,result)
+            return result
+        except RPCJobBudgetExceeded:raise
+        except RPCError as exc:
+            return {"version":1,"status":"INCOMPLETE_EVIDENCE","reason":"RESPONSE_LIMIT" if str(exc)=="RPC_POOL_RESPONSE_LIMIT" else "RPC_UNAVAILABLE"}
+
+    def special_role_snapshot(self,ranks,market):
+        if not (self.read_pool_vaults and self.audit_holder_binary):
+            return {"version":1,"status":"NOT_REQUESTED","reason":"NOT_ENABLED"}
+        self._progress("SPECIAL_ROLES",scanned=0)
+        try:
+            from .special_roles import collect_special_roles
+            return collect_special_roles(self.mint,ranks,market,self.rpc,self.registry)
+        except RPCJobBudgetExceeded:raise
+        except RPCError as exc:
+            return {"version":1,"status":"INCOMPLETE_EVIDENCE","reason":"RESPONSE_LIMIT" if str(exc)=="RPC_POOL_RESPONSE_LIMIT" else "RPC_UNAVAILABLE"}
+        except (ValueError,TypeError,KeyError,OverflowError):
+            return {"version":1,"status":"INCOMPLETE_EVIDENCE","reason":"ROLE_SOURCE_INVALID"}
+
+    def narrative_snapshot(self,market):
+        empty={"version":1,"status":"NOT_REQUESTED","attempts":[],"evidence":[],
+               "official_recognition":"UNVERIFIED","earliest_origin":"UNVERIFIED",
+               "exhaustive":False,"search_coverage":"BOUNDED_HINTS_ONLY"}
+        if self.narrative_client is None:return empty
+        metadata=getattr(self,"_launch_metadata",None)
+        chain_linked=isinstance(metadata,dict) and metadata.get("status")=="VERIFIED_CHAIN_STATE" and metadata.get("mint")==self.mint
+        market_linked=market.get("status")=="OK" and market.get("source")=="DEXSCREENER_API" and market.get("mint")==self.mint
+        if not market_linked and not chain_linked:
+            return {**empty,"reason":"PRIMARY_MARKET_IDENTITY_UNVERIFIED"}
+        self._progress("NARRATIVE_SOURCES",scanned=0)
+        hints=dict(market) if market_linked else {}
+        result=self.narrative_client.collect(self.mint,hints)
+        if not isinstance(result,dict):return {**empty,"status":"UNAVAILABLE","reason":"NARRATIVE_RESULT_INVALID"}
+        if hasattr(self.narrative_client,"collect_origin"):
+            hints.update(narrative_claims_read=bool(result.get("evidence")),
+                         narrative_read_urls=[row["source_url"] for row in result.get("evidence",[]) if row.get("source_url")],
+                         narrative_post_links=list(dict.fromkeys(url for row in result.get("evidence",[])
+                             for url in (row.get("story") or {}).get("post_links",[]))))
+            try:
+                origin=self.narrative_client.collect_origin(self.mint,metadata if chain_linked else None,hints)
+            except RPCJobBudgetExceeded:raise
+            except Exception:origin={"version":1,"status":"UNAVAILABLE","reason":"NARRATIVE_ORIGIN_SOURCE_UNAVAILABLE"}
+            if isinstance(origin,dict):
+                result["origin"]=origin
+                if origin.get("creator_website_evidence"):
+                    result["evidence"]=[*(result.get("evidence") or []),origin["creator_website_evidence"]]
+                    from .narrative import story_summary
+                    result["story_summary"]=story_summary(result["evidence"])
+                if origin.get("status")=="PARTIAL" or result.get("evidence"):
+                    result["status"]="PARTIAL"
+                recognition=origin.get("recognition") or {}
+                if recognition.get("mint")==self.mint:
+                    result["official_recognition"]=recognition.get("status","UNVERIFIED")
+                if origin.get("earliest_traceable"):
+                    result["earliest_origin"]="EARLIEST_IN_LINKED_SOURCES"
+        return result
+
+    @staticmethod
+    def _quote_quantity(record):
+        raw=record.get("quote_amount_raw")
+        decimals=record.get("quote_decimals")
+        if raw in {None,""} or decimals is None:return None
+        try:return str(Decimal(str(raw))/(Decimal(10)**int(decimals)))
+        except (ValueError,TypeError,InvalidOperation):return None
+    def _supply(self):
+        r=self.rpc.call("getTokenSupply",[self.mint,{"commitment":"finalized"}],ttl=30)
+        self._snapshot_slots["supply"]=(r or {}).get("context",{}).get("slot")
+        v=(r or {}).get("value") or {}
+        return int(v["amount"]),int(v["decimals"])
+    def _top(self):
+        r=self.rpc.call("getTokenLargestAccounts",[self.mint,{"commitment":"finalized"}],ttl=30)
+        self._snapshot_slots["largest_accounts"]=(r or {}).get("context",{}).get("slot")
+        return (r or {}).get("value") or []
+    def _accounts(self,addresses):
+        r=self.rpc.call("getMultipleAccounts",[addresses,{"encoding":"jsonParsed","commitment":"finalized"}],ttl=60)
+        self._snapshot_slots.setdefault("account_batches",[]).append((r or {}).get("context",{}).get("slot"))
+        # Preserve an unavailable/non-list value for the caller's shape audit.
+        return (r or {}).get("value")
+    def holders(self):
+        self._snapshot_slots={}
+        self._top_account_context_errors=[]
+        supply,decimals=self._supply();top=self._top()[:20]
+        self._top_accounts_requested=len(top)
+        def uint(value):
+            return (isinstance(value,str) and 1<=len(value)<=20 and value.isascii()
+                    and value.isdigit() and int(value)<=2**64-1)
+        def reject(address,reason,slot=None):
+            row={"reason":reason}
+            if valid_pubkey(address):row["token_account"]=address
+            if type(slot) is int and slot>0:row["snapshot_slot"]=slot
+            self._top_account_context_errors.append(row)
+        if self._expected_mint_program is None:reject(None,"MINT_PROGRAM_CONTEXT_UNAVAILABLE")
+        valid=[];seen=set()
+        for row in top:
+            address=row.get("address") if isinstance(row,dict) else None
+            if (not valid_pubkey(address) or address in seen or not uint(row.get("amount"))
+                    or type(row.get("decimals")) is not int or row["decimals"]!=decimals):
+                reject(address,"LARGEST_ACCOUNT_CONTEXT_INVALID",self._snapshot_slots.get("largest_accounts"));continue
+            seen.add(address);valid.append(row)
+        top=valid;tas=[x["address"] for x in top]
+        raw_top10=top[:10]
+        self._raw_top10_snapshot_pct=(
+            str((Decimal(sum(int(x["amount"]) for x in raw_top10))*100/Decimal(supply)).quantize(Decimal("0.01")))
+            if supply>0 and raw_top10 and all(str(x.get("amount","")).isdigit() for x in raw_top10)
+            else None
+        )
+        self._largest_account_snapshot={x["address"]:int(x["amount"]) for x in top if isinstance(x.get("address"),str) and str(x.get("amount","")).isdigit()}
+        infos=self._accounts(tas) if tas else []
+        account_slot=(self._snapshot_slots.get("account_batches") or [None])[-1]
+        largest_slot=self._snapshot_slots.get("largest_accounts")
+        same_bank=(type(account_slot) is int and account_slot>0
+                   and type(largest_slot) is int and largest_slot==account_slot)
+        if not isinstance(infos,list):
+            reject(None,"TOKEN_ACCOUNT_BATCH_INVALID",account_slot);infos=[]
+        elif len(infos)!=len(tas):reject(None,"TOKEN_ACCOUNT_BATCH_LENGTH_INVALID",account_slot)
+        owners=[];temp=[]
+        for row,info in zip(top,infos):
+            if info is None:continue
+            data=info.get("data") if isinstance(info,dict) else None
+            parsed=data.get("parsed") if isinstance(data,dict) else None
+            value=parsed.get("info") if isinstance(parsed,dict) else None
+            token=value.get("tokenAmount") if isinstance(value,dict) else None
+            if (not isinstance(info,dict) or not isinstance(info.get("owner"),str) or info["owner"] not in TOKEN_PROGRAMS or info.get("executable") is not False
+                    or (self._expected_mint_program is not None and info.get("owner")!=self._expected_mint_program)
+                    or not isinstance(parsed,dict) or parsed.get("type")!="account" or not isinstance(value,dict)
+                    or value.get("mint")!=self.mint or not valid_pubkey(value.get("owner"))
+                    or not isinstance(value.get("state"),str) or value["state"] not in {"initialized","frozen"} or not isinstance(token,dict)
+                    or not uint(token.get("amount")) or type(token.get("decimals")) is not int or token["decimals"]!=decimals):
+                reject(row["address"],"TOKEN_ACCOUNT_CONTEXT_INVALID",account_slot);continue
+            owner=value["owner"];amount=token["amount"]
+            if same_bank and int(amount)!=int(row["amount"]):
+                reject(row["address"],"TOKEN_ACCOUNT_SAME_SLOT_AMOUNT_CONFLICT",account_slot);continue
+            owners.append(owner);temp.append((row,owner,int(amount)))
+        unique_owners=list(dict.fromkeys(owners))
+        owner_infos=self._accounts(unique_owners) if owners else []
+        if not isinstance(owner_infos,list):
+            reject(None,"OWNER_METADATA_BATCH_INVALID",self._snapshot_slots["account_batches"][-1]);owner_infos=[]
+        elif len(owner_infos)!=len(unique_owners):reject(None,"OWNER_METADATA_BATCH_LENGTH_INVALID",self._snapshot_slots["account_batches"][-1])
+        owner_map={o:i for o,i in zip(unique_owners,owner_infos)}
+        result=[]
+        for row,owner,raw in temp:
+            role,source=self._role(owner,{"value":owner_map.get(owner)})
+            program=(owner_map.get(owner) or {}).get("owner") if isinstance(owner_map.get(owner),dict) else None
+            result.append(Holder(row["address"],owner,raw,decimals,role,source,program))
+        return supply,decimals,result
+    def _edge(self,a,b,kind,signature,**extra):
+        if not a or not b or a==b:return
+        if self.query_scope=="wallet" and self.focus_owner not in (a,b):return
+        x,y=sorted([a,b]);record={"a":x,"b":y,"type":kind,"signature":signature,**extra}
+        key=_hash(record)
+        if key not in {e["_key"] for e in self.edges}:self.edges.append({**record,"_key":key})
+    def _rank_owner_accounts(self,addresses,slot):
+        try:
+            return self.rpc.call("getMultipleAccounts",[addresses,{"encoding":"jsonParsed","commitment":"finalized","minContextSlot":slot}],ttl=60)
+        except RPCJobBudgetExceeded:raise
+        except Exception:return None
+
+    def _supply_recheck(self,decimals):
+        try:value=self.rpc.call("getTokenSupply",[self.mint,{"commitment":"finalized"}])
+        except RPCJobBudgetExceeded:raise
+        except Exception:return None
+        try:
+            amount=value["value"]["amount"]
+            precision=value["value"]["decimals"]
+            slot=value["context"]["slot"]
+        except (KeyError,TypeError):return None
+        if (not isinstance(amount,str) or not re.fullmatch(r"(?:0|[1-9][0-9]{0,19})",amount)
+                or int(amount)>=2**64 or type(precision) is not int or precision!=decimals):
+            return None
+        return int(amount),slot
+
+    def _holder_ranks(self,profile,supply,decimals):
+        if not self.enumerate_holder_ranks:return {"requested":False,"status":"NOT_REQUESTED"}
+        base={"requested":True,"status":"UNAVAILABLE","owners":[],"metrics":{}}
+        if profile.get("program_id") not in TOKEN_PROGRAMS or profile.get("is_initialized") is not True or not valid_pubkey(self.mint):
+            return {**base,"reason":"MINT_IDENTITY_UNVERIFIED"}
+        supply_slot=self._snapshot_slots.get("supply")
+        authority_slot=None
+        profile_slot=profile.get("slot")
+        if profile.get("status")=="OK" and type(profile_slot) is int and profile_slot>0:
+            if profile.get("supply_raw")==str(supply) and profile.get("decimals")==decimals:
+                if type(supply_slot) is not int or profile_slot>supply_slot:
+                    supply_slot=profile_slot
+                if ("mint_authority" in profile and profile["mint_authority"] is None
+                        and profile.get("mint_close_authority_excluded") is True):
+                    authority_slot=profile_slot
+            elif profile_slot==supply_slot:
+                return {**base,"status":"INCOMPLETE_EVIDENCE","reason":"MINT_SUPPLY_SAME_SLOT_CONFLICT",
+                        "supply_slot":supply_slot}
+        cfg=(self.registry.get("tokens") or {}).get(self.mint) or {}
+        normalized=cfg.get("normalization_complete",self.registry.get("normalization_complete",False)) is True
+        try:
+            self._progress("HOLDER_ENUMERATION",scanned=0)
+            result=collect_mint_holder_ranks(self.mint,profile["program_id"],supply,decimals,
+                supply_slot,self.rpc,self._role,
+                normalization_declared=normalized,special_roles=SPECIAL_ROLES,
+                expected_top_accounts=getattr(self,"_largest_account_snapshot",None),
+                largest_slot=self._snapshot_slots.get("largest_accounts"),owner_reader=self._rank_owner_accounts,
+                supply_recheck=lambda:self._supply_recheck(decimals),mint_authority_slot=authority_slot)
+            if self.audit_holder_binary:
+                self._progress("HOLDER_BINARY",scanned=0)
+                try:
+                    from .holder_binary import collect_holder_binary_check
+                    check=collect_holder_binary_check(self.mint,result,self.rpc)
+                except RPCJobBudgetExceeded:raise
+                except RPCError as exc:
+                    check={"version":1,"status":"UNAVAILABLE","reason":"RESPONSE_LIMIT" if str(exc)=="RPC_POOL_RESPONSE_LIMIT" else "RPC_UNAVAILABLE"}
+                result["raw_balance_check"]=check
+                if check.get("enumeration_relation")=="SAME_SLOT_CONTRADICTION":
+                    result.update(status="INCOMPLETE_EVIDENCE",reason="RAW_BINARY_REPRESENTATION_CONTRADICTION")
+                    result["metrics"]={key:"UNRESOLVED" for key in result.get("metrics") or {}}
+                    for row in result.get("owners") or []:row["supply_pct"]="UNRESOLVED"
+            return result
+        except RPCJobBudgetExceeded:raise
+        except HolderRankSourceError as exc:return {**base,"reason":str(exc)}
+        except Exception as exc:
+            reason="RESPONSE_LIMIT" if str(exc)=="RPC_HOLDER_RANK_RESPONSE_LIMIT" else "SOURCE_UNAVAILABLE"
+            return {**base,"reason":reason}
+
+    def _history_window_key(self,holder,address,before,phase):
+        # A reused historical account may have belonged to multiple Owners.
+        # Each transaction-bound ownership context needs its own continuation.
+        return (phase,holder.owner,address,before) if self.exhaust_history else (phase,address,before)
+
+    def _signature_pages(self,holder,address,page_size,max_pages,phase,*,before=None):
+        """Read an address window, committing the cursor only after a whole page.
+
+        Source-driven mode has no local page count stop. Per-request transport
+        timeouts, source failures/conflicts and explicit job cancellation remain
+        terminal; an empty page is only the end of this provider address window.
+        """
+        if type(page_size) is not int or not 1<=page_size<=1000:raise ValueError("HISTORY_PAGE_SIZE_INVALID")
+        if self.exhaust_history and phase=='funding' and getattr(self.rpc,'supports_transaction_batches',False):page_size=1000
+        if type(max_pages) is not int or not 1<=max_pages<=8:raise ValueError("HISTORY_PAGE_BOUND_INVALID")
+        key=self._history_window_key(holder,address,before,phase)
+        previous=self._history_streams.get(key) if self.exhaust_history else None
+        if previous is not None:
+            state,seen,cursors=previous
+            # Never automatically retry a failed source or restart an exhausted
+            # address from newest. A partial consumer can replay its pending page.
+            if state['stop_reason'] not in {'INTERRUPTED','PAGE_LIMIT'}:return
+            cursor=state['next_before'];state['stop_reason']='RUNNING'
+        else:
+            state={"owner":holder.owner,"address":address,"phase":phase,
+                   "initial_before":before,"next_before":before,"page_size":page_size,
+                   "page_limit":None if self.exhaust_history else max_pages,
+                   "pages":0,"page_requests":0,"signature_count":0,"duplicates_skipped":0,
+                   "oldest_slot":None,"newest_slot":None,"oldest_block_time":None,"newest_block_time":None,
+                   "signature_slots_complete":True,"provider_pagination_end_observed":False,
+                   "history_complete":False,"stop_reason":"RUNNING",
+                   "account_origin":"OWNER_FUNDING_WINDOW" if phase=="funding" else "HISTORICAL_OBSERVED_OWNER" if self._historical_scan_active else "CURRENT_SELECTED_ACCOUNT"}
+            self.history_coverage[key]=state;self.history_attempts.append(state)
+            cursor=before;seen={};cursors={before} if before else set()
+            if self.exhaust_history:self._history_streams[key]=(state,seen,cursors)
+        def fail(reason):
+            state["stop_reason"]=reason
+            self.tx_errors.append({"address":address,"phase":phase+"_signatures","error":reason})
+        requested=0
+        try:
+            while self.exhaust_history or requested<max_pages:
+                opts={"commitment":"finalized","limit":page_size}
+                if cursor:opts["before"]=cursor
+                requested+=1;state["page_requests"]+=1
+                try:page=self.rpc.call("getSignaturesForAddress",[address,opts],ttl=300)
+                except RPCJobBudgetExceeded:
+                    state["stop_reason"]="JOB_BUDGET"
+                    raise
+                except Exception as exc:
+                    state["stop_reason"]="SOURCE_UNAVAILABLE"
+                    self.tx_errors.append({"address":address,"phase":phase+"_signatures","error":type(exc).__name__})
+                    return
+                state["pages"]+=1
+                if not isinstance(page,list) or len(page)>page_size or any(
+                    not isinstance(row,dict) or not isinstance(row.get("signature"),str)
+                    or not row["signature"] or len(row["signature"])>128 for row in page
+                ):
+                    fail("MALFORMED_SIGNATURE_PAGE");return
+                if not page:
+                    state["provider_pagination_end_observed"]=True
+                    state["stop_reason"]="PROVIDER_EMPTY_PAGE"
+                    self._progress("HISTORY_PAGE",**state)
+                    return
+                fresh=[];pending={};duplicates=0
+                for row in page:
+                    sig=row["signature"];identity=(row.get("slot"),row.get("blockTime"))
+                    previous_identity=pending.get(sig,seen.get(sig))
+                    if previous_identity is not None:
+                        if any(a is not None and b is not None and a!=b for a,b in zip(previous_identity,identity)):
+                            fail("SOURCE_PAGE_CONFLICT");return
+                        duplicates+=1
+                    else:
+                        pending[sig]=identity;fresh.append(row)
+                tail=page[-1]["signature"]
+                if tail in cursors or not fresh:
+                    fail("CURSOR_STALLED");return
+                known_slots=[row["slot"] for row in fresh if type(row.get("slot")) is int and row["slot"]>0]
+                if known_slots!=sorted(known_slots,reverse=True) or (
+                    known_slots and state["oldest_slot"] is not None and known_slots[0]>state["oldest_slot"]
+                ):
+                    fail("SOURCE_PAGE_CONFLICT");return
+                if self.exhaust_history and phase=='funding' and getattr(self.rpc,'supports_transaction_batches',False):
+                    self.rpc.prefetch_transactions([row['signature'] for row in fresh],ttl=3650*86400)
+                yield from fresh
+                # Seen identities and the continuation are a single page commit.
+                # An interrupted page is replayed, while transaction evidence is
+                # separately deduplicated per Owner/signature by its consumer.
+                seen.update(pending);state["duplicates_skipped"]+=duplicates
+                state["signature_count"]+=len(fresh)
+                state["signature_slots_complete"] &= len(known_slots)==len(fresh)
+                for field,values in (("slot",known_slots),("block_time",[row["blockTime"] for row in fresh if type(row.get("blockTime")) is int])):
+                    if values:
+                        old=state["oldest_"+field];new=state["newest_"+field]
+                        state["oldest_"+field]=min(values+[old] if old is not None else values)
+                        state["newest_"+field]=max(values+[new] if new is not None else values)
+                cursor=tail;cursors.add(cursor);state["next_before"]=cursor
+                self._progress("HISTORY_PAGE",**state)
+            state["stop_reason"]="PAGE_LIMIT"
+        finally:
+            if state["stop_reason"]=="RUNNING":state["stop_reason"]="INTERRUPTED"
+
+    def _scan_holder(self,holder:Holder,account_to_owner,top_owners,history_limit=None):
+        limit=int(history_limit or self.history_per_holder)
+        identity=(holder.owner,holder.token_account)
+        first=self._holder_firsts.get(identity) if self.exhaust_history else None
+        for meta in self._signature_pages(holder,holder.token_account,limit,self._history_page_limit,"holder"):
+            sig=meta.get("signature")
+            if not sig:continue
+            cache_key=(holder.owner,sig)
+            if cache_key in self._classified_holder_transactions:
+                if self._reject_conflicting_transaction_context(self._classified_holder_contexts[cache_key],sig,meta.get("slot"),"holder"):continue
+                first=self._earlier_buy(first,self._classified_holder_transactions[cache_key])
+                continue
+            try:tx=self.rpc.call("getTransaction",[sig,{"commitment":"finalized","encoding":"jsonParsed","maxSupportedTransactionVersion":1}],ttl=3650*86400)
+            except RPCJobBudgetExceeded:
+                self.history_coverage[self._history_window_key(holder,holder.token_account,None,'holder')]["stop_reason"]="JOB_BUDGET"
+                raise
+            except Exception as exc:self.tx_errors.append({"signature":sig,"phase":"holder","error":type(exc).__name__});continue
+            if not tx:
+                self.tx_errors.append({"signature":sig,"phase":"holder","error":"UNAVAILABLE_ON_PUBLIC_RPC"})
+                continue
+            self._observe_historical_accounts(tx,sig,holder.owner,meta.get("slot"))
+            if self._reject_conflicting_transaction_context(tx,sig,meta.get("slot"),"holder"):continue
+            bt=tx.get("blockTime")
+            bt=bt if type(bt) is int and bt>=0 else None
+            slot=tx.get("slot",meta.get("slot"))
+            slot=slot if type(slot) is int and slot>0 else None
+            for tr in _native_transfers(tx):
+                if tr["source"] in top_owners and tr["destination"] in top_owners:
+                    self._edge(tr["source"],tr["destination"],"DIRECT_QUOTE_TRANSFER",sig,asset="SOL",amount_raw=tr["lamports"],block_time=bt)
+            for tr in _owner_token_transfers(tx):
+                src=tr["source_owner"];dst=tr["destination_owner"];mint=tr["mint"]
+                if mint==self.mint:
+                    if src in top_owners and dst in top_owners:
+                        self._edge(src,dst,"DIRECT_TOKEN_TRANSFER",sig,amount_raw=tr["amount_raw"],block_time=bt)
+                    elif src in top_owners and dst not in top_owners:
+                        record={"source_owner":src,"destination_owner":dst,"mint":mint,"amount_raw":tr["amount_raw"],"signature":sig,"block_time":bt}
+                        if not any(x["source_owner"]==src and x["destination_owner"]==dst and x["signature"]==sig for x in self.consolidations):self.consolidations.append(record)
+                elif mint in {USDC,WSOL} and src in top_owners and dst in top_owners:
+                    self._edge(src,dst,"DIRECT_QUOTE_TRANSFER",sig,asset=mint,amount_raw=tr["amount_raw"],block_time=bt)
+            try:
+                c=classify(sig,tx,holder.owner)
+                if self.exhaust_history:
+                    c=resolve_history_classification(c,sig,tx,holder.owner,self.mint)
+                    if c.get('history_resolution'):
+                        self._history_classification_resolutions[(holder.owner,sig)]=resolution_record(c,sig,tx,holder.owner,self.mint)
+            except Exception as exc:
+                self.tx_errors.append({"signature":sig,"phase":"holder_classify","error":type(exc).__name__})
+                continue
+            if c.get("classification")=="UNKNOWN_NEEDS_REVIEW":
+                # Reading a signature is not the same as explaining its economic
+                # effect. An incomplete/ambiguous classification cannot prove
+                # that this account has no earlier market acquisition.
+                self.tx_errors.append({"signature":sig,"phase":"holder_classify","error":"CLASSIFICATION_UNRESOLVED",**self._classification_gap_reason(c)})
+                continue
+            trade=c.get("trade") or {}
+            found=None
+            if c.get("classification")=="ACTIVE_TRADE" and trade.get("mint")==self.mint:
+                record={"owner":holder.owner,"signature":sig,"slot":slot,"block_time":bt,"direction":trade.get("direction"),"quote_asset":trade.get("quote_asset"),"quote_amount_raw":trade.get("quote_amount_raw"),"quote_decimals":trade.get("quote_decimals"),"token_amount_raw":trade.get("token_amount_raw"),"token_decimals":trade.get("token_decimals"),"program_ids":(c.get("evidence") or {}).get("program_ids") or [],"signers":_signers(tx)}
+                if c.get('history_resolution')=='TARGET_MINT_TWO_TOKEN_EXCHANGE':
+                    record['quote_amount_semantics']=trade['route_amount_semantics']
+                if not any(x["owner"]==holder.owner and x["signature"]==sig for x in self.trades):self.trades.append(record)
+                if trade.get("direction")=="BUY":
+                    if slot is None and bt is None:
+                        self.tx_errors.append({"signature":sig,"phase":"holder_classify","error":"BUY_ORDER_UNVERIFIED"})
+                    found={
+                        "slot":slot,"block_time":bt,"signature":sig,"type":"MARKET_BUY",
+                        "quote_asset":trade.get("quote_asset"),
+                        "quote_amount_raw":trade.get("quote_amount_raw"),
+                        "quote_decimals":trade.get("quote_decimals"),
+                        "token_amount_raw":trade.get("token_amount_raw"),
+                        "token_decimals":trade.get("token_decimals"),
+                        "program_ids":(c.get("evidence") or {}).get("program_ids") or [],
+                    }
+                    if c.get('history_resolution')=='TARGET_MINT_TWO_TOKEN_EXCHANGE':
+                        found['quote_amount_semantics']=trade['route_amount_semantics']
+                    first=self._earlier_buy(first,found)
+                    if self.exhaust_history:self._holder_firsts[identity]=first
+            self._classified_holder_transactions[cache_key]=found
+            context={"slot":tx["slot"]} if "slot" in tx else {}
+            transaction=tx.get("transaction")
+            if isinstance(transaction,dict) and isinstance(transaction.get("signatures"),list) and transaction["signatures"]:
+                context["transaction"]={"signatures":[transaction["signatures"][0]]}
+            self._classified_holder_contexts[cache_key]=context
+        return first
+
+    @staticmethod
+    def _funding_precedes(row,anchor):
+        slot,anchor_slot=row.get("slot"),anchor.get("slot")
+        if type(slot) is int and type(anchor_slot) is int:
+            return slot<anchor_slot
+        stamp,anchor_stamp=row.get("block_time"),anchor.get("block_time")
+        return type(stamp) is int and type(anchor_stamp) is int and stamp<=anchor_stamp
+
+    @staticmethod
+    def _later_funding(row,previous):
+        slot,previous_slot=row.get("slot"),previous.get("slot")
+        if type(slot) is int and type(previous_slot) is int:
+            return slot>previous_slot
+        return (row.get("block_time") or 0)>(previous.get("block_time") or 0)
+
+    def _scan_funding(self,holder:Holder,first,top_owners,funding_limit=None):
+        if not first:return
+        limit=int(funding_limit or self.funding_lookback)
+        best={}
+        for processed,meta in enumerate(self._signature_pages(holder,holder.owner,limit,self._funding_page_limit,"funding",before=first["signature"]),1):
+            if processed>1 and (processed-1)%4==0:
+                self._progress('HISTORY_TRANSACTIONS',owner=holder.owner,phase='funding',completed=processed-1)
+            sig=meta.get("signature")
+            if not sig:continue
+            try:tx=self.rpc.call("getTransaction",[sig,{"commitment":"finalized","encoding":"jsonParsed","maxSupportedTransactionVersion":1}],ttl=3650*86400)
+            except RPCJobBudgetExceeded:
+                self.history_coverage[self._history_window_key(holder,holder.owner,first['signature'],'funding')]["stop_reason"]="JOB_BUDGET"
+                raise
+            except Exception as exc:
+                self.tx_errors.append({"signature":sig,"phase":"funding","error":type(exc).__name__})
+                continue
+            if not tx:
+                self.tx_errors.append({"signature":sig,"phase":"funding","error":"UNAVAILABLE_ON_PUBLIC_RPC"})
+                continue
+            self._observe_historical_accounts(tx,sig,holder.owner,meta.get("slot"))
+            if self._reject_conflicting_transaction_context(tx,sig,meta.get("slot"),"funding"):continue
+            bt=tx.get("blockTime")
+            bt=bt if type(bt) is int and bt>=0 else None
+            slot=tx.get("slot",meta.get("slot"))
+            slot=slot if type(slot) is int and slot>0 else None
+            observation={"signature":sig,"slot":slot,"block_time":bt}
+            if not self._funding_precedes(observation,first):continue
+            transfers=[{"source":source,"asset":"SOL","decimals":9,"amount_raw":str(lamports),"basis":"SYSTEM_TRANSFER"}
+                       for source,lamports in _native_funders(tx,holder.owner)
+                       if source!=holder.owner and re.fullmatch(r"[0-9]{1,20}",str(lamports)) and 0<int(lamports)<2**64]
+            transfers.extend(_direct_quote_funders(tx,holder.owner))
+            by_asset_source=defaultdict(list)
+            for transfer in transfers:by_asset_source[transfer["asset"],transfer["source"]].append(transfer)
+            for (asset,source),evidence in by_asset_source.items():
+                raw=str(sum(int(row["amount_raw"]) for row in evidence))
+                candidate={"owner":holder.owner,"source":source,"asset":asset,
+                           "decimals":evidence[0]["decimals"],"amount_raw":raw,"transfers":evidence,**observation,
+                           "acquisition_signature":first["signature"],"acquisition_slot":first.get("slot"),
+                           "acquisition_block_time":first.get("block_time")}
+                if asset=="SOL":candidate["lamports"]=raw
+                self._funding_transfers[holder.owner,sig,asset,source]=candidate
+                if source in top_owners:self._edge(source,holder.owner,"DIRECT_QUOTE_TRANSFER",sig,asset=asset,amount_raw=raw,block_time=bt)
+                previous=best.get(asset)
+                if previous is None or self._later_funding(candidate,previous):best[asset]=candidate
+        for asset,evidence in best.items():
+            if not any(x["owner"]==holder.owner and x["signature"]==evidence["signature"] and x.get("asset","SOL")==asset
+                       for x in self.funding):
+                self.funding.append(evidence)
+    def _derive_pair_edges(self):
+        owners_in_scope=getattr(self,"_relation_owner_scope",None)
+        by_funder=defaultdict(list);by_sig=defaultdict(list)
+        for f in self.funding:
+            if owners_in_scope is not None and f["owner"] not in owners_in_scope:continue
+            by_funder[f["source"]].append(f);by_sig[f["signature"]].append(f)
+        for source,rows in by_funder.items():
+            if len({r["owner"] for r in rows})<2:continue
+            role=(self._entry(source) or {}).get("role")
+            if role=="CEX":kind="COMMON_FUNDER_CEX"
+            elif role in {"PUBLIC_INFRA","PUBLIC_PROGRAM","ROUTER","BRIDGE","AMM_POOL","PROTOCOL_VAULT"}:kind="SHARED_INFRA"
+            elif role in {"EOA","DEV","CREATOR","TREASURY"}:kind="COMMON_FUNDER_EOA"
+            else:kind="COMMON_FUNDER_UNRESOLVED"
+            owners=sorted({r["owner"] for r in rows})
+            for i,a in enumerate(owners):
+                for b in owners[i+1:]:self._edge(a,b,kind,rows[0]["signature"],funder=source)
+        by_destination=defaultdict(set)
+        for row in self.consolidations:
+            if owners_in_scope is not None and row["source_owner"] not in owners_in_scope:continue
+            by_destination[row["destination_owner"]].add(row["source_owner"])
+        for destination,owners in by_destination.items():
+            role=(self._entry(destination) or {}).get("role")
+            if role in {"EOA","DEV","CREATOR","TREASURY"}:kind="COMMON_CONSOLIDATION"
+            elif role in {"PUBLIC_INFRA","PUBLIC_PROGRAM","ROUTER","BRIDGE","AMM_POOL","PROTOCOL_VAULT","CEX"}:kind="SHARED_INFRA"
+            else:kind="COMMON_CONSOLIDATION_UNRESOLVED"
+            owners=sorted(owners)
+            if len(owners)>1:
+                evidence=next(x for x in self.consolidations if x["destination_owner"]==destination and x["source_owner"] in owners)
+                for i,a in enumerate(owners):
+                    for b in owners[i+1:]:self._edge(a,b,kind,evidence["signature"],destination=destination)
+        # A single CEX payout transaction can serve independent users.
+        # Require the SAME identified non-public funder, not just a tx signature.
+        batches=defaultdict(list)
+        for sig,rows in by_sig.items():
+            for row in rows:batches[(sig,row["source"])].append(row)
+        for (sig,source),rows in batches.items():
+            owners=sorted({r["owner"] for r in rows})
+            if len(owners)<2:continue
+            role=(self._entry(source) or {}).get("role")
+            if role=="CEX":kind="COMMON_FUNDER_CEX"
+            elif role in {"PUBLIC_INFRA","PUBLIC_PROGRAM","ROUTER","BRIDGE","AMM_POOL","PROTOCOL_VAULT"}:kind="SHARED_INFRA"
+            elif role in {"EOA","DEV","CREATOR","TREASURY"}:kind="BATCH_FUNDING"
+            else:kind="COMMON_FUNDER_UNRESOLVED"
+            for i,a in enumerate(owners):
+                for b in owners[i+1:]:self._edge(a,b,kind,sig,funder=source,batch=True)
+        trades=sorted((t for t in self.trades if owners_in_scope is None or t["owner"] in owners_in_scope),
+                      key=lambda x:(x.get("block_time") or 0,x["owner"]))
+        pair_counts=defaultdict(lambda:defaultdict(int))
+        for i,a in enumerate(trades):
+            for b in trades[i+1:]:
+                if a["owner"]==b["owner"]:continue
+                if a.get("block_time") is None or b.get("block_time") is None:continue
+                if b["block_time"]-a["block_time"]>2:break
+                pair=tuple(sorted([a["owner"],b["owner"]]))
+                if a["direction"]==b["direction"]:
+                    kind="SYNC_BUY" if a["direction"]=="BUY" else "SYNC_SELL";pair_counts[pair][kind]+=1
+                    self._edge(*pair,kind,a["signature"],other_signature=b["signature"],seconds_apart=abs(a["block_time"]-b["block_time"]))
+                if a.get("quote_asset")==b.get("quote_asset") and a.get("quote_amount_raw")==b.get("quote_amount_raw") and a.get("quote_amount_raw"):
+                    pair_counts[pair]["IDENTICAL_SIZE"]+=1;self._edge(*pair,"IDENTICAL_SIZE",a["signature"],other_signature=b["signature"],quote_amount_raw=a["quote_amount_raw"])
+                common=set(a.get("program_ids") or []) & set(b.get("program_ids") or [])
+                public_common={
+                    program for program in common
+                    if program in INFRA_PROGRAMS
+                    or program in DEX_PROGRAMS
+                    or (self._entry(program) or {}).get("role") in {"PUBLIC_INFRA","PUBLIC_PROGRAM","ROUTER","AMM_POOL","PROTOCOL_VAULT"}
+                }
+                if public_common:
+                    self._edge(*pair,"SHARED_INFRA",a["signature"],other_signature=b["signature"],programs=sorted(public_common))
+                nonpublic_common=common-public_common
+                if nonpublic_common:
+                    pair_counts[pair]["SAME_EXECUTION_PROGRAM"]+=1;self._edge(*pair,"SAME_EXECUTION_PROGRAM",a["signature"],other_signature=b["signature"],programs=sorted(nonpublic_common))
+        signer_owners=defaultdict(set)
+        for t in trades:
+            for signer in t.get("signers") or []:
+                if signer!=t["owner"] and signer not in INFRA_PROGRAMS:signer_owners[signer].add(t["owner"])
+        for signer,owners in signer_owners.items():
+            owners=sorted(owners)
+            if len(owners)>1:
+                role=(self._entry(signer) or {}).get("role")
+                if role in {"EOA","DEV","CREATOR","TREASURY"}:kind="COMMON_SIGNER"
+                elif role in {"PUBLIC_INFRA","PUBLIC_PROGRAM","ROUTER","BRIDGE","AMM_POOL","PROTOCOL_VAULT","CEX"}:kind="SHARED_INFRA"
+                else:kind="COMMON_SIGNER_UNRESOLVED"
+                for i,a in enumerate(owners):
+                    for b in owners[i+1:]:self._edge(a,b,kind,"MULTI_TX",signer=signer)
+        for pair,counts in pair_counts.items():
+            if sum(counts.values())>=3:self._edge(*pair,"REPEATED_SYNC_BEHAVIOR","MULTI_TX",counts=dict(counts))
+    @staticmethod
+    def _pct(raw,supply):
+        return None if supply<=0 else str((Decimal(raw)*Decimal(100)/Decimal(supply)).quantize(Decimal("0.0001")))
+    def _identity_and_narrative(self):
+        token_profile=self.token_profile()
+        self._expected_mint_program=(token_profile.get("program_id")
+            if token_profile.get("status")=="OK" and token_profile.get("is_initialized") is True
+            and isinstance(token_profile.get("program_id"),str)
+            and token_profile.get("program_id") in TOKEN_PROGRAMS else None)
+        launch=self.launch_snapshot(token_profile)
+        market=({"status":"UNAVAILABLE","reason":"MINT_ACCOUNT_TYPE_UNVERIFIED","chain":"solana","mint":self.mint}
+                if token_profile.get("reason")=="MINT_ACCOUNT_TYPE_UNVERIFIED" else self.market_snapshot())
+        if self.query_scope=="overview" and self.independent_market_client is not None and market.get("reason")=="NO_BASE_TOKEN_PAIR":
+            from .ca_market_series import report_pool
+            # One alternate at most: keep overview latency bounded and honor provider backoff.
+            attempted = set()
+            for row in market.get("pool_candidates") or []:
+                if not isinstance(row,dict):continue
+                pool=row.get("pair_address")
+                peer=report_pool(self.mint,token_profile,market,pool)
+                if peer and row.get("quote_address")==self.mint and pool not in attempted:
+                    attempted.add(pool)
+                    reverse=self.independent_market_client.pool_snapshot(self.mint,pool,peer)
+                    price = number(reverse.get("price_usd"))
+                    if reverse.get("status")=="OK" and price is not None and Decimal(price) > 0:
+                        market={**market,"reverse_market":reverse}
+                        meta=launch.get("metadata") or {}
+                        if meta.get("status")!="VERIFIED_CHAIN_STATE":
+                            market.update(name=row.get("target_name"),symbol=row.get("target_symbol"))
+                        break
+                    if reverse.get("reason") in {"HTTP_429", "RATE_LIMIT"} or len(attempted) >= 2:
+                        break
+        self._launch_metadata=launch.get("metadata")
+        if self.query_scope=="overview":
+            self._progress("BASE_READY",token_profile=token_profile,market=market,launch_identity=launch)
+            try:
+                narrative=self.narrative_snapshot(market)
+            except RPCJobBudgetExceeded:
+                raise
+            except Exception:
+                narrative={"version":1,"status":"UNAVAILABLE","reason":"NARRATIVE_SOURCE_UNAVAILABLE",
+                           "official_recognition":"UNVERIFIED","evidence":[]}
+            self._progress("NARRATIVE_READY",narrative=narrative)
+        else:
+            narrative=self.narrative_snapshot(market)
+            self._progress("BASE_READY",token_profile=token_profile,market=market)
+        return token_profile,launch,market,narrative
+
+    def _overview_holder_sample(self,token_profile):
+        ranks={"requested":False,"status":"NOT_REQUESTED","reason":"FULL_QUERY_ON_DEMAND"}
+        deferred={"version":1,"status":"NOT_REQUESTED","reason":"FULL_QUERY_ON_DEMAND"}
+        if self._expected_mint_program is not None:
+            try:
+                supply,decimals,holders=self.holders()
+                return supply,decimals,holders,ranks,dict(deferred),dict(deferred),dict(deferred)
+            except RPCJobBudgetExceeded:
+                raise
+            except (RPCError,KeyError,ValueError,TypeError,AttributeError):
+                self._raw_top10_snapshot_pct=None
+        # A failed sample must not block otherwise available market data.
+        supply=int(token_profile.get("supply_raw") or 0)
+        decimals=token_profile.get("decimals") or 0
+        return supply,decimals,[],ranks,dict(deferred),dict(deferred),dict(deferred)
+
+    def _holder_snapshot(self,token_profile,market):
+        supply,decimals,holders=self.holders()
+        self._history_decimals=decimals
+        holder_rankings=self._holder_ranks(token_profile,supply,decimals)
+        conflict_slots={row.get("snapshot_slot") for row in self._top_account_context_errors
+                        if type(row.get("snapshot_slot")) is int}
+        if holder_rankings.get("snapshot_slot") in conflict_slots:
+            if holder_rankings.get("status")=="COMPLETE_SNAPSHOT":
+                holder_rankings.update(status="INCOMPLETE_EVIDENCE",reason="TOP_ACCOUNT_CONTEXT_CONFLICT")
+            holder_rankings["metrics"]={key:"UNRESOLVED" for key in holder_rankings.get("metrics") or {}}
+            for row in holder_rankings.get("owners") or []:row["supply_pct"]="UNRESOLVED"
+        binary=holder_rankings.get("raw_balance_check")
+        if isinstance(binary,dict) and binary.get("snapshot_slot") in conflict_slots:
+            binary.update(status="INCOMPLETE_EVIDENCE",reason="TOP_ACCOUNT_CONTEXT_CONFLICT",
+                          full_positive_mass_reconciled=False,owner_top10_pct="UNRESOLVED")
+            for row in binary.get("owners") or []:row["supply_pct"]="UNRESOLVED"
+        pool_vaults=self.pool_vault_snapshot(market)
+        from .pool_holder_roles import attach_pool_holder_roles
+        pool_holder_roles=attach_pool_holder_roles(self.mint,holder_rankings,pool_vaults)
+        special_address_roles=self.special_role_snapshot(holder_rankings,market)
+        from .special_roles import apply_sufficient_top10,withhold_legacy_normalization
+        withhold_legacy_normalization(holder_rankings,special_address_roles)
+        apply_sufficient_top10(holder_rankings)
+        return supply,decimals,holders,holder_rankings,pool_vaults,pool_holder_roles,special_address_roles
+
+    def _apply_protocol_history_exclusions(self,special_address_roles,pool_vaults,pool_holder_roles):
+        if not self.exhaust_history:
+            return
+        # Exclude only verified protocol facilities from personal acquisition
+        # history. Their original balances stay in the snapshot and report.
+        self._protocol_history_exclusions=[r for r in special_address_roles.get("rankings",{}).get("records",[])
+            if r.get("classification")=="CHAIN_ACCOUNT_ROLE"
+            and r.get("role") in {"LP","AMM_POOL","PROTOCOL_VAULT"}]
+        self._protocol_pool_accounts={(r.get("owner"),r.get("token_account")) for r in self._protocol_history_exclusions}
+        from .pool_holder_roles import selected_pool_vault_binding
+        if pool_holder_roles.get("status")=="SAME_SLOT_CONTRADICTION":
+            return
+        selected=selected_pool_vault_binding(self.mint,pool_vaults)
+        if selected is None:
+            return
+        pair=(selected["authority"],selected["vault_address"])
+        if pair not in self._protocol_pool_accounts:
+            self._protocol_pool_accounts.add(pair)
+            self._protocol_history_exclusions.append({
+                "owner":pair[0],"token_account":pair[1],"role":"PROTOCOL_VAULT",
+                "classification":"CHAIN_ACCOUNT_ROLE","scope":"EXACT_VAULT_PERSONAL_HISTORY_ONLY",
+                "basis":selected["role_basis"],"pool_slot":selected["pool_slot"],
+                "pool_response_sha256":selected["pool_response_sha256"],
+            })
+
+    def _wallet_snapshot(self):
+        base=self.wallet_base
+        evidence=deepcopy({key:base.get(key) or {} for key in (
+            "token_profile","launch_identity","market","narrative","holder_rankings",
+            "pool_vaults","pool_holder_roles","special_address_roles",
+        )})
+        supply=int(base.get("supply_raw") or 0)
+        decimals=int(base.get("decimals") or 0)
+        self._history_decimals=decimals
+        coverage=base.get("coverage") or {}
+        self._snapshot_slots=deepcopy(coverage.get("snapshot_slots") or {})
+        self._top_account_context_errors=deepcopy(coverage.get("top_account_context_errors") or [])
+        self._raw_top10_snapshot_pct=(base.get("metrics") or {}).get("RAW_TOP10_PCT")
+        holders=[Holder(r["token_account"],r["owner"],int(r["raw"]),decimals,r.get("role","UNRESOLVED"),
+                        r.get("role_source","BOUND_REPORT"),r.get("account_program"))
+                 for r in base.get("holders") or []]
+        self._top_accounts_requested=coverage.get("top_accounts_requested",len(holders))
+        token_profile=evidence["token_profile"]
+        self._expected_mint_program=token_profile.get("program_id") if token_profile.get("status")=="OK" else None
+        return (token_profile,evidence["launch_identity"],evidence["market"],evidence["narrative"],
+                supply,decimals,holders,evidence["holder_rankings"],evidence["pool_vaults"],
+                evidence["pool_holder_roles"],evidence["special_address_roles"])
+
+    def _usable_holder_snapshot(self,holder_rankings,pool_holder_roles):
+        return (holder_rankings.get("status")=="COMPLETE_SNAPSHOT"
+                and pool_holder_roles.get("status")!="SAME_SLOT_CONTRADICTION"
+                and not self._top_account_context_errors)
+
+    def _opening_overview(self,launch,holder_rankings,pool_holder_roles,supply):
+        from .launch_flow import collect_launch_flow
+        verified=self._usable_holder_snapshot(holder_rankings,pool_holder_roles)
+        owners=holder_rankings.get("owners") or []
+        balances={r["owner"]:int(r["raw"]) for r in owners} if verified else None
+        excluded=set(holder_rankings.get("verified_pool_authorities") or [])
+        excluded.update(r["owner"] for r in self._protocol_history_exclusions
+                        if r.get("owner") and r.get("scope")!="EXACT_VAULT_PERSONAL_HISTORY_ONLY")
+        self._progress("LAUNCH_FLOW",parsed=0)
+        flow=collect_launch_flow(self.mint,self.rpc,launch=launch,current_balances=balances,supply_raw=supply,
+                                 excluded_owners=excluded,progress=lambda parsed:self._progress("LAUNCH_FLOW",parsed=parsed))
+        summary=flow.get("summary") or {}
+        adjusted=(holder_rankings.get("metrics") or {}).get("GLOBAL_EX_VERIFIED_POOLS_OWNER_TOP10_PCT")
+        quick_check={
+            "version":1,"dev":flow.get("dev"),"launch_flow_status":flow.get("status"),
+            "first_buyers":summary.get("first_buyers"),"snipers":summary.get("snipers"),"bundles":summary.get("bundles"),
+            "top10_ex_pool_program_pct":adjusted if verified else "UNRESOLVED",
+            "top10_raw_pct":(holder_rankings.get("metrics") or {}).get("GLOBAL_OWNER_TOP10_PCT") if verified else None,
+            "pool_like_owners_excluded":sorted(excluded),
+        }
+        return flow,quick_check
+
+    def analyze(self):
+        if self.query_scope=="wallet":
+            (token_profile,launch,market,narrative,supply,decimals,holders,holder_rankings,
+             pool_vaults,pool_holder_roles,special_address_roles)=self._wallet_snapshot()
+        else:
+            token_profile,launch,market,narrative=self._identity_and_narrative()
+            if self.query_scope=="overview":
+                snapshot=self._overview_holder_sample(token_profile)
+            else:
+                snapshot=self._holder_snapshot(token_profile,market)
+            (supply,decimals,holders,holder_rankings,pool_vaults,
+             pool_holder_roles,special_address_roles)=snapshot
+        self._apply_protocol_history_exclusions(special_address_roles,pool_vaults,pool_holder_roles)
+        independent_balance_check={"version":1,"status":"NOT_REQUESTED"}
+        if self.query_scope=="full" and self.independent_rpc is not None:
+            from .independent_check import collect_independent_balance_check
+            enumerated=holder_rankings.get("accounts")
+            addresses=([r["token_account"] for r in sorted(enumerated,key=lambda r:-int(r["raw"]))]
+                       if isinstance(enumerated,list) else [h.token_account for h in holders])
+            try:independent_balance_check=collect_independent_balance_check(self.mint,addresses,self.rpc,self.independent_rpc,full_accounts=self.exhaust_history,
+                enumeration=holder_rankings,
+                progress=lambda completed,total:self._progress('INDEPENDENT_BALANCE_BATCH',completed=completed,total=total))
+            except RPCJobBudgetExceeded:raise
+            except Exception as exc:independent_balance_check={"version":1,"status":"UNAVAILABLE","reason":type(exc).__name__}
+        if self.query_scope!="overview":
+            self._prepare_owner_account_history(holders,holder_rankings)
+        preview_top10_pct=getattr(self,"_raw_top10_snapshot_pct",None)
+        self._progress(
+            "HOLDERS_READY",top_accounts_resolved=len(holders),
+            supply_raw=str(supply),decimals=decimals,
+            raw_top10_resolved_pct=preview_top10_pct if self.query_scope!="overview" else None,
+            holder_snapshot_status=holder_rankings.get("status","BOUNDED_RESOLVED_ONLY"),
+        )
+        launch_flow=quick_check=None
+        if self.read_launch_flow and self.read_launch_identity:
+            launch_flow,quick_check=self._opening_overview(launch,holder_rankings,pool_holder_roles,supply)
+            self._progress("LAUNCH_FLOW_READY",launch_flow=launch_flow,quick_check=quick_check)
+        account_to_owner={h.token_account:h.owner for h in holders}
+        firsts={};deep=[];deep_seen=set()
+        top_owners=set(account_to_owner.values())
+        material_holders=[]
+        if self.query_scope=="full":
+            for h in holders:
+                if h.owner in deep_seen:continue
+                deep_seen.add(h.owner);deep.append(h)
+                if not self.exhaust_history and len(deep)>=self.deep_holders:break
+            material_holders=self._additional_material_holders(supply,top_owners)
+            deep.extend(material_holders)
+            deep_seen.update(h.owner for h in material_holders)
+        elif self.query_scope=="wallet":
+            selected=self._owner_history_candidates.get(self.focus_owner) or {}
+            if selected:
+                target=min(selected.values(),key=lambda h:(-h.raw,h.token_account))
+                deep=[target]
+                deep_seen={target.owner}
+                top_owners.add(target.owner)
+                account_to_owner.update({h.token_account:h.owner for h in selected.values()})
+        # Keep the sampled-balance relationship graph expressible on the
+        # Top20 account scope even when history expands to more Owners.
+        self._relation_owner_scope=top_owners
+
+        for idx,h in enumerate(deep,1):
+            self._progress("OWNER_SCAN",scanned=idx-1,target=len(deep),owner=h.owner,mode="SHALLOW")
+            firsts[h.owner]=self._scan_owner_history(h,account_to_owner,top_owners,self.history_per_holder)
+            self._progress("OWNER_SCAN",scanned=idx,target=len(deep),owner=h.owner,mode="SHALLOW")
+        shallow_funding=deep if self.query_scope=="full" or not self.exhaust_history else []
+        for idx,h in enumerate(shallow_funding,1):
+            self._progress("FUNDING_SCAN",scanned=idx-1,target=len(deep),owner=h.owner,mode="SHALLOW")
+            self._scan_funding_bounded(h,firsts.get(h.owner),top_owners,self.funding_lookback)
+        self._derive_pair_edges()
+
+        adaptive_history=self.adaptive_history_per_holder or self.history_per_holder
+        adaptive_funding=self.adaptive_funding_lookback or self.funding_lookback
+        if self.query_scope=="full" and (adaptive_history>self.history_per_holder or adaptive_funding>self.funding_lookback):
+            history_targets=set()
+            for edge in self.edges:
+                if edge.get("type") not in {"SHARED_INFRA","COMMON_FUNDER_CEX"}:
+                    history_targets.update(x for x in (edge.get("a"),edge.get("b")) if x)
+            # Static role/materiality is known for all resolved Top20 holders, not
+            # only the shallow-scan prefix. ORDINARY identifies an account's
+            # program, not its acquisition/funding history or a safe controller.
+            # Material ordinary owners need the same bounded history eligibility.
+            owner_holder={}
+            owner_balance=defaultdict(int)
+            owner_roles=defaultdict(set)
+            for h in holders:
+                owner_holder.setdefault(h.owner,h)
+                owner_balance[h.owner]+=h.raw
+                owner_roles[h.owner].add(h.role)
+            history_roles=DEV_ROLES | {"ORDINARY","UNRESOLVED","PROGRAM_OWNED_UNRESOLVED","TOKEN_ACCOUNT_OWNER_UNRESOLVED"}
+            for owner,raw in owner_balance.items():
+                pct=Decimal(raw)*100/Decimal(supply) if supply else Decimal(0)
+                if pct>=self.material_pct and owner_roles[owner] & history_roles:
+                    history_targets.add(owner)
+            # A relationship discovered from a shallow-scanned owner may point to
+            # rank 7-20. Deepen that known Top20 counterpart too rather than
+            # silently restricting adaptive work to the first-six prefix.
+            targets=[owner_holder[owner] for owner in owner_holder if owner in history_targets]
+            self.adaptive_deepened_owners=[h.owner for h in targets]
+            if targets:
+                self._progress("ADAPTIVE_DEEPEN",scanned=0,target=len(targets),owners=self.adaptive_deepened_owners)
+                for idx,h in enumerate(targets,1):
+                    firsts[h.owner]=self._earlier_buy(firsts.get(h.owner),self._scan_owner_history(h,account_to_owner,top_owners,adaptive_history,self.adaptive_history_max_pages))
+                    self._scan_funding_bounded(h,firsts.get(h.owner),top_owners,adaptive_funding,self.adaptive_funding_max_pages)
+                    self._progress("ADAPTIVE_DEEPEN",scanned=idx,target=len(targets),owner=h.owner)
+                self._derive_pair_edges()
+        if self.enumerate_holder_ranks and self.query_scope!="overview":
+            representatives={h.owner:h for h in deep}
+            if self.query_scope=="full":
+                representatives={h.owner:h for h in holders}
+                representatives.update({h.owner:h for h in material_holders})
+            self._scan_historical_account_frontier(firsts,account_to_owner,top_owners,representatives)
+            self._derive_pair_edges()
+        self._progress("FINALIZING",deep_holders_scanned=len(deep),adaptive_deepened=len(self.adaptive_deepened_owners))
+
+        scanned_owners=(deep_seen | set(self.adaptive_deepened_owners))-self._protocol_history_owners
+        owners=sorted({h.owner for h in holders});balances=defaultdict(int)
+        for h in holders:balances[h.owner]+=h.raw
+        relation=UnionFind(owners);control=UnionFind(owners);execution=UnionFind(owners)
+        pair_types=defaultdict(set)
+        for e in self.edges:
+            pair=(e["a"],e["b"]);pair_types[pair].add(e["type"])
+            if e["type"] in {"DIRECT_TOKEN_TRANSFER","DIRECT_QUOTE_TRANSFER"}:relation.union(*pair)
+        for pair,types in pair_types.items():
+            # The same common funder appears as both a funder and a batch
+            # when a single transaction paid both Owners. Count one mechanism.
+            strong=len(types & STRONG)-int({"COMMON_FUNDER_EOA","BATCH_FUNDING"}<=types)
+            behavior=len(types & BEHAVIOR)
+            if strong>=2 or (strong>=1 and behavior>=1) or ("DIRECT_TOKEN_TRANSFER" in types and strong>=1):control.union(*pair)
+            if behavior>=2 or "REPEATED_SYNC_BEHAVIOR" in types:execution.union(*pair)
+
+        funding_by_owner={}
+        for row in self.funding:
+            anchor=firsts.get(row["owner"])
+            # A deeper window may discover an earlier acquisition. Preserve all
+            # funding evidence, but never show a later transfer as its prefunding.
+            if isinstance(anchor,dict) and not self._funding_precedes(row,anchor):
+                continue
+            current=funding_by_owner.get(row["owner"])
+            if current is None or self._later_funding(row,current):
+                funding_by_owner[row["owner"]]=row
+
+        holder_tx_errors=[e for e in self.tx_errors if isinstance(e,dict) and str(e.get("phase","")).startswith("holder")]
+        def account_history_complete(owner):
+            plan=self._owner_history_selection.get(owner)
+            if plan:
+                accounts=[h.token_account for h in plan["holders"]]
+                if self._owner_account_source!="VERIFIED_CURRENT_MINT_ACCOUNTS" or len(accounts)!=plan["observed"]:return False
+            else:
+                accounts=[h.token_account for h in holders if h.owner==owner]
+            # Unscoped legacy errors stay conservative. A known different
+            # Owner's missing transaction cannot invalidate this account set.
+            if not accounts or any(not e.get('owner') or e['owner']==owner for e in holder_tx_errors):return False
+            for address in accounts:
+                if not any(w["phase"]=="holder" and w["owner"]==owner and w["address"]==address and w["initial_before"] is None
+                           and w["stop_reason"]=="PROVIDER_EMPTY_PAGE" and w["signature_slots_complete"]
+                           for w in self.history_attempts):return False
+            return True
+        def acquisition(owner):
+            if owner in self._protocol_history_owners:
+                return {'status':'NOT_APPLICABLE_PROTOCOL_POOL','type':'PROTOCOL_POOL',
+                        'history_scope':'VERIFIED_PROTOCOL_VAULTS_NOT_PERSONAL_ACQUISITION'}
+            row=firsts.get(owner)
+            complete=owner in scanned_owners and account_history_complete(owner)
+            if not row or not isinstance(row,dict):
+                if complete:return {"status":"NO_MARKET_BUY_IN_COMPLETE_ACCOUNT_HISTORY","type":"NON_MARKET_ACQUISITION",
+                                    "history_scope":"ALL_SIGNATURES_OF_CURRENT_TOKEN_ACCOUNTS; CLOSED_ACCOUNTS_NOT_ENUMERATED"}
+                return {"status":"UNRESOLVED","type":"UNRESOLVED"} if owner in scanned_owners else {"status":"NOT_SCANNED","type":"NOT_SCANNED"}
+            if row.get("same_slot_buy_signatures"):
+                return {"status":"CONFIRMED_BOUNDED","type":"MARKET_BUY",
+                        "history_scope":"EARLIEST_OBSERVED_SLOT_INTRA_SLOT_ORDER_UNVERIFIED",
+                        "slot":row["slot"],"same_slot_buy_signatures":row["same_slot_buy_signatures"]}
+            token_qty=None
+            if row.get("token_amount_raw") not in {None,""} and row.get("token_decimals") is not None:
+                try:token_qty=str(Decimal(str(row["token_amount_raw"]))/(Decimal(10)**int(row["token_decimals"])))
+                except (ValueError,TypeError,InvalidOperation):token_qty=None
+            return {
+                "status":"CONFIRMED_ACCOUNT_COMPLETE" if complete else "CONFIRMED_BOUNDED",
+                "history_scope":"ALL_SIGNATURES_OF_CURRENT_TOKEN_ACCOUNTS; CLOSED_ACCOUNTS_NOT_ENUMERATED" if complete else "BOUNDED_WINDOW",
+                "type":row.get("type") or "MARKET_BUY",
+                "slot":row.get("slot"),
+                "block_time":row.get("block_time"),
+                "signature":row.get("signature"),
+                "quote_asset":row.get("quote_asset"),
+                "quote_quantity":self._quote_quantity(row),
+                "token_quantity":token_qty,
+                "program_ids":row.get("program_ids") or [],
+                **({'quote_amount_semantics':row['quote_amount_semantics']} if row.get('quote_amount_semantics') else {}),
+            }
+
+        def funding_record(owner):
+            row=funding_by_owner.get(owner)
+            if not row:return None
+            source=row.get("source");entry=self._entry(source) or {}
+            try:sol=str(Decimal(str(row.get("lamports")))/Decimal(10**9))
+            except (InvalidOperation,ValueError,TypeError):sol=None
+            return {
+                "source":source,"sol":sol,"signature":row.get("signature"),"block_time":row.get("block_time"),
+                "slot":row.get("slot"),"asset":row.get("asset","SOL"),
+                "amount_raw":row.get("amount_raw",row.get("lamports")),"decimals":row.get("decimals",9),
+                "source_role":entry.get("role") or "UNRESOLVED",
+                "source_label":entry.get("label"),
+            }
+
+        def group_records(groups,kind,confidence):
+            out=[]
+            for idx,g in enumerate(groups,1):
+                if len(g)<2:continue
+                raw=sum(balances[x] for x in g)
+                evidence=[{k:v for k,v in e.items() if k!="_key"} for e in self.edges if e["a"] in g and e["b"] in g]
+                out.append({
+                    "cluster_id":f"{kind}-{idx}","confidence":confidence,"wallets":sorted(g),
+                    "wallet_balances_raw":{x:str(balances[x]) for x in sorted(g)},
+                    "combined_raw":str(raw),"supply_pct":self._pct(raw,supply),"evidence":evidence,
+                    "first_target_acquisition":{x:acquisition(x) for x in sorted(g)},
+                    "funding_evidence":[x for x in self.funding if x["owner"] in g],
+                    "trade_evidence":[x for x in self.trades if x["owner"] in g],
+                })
+            return sorted(out,key=lambda x:int(x["combined_raw"]),reverse=True)
+
+        relation_groups=group_records(relation.groups(),"REL","CONFIRMED_RELATION")
+        control_groups=group_records(control.groups(),"CTRL","PROBABLE_CONTROL_CLUSTER")
+        execution_groups=group_records(execution.groups(),"EXEC","PROBABLE_EXECUTION_CLUSTER")
+        raw_top10=sum(h.raw for h in holders[:10])
+        nonspecial=[h for h in holders if h.role not in SPECIAL_ROLES]
+        ex_lp=[h for h in holders if h.role not in {"LP","AMM_POOL","PROTOCOL_VAULT"}]
+        def known_owner_top10(rows):
+            amounts=defaultdict(int)
+            for h in rows:amounts[h.owner]+=h.raw
+            return sum(sorted(amounts.values(),reverse=True)[:10])
+        ex_special_top10=known_owner_top10(nonspecial)
+        ex_lp_top10=known_owner_top10(ex_lp)
+        dev_owners={h.owner for h in holders if h.role in DEV_ROLES}
+        dev_linked_owners=set(dev_owners)
+        for group in control.groups():
+            if set(group) & dev_owners:dev_linked_owners.update(group)
+        dev_raw=sum(balances[o] for o in dev_linked_owners)
+
+        cluster_values=[];seen=set();group_by_owner={}
+        for g in control.groups():
+            for o in g:group_by_owner[o]=tuple(sorted(g))
+        for h in nonspecial:
+            g=group_by_owner.get(h.owner,(h.owner,))
+            if g in seen:continue
+            seen.add(g);cluster_values.append(sum(balances[o] for o in g))
+        cluster_values.sort(reverse=True)
+
+        unresolved_raw=0;classified=set()
+        for g in control_groups+relation_groups:classified.update(g["wallets"])
+        unresolved_balances=defaultdict(int)
+        for h in nonspecial:
+            if h.owner not in classified and h.role in {"ORDINARY","UNRESOLVED","PROGRAM_OWNED_UNRESOLVED","TOKEN_ACCOUNT_OWNER_UNRESOLVED"}:
+                unresolved_balances[h.owner]+=h.raw
+        # Materiality belongs to an owner, not one of its token accounts.
+        for raw in unresolved_balances.values():
+            pct=Decimal(raw)*100/Decimal(supply) if supply else Decimal(0)
+            if pct>=self.material_pct:unresolved_raw+=raw
+
+        token_cfg=(self.registry.get("tokens") or {}).get(self.mint) or {}
+        normalization_complete=(token_cfg.get("normalization_complete",self.registry.get("normalization_complete",False)) is True
+                                and special_address_roles.get("status")=="NOT_REQUESTED")
+        # LargestAccounts is capped at 20 token accounts. Labels alone cannot
+        # prove the eligible-owner ranks after exclusions. Only a sample that
+        # accounts for the entire supply can close that gap in this collector.
+        holder_rank_complete=(self.query_scope!="overview" and supply>0
+                              and sum(h.raw for h in holders)==supply
+                              and len({h.token_account for h in holders})==len(holders))
+        slots=[self._snapshot_slots.get("supply"),self._snapshot_slots.get("largest_accounts")]
+        slots+=self._snapshot_slots.get("account_batches",[])
+        snapshot_consistent=(len(slots)>=4 and all(type(slot) is int and slot>0 for slot in slots)
+                             and len(set(slots))==1 and not self._top_account_context_errors
+                             and len(holders)==getattr(self,"_top_accounts_requested",len(holders)))
+        if pool_holder_roles.get("status")=="SAME_SLOT_CONTRADICTION":snapshot_consistent=False
+        strict_metrics_available=normalization_complete and holder_rank_complete and snapshot_consistent
+        owners_not_scanned=sorted(set(owners)-scanned_owners-self._protocol_history_owners)
+        owner_account_history=self._owner_account_history_coverage()
+        coverage_gaps=[]
+        if self.query_scope=="overview":
+            coverage_gaps.extend(("WALLET_HISTORY_ON_DEMAND","HOLDER_ENUMERATION_ON_DEMAND",
+                                  "INDEPENDENT_HOLDER_CHECK_ON_DEMAND","LAUNCH_FLOW_ON_DEMAND"))
+        elif self.query_scope=="wallet":
+            coverage_gaps.append("SINGLE_WALLET_HISTORY_SCOPE")
+            if not deep:coverage_gaps.append("FOCUS_WALLET_NOT_IN_BOUND_SNAPSHOT")
+        if launch_flow and launch_flow.get("status")!="OK":coverage_gaps.append("LAUNCH_FLOW_INCOMPLETE")
+        if self._top_account_context_errors:coverage_gaps.append("TOP_ACCOUNT_CONTEXT_CONFLICT")
+        if pool_holder_roles.get("status")=="SAME_SLOT_CONTRADICTION":
+            snapshot_consistent=False
+            coverage_gaps.append("POOL_HOLDER_SAME_SLOT_CONTRADICTION")
+        if self._historical_errors:coverage_gaps.append("HISTORICAL_ACCOUNT_CONTEXT_GAPS")
+        if self._historical_evidence_limited:coverage_gaps.append("HISTORICAL_ACCOUNT_EVIDENCE_LIMIT")
+        if self._historical_compacted_observations:coverage_gaps.append("HISTORICAL_ACCOUNT_EVIDENCE_COMPACTED")
+        if any(not r["selected"] and r["stop_reason"]!="CURRENT_ACCOUNT_ALREADY_SELECTED" for r in self.historical_account_scans):coverage_gaps.append("HISTORICAL_ACCOUNT_SCAN_INCOMPLETE")
+        if self._owner_account_source=="SNAPSHOT_OWNER_CONFLICT":coverage_gaps.append("OWNER_ACCOUNT_SNAPSHOT_CONFLICT")
+        if any(row["accounts_not_selected"] for row in owner_account_history):coverage_gaps.append("OWNER_ACCOUNT_SELECTION_INCOMPLETE")
+        if holder_rankings.get("requested") and holder_rankings.get("status")!="COMPLETE_SNAPSHOT":coverage_gaps.append("HOLDER_ENUMERATION_INCOMPLETE")
+        for row in holder_rankings.get("owners") or []:row["history_scanned"]=row["owner"] in scanned_owners
+        if any(not row["history_scanned"] and row["owner"] not in self._protocol_history_owners
+               and Decimal(row["raw"])*100>=self.material_pct*Decimal(supply)
+               for row in (holder_rankings.get("owners") or []) if supply>0):
+            coverage_gaps.append("GLOBAL_OWNER_HISTORY_NOT_SCANNED")
+        if not holders:coverage_gaps.append("NO_RESOLVED_HOLDERS")
+        if supply<=0:coverage_gaps.append("SUPPLY_UNAVAILABLE")
+        if len(holders)<getattr(self,"_top_accounts_requested",len(holders)):
+            coverage_gaps.append("TOP_ACCOUNT_RESOLUTION_GAPS")
+        if not normalization_complete:coverage_gaps.append("SPECIAL_NORMALIZATION_UNVERIFIED")
+        if not holder_rank_complete and holder_rankings.get("status")!="COMPLETE_SNAPSHOT":coverage_gaps.append("ELIGIBLE_OWNER_RANKS_INCOMPLETE")
+        if not snapshot_consistent:coverage_gaps.append("SNAPSHOT_SLOT_UNRECONCILED")
+        if owners_not_scanned:coverage_gaps.append("OWNER_HISTORY_NOT_SCANNED")
+        if len(holders)>len(owners):coverage_gaps.append("MULTIPLE_TOKEN_ACCOUNTS_PER_OWNER")
+        if self.tx_errors:coverage_gaps.append("TRANSACTION_READ_GAPS")
+        if any(w["stop_reason"]!="PROVIDER_EMPTY_PAGE" or not w["signature_slots_complete"] for w in self.history_coverage.values()):
+            coverage_gaps.append("HISTORY_PAGINATION_INCOMPLETE")
+        metrics={
+            "RAW_TOP10_PCT":(
+                preview_top10_pct if preview_top10_pct is not None else
+                self._pct(raw_top10,supply) if holders and len(holders)==getattr(self,"_top_accounts_requested",len(holders)) else "UNRESOLVED"
+            ),
+            "EX_LP_TOP10_PCT":self._pct(ex_lp_top10,supply) if strict_metrics_available else "UNRESOLVED",
+            "EX_SPECIAL_TOP10_PCT":self._pct(ex_special_top10,supply) if strict_metrics_available else "UNRESOLVED",
+            "LARGEST_CONFIRMED_RELATION_GROUP_PCT":relation_groups[0]["supply_pct"] if relation_groups else "0",
+            "LARGEST_PROBABLE_CONTROL_CLUSTER_PCT":control_groups[0]["supply_pct"] if control_groups else "0",
+            "LARGEST_PROBABLE_EXECUTION_CLUSTER_PCT":execution_groups[0]["supply_pct"] if execution_groups else "0",
+            "DEV_LINKED_CLUSTER_PCT":self._pct(dev_raw,supply) if strict_metrics_available else "UNRESOLVED",
+            "CLUSTER_ADJUSTED_TOP10_PCT":self._pct(sum(cluster_values[:10]),supply) if strict_metrics_available else "UNRESOLVED",
+            "UNRESOLVED_MATERIAL_HOLDER_PCT":self._pct(unresolved_raw,supply),
+            "KNOWN_EX_LP_TOP10_PCT":self._pct(ex_lp_top10,supply),
+            "KNOWN_EX_SPECIAL_TOP10_PCT":self._pct(ex_special_top10,supply),
+            "KNOWN_CLUSTER_ADJUSTED_TOP10_PCT":self._pct(sum(cluster_values[:10]),supply),
+        }
+
+        metrics.update(holder_rankings.get("metrics") or {})
+        if self.query_scope!="full":
+            for key in ("LARGEST_CONFIRMED_RELATION_GROUP_PCT","LARGEST_PROBABLE_CONTROL_CLUSTER_PCT",
+                        "LARGEST_PROBABLE_EXECUTION_CLUSTER_PCT","DEV_LINKED_CLUSTER_PCT",
+                        "CLUSTER_ADJUSTED_TOP10_PCT","KNOWN_CLUSTER_ADJUSTED_TOP10_PCT"):
+                metrics[key]="UNRESOLVED"
+        holder_rows=[]
+        for i,h in enumerate(holders):
+            holder_rows.append({
+                "rank":i+1,"token_account":h.token_account,"owner":h.owner,"raw":str(h.raw),
+                "quantity":str(h.quantity),"supply_pct":self._pct(h.raw,supply) if pool_holder_roles.get("status")!="SAME_SLOT_CONTRADICTION" and not self._top_account_context_errors else "UNRESOLVED","role":h.role,
+                "role_source":h.role_source,"account_program":h.account_program,
+                "deep_scanned":h.owner in scanned_owners,
+                "first_acquisition":acquisition(h.owner),
+                "funding":funding_record(h.owner),
+            })
+
+        if token_profile.get("status")=="OK":
+            active_authorities=[
+                name for name in ("mint_authority","freeze_authority")
+                if token_profile.get(name) not in {None,""}
+            ]
+            sensitive_extensions=list(token_profile.get("sensitive_extensions") or [])
+            active_extension_risks=list(token_profile.get("active_extension_risks") or [])
+            unresolved_extension_risks=list(token_profile.get("unresolved_sensitive_extensions") or [])
+            if active_authorities or active_extension_risks:chain_status="RISK"
+            elif unresolved_extension_risks:chain_status="UNRESOLVED"
+            else:chain_status="PASS"
+        else:
+            active_authorities=[];sensitive_extensions=[];active_extension_risks=[];unresolved_extension_risks=[];chain_status="UNRESOLVED"
+
+        unresolved_pct=Decimal(str(metrics["UNRESOLVED_MATERIAL_HOLDER_PCT"] or "0"))
+        if self.query_scope!="full":
+            cluster_status="WALLET_CLUSTER_UNRESOLVED"
+        elif control_groups:
+            cluster_status="PROBABLE_CONTROL_CLUSTER_PRESENT"
+        elif (coverage_gaps or unresolved_pct>0 or
+              any(edge.get("type") in {
+                  "COMMON_FUNDER_UNRESOLVED","COMMON_SIGNER_UNRESOLVED",
+                  "COMMON_CONSOLIDATION_UNRESOLVED"
+              } for edge in self.edges)):
+            cluster_status="WALLET_CLUSTER_UNRESOLVED"
+        else:
+            cluster_status="NO_MATERIAL_CONTROL_CLUSTER_FOUND"
+
+        if chain_status=="RISK":
+            trading_status="RISK / ACTIVE_CHAIN_PERMISSION"
+        elif chain_status=="UNRESOLVED":
+            trading_status="WATCH / CHAIN_PERMISSION_UNRESOLVED"
+        elif control_groups:
+            trading_status="WATCH / CONTROL_CLUSTER_RISK"
+        elif cluster_status=="WALLET_CLUSTER_UNRESOLVED":
+            trading_status="WATCH / WALLET_CLUSTER_UNRESOLVED"
+        else:
+            trading_status="WATCH / CHAIN_STRUCTURE_PASS"
+
+        assessment={
+            "chain_permission_status":chain_status,
+            "active_authorities":active_authorities,
+            "sensitive_extensions":sensitive_extensions,
+            "active_extension_risks":active_extension_risks,
+            "unresolved_extension_risks":unresolved_extension_risks,
+            "cluster_status":cluster_status,
+            "trading_status":trading_status,
+            "narrative_status":"EXTERNAL_CLAIMS_PARTIAL" if narrative.get("status")=="PARTIAL" else "SOURCE_ATTEMPTS_INCOMPLETE" if narrative.get("attempts") else "NOT_AUTOMATICALLY_VERIFIED",
+            "next_checks":[
+                "Verify whether the project/narrative owner explicitly recognizes this exact CA.",
+                "Verify creator-fee claim, creator buy, lock or treasury relationship on-chain when relevant.",
+                "Use live executable quote and current market structure before any entry; this report does not infer an ATH that was not observed.",
+            ],
+        }
+
+        # Never persist credential-bearing RPC URLs in JSON, markdown, latest,
+        # or API responses. Stable labels keep diagnostics without secret values.
+        raw_endpoints=list(getattr(self.rpc,"endpoints",[getattr(self.rpc,"endpoint","UNKNOWN")]))
+        endpoint_labels={value:("PRIMARY" if i==0 else f"FALLBACK_{i}")
+                         for i,value in enumerate(raw_endpoints)}
+        def safe_rpc_label(value):
+            return endpoint_labels.get(value,"UNLISTED_RPC")
+        endpoints=[safe_rpc_label(value) for value in raw_endpoints]
+        endpoint_calls={safe_rpc_label(k):v for k,v in
+                        (getattr(self.rpc,"endpoint_calls",{}) or {}).items()}
+        endpoint_failures={safe_rpc_label(k):v for k,v in
+                           (getattr(self.rpc,"endpoint_failures",{}) or {}).items()}
+        if pool_holder_roles.get("status")=="SAME_SLOT_CONTRADICTION":
+            pool_holder_roles.setdefault("withdrawn_metrics",{})["analysis_metrics_before_withdrawal"]=dict(metrics)
+        if pool_holder_roles.get("status")=="SAME_SLOT_CONTRADICTION" or self._top_account_context_errors:
+            for key in metrics:
+                if key.endswith("_PCT"):metrics[key]="UNRESOLVED"
+            for group in relation_groups+control_groups+execution_groups:group["supply_pct"]="UNRESOLVED"
+        report = {
+            "schema_version":2,"mint":self.mint,"source":"SOLANA_FINALIZED_JSON_RPC",
+            "rpc_endpoint":safe_rpc_label(getattr(self.rpc,"endpoint","UNKNOWN")),"rpc_endpoints":endpoints,
+            "observed_at":time.time(),"supply_raw":str(supply),"decimals":decimals,
+            "token_profile":token_profile,"launch_identity":launch,"independent_balance_check":independent_balance_check,"market":market,"pool_vaults":pool_vaults,"pool_holder_roles":pool_holder_roles,"special_address_roles":special_address_roles,"narrative":narrative,"assessment":assessment,"holders":holder_rows,"holder_rankings":holder_rankings,
+            "metrics":metrics,"confirmed_relation_groups":relation_groups,"probable_control_clusters":control_groups,
+            "probable_execution_clusters":execution_groups,
+            "shared_infrastructure_exclusions":[{k:v for k,v in e.items() if k!="_key"} for e in self.edges if e["type"] in {"COMMON_FUNDER_CEX","SHARED_INFRA"}],
+            "unresolved_relation_edges":[{k:v for k,v in e.items() if k!="_key"} for e in self.edges if e["type"] in {"COMMON_FUNDER_UNRESOLVED","COMMON_SIGNER_UNRESOLVED","COMMON_CONSOLIDATION_UNRESOLVED"}],
+            "edges":[{k:v for k,v in e.items() if k!="_key"} for e in self.edges],
+            "funding_evidence":self.funding,"funding_transfers":list(self._funding_transfers.values()),
+            "consolidation_evidence":self.consolidations,
+            "trade_evidence":self.trades,"transaction_errors":self.tx_errors,
+            "historical_account_evidence":self.historical_accounts,
+            "coverage":{
+                "scope":("SOURCE_END_TOP20_AND_MATERIAL_OWNERS_OBSERVED_ACCOUNTS" if material_holders else
+                         "SOURCE_END_TOP20_OWNERS_OBSERVED_ACCOUNTS" if self.exhaust_history else
+                         "BOUNDED_TOP20_OWNERS_CURRENT_ACCOUNTS" if self.enumerate_holder_ranks else "BOUNDED_TOP20_ACCOUNTS"),
+                "history_windows":list(self.history_attempts),
+                "history_scan_mode":"SOURCE_END" if self.exhaust_history else "BOUNDED",
+                "protocol_history_exclusions":getattr(self,'_protocol_history_exclusions',[]),
+                "owner_account_history":owner_account_history,
+                "additional_material_owners":{
+                    h.owner:{"raw":str(sum(a.raw for a in self._owner_history_candidates[h.owner].values())),
+                             "first_acquisition":acquisition(h.owner),"funding":funding_record(h.owner),
+                             "history_scanned":h.owner in scanned_owners}
+                    for h in material_holders
+                },
+                "historical_account_history":self.historical_account_scans,
+                "historical_account_evidence_errors":dict(self._historical_errors),
+                "historical_account_retention":self._historical_retention_coverage(),
+                "holder_classification_gaps":self._classification_gap_coverage(),
+                "historical_account_observation_limit":None if self.exhaust_history else MAX_OBSERVATIONS,
+                "historical_account_frontier_limit":None if self.exhaust_history else 1,
+                "owner_history_account_limit":None if self.exhaust_history else 4,"report_extra_history_account_limit":None if self.exhaust_history else 12,
+                "additional_history_accounts_selected":len(self._extra_history_accounts),
+                "holder_history_pages":sum(w["pages"] for w in self.history_attempts if w["phase"]=="holder"),
+                "funding_history_pages":sum(w["pages"] for w in self.history_attempts if w["phase"]=="funding"),
+                "eligible_owner_rank_complete":holder_rank_complete or holder_rankings.get("status")=="COMPLETE_SNAPSHOT",
+                "sample_owner_rank_complete":holder_rank_complete,
+                "snapshot_slots":self._snapshot_slots,"snapshot_consistent":snapshot_consistent,
+                "gaps":coverage_gaps,
+                "owners_resolved":len(owners),"owners_scanned":len(scanned_owners & top_owners),
+                "owners_not_scanned":owners_not_scanned,
+                "top_accounts_requested":getattr(self,"_top_accounts_requested",len(holders)),
+                "top_accounts_resolved":len(holders),"deep_holders_scanned":len(deep)-len(material_holders),
+                "history_per_holder":self.history_per_holder,"funding_lookback":self.funding_lookback,
+                "adaptive_history_per_holder":self.adaptive_history_per_holder,
+                "adaptive_funding_lookback":self.adaptive_funding_lookback,
+                "adaptive_deepened_owners":list(self.adaptive_deepened_owners),
+                "scan_mode":"SOURCE_END" if self.exhaust_history else "ADAPTIVE" if self.adaptive_history_per_holder or self.adaptive_funding_lookback else "FIXED",
+                "material_pct":str(self.material_pct),"special_normalization_complete":normalization_complete,
+                "rpc_calls":getattr(self.rpc,"calls",0),"rpc_cache_hits":getattr(self.rpc,"cache_hits",0),
+                "rpc_endpoint_calls":endpoint_calls,"rpc_endpoint_failures":endpoint_failures,
+            },
+            "limitations":[
+                "Raw finalized RPC is authoritative for chain ownership/transactions; DexScreener is secondary market data only.",
+                "CEX/public-infrastructure identity is never guessed from funding alone.",
+                "Program-owned holder accounts remain unresolved unless explicitly labelled.",
+                "Bounded history can miss older funding, consolidation, and cross-token coordination.",
+                "A provider empty page ends only that address/cursor window; it does not prove complete wallet history or the true first acquisition/funding.",
+                ("Selected current accounts and recursively discovered transaction-proven historical accounts are read until the provider window ends or a source failure occurs, without a fixed page/account quota. Verified protocol vaults are separately marked inapplicable to personal acquisition. Historical association remains transaction-bound; lifetime ownership and later account reuse remain unverified." if self.exhaust_history else "Owner scan status means at least one sampled token account was queried; selected current accounts are individually recorded, with at most four per Owner and twelve additional accounts per report. Historical account association is transaction-bound; closure requires a successful Token Program close plus zero end lamports. Historical reads share account limits and use one fixed frontier. Lifetime and later account reuse remain unverified."),
+                "Known exclusion Top10 values aggregate owners within resolved Top20 accounts only; they are not exact global eligible-owner Top10 without complete holder ranks.",
+                "PROBABLE_EXECUTION_CLUSTER never implies common beneficial ownership.",
+                "Narrative ownership, social endorsement and creator identity are not automatically inferred from token name or social links.",
+            ],
+        }
+        report["query_scope"]=self.query_scope
+        if launch_flow is not None:
+            report.update(launch_flow=launch_flow,quick_check=quick_check)
+        if self.query_scope=="overview":
+            report["coverage"].update(scope="CA_OVERVIEW_ONLY",history_scan_mode="ON_DEMAND",scan_mode="ON_DEMAND")
+        elif self.query_scope=="wallet":
+            owner=self.focus_owner
+            known_rank=next((row for row in holder_rankings.get("owners") or [] if row["owner"]==owner),None)
+            source_complete=self._usable_holder_snapshot(holder_rankings,pool_holder_roles)
+            report["focus_owner"]=owner
+            report["coverage"].update(scope="SINGLE_WALLET_ON_BOUND_CA",snapshot_observed_at=self.wallet_base.get("observed_at"))
+            first=acquisition(owner)
+            detail_status="PARTIAL_EVIDENCE" if deep else "OWNER_NOT_IN_BOUND_SNAPSHOT"
+            if first["status"]=="NOT_APPLICABLE_PROTOCOL_POOL":detail_status="NOT_APPLICABLE_PROTOCOL_POOL"
+            report["wallet_detail"]={"status":detail_status,"owner":owner,"first_acquisition":first,
+                                     "deep_scanned":owner in scanned_owners,"funding":funding_record(owner),
+                                     "balance_observed_at":self.wallet_base.get("observed_at"),
+                                     "raw":known_rank.get("raw") if source_complete and known_rank else None,
+                                     "supply_pct":known_rank.get("supply_pct") if source_complete and known_rank else None}
+        if self._top_account_context_errors:
+            report["coverage"]["top_account_context_errors"]=self._top_account_context_errors
+        if self._history_classification_resolutions:
+            report["coverage"]["holder_classification_resolutions"]=list(self._history_classification_resolutions.values())
+        batch_stats=getattr(self.rpc,'transaction_batch_stats',None)
+        if isinstance(batch_stats,dict) and batch_stats.get('http_batch_attempts'):
+            report['coverage']['transaction_batch_transport']=batch_stats
+        report["analysis_completeness"]=report_completeness(report)
+        return report
+
+
+def report_completeness(report:dict)->dict:
+    """Versioned product outcome, independent of worker DONE and risk ratings.
+
+    Current paths collect bounded history, independent indexer comparisons and
+    public page claims. Full economic history, raw-chain parity and official
+    narrative attribution still have gaps. Snapshot flags cannot close them.
+    VERIFIED_SNAPSHOT is deliberately narrower than analysis completion.
+    Only fixed capability descriptions are emitted, never provider error text.
+    """
+    ranks=report.get("holder_rankings") or {}
+    profile=report.get("token_profile") or {}
+    market=report.get("market") or {}
+    market_requested=market.get("reason")!="MARKET_CLIENT_DISABLED"
+    raw_pool=report.get("pool_vaults") or {}
+    raw_pool_read=raw_pool.get("status")=="VAULT_BALANCE_SNAPSHOT"
+    unit_compared=raw_pool_read and (raw_pool.get("market_comparison") or {}).get("status")=="UNALIGNED_RATIO_COMPARISON"
+    reserve_model_read=raw_pool_read and (raw_pool.get("effective_reserves") or {}).get("status") in {"DERIVED_PROTOCOL_RESERVES","ARITHMETIC_ONLY"}
+    narrative=report.get("narrative") or {}
+    origin=narrative.get("origin") or {}
+    narrative_read=bool(narrative.get("evidence") or origin.get("posts") or origin.get("creator_metadata"))
+    narrative_attempted=any(row.get("requested") is True
+        for row in [*(narrative.get("attempts") or []),*(origin.get("reads") or [])])
+    independent=market.get("independent_market") or {}
+    independent_balances=report.get("independent_balance_check") or {}
+    independent_accounts=independent_balances.get("independent_account_set") or {}
+    independent_holder_conflict=(independent_accounts.get("status")=="SAME_SLOT_DIFFERENCE"
+        and ranks.get("snapshot_slot") is not None
+        and independent_accounts.get("primary_slot")==independent_accounts.get("secondary_slot")==ranks.get("snapshot_slot"))
+    second_attempted=independent_balances.get("status") not in (None,"NOT_REQUESTED")
+    compared=(market.get("comparison") or {}).get("status") in {"INDEXER_SNAPSHOTS_COMPARED","PARTIAL_INDEXER_SNAPSHOTS"}
+    role_evidence=report.get("pool_holder_roles") or {}
+    pool_holder_conflict=role_evidence.get("status")=="SAME_SLOT_CONTRADICTION"
+    rank_slot,supply_slot=ranks.get("snapshot_slot"),ranks.get("supply_slot")
+    same_slot=type(rank_slot) is int and rank_slot>0 and type(supply_slot) is int and rank_slot==supply_slot
+    bracket=ranks.get("supply_bracket")
+    bracketed=(isinstance(bracket,dict) and bracket.get("method")=="NO_MINT_AUTHORITY_MONOTONIC_SUPPLY_BRACKET"
+        and all(type(s) is int for s in (rank_slot,supply_slot,bracket.get("mint_authority_slot"),
+                                         bracket.get("before_slot"),bracket.get("after_slot")))
+        and 0<bracket["mint_authority_slot"]<=bracket["before_slot"]==supply_slot<rank_slot<=bracket["after_slot"])
+    ranked=ranks.get("requested") is True and ranks.get("status")=="COMPLETE_SNAPSHOT" and (same_slot or bracketed)
+    supply_reconciliation=("NO_MINT_AUTHORITY_MONOTONIC_SUPPLY_BRACKET"
+        if bracketed else "SAME_SLOT_SUPPLY_RECONCILED")
+    from .holder_binary import verified_holder_mass
+    binary_check=ranks.get("raw_balance_check") or {}
+    binary_mass=verified_holder_mass(binary_check,report.get("mint")) and binary_check.get("enumeration_response_sha256")==ranks.get("response_sha256")
+    special_audit=report.get("special_address_roles") or {}
+    normalized=special_audit.get("status") in (None,"NOT_REQUESTED") and not pool_holder_conflict and not independent_holder_conflict and ranked and ranks.get("normalization_complete") is True and (not binary_mass or binary_check.get("snapshot_slot")==ranks.get("snapshot_slot"))
+    requirements=[]
+    def row(key,status,cause,attempted,next_source,paths):
+        requirements.append({"id":key,"status":status,"cause":cause,
+                             "attempted_sources":attempted,"next_source":next_source,
+                             "evidence_paths":paths})
+    row("contract","PARTIAL" if profile.get("status")=="OK" else "UNAVAILABLE",
+        "PARSED_MINT_IS_NOT_FULL_CONTRACT_PROVENANCE",
+        ["Finalized getAccountInfo mint parsing"],
+        "Verify metadata/update authority and applicable program controls with account/transaction evidence.",
+        ["token_profile","assessment.chain_permission_status"])
+    row("holder_balances","VERIFIED_SNAPSHOT" if (ranked or binary_mass) and not pool_holder_conflict and not independent_holder_conflict else "PARTIAL",
+        "INDEPENDENT_HOLDER_SAME_SLOT_CONTRADICTION" if independent_holder_conflict else
+        "POOL_HOLDER_SAME_SLOT_CONTRADICTION" if pool_holder_conflict else "RAW_BINARY_NONZERO_BALANCE_MASS_RECONCILED_SAME_PROVIDER" if binary_mass else supply_reconciliation if ranked else "FULL_MINT_RANK_SOURCE_NOT_VERIFIED",
+        ["Finalized supply and Top20 account reads", "Mint-filtered getProgramAccounts" if ranks.get("requested") is True else "Full enumeration not requested"],
+        "Use a permitted complete mint-account source within bounds and reconcile actual slots and supply.",
+        ["holder_rankings","holder_rankings.raw_balance_check","coverage.snapshot_slots"])
+    row("holder_roles","VERIFIED_SNAPSHOT" if normalized else "PARTIAL",
+        "SNAPSHOT_ROLES_NORMALIZED" if normalized else "SPECIAL_ADDRESS_IDENTITIES_NOT_FULLY_VERIFIED",
+        ["Owner account metadata, dated role evidence registry and bounded multi-program pool identities"],
+        "Verify pool/vault/CEX/treasury roles with dated program/account/transaction evidence.",
+        ["holder_rankings.normalization_complete","holders","pool_holder_roles","special_address_roles"])
+    overview=report.get("query_scope")=="overview"
+    row("wallet_history","NOT_COLLECTED" if overview else "PARTIAL",
+        "WALLET_HISTORY_ON_DEMAND" if overview else "BOUNDED_HISTORY_NOT_ALL_OWNER_ACCOUNTS",
+        [] if overview else ["Selected observed token-account history and owner prefunding signature windows; per-account coverage in coverage.owner_account_history"],
+        "Enumerate all material Owner token accounts and reconcile complete acquisition/sale/funding movements.",
+        ["historical_account_evidence","coverage.historical_account_history","coverage.owner_account_history","coverage.history_windows","coverage.owners_not_scanned","trade_evidence","funding_evidence"])
+    row("control_attribution","NOT_COLLECTED" if overview else "PARTIAL",
+        "WALLET_RELATIONSHIPS_ON_DEMAND" if overview else "BOUNDED_RELATIONS_NOT_COMPLETE_BENEFICIAL_CONTROL",
+        [] if overview else ["Sampled transfers/funders/signers/consolidations with public-infrastructure exclusions"],
+        "Resolve material unknown relationships using independent non-public evidence; keep inherent uncertainty explicit.",
+        ["assessment.cluster_status","unresolved_relation_edges","probable_control_clusters"])
+    row("market","NOT_COLLECTED" if not market_requested else "PARTIAL" if market.get("status")=="OK" else "UNAVAILABLE",
+        "MARKET_SOURCE_NOT_REQUESTED" if not market_requested else "POOL_HOLDER_SAME_SLOT_CONTRADICTION" if pool_holder_conflict else "DOCUMENTED_RESERVES_WITHOUT_USD_OR_SNAPSHOT_PARITY" if reserve_model_read else "RAW_VAULT_BALANCES_WITHOUT_NET_RESERVE_OR_PRICE_RECONCILIATION" if raw_pool_read else "INDEXED_MARKETS_WITHOUT_RAW_POOL_RECONCILIATION" if compared else "SINGLE_MARKET_REFERENCE_WITHOUT_POOL_RECONCILIATION",
+        (["DexScreener market reference"] if market_requested else ["No market reference requested"])+(["GeckoTerminal exact-pool indexer"] if independent.get("attempted") is True else [])+(["Selected pool raw vault/Mint accounts in one finalized batch; protocol reserve arithmetic recorded separately"] if raw_pool_read else []),
+        "Reconcile dated selected-pool reserves and market definitions with an independent permitted source.",
+        ["market","pool_vaults","pool_holder_roles"])
+    holder_compared=bool(independent_balances.get("batches_completed") or independent_balances.get("accounts_compared"))
+    row("independent_sources","PARTIAL" if compared or unit_compared or holder_compared else "UNAVAILABLE" if independent.get("attempted") is True or second_attempted else "NOT_COLLECTED",
+        "SAME_SLOT_INDEPENDENT_HOLDER_ENUMERATION_WITHOUT_POOL_PARITY" if independent_accounts.get("status")=="SAME_SLOT_MATCH" else
+        "NON_SYNCHRONOUS_POOL_RATIO_REFERENCES_NOT_FULL_PARITY" if unit_compared else
+        "PARTIAL_INDEPENDENT_HOLDER_OR_MARKET_OBSERVATIONS" if holder_compared or compared else
+        "INDEPENDENT_SOURCE_UNAVAILABLE" if independent.get("attempted") is True or second_attempted else "INDEPENDENT_SOURCE_NOT_REQUESTED",
+        (["GeckoTerminal exact selected pool; retrieval timestamps are not provider as-of timestamps"] if independent.get("attempted") is True else [])+
+        (["Secondary configured RPC balance reread and independent mint-filtered enumeration when available"] if second_attempted else []) or
+        ["No independent holder or pool source requested"],
+        "Reconcile actual DEX pool reserves and independent holder evidence at a controlled chain snapshot.",
+        ["market.independent_market","market.comparison","pool_vaults.market_comparison","independent_balance_check"])
+    row("narrative","PARTIAL" if narrative_read else "UNAVAILABLE" if narrative_attempted else "NOT_COLLECTED",
+        "LINKED_PUBLIC_SOURCE_EVIDENCE_WITH_EXPLICIT_ATTRIBUTION_SCOPE" if narrative_read else "EXTERNAL_SOURCE_ATTEMPTS_INCOMPLETE" if narrative_attempted else "EXTERNAL_SOURCES_NOT_REQUESTED",
+        ["Linked launchpad, market or chain metadata reads and observed public post references"] if narrative_attempted else ["No external page read recorded"],
+        "Verify author/official exact-CA recognition and independently attributable public posts/origin; keep page claims separate.",
+        ["narrative","market.websites","market.socials","assessment.narrative_status"])
+    return {"version":1,"status":"INCOMPLETE_EVIDENCE",
+            "scope":"MANUAL_CA_DUE_DILIGENCE",
+            "requirements":requirements,
+            "missing_required":[r["id"] for r in requirements if r["status"]!="VERIFIED_SNAPSHOT"]}
+
+
+def load_registry(path:Path|None):
+    if path is None:return {"schema_version":1,"addresses":{}}
+    data=json.loads(Path(path).read_text())
+    if data.get("schema_version")!=1 or not isinstance(data.get("addresses"),dict) or not isinstance(data.get("tokens",{}),dict):raise ValueError("SPECIAL_REGISTRY_SCHEMA")
+    return data
+
+
+def markdown(report:dict)->str:
+    def quote_time(value):
+        try:
+            stamp=float(value)
+            if not 0 < stamp < 4102444800:
+                return "UNAVAILABLE"
+            return time.strftime("%Y-%m-%d %H:%M:%S UTC",time.gmtime(stamp))
+        except (TypeError,ValueError,OverflowError):
+            return "UNAVAILABLE"
+
+    m=report.get("metrics") or {}
+    profile=report.get("token_profile") or {}
+    market=report.get("market") or {}
+    assessment=report.get("assessment") or {}
+    pair=market.get("main_pair") or {}
+    completeness=report.get("analysis_completeness")
+    if not (isinstance(completeness,dict) and completeness.get("version")==1
+            and completeness.get("status")=="INCOMPLETE_EVIDENCE"
+            and isinstance(completeness.get("requirements"),list)):
+        completeness={"status":"NOT_ASSESSED","requirements":[]}
+    lines=[
+        f"# Meme CA Research — {report.get('mint')}",
+        "",
+        f"Observed at: {report.get('observed_at')}",
+        *( ["Collection resumed from the original job's historical source epoch; completion does not refresh balances or market data."]
+           if (report.get("collection_checkpoint") or {}).get("mode")=="RESUMED_HISTORICAL_JOB" else [] ),
+        f"Schema: {report.get('schema_version')}",
+        "",
+        "## Conclusion",
+        "",
+        f"- Analysis completeness: {completeness['status']}",
+        f"- Trading status: {assessment.get('trading_status','UNRESOLVED')}",
+        f"- Chain permission: {assessment.get('chain_permission_status','UNRESOLVED')}",
+        f"- Wallet cluster: {assessment.get('cluster_status','UNRESOLVED')}",
+        f"- Narrative: {assessment.get('narrative_status','UNRESOLVED')}",
+        "",
+        "## Conclusion history",
+        "",
+    ]
+    history=report.get("assessment_history") or []
+    if history:
+        for row in history[-10:]:
+            lines.append(
+                f"- {row.get('observed_at')} [{row.get('preset','unknown')}] "
+                f"{row.get('structure_rating','UNRESOLVED')} / {row.get('investment_rating','UNRESOLVED')} "
+                f"— {row.get('reason','')}"
+            )
+    else:
+        lines.append("- No material conclusion change recorded yet.")
+    lines += [
+        "",
+        "## Token / contract",
+        "",
+        f"- Name / Symbol: {market.get('name') or 'UNAVAILABLE'} / {market.get('symbol') or 'UNAVAILABLE'}",
+        f"- Token program: {profile.get('token_program','UNAVAILABLE')}",
+        f"- Supply raw: {report.get('supply_raw')}",
+        f"- Decimals: {report.get('decimals')}",
+        f"- Mint authority: {profile.get('mint_authority')}",
+        f"- Freeze authority: {profile.get('freeze_authority')}",
+        f"- Metadata update authority: {profile.get('metadata_update_authority','UNAVAILABLE')}",
+        f"- Active Token-2022 extension risks: {json.dumps(profile.get('active_extension_risks') or [],ensure_ascii=False,sort_keys=True)}",
+        f"- Inactive sensitive extensions: {json.dumps(profile.get('inactive_sensitive_extensions') or [],ensure_ascii=False,sort_keys=True)}",
+        f"- Unresolved sensitive extensions: {json.dumps(profile.get('unresolved_sensitive_extensions') or [],ensure_ascii=False,sort_keys=True)}",
+        "",
+        "## Market snapshot (historical; not live)",
+        "",
+        f"- Market source status: {market.get('status','UNAVAILABLE')} / {market.get('source','UNAVAILABLE')}",
+        f"- Price USD: {market.get('price_usd','UNAVAILABLE')}",
+        f"- Market cap USD: {market.get('market_cap_usd','UNAVAILABLE')}",
+        f"- Main DEX: {pair.get('dex_id','UNAVAILABLE')}",
+        f"- Main pair: {pair.get('pair_address','UNAVAILABLE')}",
+        f"- Main-pair liquidity USD: {pair.get('liquidity_usd','UNAVAILABLE')}",
+        f"- 24h volume USD: {(pair.get('volume') or {}).get('h24','UNAVAILABLE')}",
+        "- Executable trade quote: not calculated; trading amount is user-controlled.",
+        "",
+        "## Concentration",
+        "",
+    ]
+    for k,v in m.items():
+        if _decimal_value(v)==0:
+            if k=="LARGEST_PROBABLE_CONTROL_CLUSTER_PCT":
+                lines.append(f"- {k}: No common-control evidence established in the covered sample; hidden control is not ruled out.")
+                continue
+            if k=="LARGEST_PROBABLE_EXECUTION_CLUSTER_PCT":
+                lines.append(f"- {k}: No common-execution evidence established in the covered sample.")
+                continue
+        suffix="%" if v not in {"UNRESOLVED","UNAVAILABLE",None} else ""
+        lines.append(f"- {k}: {v}{suffix}")
+    lines += [
+        "",
+        "## Top holders",
+        "",
+        "|#|Owner|Share|Role|First acquisition|Funding source|",
+        "|---:|---|---:|---|---|---|",
+    ]
+    for h in report.get("holders") or []:
+        a=h.get("first_acquisition") or {}
+        first=(
+            f"{a.get('type')} {a.get('quote_quantity') or ''} {a.get('quote_asset') or ''} "
+            f"@ {a.get('block_time') or ''}"
+        ).strip() if a.get("status") in {"CONFIRMED_BOUNDED","CONFIRMED_ACCOUNT_COMPLETE"} else a.get("status","UNRESOLVED")
+        funding=h.get("funding") or {}
+        funder=f"{funding.get('source') or 'UNRESOLVED'} {funding.get('sol') or ''} SOL".strip()
+        lines.append(
+            f"|{h.get('rank')}|{h.get('owner')}|{h.get('supply_pct')}%|{h.get('role')}|{first}|{funder}|"
+        )
+    for title,key in [
+        ("Confirmed relations","confirmed_relation_groups"),
+        ("Probable control","probable_control_clusters"),
+        ("Probable execution","probable_execution_clusters"),
+    ]:
+        lines += ["",f"## {title}"]
+        rows=report.get(key) or []
+        if not rows:lines.append("- None confirmed in bounded evidence.")
+        for g in rows:
+            edge_types=sorted({x.get("type") for x in (g.get("evidence") or []) if x.get("type")})
+            lines.append(
+                f"- {g.get('cluster_id')}: {g.get('supply_pct')}% — "
+                + ", ".join(g.get("wallets") or [])
+                + (" — evidence: "+", ".join(edge_types) if edge_types else "")
+            )
+    lines += ["", "## Selected pool/holder role evidence (not all LP exclusions)", "", "~~~json",
+              json.dumps({"pool_holder_roles":report.get("pool_holder_roles"),"special_address_roles":report.get("special_address_roles")},ensure_ascii=False,indent=2), "~~~"]
+    lines += ["", "## Same-provider binary holder balance check", "",
+              "One actual finalized batch can reconcile nonzero legacy SPL balance mass; provider, role, account-enumeration and history independence remain unverified.",
+              "~~~json", json.dumps({"raw_balance_check":(report.get("holder_rankings") or {}).get("raw_balance_check")},ensure_ascii=False,indent=2), "~~~"]
+    lines += ["", "## Raw selected-pool vault balance evidence (not price or executable quote)", "",
+              "Raw vault balances alone do not establish net reserves. A separately recorded documented reserve model does not establish USD valuation, tradability, deployed-binary semantics or indexer snapshot parity.",
+              "~~~json", json.dumps(report.get("pool_vaults") or {},ensure_ascii=False,indent=2), "~~~"]
+    narrative=report.get("narrative") or {}
+    summary=narrative.get("story_summary") or {}
+    if summary.get("version")==1:
+        def source_text(value):return re.sub(r'([\\`*_{}\[\]<>])',r'\\\1',' '.join(str(value or '').split()))
+        origin=narrative.get("origin") or {}
+        recognition=origin.get("recognition") or {}
+        interactions=origin.get("interactions") or []
+        claimed=recognition.get("mint")==report.get("mint") and recognition.get("status")=="EXACT_CA_CLAIM_VERIFIED"
+        lines += ["", "## Narrative content (source-attributed)", "",
+                  "- Topics mentioned by read sources: "+source_text(' / '.join(summary.get("themes") or [])),
+                  f"- Post relations returned by the public source: {len(interactions)}.",
+                  "- Exact-CA official recognition: "+("the author of the chain-linked post explicitly stated this CA." if claimed else "unverified; source content is retained independently.")]
+        for claim in (narrative.get("evidence") or []):
+            lines.append("- Source statement: "+source_text(claim.get("excerpt"))+" | "+source_text(claim.get("source_url")))
+    lines += ["", "## External narrative source claims and attribution evidence", "", "~~~json",
+              json.dumps(report.get("narrative") or {},ensure_ascii=False,indent=2), "~~~"]
+    lines += ["", "## Required evidence gaps", "", "~~~json",
+              json.dumps([r for r in completeness["requirements"]
+                          if r.get("status")!="VERIFIED_SNAPSHOT"],ensure_ascii=False,indent=2), "~~~"]
+    lines += [
+        "",
+        "## Coverage",
+        "",
+        "~~~json",
+        json.dumps(report.get("coverage") or {},ensure_ascii=False,indent=2),
+        "~~~",
+        "",
+        "## Next checks",
+    ]
+    lines += [f"- {x}" for x in assessment.get("next_checks") or []]
+    lines += ["","## Limitations"]
+    lines += [f"- {x}" for x in report.get("limitations") or []]
+    return "\n".join(lines)+"\n"
