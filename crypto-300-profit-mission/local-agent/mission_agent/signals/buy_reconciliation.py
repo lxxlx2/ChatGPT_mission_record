@@ -22,9 +22,13 @@ def _latency(observed, at):
 
 
 def _timing(values):
-    known = [value for value in values if value is not None]
-    return {"sample_count": len(known), "unknown_count": len(values) - len(known),
-            "minimum_seconds": min(known, default=None), "maximum_seconds": max(known, default=None)}
+    known = sorted(value for value in values if value is not None)
+    count = len(known)
+    return {"sample_count": count, "unknown_count": len(values) - count,
+            "minimum_seconds": known[0] if count else None,
+            "p50_seconds": known[(count+1)//2-1] if count else None,
+            "p95_seconds": known[(95*count+99)//100-1] if count else None,
+            "maximum_seconds": known[-1] if count else None}
 
 
 def _recognized_exclusion(event, assets):
