@@ -159,12 +159,12 @@ class CAMarketSeries:
             raise ValueError()
         return json.loads(raw,parse_float=Decimal)
 
-    def _read_cached(self,mint,pool,peer,kind,period,suffix,before=None):
+    def _read_cached(self,mint,pool,peer,kind,period,suffix,before=None,*,refresh=False):
         key=(mint,pool,peer,kind,period,before)
         with self.lock:
             cached=self.cache.get(key)
             now=self.monotonic()
-            if cached and now-cached[0]<60:
+            if not refresh and cached and now-cached[0]<60:
                 return {**cached[1],"cache":"FRESH"}
             while self.requests and now-self.requests[0]>=60:
                 self.requests.popleft()
@@ -195,7 +195,7 @@ class CAMarketSeries:
                 return {**cached[1],"status":"STALE","reason":reason}
             return {"status":"UNAVAILABLE","rows":[],"reason":reason}
 
-    def read(self,mint,pool,peer,period,*,before=None):
+    def read(self,mint,pool,peer,period,*,before=None,refresh=False):
         if (not all(valid_pubkey(value) for value in (mint,pool,peer)) or len({mint,pool,peer})!=3
                 or period not in PERIODS or (before is not None and
                     (type(before) is not int or not 1 < before <= self.clock()+60))):
@@ -207,8 +207,8 @@ class CAMarketSeries:
         chart_q=urllib.parse.urlencode(params)
         # The public route defaults to 300 trades in one day; both controls are Pro-only.
         trades_q=urllib.parse.urlencode({"token":mint})
-        chart=self._read_cached(mint,pool,peer,"chart",period,"/ohlcv/"+frame+"?"+chart_q,before)
+        chart=self._read_cached(mint,pool,peer,"chart",period,"/ohlcv/"+frame+"?"+chart_q,before,refresh=refresh)
         out={"source":SOURCE,"mint":mint,"pool":pool,"period":period,"currency":"USD","chart":chart}
         if before is not None:
             return {**out,"before":before}
-        return {**out,"trades":self._read_cached(mint,pool,peer,"trades",None,"/trades?"+trades_q)}
+        return {**out,"trades":self._read_cached(mint,pool,peer,"trades",None,"/trades?"+trades_q,refresh=refresh)}

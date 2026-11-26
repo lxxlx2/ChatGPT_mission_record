@@ -60,7 +60,7 @@ const unpriced = {mint:b,name:'无美元价格样例',signature:'2'.repeat(64),a
       if (path==='/api/cluster-market-series') {
         const mint=u.searchParams.get('mint'), before=Number(u.searchParams.get('before'));
         const selectedPool=u.searchParams.get('pool'), period=u.searchParams.get('period');
-        marketRequests.push({mint,before,pool:selectedPool,period});
+        marketRequests.push({mint,before,pool:selectedPool,period,refresh:u.searchParams.get("refresh")});
         return json(series(mint,selectedPool,period,before));
       }
       if (path==='/' || /^\/static\/[\w.-]+$/.test(path)) {
@@ -111,6 +111,9 @@ const unpriced = {mint:b,name:'无美元价格样例',signature:'2'.repeat(64),a
     await page.locator('#cluster-series-pool').selectOption(alternate);
     await page.waitForFunction(()=>document.querySelector('#cluster-series-chart svg'));
     assert(marketRequests.some(row=>row.pool===alternate && row.period==='1h' && row.before===0));
+    await page.locator('#cluster-series-load').click();
+    await page.waitForFunction(()=>document.querySelector('#cluster-series-chart svg'));
+    assert(marketRequests.some(row=>row.mint===a && row.pool===alternate && row.refresh==='1'));
     await choose(b);
     await waitText('#cluster-series-trades td','71',true);
     assert(!((await page.locator('#cluster-series-trades').textContent()).includes('42')));

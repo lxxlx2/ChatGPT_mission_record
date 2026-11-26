@@ -470,8 +470,9 @@ def test_scoped_ca_jobs_use_bound_report_and_recover_without_overwriting_full(tm
 
     monkeypatch.setattr(server, 'WalletClusterAnalyzer', Analyzer)
     manager = ClusterJobManager(tmp_path)
-    manager.executor.shutdown()
-    manager.executor = HoldingExecutor()
+    for field in ("executor", "overview_executor", "wallet_executor"):
+        getattr(manager, field).shutdown()
+        setattr(manager, field, HoldingExecutor())
 
     overview = manager.submit(MINT, scope='overview')
     full = manager.submit(MINT)
@@ -544,3 +545,48 @@ def test_ca_preview_delivers_narrative_and_claim_separately_before_details(tmp_p
     assert preview['adjusted_top10_pct'] == '12.34'
     assert preview['holder_count'] == 21
     manager.executor.shutdown()
+
+
+def test_blocked_full_scan_does_not_hold_overview_or_wallet_worker(tmp_path, monkeypatch):
+    from threading import Event
+    from mission_agent.mission_control import server
+
+    full_started, release_full = Event(), Event()
+    overview_mint = "B" * 44
+    owner = "C" * 44
+
+    class Analyzer:
+        def __init__(self, mint, **options):
+            self.mint = mint
+            self.scope = options.get("query_scope", "full")
+
+        def analyze(self):
+            if self.scope == "full":
+                full_started.set()
+                assert release_full.wait(5)
+            return {"schema_version": 2, "source": "SOLANA_FINALIZED_JSON_RPC",
+                    "mint": self.mint, "observed_at": 20, "coverage": {},
+                    "holders": [{"owner": owner}], "metrics": {}, "assessment": {},
+                    "token_profile": {}, "limitations": []}
+
+    monkeypatch.setattr(server, "WalletClusterAnalyzer", Analyzer)
+    manager = ClusterJobManager(tmp_path)
+    def finish(job):
+        manager.jobs[job["job_id"]]["future"].result(timeout=3)
+        assert manager.get(job["job_id"])["status"] == "DONE"
+
+    try:
+        full = manager.submit(MINT)
+        assert full_started.wait(3)
+        overview = manager.submit(overview_mint, scope="overview")
+        finish(overview)
+        wallet = manager.submit(overview_mint, scope="wallet", owner=owner, base_job_id=overview["job_id"])
+        finish(wallet)
+        assert manager.get(full["job_id"])["status"] == "RUNNING"
+        assert manager.latest(overview_mint, wallet["job_id"])["focus_owner"] == owner
+        release_full.set()
+        finish(full)
+    finally:
+        release_full.set()
+        for worker in (manager.executor, manager.overview_executor, manager.wallet_executor):
+            worker.shutdown()

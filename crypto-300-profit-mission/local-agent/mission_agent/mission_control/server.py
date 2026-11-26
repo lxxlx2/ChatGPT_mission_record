@@ -20,7 +20,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 
-from ..meme.cluster import RpcCache, RPCJobBudgetExceeded, SolanaReadOnlyRPC, WalletClusterAnalyzer, load_registry, markdown, report_completeness
+from ..meme.cluster import RpcCache, RPCPacing, RPCJobBudgetExceeded, SolanaReadOnlyRPC, WalletClusterAnalyzer, load_registry, markdown, report_completeness
 from ..meme.job_checkpoint import JobCheckpoint, CheckpointRPC, CheckpointSecondaryRPC, CheckpointClient, CheckpointError, canonical, digest, source_fingerprint
 from ..meme.market import DexScreenerMarketClient
 from ..meme.market_parity import GeckoTerminalMarketClient
@@ -204,6 +204,9 @@ class ClusterJobManager:
         self.jupiter=JupiterQuoteClient(os.environ.get("JUPITER_API_KEY"))
         self.frank=FrankReader(production_root) if production_root is not None else None
         self.executor = ThreadPoolExecutor(max_workers=1, thread_name_prefix="meme-cluster")
+        self.overview_executor = ThreadPoolExecutor(max_workers=1, thread_name_prefix="meme-overview")
+        self.wallet_executor = ThreadPoolExecutor(max_workers=1, thread_name_prefix="meme-wallet")
+        self.rpc_pacing = RPCPacing()
         self.lock = threading.Lock()
         self.jobs: dict[str, dict] = {}
         self.max_retained_jobs = 64
@@ -231,6 +234,12 @@ class ClusterJobManager:
             public["preview"] = {k: v for k, v in preview.items()
                                  if k != "execution_quote_30_usdc"}
         return public
+
+    def _submit_job(self, job_id, job):
+        executor = {"overview": self.overview_executor, "wallet": self.wallet_executor}.get(
+            job.get("query_scope"), self.executor,
+        )
+        job["future"] = executor.submit(self._run, job_id)
 
     def _prune_jobs_locked(self):
         finished=[
@@ -297,7 +306,7 @@ class ClusterJobManager:
             job = {**paused, "status": "QUEUED", "resume_available": False,
                    "progress": {"stage": "QUEUED", "updated_at": time.time()}}
             self.jobs[job_id] = job
-            job["future"] = self.executor.submit(self._run, job_id)
+            self._submit_job(job_id, job)
             return self._public_job(job)
 
     def _independent_rpc(self):
@@ -374,7 +383,7 @@ class ClusterJobManager:
                 JobCheckpoint.create(self.checkpoint_root, job, self._checkpoint_binding(preset, query),
                                      CLUSTER_RPC_JOB_BUDGETS[preset])
             self.jobs[job_id] = job
-            job["future"] = self.executor.submit(self._run, job_id)
+            self._submit_job(job_id, job)
             return self._public_job(job)
 
     def _frank_snapshot(self, mint: str) -> dict:
@@ -679,6 +688,7 @@ class ClusterJobManager:
                 self.rpc_endpoint,
                 fallback_endpoints=self.rpc_endpoints[1:],
                 cache=cache,
+                pacing=self.rpc_pacing,
                 **active_budget,
             )
             if checkpoint is not None:rpc = CheckpointRPC(checkpoint, rpc)
@@ -928,10 +938,11 @@ class ClusterJobManager:
             **_ca_query_fields(report),
         }
 
-    def market_series(self, mint, job_id, pool, period, before=None):
+    def market_series(self, mint, job_id, pool, period, before=None, refresh=None):
         if period not in PERIODS or not self._valid_job_id(job_id):
             raise ValueError("INVALID_CA_MARKET_QUERY")
-        if before is not None and not re.fullmatch(r"[1-9][0-9]{0,9}", before):
+        if ((before is not None and not re.fullmatch(r"[1-9][0-9]{0,9}", before))
+                or refresh not in (None,"1") or (refresh is not None and before is not None)):
             raise ValueError("INVALID_CA_MARKET_QUERY")
         report = self.latest(mint, job_id=job_id)
         if not report or report.get("ca_job_id") != job_id or report.get("mint") != mint:
@@ -940,6 +951,8 @@ class ClusterJobManager:
         if not peer or report.get("query_scope") not in {"overview","full"}:
             return None
         paging={"before":int(before)} if before is not None else {}
+        if refresh == "1":
+            paging["refresh"] = True
         return {"job_id":job_id,**self.ca_market_series.read(mint,pool,peer,period,**paging)}
 
     def latest(self, mint: str, job_id: str | None = None) -> dict | None:
@@ -1844,7 +1857,7 @@ class Handler(BaseHTTPRequestHandler):
             try:
                 qs=parse_qs(urlparse(self.path).query,keep_blank_values=True,max_num_fields=5)
                 required={"job_id","mint","pool","period"}
-                if not required<=set(qs)<=required|{"before"} or any(len(v)!=1 for v in qs.values()):
+                if not required<=set(qs)<=required|{"before","refresh"} or any(len(v)!=1 for v in qs.values()):
                     raise ValueError("INVALID_CA_MARKET_QUERY")
                 result=self.state.cluster_jobs.market_series(**{k:v[0] for k,v in qs.items()})
             except ValueError:

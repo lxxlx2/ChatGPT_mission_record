@@ -194,14 +194,16 @@ test('resumed report visibly retains its historical source epoch',()=>{
   assert.match(h.element('cluster-completeness').innerHTML,/不代表余额或行情已更新到当前/);
 });
 
-test('startup historical load labels the remembered CA as unverified and uses GET only',async()=>{
+test('startup remembers the CA but history requires a click',async()=>{
   const store=new Map([['local:mission-meme-last-cluster-ca',mint]]);
   const h=harness({store,responseFor:async url=>url.startsWith('/api/cluster-latest?')
     ? {ok:true,status:200,json:async()=>fixture} : new Promise(()=>{})});
   await new Promise(resolve=>setImmediate(resolve));
   assert.equal(h.element('cluster-mint').value,mint);
+  assert.equal(h.element('cluster-result').hidden,true);
+  assert.equal(h.requests.filter(x=>x.url.startsWith('/api/cluster-latest?')).length,0);
+  await h.element('cluster-read-cached').listeners.get('click')();
   assert.equal(h.element('cluster-result').hidden,false);
-  assert.match(h.element('cluster-status').innerHTML,/历史报告/);
   assert.match(h.element('cluster-status').innerHTML,/历史报告/);
   assert.deepEqual(h.requests.filter(x=>x.url.startsWith('/api/cluster-latest?')),
     [{url:'/api/cluster-latest?mint='+mint,method:'GET'}]);
@@ -215,6 +217,8 @@ test('startup prefilled CA takes precedence over the previous CA cache',async()=
     ? {ok:true,status:200,json:async()=>({...fixture,mint:selected})} : new Promise(()=>{})});
   await new Promise(resolve=>setImmediate(resolve));
   assert.equal(h.element('cluster-mint').value,selected);
+  assert.equal(h.requests.filter(x=>x.url.startsWith('/api/cluster-latest?')).length,0);
+  await h.element('cluster-read-cached').listeners.get('click')();
   assert.deepEqual(h.requests.filter(x=>x.url.startsWith('/api/cluster-latest?')),
     [{url:'/api/cluster-latest?mint='+selected,method:'GET'}]);
   assert.match(h.element('cluster-status').innerHTML,/历史报告/);

@@ -234,3 +234,27 @@ def test_overview_uses_only_verified_reverse_target_field_and_ignores_wallet_sym
     monkeypatch.setattr(analyzer,"market_snapshot",lambda:market_calls.append(True))
     assert analyzer._identity_and_narrative()[2]["status"]=="UNAVAILABLE"
     assert market_calls==[]
+
+
+def test_explicit_refresh_revalidates_fresh_same_pool_and_preserves_failed_observation():
+    now = [AS_OF]
+    calls = []
+    def source(req, timeout):
+        url = req.full_url
+        calls.append(url)
+        if now[0] == AS_OF+2:
+            raise urllib.error.HTTPError(url, 429, "fixture", {}, None)
+        return io.BytesIO(json.dumps(candles() if "/ohlcv/" in url else {"data": []}).encode())
+
+    client = CAMarketSeries(open_url=source, clock=lambda: now[0], monotonic=lambda: now[0])
+    client.read(MINT, POOL, PEER, "5m")
+    now[0] += 1
+    assert client.read(MINT, POOL, PEER, "5m")["chart"]["observed_at"] == AS_OF
+    fresh = client.read(MINT, POOL, PEER, "5m", refresh=True)
+    assert fresh["chart"]["observed_at"] == fresh["trades"]["observed_at"] == AS_OF+1
+    assert len(calls) == 4
+    now[0] += 1
+    old = client.read(MINT, POOL, PEER, "5m", refresh=True)
+    assert old["chart"]["status"] == old["trades"]["status"] == "STALE"
+    assert old["chart"]["observed_at"] == old["trades"]["observed_at"] == AS_OF+1
+    assert len(calls) == 5

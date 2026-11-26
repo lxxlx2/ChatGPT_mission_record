@@ -1550,10 +1550,7 @@ function setView(name) {
     if (!validPending) {
       // An explicitly selected CA takes precedence over the convenience hint.
       mint=$('cluster-mint').value.trim() || mint;
-      if (mint) {
-        $('cluster-mint').value=mint;
-        void clusterLoadHistoricalCache();
-      }
+      if (mint) $('cluster-mint').value=mint;
     }
   }
 }
@@ -2729,7 +2726,7 @@ function renderClusterChartPage() {
   $('cluster-series-older').disabled=!older;
 }
 
-async function loadClusterSeries(older=false) {
+async function loadClusterSeries(older=false,refresh=false) {
   const report=clusterVisibleReport,pool=$('cluster-series-pool').value,period=$('cluster-series-period').value;
   if (!clusterSeriesPools(report).includes(pool) || !['5m','1h','1d'].includes(period) ||
       $('cluster-mint').value.trim()!==report.mint || $('cluster-result').hidden || clusterCurrentView!=='cluster') return;
@@ -2753,6 +2750,7 @@ async function loadClusterSeries(older=false) {
   try {
     const query=new URLSearchParams({mint:report.mint,job_id:report.ca_job_id,pool,period});
     if (older) query.set('before',String(before));
+    if (refresh) query.set('refresh','1');
     const response=await fetch('/api/cluster-market-series?'+query,{cache:'no-store',headers:{'X-Frank-Research-Read':'1'}});
     const result=await response.json();
     if (generation!==clusterSeriesVersion || report!==clusterVisibleReport || clusterCurrentView!=='cluster' ||
@@ -2792,7 +2790,7 @@ async function loadClusterSeries(older=false) {
 }
 
 if ($('cluster-series-load')) {
-  $('cluster-series-load').addEventListener('click',loadClusterSeries);
+  $('cluster-series-load').addEventListener('click',()=>void loadClusterSeries(false,true));
   $('cluster-series-older').addEventListener('click',()=>void loadClusterSeries(true));
   $('cluster-series-newer').addEventListener('click',()=>{
     if (clusterChartPage>0) {
