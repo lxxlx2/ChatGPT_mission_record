@@ -620,6 +620,7 @@ def tick(*, fetch=_json_response, cli_status=cli_network_status, execution=do_di
     ensure_state(conn)
     try:
         state={'ready':False,'reason':'NOT_CHECKED'}
+        network_check_completed=False
         # Mail test is deliberately separate and mandatory before live auto-start.
         mail_preflight=conn.execute("SELECT status FROM flop_mail WHERE mail_key='first-mail-setup-test'").fetchone() if has_mail_table(conn) else None
         if now()<LAUNCH_UTC:
@@ -634,6 +635,7 @@ def tick(*, fetch=_json_response, cli_status=cli_network_status, execution=do_di
                     config=None
                     notify_error(conn,'PRIVATE_CONFIG_NOT_READY',type(exc).__name__+': '+str(exc))
                 state=ready_to_send(conn,config,fetch=fetch,cli_status=cli_status)
+                network_check_completed=True
                 # Legacy single-session branch is retired. The cycle runs after
                 # funding observations; it has independent funding and spend gates.
                 put(conn,'execution_mode','CHECKING_TESTNET_CYCLE')
@@ -642,16 +644,18 @@ def tick(*, fetch=_json_response, cli_status=cli_network_status, execution=do_di
         from faucet import funding_observation
         funding_observation(conn,fetch=fetch,cli_status={
             'observed_genesis':get(conn,'observed_genesis'),
-            'rpc_genesis_matches_expected':get(conn,'rpc_genesis_matches_expected')=='true'
+            'rpc_genesis_matches_expected':network_check_completed and get(conn,'rpc_genesis_matches_expected')=='true'
                 and get(conn,'rpc_reachable')=='true'
                 and get(conn,'profile_status')=='live'})
-        if now()>=LAUNCH_UTC and mail_preflight and mail_preflight[0]=='SENT_VERIFIED':
+        if network_check_completed and now()>=LAUNCH_UTC and mail_preflight and mail_preflight[0]=='SENT_VERIFIED':
             from cycle import run_tick
             try:
                 run_tick(conn,fetch)
             except (OSError,TimeoutError,ValueError,TypeError,KeyError,subprocess.SubprocessError) as exc:
                 put(conn,'cycle_status','CYCLE_CHECK_FAILED')
                 notify_error(conn,'CYCLE_CHECK_FAILED',type(exc).__name__)
+        elif now()>=LAUNCH_UTC and not network_check_completed:
+            put(conn,'cycle_status','CURRENT_NETWORK_OBSERVATION_FAILED')
         dashboard_state=check_dashboard_health_from_tick(conn)
         queue_summary(conn)
         delivery=pump(conn)

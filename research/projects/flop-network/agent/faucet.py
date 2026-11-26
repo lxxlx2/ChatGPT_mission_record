@@ -24,7 +24,7 @@ def funding_observation(conn, *, fetch, cli_status, runner=subprocess.run):
         conn.execute('INSERT OR REPLACE INTO kv VALUES (?,?)',(k,str(v)))
     for k in ('faucet_pool_flop','faucet_daily_remaining_flop','faucet_pending_grants',
               'faucet_grant_flop','faucet_limits_asof','wallet_free_flop','wallet_reserved_flop',
-              'wallet_balance_at','wallet_address','faucet_signer'):
+              'wallet_balance_at','wallet_address','faucet_signer','faucet_lane_status','faucet_claim_path','faucet_rollover_requires_spend'):
         save(k,'UNVERIFIED')
     save('funding_observed_at',utc())
     save('wallet_funding_state','UNVERIFIED')
@@ -53,6 +53,9 @@ def funding_observation(conn, *, fetch, cli_status, runner=subprocess.run):
         if chain.get('network')!='testnet' or chain.get('genesisHash')!=GENESIS or limits.get('network')!='testnet' or limits.get('stale') is not False:
             raise ValueError('FAUCET_IDENTITY_OR_FRESHNESS')
         f=limits['faucet']
+        save('faucet_lane_status',f.get('status','UNVERIFIED'))
+        save('faucet_claim_path',f.get('agent',{}).get('claimPath','UNVERIFIED'))
+        save('faucet_rollover_requires_spend',str(f.get('agent',{}).get('rolloverRequiresSpend')).lower())
         signer=f.get('signer')
         if isinstance(signer,str) and re.fullmatch(r'[1-9A-HJ-NP-Za-km-z]{42,55}',signer):
             save('faucet_signer',signer)
@@ -112,7 +115,7 @@ def active_claim_key(conn,address):
         return key
     return base
 
-def request_initial(conn, confirmed_genesis, *, cli_runner=subprocess.run, clock=time.time):
+def request_initial(conn, confirmed_genesis, *, cli_runner=subprocess.run, clock=time.time, recheck_reported=False):
     if confirmed_genesis!=GENESIS:
         return {'status':'BLOCKED_NETWORK_GENESIS_NOT_VERIFIED'}
     keyfile=IDENTITY.parent/'agent-key.json'
@@ -138,7 +141,7 @@ def request_initial(conn, confirmed_genesis, *, cli_runner=subprocess.run, clock
         attempt=json.loads(old[0])
         if not attempt.get('nonce'):
             return {'status':'BLOCKED_LEGACY_ATTEMPT'}
-        if attempt.get('status') in ('CLI_FINALIZED_REPORTED','CHAIN_FINALIZED','REFUSED_NO_AUTO_RETRY'):
+        if attempt.get('status') in ('CHAIN_FINALIZED','REFUSED_NO_AUTO_RETRY') or (attempt.get('status')=='CLI_FINALIZED_REPORTED' and not recheck_reported):
             return {'status':attempt['status'],'receipt':attempt}
         if now < attempt.get('retry_at',0):
             return {'status':'SAME_NONCE_BACKOFF'}
@@ -168,6 +171,8 @@ def request_initial(conn, confirmed_genesis, *, cli_runner=subprocess.run, clock
                        '--json','--nonce',attempt['nonce']],env=env,capture_output=True,text=True,
                        timeout=150,check=False)
         attempt['return_code']=cp.returncode
+        attempt['output_sha256']=hashlib.sha256(cp.stdout.encode()).hexdigest()
+        attempt['stderr_sha256']=hashlib.sha256(cp.stderr.encode()).hexdigest()
         response={}
         for raw in (cp.stdout,cp.stderr):
             try:

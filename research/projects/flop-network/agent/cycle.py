@@ -109,6 +109,7 @@ def locate(fetch,tx,record):
     h=record.get('block_hash')
     if hint is not None:
         return {'block_number':hint,**({'block_hash':h} if valid_hash(h) else {})}
+    if valid_hash(h):return {'block_hash':h}
     try:
         obj=read_json(fetch,EXPLORER+'/api/transactions/'+tx)
         if isinstance(obj,dict) and isinstance(obj.get('data'),dict):obj=obj['data']
@@ -275,6 +276,9 @@ def run_tick(c,fetch,*,clock=time.time,verifier=chain_check,runner=subprocess.ru
     grant_raw=get(c,key)
     grant=json.loads(grant_raw) if grant_raw else None
     ready=(get(c,'faucet_ready')=='true' and get(c,'faucet_matches_rpc')=='true'
+           and get(c,'faucet_lane_status')=='open' and get(c,'faucet_claim_path')=='/v1/testnet/agent-claims'
+           and get(c,'faucet_rollover_requires_spend')=='true'
+           and ADDRESS.fullmatch(get(c,'faucet_signer','')) is not None
            and get(c,'faucet_grant_flop')=='10' and integer(get(c,'faucet_daily_remaining_flop')) is not None
            and int(get(c,'faucet_daily_remaining_flop'))>=10)
     # A grant's balance is not a receipt. Recheck the same nonce on the existing
@@ -292,12 +296,17 @@ def run_tick(c,fetch,*,clock=time.time,verifier=chain_check,runner=subprocess.ru
                          '[FLOP] 测试币领取已链上最终确认','到账 10 Test FLOP\n钱包：'+wallet+'\n交易：'+grant['tx_hash']+'\n不代表空投积分。')
                     return status(c,'GRANT_FINALIZED_READY_FOR_DISCOVERY')
                 put(c,'cycle_verify_reason',ev.get('code','GRANT_EVIDENCE_MISMATCH'))
-        if ready and (not grant or grant.get('status') not in ('CLI_FINALIZED_REPORTED','REFUSED_NO_AUTO_RETRY')):
-            outcome=faucet.request_initial(c,GENESIS)
+        if grant and grant.get('status')=='REFUSED_NO_AUTO_RETRY':
+            return status(c,'GRANT_REFUSED_REQUIRES_REVIEW')
+        if ready:
+            outcome=faucet.request_initial(c,GENESIS,cli_runner=runner,clock=clock,recheck_reported=True)
             put(c,'faucet_claim_status',outcome.get('status','UNVERIFIED'))
+            if outcome.get('status') in ('BLOCKED_AGENT_IDENTITY_NOT_READY','BLOCKED_CLI_VERSION_REVIEW_REQUIRED','BLOCKED_LEGACY_ATTEMPT','REFUSED_NO_AUTO_RETRY'):
+                return status(c,outcome['status'])
             return status(c,'WAITING_GRANT_FINALITY')
         return status(c,'WAITING_GRANT_FINALITY_OR_FAUCET')
     if grant.get('address')!=wallet or grant.get('genesis')!=GENESIS:return status(c,'GRANT_WALLET_OR_GENESIS_MISMATCH')
+    put(c,'cycle_verify_reason','NONE')
     grant['key']=key
     aid='cycle-'+hashlib.sha256(key.encode()).hexdigest()[:24]
     # Unknown legacy or parallel sessions prevent any new payment.
@@ -347,5 +356,7 @@ def run_tick(c,fetch,*,clock=time.time,verifier=chain_check,runner=subprocess.ru
     # Verify our independent adapter can actually decode current runtime before
     # permitting first payment; future schemas still fail closed.
     probe=verifier('probe',{})
-    if not probe.get('ok') or probe.get('genesis')!=GENESIS:return status(c,'CHAIN_VERIFIER_UNAVAILABLE_NO_PAYMENT')
+    if not probe.get('ok') or probe.get('genesis')!=GENESIS or probe.get('settlement_schema_ready') is not True:
+        put(c,'cycle_verify_reason',probe.get('code','SETTLEMENT_SCHEMA_UNVERIFIED'))
+        return status(c,'CHAIN_VERIFIER_UNAVAILABLE_NO_PAYMENT')
     return submit(c,key,grant,offers[0],height,runner=runner)

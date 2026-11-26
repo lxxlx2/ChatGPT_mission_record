@@ -1,6 +1,12 @@
 """Offline state/offer tests; no real network or signing."""
 import unittest
+import sqlite3
+import json
+from unittest.mock import patch
 from decimal import Decimal
+import runtime
+import mail
+import faucet
 import cycle
 G=cycle.GENESIS
 W='5DRhi7dvWicmgUPfKpxdV5p4kxXiQUbLUFXtwp4EcAWLtu4D'
@@ -28,6 +34,23 @@ class CycleTests(unittest.TestCase):
         self.assertEqual(cycle.score_state('Voucher earning starts at a future upgrade. No block or date is announced.',200),'UNSCORED_OR_NOT_ANNOUNCED')
         self.assertEqual(cycle.score_state('Voucher earning starts at finalized block 150',149),'WAITING_ACTIVATION_BLOCK_150')
         self.assertEqual(cycle.score_state('Voucher earning starts at finalized block 150',150),'SCORED_AT_FINALIZED_BLOCK_150')
+    def test_existing_nonce_is_reconciled_without_new_claim_key(self):
+        c=sqlite3.connect(':memory:');c.row_factory=sqlite3.Row
+        runtime.ensure_state(c);mail.init(c)
+        key=faucet.base_claim_key(W)
+        for k,v in {'rpc_genesis_matches_expected':'true','observed_genesis':G,'rpc_reachable':'true','profile_status':'live',
+            'finalized_height':'100','wallet_address':W,'faucet_ready':'true','faucet_matches_rpc':'true',
+            'faucet_lane_status':'open','faucet_claim_path':'/v1/testnet/agent-claims','faucet_rollover_requires_spend':'true',
+            'faucet_signer':M,'faucet_grant_flop':'10','faucet_daily_remaining_flop':'100',
+            key:json.dumps({'status':'SAME_NONCE_RECONCILIATION_PENDING','nonce':'123','address':W,'genesis':G})}.items():cycle.put(c,k,v)
+        with patch.object(faucet,'request_initial',return_value={'status':'SAME_NONCE_BACKOFF'}) as req:
+            self.assertEqual(cycle.run_tick(c,lambda _: 'No block or date is announced.'),'WAITING_GRANT_FINALITY')
+            req.assert_called_once()
+        self.assertEqual(faucet.active_claim_key(c,W),key)
+        self.assertEqual(json.loads(cycle.get(c,key))['nonce'],'123')
+        self.assertEqual(c.execute('SELECT COUNT(*) FROM session_attempts').fetchone()[0],0)
+        c.close()
+
     def test_unverified_sources_never_become_empty(self):
         with self.assertRaises(ValueError):cycle.rows({'unknown':[]})
         self.assertEqual(cycle.rows({'data':[]}),[])

@@ -10,13 +10,20 @@ async function main(){
   const q=JSON.parse(fs.readFileSync(0,'utf8'));
   if(q.genesis!==PIN)throw Error('GENESIS_PIN');
   const req=createRequire(fs.realpathSync(q.cli));
-  const {ApiPromise,HttpProvider}=req('@polkadot/api');
+  let lib;try{lib=req('@polkadot/api');}catch{lib=createRequire(req.resolve('@flop-labs/sdk'))('@polkadot/api');}
+  const {ApiPromise,HttpProvider}=lib;
   const api=await ApiPromise.create({provider:new HttpProvider('https://testnet.flop.network/'),noInitWarn:true});
   try {
     if((await api.rpc.chain.getBlockHash(0)).toHex()!==PIN)throw Error('GENESIS_MISMATCH');
     const head=await api.rpc.chain.getFinalizedHead();
     const height=(await api.rpc.chain.getHeader(head)).number.toNumber();
-    if(q.kind==='probe')return {ok:true,height,genesis:PIN};
+    if(q.kind==='probe'){
+      const event=api.events.computeChannel?.Settled;
+      const names=event?.meta?.fields?.map(f=>norm(f.name.isSome?f.name.unwrap().toString():''));
+      const ready=!!api.query.computeChannel?.channels&&!!names&&['channelid','minerpaid','validatorpaid','auditpaid'].every(n=>names.includes(n));
+      return {ok:true,height,genesis:PIN,settlement_schema_ready:ready};
+    }
+    if(!Number.isSafeInteger(q.block_number)&&HASH.test(q.block_hash||''))q.block_number=(await api.rpc.chain.getHeader(q.block_hash)).number.toNumber();
     if(!HASH.test(q.tx_hash)||!Number.isSafeInteger(q.block_number)||q.block_number<1||q.block_number>height)throw Error('BLOCK_NOT_FINALIZED_OR_UNKNOWN');
     const h=await api.rpc.chain.getBlockHash(q.block_number);
     if(q.block_hash&&h.toHex()!==q.block_hash.toLowerCase())throw Error('BLOCK_HASH_MISMATCH');
