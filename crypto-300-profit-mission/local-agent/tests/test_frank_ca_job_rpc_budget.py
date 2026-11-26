@@ -152,6 +152,7 @@ class TestCannotSwallowJobBudget(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             worker = object.__new__(server.ClusterJobManager)
+            worker.rpc_pacing = server.RPCPacing()
             worker.lock = threading.Lock()
             worker.jobs = {
                 "job": {
@@ -334,6 +335,7 @@ class TestReviewP1Regressions(unittest.TestCase):
                 def submit(self, *args):
                     raise AssertionError("successful evidence submit must never run")
             worker = object.__new__(server.ClusterJobManager)
+            worker.rpc_pacing = server.RPCPacing()
             worker.lock = threading.Lock()
             worker.jobs = {
                 "job": {
@@ -384,6 +386,7 @@ class TestCompletedCAReportIdentity(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             worker = object.__new__(server.ClusterJobManager)
+            worker.rpc_pacing = server.RPCPacing()
             worker.lock = threading.Lock()
             worker.jobs = {
                 "a" * 32: {
@@ -483,6 +486,7 @@ class TestCompletedCAReportIdentity(unittest.TestCase):
     @staticmethod
     def _worker(root, job_id, mint):
         worker = object.__new__(server.ClusterJobManager)
+        worker.rpc_pacing = server.RPCPacing()
         worker.lock = threading.Lock()
         worker.jobs = {job_id: {
             "job_id": job_id, "mint": mint, "preset": "quick",
@@ -618,3 +622,26 @@ class TestCompletedCAReportIdentity(unittest.TestCase):
             report_path.write_text(json.dumps(report))
             self.assertIsNone(worker.get(job_id))
             self.assertIsNone(worker.latest(mint, job_id=job_id))
+
+
+def test_simultaneous_jobs_share_rate_pacing_and_cooldown_without_sharing_wire_budgets():
+    clock = Clock()
+    pacing = server.RPCPacing()
+    calls = []
+    endpoint = "https://example.invalid"
+    def transport(request, timeout):
+        calls.append((request.full_url, clock.now))
+        return Response({"result": "fixture"})
+
+    def rpc():
+        return SolanaReadOnlyRPC(endpoint, fallback_endpoints=[], pacing=pacing, open_url=transport,
+                                 monotonic=clock.monotonic, sleep=clock.sleep, min_interval=1,
+                                 max_wire_attempts=2)
+
+    full, overview = rpc(), rpc()
+    full.call("getTokenSupply", ["mint-full"])
+    overview.call("getTokenSupply", ["mint-overview"])
+    overview._cool_down(endpoint, 4)
+    full.call("getTokenSupply", ["mint-full-2"])
+    assert calls == [(endpoint, 1000), (endpoint, 1001), (endpoint, 1005)]
+    assert full.calls == 2 and overview.calls == 1

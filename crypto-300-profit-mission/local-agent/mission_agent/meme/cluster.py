@@ -13,6 +13,7 @@ import re
 import math
 import sqlite3
 import time
+import threading
 import urllib.error
 import urllib.request
 from collections import Counter, defaultdict
@@ -267,6 +268,29 @@ class RpcCache:
         self.db.commit()
 
 
+class RPCPacing:
+    """Shared wire pacing and provider cooldown across simultaneous CA jobs."""
+
+    def __init__(self):
+        self.lock = threading.Lock()
+        self.ready = defaultdict(float)
+
+    def wait(self, endpoint, interval, monotonic, sleep, check_budget):
+        while True:
+            check_budget()
+            with self.lock:
+                now = monotonic()
+                remaining = self.ready[endpoint] - now
+                if remaining <= 0:
+                    self.ready[endpoint] = now + interval
+                    return
+            sleep(remaining)
+
+    def cool_down(self, endpoint, until):
+        with self.lock:
+            self.ready[endpoint] = max(self.ready[endpoint], until)
+
+
 class SolanaReadOnlyRPC:
     ALLOWED={"getTokenSupply","getTokenLargestAccounts","getMultipleAccounts","getAccountInfo","getSignaturesForAddress","getTransaction","getProgramAccounts","getBlock"}
     RETRYABLE_HTTP={403,429,500,502,503,504}
@@ -286,6 +310,7 @@ class SolanaReadOnlyRPC:
         before_wire=None,
         transport_updated=None,
         transaction_batches=True,
+        pacing=None,
     ):
         endpoints=[endpoint]
         endpoints.extend(DEFAULT_RPC_FALLBACKS if fallback_endpoints is None else fallback_endpoints)
@@ -305,6 +330,7 @@ class SolanaReadOnlyRPC:
         self.open_url=open_url if open_url is not None else urllib.request.build_opener(_NoRPCRedirectHandler()).open
         self.sleep=sleep
         self.min_interval=float(min_interval)
+        self.pacing=pacing
         self.cache=cache
         self.before_wire=before_wire
         self.transport_updated=transport_updated
@@ -365,8 +391,16 @@ class SolanaReadOnlyRPC:
                 endpoint=primary;ready=max(primary_cooldown,self._last_by_endpoint[primary]+self.min_interval)
         delay=ready-now
         if delay>0:self.sleep(delay)
+        if self.pacing is not None:
+            self.pacing.wait(endpoint,self.min_interval,self._monotonic,self.sleep,self._check_job_budget)
         self.endpoint=endpoint
         return endpoint
+
+    def _cool_down(self, endpoint, delay):
+        until=self._monotonic()+delay
+        self._cooldown_until[endpoint]=max(self._cooldown_until[endpoint],until)
+        if self.pacing is not None:
+            self.pacing.cool_down(endpoint,until)
 
     @staticmethod
     def _retry_after(exc):
@@ -481,10 +515,7 @@ class SolanaReadOnlyRPC:
                     error=value.get("error") or {}
                     if self._rpc_rate_limited(error):
                         self.endpoint_failures[endpoint]+=1
-                        self._cooldown_until[endpoint]=max(
-                            self._cooldown_until[endpoint],
-                            self._monotonic()+min(30.0,1.5*(2**min(attempt,4))),
-                        )
+                        self._cool_down(endpoint,min(30.0,1.5*(2**min(attempt,4))))
                         last_error=RPCError("RPC_RATE_LIMITED")
                         self.last_wire_error_code="RPC_RATE_LIMITED"
                         self._check_job_budget()
@@ -510,15 +541,12 @@ class SolanaReadOnlyRPC:
                 self._check_job_budget()
                 if exc.code not in self.RETRYABLE_HTTP:raise last_error
                 retry=max(self._retry_after(exc),min(30.0,1.5*(2**min(attempt,4))))
-                self._cooldown_until[endpoint]=max(self._cooldown_until[endpoint],self._monotonic()+retry)
+                self._cool_down(endpoint,retry)
             except (urllib.error.URLError,TimeoutError,OSError,ValueError) as exc:
                 last_error=RPCError(type(exc).__name__);self.endpoint_failures[endpoint]+=1
                 self.last_wire_error_code=self._safe_wire_error_code(exc)
                 self._check_job_budget()
-                self._cooldown_until[endpoint]=max(
-                    self._cooldown_until[endpoint],
-                    self._monotonic()+min(10.0,1.0*(2**min(attempt,3))),
-                )
+                self._cool_down(endpoint,min(10.0,1.0*(2**min(attempt,3))))
         # The final permitted failed attempt must not escape as recoverable RPCError.
         self._check_job_budget()
         raise last_error or RPCError("RPC_FAILED")
@@ -1751,9 +1779,9 @@ class WalletClusterAnalyzer:
         launch=self.launch_snapshot(token_profile)
         market=({"status":"UNAVAILABLE","reason":"MINT_ACCOUNT_TYPE_UNVERIFIED","chain":"solana","mint":self.mint}
                 if token_profile.get("reason")=="MINT_ACCOUNT_TYPE_UNVERIFIED" else self.market_snapshot())
-        if self.query_scope=="overview" and self.independent_market_client is not None and market.get("reason")=="NO_BASE_TOKEN_PAIR":
+        if self.independent_market_client is not None and market.get("reason")=="NO_BASE_TOKEN_PAIR":
             from .ca_market_series import report_pool
-            # One alternate at most: keep overview latency bounded and honor provider backoff.
+            # Reuse the same two-candidate fallback and provider backoff for both CA views.
             attempted = set()
             for row in market.get("pool_candidates") or []:
                 if not isinstance(row,dict):continue
