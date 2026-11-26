@@ -87,3 +87,21 @@ Solscan Chrome 的钱包原始交易表可以打开，时间列提供 UTC 自定
 买入页面不显示原币和数量。可选美元证据文件位于 Dashboard 控制目录的 `frank-buy-usd-evidence.json`。其版本为 `1`，记录键为钱包、交易签名、槽位、区块时间、交易原件哈希、目标 Mint 和支付币。证据同时记录来源、原件哈希和成交时点，并提供已核实美元花费或该时点的支付币美元折算价，二者填其一。美元花费和单价保持十进制原精度，页面才舍入。现有冻结账本的 125 笔候选主动买入都没有存入成交时点的美元字段，运行目录尚未导入这份外部证据。历史记录的两列对缺失数据留空，仍可进入原交易。
 
 本轮离线 Python 全量 2,992 通过、1 项备用 Chromium 测试跳过。Node 界面与查询恢复 259 通过。Mac Chrome 158.0.8127.38 用两个合成 CA 走通默认 K 线、切池和周期、历史翻页、CA 切换、无美元证据、键盘焦点和 320／390 px 布局。1440／390／320 px 的独立预览复核同时检查关键控件对比度（5.13:1 以上）。两次浏览器验证都使用模拟响应，无真实外部请求、POST 或页面异常。真实美元原件和实时 CA 验收保持待完成，原 8766 运行切换保持 NO_GO。
+
+## 2026-11-26 审核交接与隔离 HTTP 验收
+
+基线 `737348a0fd272fdd8ecc25fa7abd63a1af62b46f`。将核实后的缺口和验收准则写入[技术方案第 6 节](FRANK_REBUILD_DESIGN_20261122.md#6-11-月-26-日审核后的实施顺序)及[审核反查表](FRANK_REBUILD_REQUIREMENTS_20261122.md#11-月-26-日审核反查)。报价侧反例使用两个绑定同一目标 Mint 的池，第一池失败、第二池有价，基线未访问第二池。当前概览单工作器、资格依赖与报价来源分别按源码核对。实链数据和生产切换门禁仍待完成。
+
+更新并启用此前默认跳过的 `test_browser_default_entry_filters_and_prefills_ca`。Mac Chrome 通过真正的本地 Dashboard HTTP 服务读取隔离 SQLite 与合成美元证据，验证 USD 两列、BP 筛选、进入 CA 及钱包账本哈希不变。只放行隔离服务的预期 GET，运行结束关闭临时服务。测试使用合成交易与价格证据。
+
+实际命令从 `crypto-300-profit-mission/local-agent` 执行。**140 通过，包含上述 Chrome 用例**。
+
+```zsh
+FRANK_TEST_CHROMIUM="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" \
+  uv run --isolated --offline --no-project --with pytest==8.3.5 --with playwright \
+  python -B -m pytest -q -p no:cacheprovider \
+  tests/test_frank_rebuild_buys.py tests/test_frank_rebuild_delivery.py \
+  tests/test_frank_v1.py tests/test_frank_scanner_source_integrity.py \
+  tests/test_frank_ca_market_series.py tests/test_frank_ca_scoped_analyzer.py \
+  tests/test_frank_ca_launch_flow.py
+```

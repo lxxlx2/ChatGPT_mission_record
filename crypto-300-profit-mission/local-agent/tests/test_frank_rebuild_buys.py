@@ -312,9 +312,14 @@ def test_browser_default_entry_filters_and_prefills_ca(tmp_path):
     at = int(time.time())
     config(control/"frank-buy-qualifications.json",as_of=at)
     ledger = Ledger(prod/"forward.sqlite")
-    put(ledger,1,at=at-1)
+    buy = put(ledger,1,at=at-1,token_raw="2500000")
     put(ledger,2,mint=BP,at=at-2)
     put(ledger,3,kind="failed",at=at-3)
+    write_usd_evidence(
+        control/"frank-buy-usd-evidence.json",
+        usd_observation(ledger, buy, USDC, usd_per_quote_unit="0.983"),
+    )
+    before = hashlib.sha256((prod/"forward.sqlite").read_bytes()).hexdigest()
     class TestHandler(Handler):
         state = DashboardState(prod,control)
     with DashboardHTTPServer(("127.0.0.1",0),TestHandler) as server:
@@ -323,30 +328,45 @@ def test_browser_default_entry_filters_and_prefills_ca(tmp_path):
         base = f"http://127.0.0.1:{server.server_port}"
         try:
             with sync_playwright() as api:
-                browser = api.chromium.launch(executable_path=binary,args=["--no-sandbox"])
+                browser = api.chromium.launch(executable_path=binary,args=["--disable-background-networking", "--disable-sync"])
                 page = browser.new_page()
                 errors, requests = [], []
                 page.on("pageerror", lambda exc: errors.append(str(exc)))
-                page.route("**/*", lambda route: route.continue_() if route.request.url.startswith(base+"/") else route.abort())
+                def route_local_read(route):
+                    request = route.request
+                    if request.method != "GET" or not request.url.startswith(base+"/"):
+                        route.abort()
+                        return
+                    path = request.url.removeprefix(base).split("?", 1)[0]
+                    if path.startswith("/api/") and path not in ("/api/frank-buys", "/api/cluster-latest"):
+                        route.abort()
+                        return
+                    route.continue_()
+
+                page.route("**/*", route_local_read)
                 page.on("request",lambda req:requests.append((req.method, req.url)))
                 page.goto(base,wait_until="domcontentloaded")
-                expect(page.get_by_role("heading",name="Frank 买入")).to_be_visible()
-                expect(page.locator("#frank-buy-rows article")).to_have_count(1)
-                expect(page.locator("#frank-buy-rows")).to_contain_text("样例 Meme")
-                expect(page.locator("#frank-buy-rows")).to_contain_text("支付 0.5 USDC")
+                expect(page.get_by_role("heading",name="Meme 研究台")).to_be_visible()
+                rows = page.locator("#frank-buy-rows tr")
+                expect(rows).to_have_count(1)
+                expect(rows.first).to_contain_text("样例 Meme")
+                expect(rows.first.locator(".buy-value").nth(0)).to_have_text("花费$0.49")
+                expect(rows.first.locator(".buy-value").nth(1)).to_have_text("买入价$0.20")
+                expect(rows.first).not_to_contain_text("USDC")
                 expect(page.locator("#follow-opportunities")).to_be_hidden()
                 page.locator("#frank-buy-mint").fill(BP)
                 page.get_by_role("button",name="筛选",exact=True).click()
-                expect(page.locator("#frank-buy-status")).to_contain_text("所选范围暂未核实买入")
+                expect(page.locator("#frank-buy-status")).to_contain_text("这段时间没有买入记录")
                 page.locator("#frank-buy-mint").fill(MINT)
                 page.get_by_role("button",name="筛选",exact=True).click()
-                expect(page.locator("#frank-buy-rows article")).to_have_count(1)
-                page.locator("#frank-buy-rows").get_by_role("button",name="链上查询").click()
+                expect(rows).to_have_count(1)
+                page.locator("#frank-buy-rows").get_by_role("button",name="查 CA").click()
                 expect(page.locator("#cluster-mint")).to_have_value(MINT)
                 assert not errors
                 assert all(method=="GET" and url.startswith(base+"/") for method,url in requests)
                 assert not any(url.startswith(base+"/api/") and not any(
                     key in url for key in ("/api/frank-buys", "/api/cluster-latest")) for _,url in requests)
+                assert hashlib.sha256((prod/"forward.sqlite").read_bytes()).hexdigest() == before
                 browser.close()
         finally:
             server.shutdown()
