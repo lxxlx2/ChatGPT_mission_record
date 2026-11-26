@@ -8,27 +8,29 @@ const { join } = require('node:path');
 const origin = 'http://127.0.0.254:8766';
 const assetRoot = join(__dirname, '../mission_agent/mission_control/static');
 const a = '1'.repeat(31)+'2', b = '1'.repeat(31)+'3';
-const pool = '1'.repeat(31)+'4', peer = '1'.repeat(31)+'5';
+const pool = '1'.repeat(31)+'4', peer = '1'.repeat(31)+'5', alternate = '1'.repeat(31)+'6';
 const jobs = {[a]:'a'.repeat(32),[b]:'b'.repeat(32)};
 const t = 1792683600, older = t-300;
 const report = mint => ({mint, ca_job_id:jobs[mint], observed_at:t, query_scope:'overview',
   coverage:{}, metrics:{}, assessment:{}, holders:[], limitations:[], transaction_errors:[],
   token_profile:{status:'OK',is_initialized:true},
   market:{status:'OK',chain:'solana',mint,name:mint===a?'合成样本甲':'合成样本乙',
-    main_pair:{pair_address:pool,base_address:mint,quote_address:peer}}});
-const series = (mint,before) => {
+    main_pair:{pair_address:pool,base_address:mint,quote_address:peer},
+    pool_candidates:[{pair_address:alternate,base_address:mint,quote_address:peer}]}});
+const series = (mint,selectedPool,period,before) => {
   const stamp=before===t?older:before===older?null:t;
-  const p=stamp===t?'7':'3';
-  return {mint,job_id:jobs[mint],pool,period:'5m',before:before||undefined,
+  const p=stamp===t?(mint===a?'7':'11'):'3';
+  return {mint,job_id:jobs[mint],pool:selectedPool,period,before:before||undefined,
     source:'GECKOTERMINAL_PUBLIC_API',currency:'USD',
     chart:{status:'OK',observed_at:t,rows:stamp?[[stamp,p,p,p,p,'5']]:[],
       coverage:{before:before||null,next_before:stamp}},
     ...(before?{}:{trades:{status:'OK',observed_at:t,coverage:{},rows:[
-      {wallet:peer,side:'BUY',quantity:'42',at:t,signature:'1'.repeat(64)}
+      {wallet:peer,side:'BUY',quantity:mint===a?'42':'71',at:t,signature:'1'.repeat(64)}
     ]}})};
 };
 const buy = {mint:a,name:'已核实样例',signature:'1'.repeat(64),at:t,
-  quantity:'1234567.12345',paid:'0.00000001',currency:'USDC'};
+  quantity:'1234567.12345',paid:'0.00000001',currency:'USDC',spent_usd:'120.125',entry_price_usd:'0.0000001234'};
+const unpriced = {mint:b,name:'无美元价格样例',signature:'2'.repeat(64),at:t-10,quantity:'700',paid:'2',currency:'SOL'};
 
 (async () => {
   const chrome = await chromium.launch({executablePath: process.env.FRANK_CHROME ||
@@ -49,7 +51,7 @@ const buy = {mint:a,name:'已核实样例',signature:'1'.repeat(64),at:t,
       const json=data=>route.fulfill({json:data});
       if (path.startsWith('/api/')) apiRequests.push(path);
       if (path==='/api/frank-buys') {
-        return json({status:'LOCAL_EVIDENCE_ONLY',next_cursor:null,rows:u.searchParams.has('mint')?[]:[buy]});
+        return json({status:'LOCAL_EVIDENCE_ONLY',next_cursor:null,rows:u.searchParams.has('mint')?[]:[buy,unpriced]});
       }
       if (path==='/api/cluster-latest') {
         const mint=u.searchParams.get('mint');
@@ -57,8 +59,9 @@ const buy = {mint:a,name:'已核实样例',signature:'1'.repeat(64),at:t,
       }
       if (path==='/api/cluster-market-series') {
         const mint=u.searchParams.get('mint'), before=Number(u.searchParams.get('before'));
-        marketRequests.push({mint,before});
-        return json(series(mint,before));
+        const selectedPool=u.searchParams.get('pool'), period=u.searchParams.get('period');
+        marketRequests.push({mint,before,pool:selectedPool,period});
+        return json(series(mint,selectedPool,period,before));
       }
       if (path==='/' || /^\/static\/[\w.-]+$/.test(path)) {
         const type=path==='/'?'text/html':path.endsWith('.js')?'application/javascript':path.endsWith('.css')?'text/css':'text/plain';
@@ -71,23 +74,28 @@ const buy = {mint:a,name:'已核实样例',signature:'1'.repeat(64),at:t,
       [selector,text,exact],{timeout:6000});
 
     await page.goto(origin+'/',{waitUntil:'domcontentloaded'});
-    await waitText('#frank-buy-rows','买入 约 1,234,570 枚 · 支付 约 1.000e-8 USDC');
-    assert.match(await page.locator('#frank-buy-rows').innerText(),/已核实样例/);
-    assert.doesNotMatch(await page.locator('#frank-buy-rows').innerText(),/滑点|路由|来源信号/);
+    await waitText('#frank-buy-rows','$120.13');
+    await waitText('#frank-buy-rows','$1.23E-7');
+    const buyText=await page.locator('#buys-view').innerText();
+    assert.match(buyText,/已核实样例/);
+    assert.doesNotMatch(buyText,/仅展示|证据齐全|枚数|USDC|SOL\b|滑点|路由|来源信号/);
+    assert.equal(await page.getByRole('row',{name:/无美元价格样例/}).locator('.buy-value').filter({hasText:/—/}).count(),2);
     assert.deepEqual(apiRequests,['/api/frank-buys']);
-    await page.locator('#frank-buy-rows').getByRole('button',{name:'链上查询'}).click();
+    assert.deepEqual(await page.locator('.view-tab').allTextContents(),['买入记录','CA 查询']);
+    await page.keyboard.press('Tab');
+    assert.equal(await page.evaluate(()=>document.activeElement.matches(':focus-visible')),true);
+    await page.locator('#frank-buy-rows').getByRole('button',{name:'查 CA'}).first().click();
     assert.equal(await page.locator('#cluster-mint').inputValue(),a);
-
+    assert.equal(await page.locator('h1').innerText(),'Meme 研究台');
     const choose=async mint=>{
+      const history=page.locator('.workspace-history');
+      if (!await history.evaluate(el=>el.open)) await history.locator('summary').click();
       await page.locator('#cluster-reports').selectOption(jobs[mint]);
       await page.locator('#cluster-read-report').click();
       await page.locator('#cluster-series-panel').waitFor({state:'visible',timeout:6000});
       assert.equal(await page.locator('#cluster-mint').inputValue(),mint);
     };
     await choose(a);
-    await page.locator('#cluster-series-pool').selectOption(pool);
-    await page.locator('#cluster-series-period').selectOption('5m');
-    await page.locator('#cluster-series-load').click();
     await waitText('#cluster-series-chart td','7',true);
     await waitText('#cluster-series-trades td','42',true);
     await page.locator('#cluster-series-older').click();
@@ -98,15 +106,30 @@ const buy = {mint:a,name:'已核实样例',signature:'1'.repeat(64),at:t,
     assert(await page.locator('#cluster-series-older').isDisabled());
     await page.locator('#cluster-series-newer').click();
     await waitText('#cluster-series-chart td','7',true);
-    await page.locator('#cluster-series-older').click();
-    await waitText('#cluster-series-chart td','3',true);
+    await page.locator('#cluster-series-period').selectOption('1h');
+    await page.waitForFunction(()=>document.querySelector('#cluster-series-chart svg'));
+    await page.locator('#cluster-series-pool').selectOption(alternate);
+    await page.waitForFunction(()=>document.querySelector('#cluster-series-chart svg'));
+    assert(marketRequests.some(row=>row.pool===alternate && row.period==='1h' && row.before===0));
     await choose(b);
+    await waitText('#cluster-series-trades td','71',true);
     assert(!((await page.locator('#cluster-series-trades').textContent()).includes('42')));
     await choose(a);
-    assert.deepEqual(marketRequests,[{mint:a,before:0},{mint:a,before:t},{mint:a,before:older}]);
+    await waitText('#cluster-series-trades td','42',true);
+    assert(marketRequests.some(row=>row.mint===a && row.before===t));
+    assert(marketRequests.some(row=>row.mint===a && row.before===older));
+    assert(marketRequests.some(row=>row.mint===b && row.before===0));
+    for (const width of [390,320]) {
+      await page.setViewportSize({width,height:844});
+      assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
+      await page.getByRole('button',{name:'买入记录'}).click();
+      await waitText('#frank-buy-rows','$120.13');
+      assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
+      await page.getByRole('button',{name:'CA 查询'}).click();
+    }
     assert.deepEqual(forbidden,[]);
     assert.deepEqual(errors,[]);
     console.log(JSON.stringify({chrome:chrome.version(),evidence:'synthetic browser requests intercepted, no TCP listener',
-      unique_ca:2,frank_default:'PASS',chart_next_previous_exhaustion:'PASS',A_B_A:'PASS',market_GET:3,external_or_POST:0,page_errors:0}));
+      unique_ca:2,frank_default:'PASS',chart_next_previous_exhaustion:'PASS',A_B_A:'PASS',market_GET:marketRequests.length,mobile_320_390:'PASS',keyboard_focus:'PASS',external_or_POST:0,page_errors:0}));
   } finally { await chrome.close(); }
 })().catch(error=>{console.error(error);process.exitCode=1;});

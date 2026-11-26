@@ -28,7 +28,7 @@ function harness(options = {}) {
       addEventListener(name,callback){this.listeners.set(name,callback)},
       querySelectorAll:()=>[],appendChild(){},remove(){},focus(){},select(){},
       replaceChildren(){this.innerHTML='';this.childElementCount=0},
-      insertAdjacentHTML(_,html){this.innerHTML+=html;this.childElementCount+=(html.match(/<article /g)||[]).length},
+      insertAdjacentHTML(_,html){this.innerHTML+=html;this.childElementCount+=(html.match(/<tr role="row">/g)||[]).length},
     });
     return elements.get(id);
   };
@@ -124,7 +124,7 @@ test('unfinished persisted job restore uses GET and offers a separate source con
   h.context.clusterRestorePending();
   await new Promise(resolve=>setImmediate(resolve));
   assert.equal(h.element('cluster-continuation').hidden,false);
-  assert.match(h.element('cluster-status').innerHTML,/原查询尚未完成/);
+  assert.match(h.element('cluster-status').innerHTML,/查询已暂停/);
   assert.equal(h.requests.filter(x=>x.method==='POST').length,0);
   assert.ok(h.store.has('session:mission-meme-cluster-pending-v1'));
 });
@@ -201,8 +201,8 @@ test('startup historical load labels the remembered CA as unverified and uses GE
   await new Promise(resolve=>setImmediate(resolve));
   assert.equal(h.element('cluster-mint').value,mint);
   assert.equal(h.element('cluster-result').hidden,false);
-  assert.match(h.element('cluster-status').innerHTML,/已有历史报告/);
-  assert.match(h.element('cluster-status').innerHTML,/与当前任务的关联未经核实/);
+  assert.match(h.element('cluster-status').innerHTML,/历史报告/);
+  assert.match(h.element('cluster-status').innerHTML,/历史报告/);
   assert.deepEqual(h.requests.filter(x=>x.url.startsWith('/api/cluster-latest?')),
     [{url:'/api/cluster-latest?mint='+mint,method:'GET'}]);
   assert.equal(h.requests.filter(x=>x.method==='POST').length,0);
@@ -217,7 +217,7 @@ test('startup prefilled CA takes precedence over the previous CA cache',async()=
   assert.equal(h.element('cluster-mint').value,selected);
   assert.deepEqual(h.requests.filter(x=>x.url.startsWith('/api/cluster-latest?')),
     [{url:'/api/cluster-latest?mint='+selected,method:'GET'}]);
-  assert.match(h.element('cluster-status').innerHTML,/与当前任务的关联未经核实/);
+  assert.match(h.element('cluster-status').innerHTML,/历史报告/);
   assert.equal(h.requests.filter(x=>x.method==='POST').length,0);
 });
 
@@ -258,7 +258,7 @@ test('full shipped app.js directly renders a verified-shape incomplete CA report
   assert.match(h.element('cluster-summary').innerHTML,/FIXTURE_REPORT/);
   assert.match(h.element('cluster-metrics').innerHTML,/cluster-metric/);
   assert.match(h.element('cluster-coverage').innerHTML,/覆盖|RPC/);
-  assert.match(h.element('cluster-status').innerHTML,/归一化尚未完成/);
+  assert.equal(h.element('cluster-status').hidden,true);
   assert.doesNotMatch(h.element('cluster-status').className,/done/);
   assert.equal(h.requests.filter(x=>x.method==='POST').length,0);
 });
@@ -275,7 +275,7 @@ test('full script DONE -> existing report GET -> pending cleared without phantom
   assert.equal(h.store.has('session:mission-meme-cluster-pending-v1'),false);
   assert.equal(h.element('cluster-submit').disabled,false);
   assert.equal(h.element('cluster-recovery').hidden,true);
-  assert.match(h.element('cluster-status').innerHTML,/无法独立证明与本次分析一一对应/);
+  assert.match(h.element('cluster-status').innerHTML,/历史报告/);
 });
 
 const secondJob='bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb';
@@ -336,7 +336,7 @@ test('explicit historical lookup uses entered Mint and keeps the other pending t
   await h.element('cluster-read-cached').listeners.get('click')();
   assert.equal(h.requests.at(-1).url,'/api/cluster-latest?mint='+otherMint);
   assert.equal(JSON.parse(h.store.get('session:mission-meme-cluster-pending-v1')).id,jobId);
-  assert.match(h.element('cluster-status').innerHTML,/覆盖仍不完整.*关联未经核实/);
+  assert.match(h.element('cluster-status').innerHTML,/历史报告/);
   h.setResponse(async url=>({ok:true,status:200,json:async()=>({job_id:jobId,mint,status:'RUNNING'})}));
   h.element('cluster-resume-get').listeners.get('click')();
   await new Promise(resolve=>setImmediate(resolve));
@@ -457,7 +457,7 @@ test('failed POST unlocks history controls without automatically resubmitting',a
   assert.equal(h.element('cluster-read-cached').disabled,false);
   assert.equal(h.element('cluster-read-report').disabled,false);
   assert.equal(h.requests.filter(x=>x.method==='POST').length,1);
-  assert.match(h.element('cluster-status').innerHTML,/提交状态未核实/);
+  assert.match(h.element('cluster-status').innerHTML,/未确认查询是否开始/);
 });
 
 test('blocked localStorage reads do not prevent CA controls from initializing',()=>{
@@ -477,7 +477,7 @@ test('a failed optional last-CA write cannot discard an acknowledged POST job',a
   assert.equal(JSON.parse(h.store.get(pendingKey)).id,jobId);
   assert.equal(h.requests.filter(x=>x.method==='POST').length,1);
   assert.equal(h.requests.at(-1).url,'/api/cluster-analysis?job_id='+jobId);
-  assert.doesNotMatch(h.element('cluster-status').innerHTML,/提交状态未核实/);
+  assert.doesNotMatch(h.element('cluster-status').innerHTML,/未确认查询是否开始/);
 });
 
 test('an optional storage write failure after DONE keeps the received report successful',async()=>{
@@ -486,7 +486,7 @@ test('an optional storage write failure after DONE keeps the received report suc
   assert.match(h.element('cluster-summary').innerHTML,/REPORT_WITHOUT_STORAGE/);
   assert.equal(h.store.has(pendingKey),false);
   assert.equal(h.element('cluster-submit').disabled,false);
-  assert.match(h.element('cluster-status').innerHTML,/已读取该任务报告/);
+  assert.equal(h.element('cluster-status').hidden,true);
   assert.doesNotMatch(h.element('cluster-status').innerHTML,/读取中断/);
 });
 
@@ -764,7 +764,8 @@ test('CA coverage shows specific bounded gaps without echoing untrusted codes',(
 test('CA has one visible query entry and no accuracy preset selector',()=>{
   const html=readFileSync(new URL('../mission_agent/mission_control/static/index.html',import.meta.url),'utf8');
   assert.doesNotMatch(html,/id="cluster-preset"|title="扫描深度"/);
-  assert.match(html,/统一查询/);
+  assert.match(html,/id="cluster-submit"/);
+  assert.doesNotMatch(html,/统一查询|最多保存 10 个报告入口/);
 });
 
 test('CA submit requests an overview without reading a mode control',async()=>{
@@ -797,7 +798,7 @@ test('CA report exposes per-address page window, bound and continuation without 
 
 test('CA history progress and unknown stop reason never echo raw provider errors',()=>{
   const h=harness();
-  assert.match(h.context.clusterProgressDetail({progress:{stage:'HISTORY_PAGE',phase:'holder',pages:2,signature_count:60}}),/历史分页/);
+  assert.match(h.context.clusterProgressDetail({progress:{stage:'HISTORY_PAGE',phase:'holder',pages:2,signature_count:60}}),/历史交易/);
   h.context.renderClusterReport({...fixture,coverage:{...fixture.coverage,history_windows:[{owner:mint,phase:'holder',pages:1,stop_reason:'https://private.invalid/SECRET'}]}});
   assert.ok(!h.element('cluster-coverage').innerHTML.includes('SECRET'));
 });
@@ -849,7 +850,7 @@ test('explicit incomplete contract displays mandatory gaps despite complete rank
   const html=h.element('cluster-completeness').innerHTML;
   assert.match(html,/证据不完整/);assert.match(html,/完整历史/);assert.match(html,/外部叙事/);
   assert.match(html,/独立来源/);assert.match(html,/下一来源/);
-  assert.match(h.element('cluster-status').innerHTML,/证据不完整/);
+  assert.equal(h.element('cluster-status').hidden,true);
 });
 
 test('unsupported complete claims and source text cannot turn completeness green or inject markup',()=>{
@@ -937,10 +938,9 @@ test('external page claims remain readable without exact CA recognition and esca
   report.narrative={version:1,status:'PARTIAL',official_recognition:'VERIFIED',exhaustive:false,search_coverage:'BOUNDED_HINTS_ONLY',evidence:[{classification:'THIRD_PARTY_CLAIM',source_url:'https://project.example.org/about',publisher_host:'project.example.org',title:'Fixture story',excerpt:'A cat explores distant planets <img onerror=bad>',exact_ca_mentioned:false,published_at_claim:null,first_seen_at:100,response_sha256:'a'.repeat(64)}],attempts:[{kind:'LAUNCHPAD_PAGE',source_url:'https://pump.fun/coin/'+mint,status:'UNAVAILABLE',reason:'HTTP_403',requested:true}]};
   vm.runInContext('renderClusterReport(__report)',Object.assign(h.context,{__report:report}));
   const html=h.element('cluster-narrative').innerHTML;
-  assert.match(html,/A cat explores/);assert.match(html,/精确 CA 未提及/);
-  assert.match(html,/官方归属未核实/);assert.match(html,/本报告首次读取/);
-  assert.match(html,/403/);assert.match(html,/未做全网检索/);
-  assert.doesNotMatch(html,/<img|认领已核实/);
+  assert.match(html,/A cat explores/);
+  assert.match(h.element('cluster-story').innerHTML,/CA 认领<\/strong> <span>未核实/);
+  assert.doesNotMatch(html,/<img|精确 CA 未提及|本报告首次读取|未做全网检索/);
 });
 
 test('reading legacy report removes prior external claim and does not fabricate source attempts',()=>{
@@ -950,7 +950,7 @@ test('reading legacy report removes prior external claim and does not fabricate 
   assert.match(h.element('cluster-narrative').innerHTML,/UNIQUE_OLD_NARRATIVE/);
   vm.runInContext('renderClusterReport(__report)',Object.assign(h.context,{__report:fixture}));
   assert.doesNotMatch(h.element('cluster-narrative').innerHTML,/UNIQUE_OLD_NARRATIVE/);
-  assert.match(h.element('cluster-narrative').innerHTML,/历史报告.*未记录外部来源读取/);
+  assert.doesNotMatch(h.element('cluster-narrative').innerHTML,/未记录外部来源读取/);
 });
 
 test('raw vault balances show actual batch slot and precision while prices remain unverified',()=>{
@@ -1285,12 +1285,11 @@ function storyReport() {
 test('source narrative explains content and keeps actor interaction separate from CA recognition',()=>{
   const h=harness();h.context.renderClusterReport(storyReport());
   const html=h.element('cluster-narrative').innerHTML;
-  assert.match(html,/叙事讲什么/);assert.match(html,/AI／模型训练/);
+  const story=h.element('cluster-story').innerHTML;
+  assert.match(story,/AI／模型训练/);
   assert.match(html,/A crawler trains an AI model\./);
-  assert.match(html,/Elon Musk.*是否实际互动尚未核实/);
-  assert.match(html,/CA 认领：尚未核实/);assert.match(html,/精确 CA 未提及/);
-  assert.match(html,/原帖链接线索（未核实）/);
-  assert.doesNotMatch(html,/已核实互动|已获得背书|推荐买入/);
+  assert.match(story,/CA 认领<\/strong> <span>未核实/);
+  assert.doesNotMatch(story+html,/Elon Musk|已获得背书|叙事讲什么|精确 CA 未提及/);
 });
 
 for (const change of ['forged_verification','broken_content_hash','forged_theme_and_actor']) test('narrative refuses unsupported story fields '+change,()=>{
@@ -1300,7 +1299,9 @@ for (const change of ['forged_verification','broken_content_hash','forged_theme_
   if(change==='forged_theme_and_actor') {row.story.themes=['<img src=x onerror=bad()>'];row.story.actors_mentioned=['<script>bad</script>'];}
   report.narrative.story_summary={version:1,status:'VERIFIED',themes:['FORGED_SUMMARY'],official_recognition:'VERIFIED'};
   const h=harness();h.context.renderClusterReport(report);const html=h.element('cluster-narrative').innerHTML;
-  assert.match(html,/A crawler trains an AI model/);assert.match(html,/CA 认领：尚未核实/);
+  assert.match(html,/A crawler trains an AI model/);
+  assert.match(h.element('cluster-story').innerHTML,/CA 认领<\/strong> <span>未核实/);
+  assert.doesNotMatch(h.element('cluster-story').innerHTML,/FORGED_SUMMARY|VERIFIED_ELON_ENDORSEMENT|<img/);
   assert.doesNotMatch(html,/VERIFIED_ELON_ENDORSEMENT|FORGED_SUMMARY|<img|<script>/);
 });
 
@@ -1318,7 +1319,7 @@ test('narrative post hints reject unsafe targets and do not trigger reads',()=>{
 test('legacy narrative is preserved without inventing story or actor verification',()=>{
   const report=storyReport();delete report.narrative.evidence[0].story;delete report.narrative.evidence[0].content_sha256;
   const h=harness();h.context.renderClusterReport(report);const html=h.element('cluster-narrative').innerHTML;
-  assert.match(html,/A crawler trains an AI model/);assert.match(html,/历史报告未记录主题或人物互动分析/);
+  assert.match(html,/A crawler trains an AI model/);assert.doesNotMatch(html,/历史报告未记录主题或人物互动分析/);
   assert.doesNotMatch(html,/已读来源提及主题：|已读文本提及 Elon Musk/);
 });
 
@@ -1420,9 +1421,9 @@ for(const action of ['latest','history','selected']) test('browser narrative sup
   assert.match(h.element('cluster-narrative').innerHTML,/ORIGINAL_SHORT_CLAIM/);
   const html=h.element('cluster-narrative-supplement').innerHTML;
   assert.equal(h.element('cluster-narrative-supplement').hidden,false);
-  assert.match(html,/浏览器核对补证 · 账号自述/);assert.match(html,/账号称爬虫读取加密网页/);
-  assert.match(html,/@source_reader/);assert.match(html,/CA 官方归属、人物互动和最早起源仍未核实/);
-  assert.match(html,/不代表来源或链上数据已更新到当前/);
+  assert.match(html,/账号称爬虫读取加密网页/);
+  assert.match(html,/@source_reader/);
+  assert.doesNotMatch(html,/CA 官方归属|不代表来源|最早起源/);
   assert.equal(h.requests.filter(x=>x.url.startsWith('/api/cluster-narrative-supplement?')).length,1);
   assert.equal(h.requests.filter(x=>x.method==='POST').length,0);
 });
@@ -1446,7 +1447,8 @@ for(const change of ['job','mint','source','hash','source_hash','author','verifi
   if(change==='surrogate') record.summary+='\ud800';
   if(change==='oversize') record.summary='x'.repeat(801);
   const h=await supplementHarness(record,'latest',report),node=h.element('cluster-narrative-supplement');
-  assert.match(node.innerHTML,/浏览器补证未通过核对/);
+  assert.equal(node.hidden,true);
+  assert.equal(node.innerHTML,'');
   assert.doesNotMatch(node.innerHTML,/SHOULD_NOT_BE_DISPLAYED|ElonMusk/);
   assert.match(h.element('cluster-narrative').innerHTML,/ORIGINAL_SHORT_CLAIM/);
   assert.equal(h.element('cluster-result').hidden,false);
@@ -1463,7 +1465,7 @@ test('missing browser supplement leaves no empty card and does not fabricate sou
 test('unverified browser supplement uses only a fixed message',async()=>{
   const report=supplementReport(),record={version:1,status:'UNVERIFIED',job_id:report.ca_job_id,mint:report.mint,report_sha256:'b'.repeat(64),reason:'SUPPLEMENT_NOT_VERIFIED'};
   const h=await supplementHarness(record,'latest',report);
-  assert.match(h.element('cluster-narrative-supplement').innerHTML,/浏览器补证未通过核对/);
+  assert.equal(h.element('cluster-narrative-supplement').hidden,true);
   assert.match(h.element('cluster-narrative').innerHTML,/ORIGINAL_SHORT_CLAIM/);
 });
 
@@ -1572,9 +1574,9 @@ for(const secondsBeforeReport of [1,300,86400]) test('browser narrative retains 
   const original=JSON.stringify(record),h=await supplementHarness(record,'latest',report);
   const html=h.element('cluster-narrative-supplement').innerHTML;
   assert.match(html,/READ_BEFORE_CHAIN_REPORT/);
-  assert.ok(html.includes(new Date(record.captured_at_utc).toLocaleString('zh-CN')));
+  assert.ok(html.includes(new Date(record.published_at_utc).toLocaleString('zh-CN')));
   assert.equal(JSON.stringify(record),original);
-  assert.match(html,/CA 官方归属、人物互动和最早起源仍未核实/);
+  assert.doesNotMatch(html,/CA 官方归属|最早起源/);
 });
 
 test('holder rankings describe a supply bracket without claiming a same-slot snapshot',()=>{
@@ -1702,7 +1704,7 @@ test('the first view shows a sourced story independently of exact CA recognition
   assert.match(view,/AI／模型训练、爬虫／智能体/);
   assert.doesNotMatch(view,/A crawler trains an AI model/);
   assert.match(view,/href="https:\/\/project\.example\.org\/"/);
-  assert.match(view,/CA 认领[\s\S]*已读来源中未找到可验证认领/);
+  assert.match(view,/CA 认领<\/strong> <span>未核实/);
   assert.doesNotMatch(view,/已核实链上资料关联账号/);
 });
 
@@ -1722,12 +1724,12 @@ test('first view shows source-bound interaction and requires exact Mint and sour
   const view=h.element('cluster-story').innerHTML;
   assert.doesNotMatch(view,/cat in space|<script>/);
   assert.match(h.element('cluster-narrative').innerHTML,/cat in space &lt;script&gt;/);
-  assert.match(view,/@elonmusk 回复了 @example/);
-  assert.match(view,/CA 认领[\s\S]*已核实链上资料关联账号/);
+  assert.match(view,/@elonmusk 回复 @example/);
+  assert.match(view,/CA 认领<\/strong> <span>已核实/);
   assert.match(view,/href="https:\/\/x\.com\/example\/status\/123"/);
   report.narrative.origin.recognition.mint=pendingMint;
   h.context.renderClusterReport(report);
-  assert.match(h.element('cluster-story').innerHTML,/尚未核实准确 CA/);
+  assert.match(h.element('cluster-story').innerHTML,/CA 认领<\/strong> <span>未核实/);
   assert.doesNotMatch(h.element('cluster-story').innerHTML,/认领原帖/);
 });
 
@@ -1767,8 +1769,8 @@ test('missing launch evidence does not hide the chain-proven Pump creator',()=>{
   h.context.renderClusterReport({...fixture,launch_identity:{pump:{status:'VERIFIED_CHAIN_STATE',creator:mint}},
     launch_flow:{status:'PARTIAL',reason:'MALFORMED_SIGNATURE_PAGE'},quick_check:{dev:null}});
   const view=h.element('cluster-quick-check').innerHTML;
-  assert.match(view,/当前持仓未核实.*卖出未核实/);
-  assert.match(view,/开盘覆盖不完整/);
+  assert.match(view,/创建者/);
+  assert.doesNotMatch(view,/当前持仓未核实|卖出未核实|开盘覆盖不完整/);
   assert.doesNotMatch(view,/非 Pump.fun/);
 });
 
@@ -1778,23 +1780,23 @@ test('Frank default buys render as facts without loading market or old signal fe
     paths.push(url);
     assert.equal(options.headers['X-Frank-Research-Read'],'1');
     const rows=url.includes('mint=') ? [] : [
-      {mint,signature:mint,at:1792683606,name:'<b>样例</b>',quantity:'1',paid:'0.5',currency:'USDC'},
+      {mint,signature:mint,at:1792683606,name:'<b>样例</b>',quantity:'1',paid:'0.5',currency:'USDC',spent_usd:'12.345',entry_price_usd:'0.00000001234'},
       {mint:pendingMint,signature:pendingMint,at:1792683605,name:'多跳样例',quantity:'42',paid:null,currency:null},
     ];
     return {ok:true,json:async()=>({status:'LOCAL_EVIDENCE_ONLY',rows,next_cursor:null})};
   }});
   await new Promise(resolve=>setImmediate(resolve));
-  assert.equal(h.element('product-title').textContent,'Frank 买入');
-  assert.match(h.element('frank-buy-rows').innerHTML,/支付 0.5 USDC/);
-  assert.match(h.element('frank-buy-rows').innerHTML,/<p>买入 42 枚<\/p>/);
-  assert.doesNotMatch(h.element('frank-buy-rows').innerHTML,/支付 未核实|支付 null/);
+  assert.match(h.element('frank-buy-rows').innerHTML,/\$12\.35/);
+  assert.match(h.element('frank-buy-rows').innerHTML,/\$1\.23E-8/);
+  assert.equal((h.element('frank-buy-rows').innerHTML.match(/>—<\/td>/g)||[]).length,2);
+  assert.doesNotMatch(h.element('frank-buy-rows').innerHTML,/USDC|42 枚|仅展示/);
   assert.match(h.element('frank-buy-rows').innerHTML,/&lt;b&gt;样例&lt;\/b&gt;/);
   assert.match(h.element('frank-buy-rows').innerHTML,/data-cluster-ca/);
   assert.deepEqual(paths,['/api/frank-buys?days=7']);
   h.element('frank-buy-mint').value=mint;
   await h.context.loadFrankBuys();
   assert.equal(h.element('frank-buy-rows').innerHTML,'');
-  assert.match(h.element('frank-buy-status').textContent,/不代表链上没有买入/);
+  assert.match(h.element('frank-buy-status').textContent,/这段时间没有买入记录/);
   assert.deepEqual(paths,['/api/frank-buys?days=7','/api/frank-buys?days=7&mint='+mint]);
 });
 
@@ -1839,11 +1841,11 @@ test('explicit market panel discards responses after a pool switch and keeps sco
   await h.context.loadClusterSeries();
   old.resolve({ok:true,json:async()=>market(pool)});
   await pending;
-  assert.match(h.element('cluster-series-status').textContent,new RegExp(otherPool));
+  assert.equal(h.element('cluster-series-pool').value,otherPool);
   assert.doesNotMatch(h.element('cluster-series-status').textContent,new RegExp(pool));
   assert.match(h.element('cluster-series-chart').innerHTML,/逐根 K 线数据/);
-  assert.match(h.element('cluster-series-trades').innerHTML,/不含来源标记异常的成交，非完整历史/);
-  assert.match(h.element('cluster-series-actors').innerHTML,/1 条发起地址未知/);
+  assert.match(h.element('cluster-series-trades').innerHTML,/>42<.*未知/s);
+  assert.match(h.element('cluster-series-actors').innerHTML,/本池近期交易者/);
   h.element('cluster-series-side').value='SELL';
   h.element('cluster-series-side').listeners.get('change')();
   assert.doesNotMatch(h.element('cluster-series-trades').innerHTML,/>42</);

@@ -1,14 +1,87 @@
 """Read-only Frank buys over the existing signed trade ledger."""
 import base64
 from contextlib import closing
+from decimal import Decimal, localcontext
 import hashlib
 import json
+import os
 import re
+import stat
 
 from .archived_wallet_facts import read_archived_classification
 from .wallet_activity import connect
 from .wallet_activity_paging import _source
+from ..meme.market_parity import number
 from ..signals.buy_admission import EXCLUDED_MINTS, admit_buy, exact_mint, qualification
+from ..signals.classifier import USDT
+from ..signals.policy import USDC
+from ..signals.reconciliation import _object
+
+
+_TRADE_IDENTITY = ("wallet", "signature", "slot", "block_time", "raw_hash", "mint")
+_QUOTE_ASSET = {"SOL": "SOL", "USDC": USDC, "USDT": USDT}
+
+
+def _read_usd_evidence(path):
+    """Index explicitly supplied USD observation records once per request."""
+    if path is None:
+        return {}, None
+    def open_regular(local_path, flags):
+        fd = os.open(local_path, flags | os.O_NONBLOCK)
+        if not stat.S_ISREG(os.fstat(fd).st_mode):
+            os.close(fd)
+            raise OSError("USD_EVIDENCE_FILE_REQUIRED")
+        return fd
+
+    try:
+        with open(path, "rb", opener=open_regular) as source:
+            raw = source.read()
+    except OSError:
+        return {}, None
+    document = _object(raw)
+    if (document is None or type(document.get("version")) is not int
+            or document["version"] != 1 or not isinstance(document.get("records"), list)):
+        return {}, None
+
+    observations = {}
+    for row in document["records"]:
+        if not isinstance(row, dict):
+            continue
+        key = tuple(row.get(field) for field in _TRADE_IDENTITY)
+        if tuple(type(value) for value in key) != (str, str, int, int, str, str):
+            continue
+        fields = row.keys() & {"spent_usd", "usd_per_quote_unit"}
+        asset, source = row.get("quote_asset"), row.get("source")
+        if (not isinstance(asset, str) or asset not in _QUOTE_ASSET.values()
+                or not isinstance(source, str) or not source.strip()
+                or not isinstance(row.get("source_sha256"), str)
+                or not re.fullmatch(r"[0-9a-f]{64}", row["source_sha256"])
+                or type(row.get("source_at")) is not int or row["source_at"] != row["block_time"]
+                or len(fields) != 1):
+            continue
+        field, = fields
+        amount = number(row[field])
+        if amount is None or Decimal(amount) <= 0:
+            continue
+        key += (asset,)
+        # Conflicting references cannot silently choose the last input row.
+        value = (field, Decimal(amount))
+        observations[key] = value if key not in observations else None
+    return observations, hashlib.sha256(raw).hexdigest()
+
+
+def _buy_usd(item, identity, observations):
+    key = tuple(identity[field] for field in _TRADE_IDENTITY) + (_QUOTE_ASSET.get(item["currency"]),)
+    observation = observations.get(key)
+    if observation is None or item["paid"] is None:
+        return {"spent_usd": None, "entry_price_usd": None}
+    field, value = observation
+    paid, quantity = Decimal(item["paid"]), Decimal(item["quantity"])
+    with localcontext() as context:
+        context.prec = max(50, len(value.as_tuple().digits) + len(paid.as_tuple().digits))
+        spent = value if field == "spent_usd" else paid * value
+        return {"spent_usd": format(spent.normalize(), "f"),
+                "entry_price_usd": format((spent / quantity).normalize(), "f")}
 
 
 def _encode(row):
@@ -47,16 +120,17 @@ def _needs_archive_replay(event, identity):
 
 
 def read_buys(database, qualifications, *, as_of, days="7", mint=None, cursor=None,
-              archive_root=None, legacy_archive_root=None):
+              archive_root=None, legacy_archive_root=None, usd_evidence_path=None):
     if days not in ("1", "7", "30", "all") or (mint is not None and not exact_mint(mint)):
         raise ValueError("INVALID_BUY_QUERY")
     try:
         assets = qualification(qualifications, as_of)
     except FileNotFoundError:
         return {"status": "QUALIFICATION_UNAVAILABLE", "rows": [], "next_cursor": None}
+    observations, evidence_sha = _read_usd_evidence(usd_evidence_path)
     source = _source(database)
     binding = hashlib.sha256(repr((source, days, mint, sorted(assets.items()),
-                                   archive_root, legacy_archive_root)).encode()).hexdigest()
+                                   archive_root, legacy_archive_root, evidence_sha)).encode()).hexdigest()
     with closing(connect(database)) as db:
         db.execute("BEGIN")
         if _source(database) != source:
@@ -89,7 +163,7 @@ def read_buys(database, qualifications, *, as_of, days="7", mint=None, cursor=No
                 event = json.loads(row["body"])
             except (ValueError, TypeError):
                 continue
-            identity = {key: row[key] for key in ("wallet", "signature", "slot", "block_time", "raw_hash", "mint")}
+            identity = {key: row[key] for key in _TRADE_IDENTITY}
             item = admit_buy(event, assets, **identity, allow_unpriced=True)
             if item is None and archive_root is not None and _needs_archive_replay(event, identity):
                 replay = read_archived_classification(
@@ -103,6 +177,6 @@ def read_buys(database, qualifications, *, as_of, days="7", mint=None, cursor=No
             if len(rows) == 30:
                 next_cursor = _encode([1, binding, cutoff, rowmax, last["block_time"], last["trade_id"]])
                 break
-            rows.append(item)
+            rows.append({**item, **_buy_usd(item, identity, observations)})
             last = row
         return {"status": "LOCAL_EVIDENCE_ONLY", "as_of": cutoff, "rows": rows, "next_cursor": next_cursor}

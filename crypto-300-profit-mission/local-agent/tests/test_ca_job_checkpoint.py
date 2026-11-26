@@ -458,7 +458,8 @@ def test_scoped_ca_jobs_use_bound_report_and_recover_without_overwriting_full(tm
         def analyze(self):
             scope = self.query.get('query_scope', 'full')
             base = self.query.get('wallet_base')
-            seen.append((scope, self.query.get('focus_owner'), base and base['ca_job_id']))
+            seen.append((scope, self.query.get('focus_owner'), base and base['ca_job_id'],
+                         self.query.get('read_launch_flow', False)))
             return {
                 'schema_version': 2, 'source': 'SOLANA_FINALIZED_JSON_RPC', 'mint': self.mint,
                 'observed_at': 20, 'coverage': {}, 'holders': [{'owner': owner}],
@@ -498,8 +499,8 @@ def test_scoped_ca_jobs_use_bound_report_and_recover_without_overwriting_full(tm
     assert paused['base_job_id'] == overview['job_id']
     manager.resume(wallet['job_id'], MINT)
     manager._run(wallet['job_id'])
-    assert seen == [('overview', None, None), ('full', None, None),
-                    ('wallet', owner, overview['job_id'])]
+    assert seen == [('overview', None, None, False), ('full', None, None, False),
+                    ('wallet', owner, overview['job_id'], False)]
     assert manager.latest(MINT)['ca_job_id'] == full['job_id']
     assert manager.latest(MINT, wallet['job_id'])['base_job_id'] == overview['job_id']
     manager.jobs.clear()
@@ -509,6 +510,7 @@ def test_scoped_ca_jobs_use_bound_report_and_recover_without_overwriting_full(tm
     assert continued['query_scope'] == 'full'
     assert continued['base_job_id'] == overview['job_id']
     manager._run(continued['job_id'])
+    assert seen[-1] == ('full', None, None, True)
     continued_report = manager.latest(MINT, continued['job_id'])
     assert continued_report['query_scope'] == 'full'
     assert 'launch_flow' not in continued_report

@@ -10,6 +10,7 @@ from urllib.request import Request, urlopen
 
 import pytest
 
+from mission_agent.frank.parser import WSOL
 from mission_agent.frank.rpc import WALLET
 from mission_agent.meme.holder_ranks import _b58
 from mission_agent.mission_control.frank_buys import read_buys
@@ -38,7 +39,7 @@ def config(path, *, exclude=False, as_of=AS_OF):
     ]}))
 
 
-def put(ledger, number, *, mint=MINT, kind="buy", at=AS_OF-1, person="frank"):
+def put(ledger, number, *, mint=MINT, kind="buy", at=AS_OF-1, person="frank", quote=USDC, token_raw="1000000"):
     signature = _b58(number.to_bytes(64, "big"))
     raw = tx()
     if kind == "passive":
@@ -46,7 +47,8 @@ def put(ledger, number, *, mint=MINT, kind="buy", at=AS_OF-1, person="frank"):
     else:
         for side in ("preTokenBalances", "postTokenBalances"):
             raw["meta"][side][0]["mint"] = mint
-            raw["meta"][side][1]["mint"] = USDC
+            raw["meta"][side][1]["mint"] = quote
+        raw["meta"]["postTokenBalances"][0]["uiTokenAmount"]["amount"] = token_raw
         if kind == "failed":
             raw["meta"]["err"] = {"InstructionError": [0, {"Custom": 4}]}
         if kind == "sell":
@@ -75,7 +77,8 @@ def test_read_verified_wallet_facts_only(tmp_path):
     result = read_buys(db,cfg,as_of=AS_OF)
     assert result["status"] == "LOCAL_EVIDENCE_ONLY"
     assert result["rows"] == [{"mint": MINT, "name": "样例 Meme", "signature": good,
-                               "slot": 12, "at": AS_OF-1, "quantity": "1", "paid": "0.5", "currency": "USDC"}]
+                               "slot": 12, "at": AS_OF-1, "quantity": "1", "paid": "0.5", "currency": "USDC",
+                               "spent_usd": None, "entry_price_usd": None}]
     assert hashlib.sha256(db.read_bytes()).hexdigest() == before
     assert read_buys(db,cfg,as_of=AS_OF,mint=BP)["rows"] == []
     assert read_buys(db,tmp_path/"missing",as_of=AS_OF)["status"] == "QUALIFICATION_UNAVAILABLE"
@@ -119,11 +122,88 @@ def test_dashboard_replays_only_bound_legacy_buy_evidence(tmp_path, case):
     if case == "bound_legacy":
         assert result["rows"] == [{"mint": MINT, "name": "样例 Meme", "signature": signature,
                                    "slot": 12, "at": now-1, "quantity": "1",
-                                   "paid": "0.5", "currency": "USDC"}]
+                                   "paid": "0.5", "currency": "USDC", "spent_usd": None, "entry_price_usd": None}]
     else:
         assert result["rows"] == []
     assert ledger.db.execute("SELECT body FROM signatures").fetchone()[0] == indexed_body
     assert ledger.db.execute("SELECT count(*) FROM outbox").fetchone()[0] == 0
+
+
+def usd_observation(ledger, signature, asset, **values):
+    wallet, slot, at, raw_hash = ledger.db.execute(
+        "SELECT wallet,slot,block_time,raw_hash FROM signatures WHERE signature=?", (signature,)
+    ).fetchone()
+    return {"wallet": wallet, "signature": signature, "slot": slot, "block_time": at,
+            "raw_hash": raw_hash, "mint": MINT, "quote_asset": asset, "source_at": at,
+            "source": "fixture provider", "source_sha256": "a"*64, **values}
+
+
+def write_usd_evidence(path, *observations):
+    path.write_text(json.dumps({"version": 1, "records": observations}))
+
+
+def test_dashboard_reads_bound_usd_evidence_without_writing_ledger(tmp_path):
+    prod, control = tmp_path/"production", tmp_path/"control"
+    prod.mkdir()
+    control.mkdir()
+    cfg = control/"frank-buy-qualifications.json"
+    now = int(time.time())
+    config(cfg, as_of=now)
+    db = prod/"forward.sqlite"
+    ledger = Ledger(db)
+    usdc = put(ledger, 1, at=now-1)
+    sol = put(ledger, 2, quote=WSOL, at=now-2, token_raw="2500000")
+    unpriced = put(ledger, 3, at=now-3)
+    evidence = control/"frank-buy-usd-evidence.json"
+    write_usd_evidence(
+        evidence,
+        usd_observation(ledger, usdc, USDC, usd_per_quote_unit="0.983"),
+        usd_observation(ledger, sol, "SOL", spent_usd="1.68"),
+    )
+    before = hashlib.sha256(db.read_bytes()).hexdigest()
+    rows = DashboardState(prod, control).frank_buys()["rows"]
+    assert [(r["signature"], r["spent_usd"], r["entry_price_usd"]) for r in rows] == [
+        (usdc, "0.4915", "0.4915"),
+        (sol, "1.68", "0.672"),
+        (unpriced, None, None),
+    ]
+    assert [(r["currency"], r["quantity"]) for r in rows] == [("USDC", "1"), ("SOL", "2.5"), ("USDC", "1")]
+    assert hashlib.sha256(db.read_bytes()).hexdigest() == before
+
+
+@pytest.mark.parametrize("modifications", [
+    {"wallet": UNKNOWN}, {"signature": "1"*64}, {"slot": 13}, {"block_time": AS_OF-2, "source_at": AS_OF-2},
+    {"mint": UNKNOWN}, {"raw_hash": "b"*64}, {"quote_asset": "SOL"}, {"source_at": AS_OF-2},
+    {"source_at": AS_OF}, {"source_sha256": "nohash"}, {"source": " "}, {"usd_per_quote_unit": "NaN"},
+    {"usd_per_quote_unit": "-10"}, {"spent_usd": "100"},
+])
+def test_price_evidence_requires_exact_trade_asset_and_time(tmp_path, modifications):
+    db, cfg, evidence = (tmp_path/name for name in ("ledger", "qualification.json", "prices.json"))
+    config(cfg)
+    ledger = Ledger(db)
+    signature = put(ledger, 1)
+    record = usd_observation(ledger, signature, USDC, usd_per_quote_unit="0.98")
+    write_usd_evidence(evidence, {**record, **modifications})
+    row, = read_buys(db, cfg, as_of=AS_OF, usd_evidence_path=evidence)["rows"]
+    assert row["signature"] == signature and row["paid"] == "0.5"
+    assert row["spent_usd"] is row["entry_price_usd"] is None
+
+
+def test_changed_evidence_invalidates_cursor_and_duplicate_references_do_not_price_trade(tmp_path):
+    db, cfg, evidence = (tmp_path/name for name in ("ledger", "qualification.json", "prices.json"))
+    config(cfg)
+    ledger = Ledger(db)
+    signatures = [put(ledger, i) for i in range(1,32)]
+    signature = signatures[-1]
+    record = usd_observation(ledger, signature, USDC, usd_per_quote_unit="0.985")
+    write_usd_evidence(evidence, record)
+    page = read_buys(db, cfg, as_of=AS_OF, usd_evidence_path=evidence)
+    assert page["rows"][0]["spent_usd"] == "0.4925"
+    write_usd_evidence(evidence, record, {**record, "usd_per_quote_unit": "0.997"})
+    with pytest.raises(ValueError, match="INVALID_OR_STALE_CURSOR"):
+        read_buys(db, cfg, as_of=AS_OF, usd_evidence_path=evidence, cursor=page["next_cursor"])
+    row = read_buys(db, cfg, as_of=AS_OF, usd_evidence_path=evidence)["rows"][0]
+    assert row["signature"] == signature and row["spent_usd"] is row["entry_price_usd"] is None
 
 
 def test_stable_same_second_paging_no_backfill_from_late_insert(tmp_path):

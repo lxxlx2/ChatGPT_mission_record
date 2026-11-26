@@ -3,42 +3,51 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Meme 研究控制台</title>
-  <link rel="stylesheet" href="/static/styles.css?v=frank-ca-zh-market-v1">
+  <title>Meme 研究台</title>
+  <link rel="stylesheet" href="/static/styles.css?v=meme-workspace-v1">
 </head>
 <body>
-  <header class="topbar">
-    <div>
-      <div class="eyebrow">$300 → $3000 MISSION · MEME</div>
-      <h1 id="product-title">Frank 买入</h1>
+  <header class="topbar workspace-header">
+    <div class="workspace-bar">
+      <h1 id="product-title">Meme 研究台</h1>
+      <nav class="view-tabs" aria-label="研究台">
+        <button class="view-tab active" type="button" data-view="buys" aria-controls="buys-view" aria-pressed="true">买入记录</button>
+        <button class="view-tab" type="button" data-view="cluster" aria-controls="cluster-view" aria-pressed="false">CA 查询</button>
+      </nav>
+      <div class="runtime" id="runtime" hidden></div>
     </div>
-    <div class="runtime" id="runtime">正在读取 Frank 状态…</div>
   </header>
 
   <main>
-    <nav class="view-tabs" aria-label="Meme 控制台功能">
-      <button class="view-tab active" type="button" data-view="buys">Frank 买入</button>
-      <button class="view-tab" type="button" data-view="cluster">CA 链上查询</button>
-      <button class="view-tab" type="button" data-view="signals">历史与审计</button>
-    </nav>
-
-    <div id="buys-view" class="view-pane active">
-      <section class="panel">
-        <form id="frank-buy-filter" class="cluster-search-row">
-          <label for="frank-buy-days">时间</label>
-          <select id="frank-buy-days">
-            <option value="1">最近 24 小时</option><option value="7" selected>最近 7 天</option>
-            <option value="30">最近 30 天</option><option value="all">全部本地记录</option>
-          </select>
-          <label for="frank-buy-mint">代币 CA</label>
-          <input id="frank-buy-mint" type="search" autocomplete="off" spellcheck="false" placeholder="完整合约地址（可选）">
+    <section id="buys-view" class="view-pane active" aria-label="买入记录">
+      <div class="buy-ledger">
+        <form id="frank-buy-filter" class="workspace-controls" aria-label="筛选买入">
+          <div class="workspace-field">
+            <label for="frank-buy-days">时间</label>
+            <select id="frank-buy-days">
+              <option value="1">最近 24 小时</option><option value="7" selected>最近 7 天</option>
+              <option value="30">最近 30 天</option><option value="all">全部</option>
+            </select>
+          </div>
+          <div class="workspace-field buy-ca-field">
+            <label for="frank-buy-mint">代币 CA</label>
+            <input id="frank-buy-mint" type="search" autocomplete="off" spellcheck="false" placeholder="输入完整地址">
+          </div>
           <button type="submit" class="primary-btn">筛选</button>
         </form>
-        <p id="frank-buy-status" class="frank-watch-footnote" role="status">正在读取本地已核实买入…</p>
-        <div id="frank-buy-rows" class="candidate-list"></div>
+        <p id="frank-buy-status" class="buy-status" role="status"></p>
+        <table id="frank-buy-table" class="buy-table" aria-label="买入记录" role="table" hidden>
+          <thead role="rowgroup"><tr role="row">
+            <th scope="col" role="columnheader">代币</th><th scope="col" role="columnheader">时间</th>
+            <th class="buy-value" scope="col" role="columnheader">花费（USD）</th>
+            <th class="buy-value" scope="col" role="columnheader">买入价（USD/枚）</th>
+            <th scope="col" role="columnheader">操作</th>
+          </tr></thead>
+          <tbody id="frank-buy-rows" role="rowgroup"></tbody>
+        </table>
         <button id="frank-buy-more" type="button" class="link-btn" hidden>加载更早买入</button>
-      </section>
-    </div>
+      </div>
+    </section>
 
     <div id="signals-view" class="view-pane">
     <section class="panel priority-panel" id="follow-opportunities">
@@ -385,111 +394,109 @@
 
     </div>
 
-    <div id="cluster-view" class="view-pane">
+    <div id="cluster-view" class="view-pane" aria-label="CA 查询">
       <section class="cluster-search panel">
         <form id="cluster-form">
           <label for="cluster-mint">Solana CA</label>
           <div class="cluster-search-row">
-            <input id="cluster-mint" name="mint" autocomplete="off" spellcheck="false" placeholder="粘贴 token CA" />
+            <input id="cluster-mint" name="mint" autocomplete="off" spellcheck="false" placeholder="粘贴合约地址" />
             <button id="cluster-submit" class="primary-btn" type="submit">开始查询</button>
           </div>
-          <div class="cluster-preset-help" id="cluster-preset-help">统一查询：先看叙事、CA 认领、市场和链上要点。可以逐户查询，或继续完整尽调。完整历史按来源结束推进，报告会标明覆盖缺口。</div>
-
         </form>
+        <details class="workspace-history">
+          <summary>历史报告</summary>
+          <div class="workspace-controls">
+            <button type="button" class="link-btn" id="cluster-read-cached">打开此 CA 的历史报告</button>
+            <div class="workspace-field">
+              <label for="cluster-reports">最近报告</label>
+              <select id="cluster-reports"><option value="">暂无历史报告</option></select>
+            </div>
+            <button type="button" class="link-btn" id="cluster-read-report" disabled>打开报告</button>
+            <button type="button" class="link-btn" id="cluster-clear-reports">清除列表</button>
+          </div>
+        </details>
       </section>
 
-      <div class="cluster-recovery">
-        <button type="button" class="link-btn" id="cluster-read-cached">查看输入 CA 的历史报告</button>
-        <span>仅读取已有数据，不重新扫描；历史报告不代表当前链上状态。</span>
-      </div>
-      <div class="cluster-recovery">
-        <label for="cluster-reports">本浏览器最近已读报告</label>
-        <select id="cluster-reports" aria-label="选择原任务报告"><option value="">暂无已核对报告</option></select>
-        <button type="button" class="link-btn" id="cluster-read-report" disabled>读取选中报告</button>
-        <button type="button" class="link-btn" id="cluster-clear-reports">清除本机记录</button>
-        <span>最多保存 10 个报告入口；任务归属仍由服务核对，不代表覆盖完整。</span>
-      </div>
       <section id="cluster-status" class="cluster-status" hidden></section>
       <div id="cluster-recovery" class="cluster-recovery" hidden>
         <button type="button" class="link-btn" id="cluster-resume-get">继续读取原任务</button>
-        <span>仅读取已有数据，不重新扫描</span>
       </div>
       <div id="cluster-continuation" class="cluster-recovery" hidden>
         <button type="button" class="link-btn" id="cluster-resume-scan">继续未完成的查询</button>
-        <span>手动继续链上只读查询，沿用原任务剩余额度和来源时间。</span>
       </div>
       <section id="cluster-preview" class="cluster-preview" hidden aria-live="polite"></section>
 
       <section id="cluster-result" class="cluster-result" hidden>
         <div class="cluster-summary" id="cluster-summary"></div>
-        <section class="panel cluster-overview-panel">
-          <div class="panel-title"><h2>叙事与 CA 认领</h2></div>
-          <div class="cluster-story" id="cluster-story"></div>
-          <details class="cluster-detail-fold">
-            <summary>查看原帖、引用链和来源证据</summary>
-            <div id="cluster-narrative" class="cluster-narrative"></div>
-          </details>
-        </section>
-        <section class="panel">
-          <div class="panel-title"><h2>快速体检</h2></div>
-          <div id="cluster-quick-check"></div>
-          <details id="cluster-launch-buyers-details" class="cluster-detail-fold" hidden>
-            <summary>查看前 70 个买家及开盘证据</summary>
-            <div class="holder-table-wrap">
-              <table class="holder-table">
-                <thead><tr><th>顺序</th><th>Owner</th><th>开盘买入</th><th>当前余额</th><th>余额变化</th><th>首笔证据</th></tr></thead>
-                <tbody id="cluster-launch-buyers"></tbody>
-              </table>
+        <div class="ca-desk">
+          <section class="panel" id="cluster-series-panel" hidden>
+            <div class="panel-title"><h2>价格走势</h2></div>
+            <div class="workspace-controls market-controls">
+              <div class="workspace-field market-pool"><label for="cluster-series-pool">交易池</label><select id="cluster-series-pool"></select></div>
+              <div class="workspace-field"><label for="cluster-series-period">周期</label>
+              <select id="cluster-series-period"><option value="5m">5 分钟</option><option value="1h">1 小时</option><option value="1d">1 天</option></select></div>
+              <button type="button" class="link-btn" id="cluster-series-load">刷新行情</button>
             </div>
-          </details>
-        </section>
-        <div id="cluster-full-query-controls" class="cluster-detail-actions" hidden>
-          <button type="button" class="link-btn" id="cluster-full-query">继续完整尽调</button>
+            <p id="cluster-series-status" role="status"></p>
+            <div id="cluster-series-chart"></div>
+            <div class="frank-watch-controls" id="cluster-series-pagination" hidden>
+              <button type="button" class="link-btn" id="cluster-series-newer" disabled>较新 K 线</button>
+              <button type="button" class="link-btn" id="cluster-series-older" disabled>更早 K 线</button>
+            </div>
+            <details class="cluster-detail-fold" open>
+              <summary>近期成交</summary>
+              <div class="workspace-controls trade-controls">
+              <label for="cluster-series-side">方向</label>
+              <select id="cluster-series-side"><option value="ALL">全部</option><option value="BUY">买入</option><option value="SELL">卖出</option></select>
+              <label for="cluster-series-wallet">发起地址</label><input id="cluster-series-wallet" type="search" placeholder="输入完整地址">
+              </div>
+              <div id="cluster-series-trades"></div>
+              <div id="cluster-series-actors"></div>
+            </details>
+          </section>
+          <aside class="ca-notes" aria-label="叙事与风险">
+            <section class="panel cluster-overview-panel">
+              <div class="panel-title"><h2>叙事</h2></div>
+              <div class="cluster-story" id="cluster-story"></div>
+              <details class="cluster-detail-fold">
+                <summary>相关来源</summary>
+                <div id="cluster-narrative" class="cluster-narrative"></div>
+              </details>
+            </section>
+            <section class="panel">
+              <div class="panel-title"><h2>筹码与风险</h2></div>
+              <div id="cluster-quick-check"></div>
+              <details id="cluster-launch-buyers-details" class="cluster-detail-fold" hidden>
+                <summary>开盘买家</summary>
+                <div class="holder-table-wrap">
+                  <table class="holder-table">
+                    <thead><tr><th>顺序</th><th>钱包</th><th>开盘买入</th><th>当前余额</th><th>余额变化</th><th>首笔证据</th></tr></thead>
+                    <tbody id="cluster-launch-buyers"></tbody>
+                  </table>
+                </div>
+              </details>
+            </section>
+          </aside>
         </div>
-        <section class="panel" id="cluster-series-panel" hidden>
-          <div class="panel-title"><div><h2>价格走势和近期成交</h2>
-          <p>只查看所选交易池，不会重扫链上历史。</p></div></div>
-          <div class="cluster-search-row">
-            <label for="cluster-series-pool">交易池</label><select id="cluster-series-pool"></select>
-            <label for="cluster-series-period">K 线周期</label>
-            <select id="cluster-series-period"><option value="5m">5 分钟</option><option value="1h">1 小时</option><option value="1d">1 天</option></select>
-            <button type="button" class="link-btn" id="cluster-series-load">读取所选池行情</button>
-          </div>
-          <p id="cluster-series-status" role="status"></p>
-          <div id="cluster-series-chart"></div>
-          <div class="frank-watch-controls" id="cluster-series-pagination" hidden>
-            <button type="button" class="link-btn" id="cluster-series-newer" disabled>较新 K 线</button>
-            <button type="button" class="link-btn" id="cluster-series-older" disabled>更早 K 线</button>
-          </div>
-          <details class="cluster-detail-fold">
-            <summary>查看近期成交和交易者</summary>
-            <label for="cluster-series-side">方向</label>
-            <select id="cluster-series-side"><option value="ALL">全部</option><option value="BUY">买入</option><option value="SELL">卖出</option></select>
-            <label for="cluster-series-wallet">发起地址</label><input id="cluster-series-wallet" type="search" placeholder="完整地址（可选）">
-            <div id="cluster-series-trades"></div>
-            <div id="cluster-series-actors"></div>
-          </details>
-        </section>
+        <div id="cluster-full-query-controls" class="cluster-detail-actions" hidden>
+          <button type="button" class="link-btn" id="cluster-full-query">完整尽调</button>
+        </div>
         <details class="panel cluster-detail-fold">
-          <summary>查看行情来源和池子对照</summary>
-          <div id="cluster-market" class="fact-grid"></div>
-        </details>
-        <section class="panel" id="cluster-rankings-panel" hidden>
-          <div class="panel-title"><div><h2>全量账户来源与 Owner 排名</h2><p>先合并同一 Owner 的账户余额，再计算排名；完整性与历史归因分开核实。</p></div></div>
-          <div id="cluster-rankings"></div>
-        </section>
-        <section class="panel">
-          <div class="panel-title"><div><h2>主要持有人</h2><p>账户已解析到 Owner。可选择钱包继续核对首次取得与资金关系。</p></div></div>
+          <summary id="cluster-holder-title">持有人</summary>
+          <section id="cluster-rankings-panel" hidden>
+            <div id="cluster-rankings"></div>
+          </section>
           <div class="holder-table-wrap">
             <table class="holder-table">
-              <thead><tr><th>#</th><th>Owner</th><th>占比</th><th>角色</th><th>资金来源</th><th>首次买入记录</th><th>钱包明细</th></tr></thead>
+              <thead><tr><th>#</th><th>钱包</th><th>占比</th><th>角色</th><th>资金来源</th><th>首次买入记录</th><th>钱包明细</th></tr></thead>
               <tbody id="cluster-holders"></tbody>
             </table>
           </div>
-        </section>
+        </details>
         <details class="panel cluster-detail-fold">
-          <summary>展开完整链上证据和技术细节</summary>
+          <summary>链上证据</summary>
           <div class="cluster-detail-body">
+            <section class="panel"><div class="panel-title"><h2>行情来源和池</h2></div><div id="cluster-market" class="fact-grid"></div></section>
             <section class="panel" aria-label="分析证据完整性"><div id="cluster-completeness"></div></section>
             <section class="panel conclusion-panel">
               <div class="panel-title"><h2>链上结论依据</h2></div>
@@ -532,7 +539,7 @@
   </main>
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
-  <script src="/static/app.js?v=frank-ca-evidence-v2"></script>
+  <script src="/static/app.js?v=meme-workspace-v1"></script>
   <script src="/static/frank_research.js?v=source-contract-v1"></script>
   <script src="/static/frank_watch_metadata.js?v=watch-metadata-v1"></script>
   <script src="/static/frank_evidence_manifests.js?v=manifest-v2"></script>

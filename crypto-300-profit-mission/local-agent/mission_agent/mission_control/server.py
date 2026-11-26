@@ -683,7 +683,7 @@ class ClusterJobManager:
             def source_client(name, enabled=True):
                 client = getattr(self, name, None) if enabled else None
                 return CheckpointClient(checkpoint, client, name) if checkpoint is not None and client is not None else client
-            secondary_factory=self._independent_rpc() if opts.get("audit_holder_binary") and scope != "wallet" else None
+            secondary_factory=self._independent_rpc() if opts.get("audit_holder_binary") and scope == "full" else None
             def secondary_rpc():
                 if secondary_factory is None:return None
                 client=secondary_factory() if callable(secondary_factory) else secondary_factory
@@ -713,7 +713,8 @@ class ClusterJobManager:
                 independent_rpc=secondary_rpc if secondary_factory is not None else None,
                 progress_callback=lambda stage,details:self._set_progress(job_id,stage,details),
                 **({"query_scope": scope, "focus_owner": query.get("focus_owner"),
-                    "wallet_base": base_report if scope == "wallet" else None}
+                    "wallet_base": base_report if scope == "wallet" else None,
+                    "read_launch_flow": scope == "full"}
                    if query else {}),
             ).analyze()
             if query:
@@ -1266,7 +1267,8 @@ class DashboardState:
         qualifications = qualification_path(default=self.control_root / "frank-buy-qualifications.json")
         return read_buys(self.frank.database, qualifications, as_of=int(time.time()),
                          archive_root=self.evidence_manifests.archive_root,
-                         legacy_archive_root=self.evidence_manifests.legacy_archive_root, **query)
+                         legacy_archive_root=self.evidence_manifests.legacy_archive_root,
+                         usd_evidence_path=self.control_root / "frank-buy-usd-evidence.json", **query)
 
     def frank_signed_activity(self, days=1, *, page_size=None, cursor=None, kind="ALL", mint=None):
         """Complete local indexed ranges; optional pages never cap total history."""

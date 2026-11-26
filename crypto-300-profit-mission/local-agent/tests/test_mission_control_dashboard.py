@@ -205,10 +205,12 @@ def test_cluster_query_validates_solana_ca_and_presets(tmp_path):
             raise AssertionError("invalid CA accepted")
 
 
-def test_dashboard_static_contains_signal_and_cluster_tabs():
+def test_dashboard_static_contains_buys_and_cluster_tabs_and_retains_audit():
     from mission_agent.mission_control.server import Handler
     html=(Handler.static_root/"index.html").read_text()
-    assert 'data-view="signals"' in html
+    assert 'data-view="buys"' in html
+    assert 'data-view="signals"' not in html
+    assert 'id="signals-view"' in html
     assert 'data-view="cluster"' in html
     assert 'id="cluster-form"' in html
     assert 'id="cluster-result"' in html
@@ -284,7 +286,7 @@ def test_dashboard_frontend_restores_latest_cluster_report():
 def test_dashboard_cluster_report_shows_observation_age_and_shared_infra_label():
     from mission_agent.mission_control.server import Handler
     js=(Handler.static_root/"app.js").read_text()
-    assert "数据时间" in js
+    assert "clusterKnownTime(report.observed_at)" in js
     assert "report.observed_at" in js
     assert "共享公共基础设施（不代表共同控制）" in js
 
@@ -302,13 +304,11 @@ def test_cluster_dashboard_explains_single_query_bounds_and_localizes_rate_limit
     from mission_agent.mission_control.server import Handler
     html=(Handler.static_root/"index.html").read_text()
     js=(Handler.static_root/"app.js").read_text()
-    assert "统一查询" in html
-    assert "完整历史按来源结束推进" in html
-    assert "报告会标明覆盖缺口" in html
+    assert "统一查询" not in html
     assert "请求与耗时上限" not in html
-    assert "继续完整尽调" in html
+    assert "完整尽调" in html
     assert "clusterPresetHelp" not in js
-    assert "免费 Solana RPC 触发限流（HTTP 429）" in js
+    assert "数据来源暂时限流，请稍后重试" in js
     assert "execution_quote_30_usdc" not in js
     assert "token_profile" in js
     assert "first_acquisition" in js
@@ -330,8 +330,8 @@ def test_cluster_dashboard_does_not_fabricate_narrative_conclusion():
     js=(Handler.static_root/"app.js").read_text()
     assert "链上 / 市场结构结论" in js
     assert "完整投资结论" not in js
-    assert "官方归属未核实" in js
-    assert "未做全网检索" in js
+    assert "CHAIN_LINKED_POST_AUTHOR_EXPLICIT_EXACT_MINT_CLAIM" in js
+    assert "未做全网检索" not in js
 
 
 def test_standard_cluster_preset_covers_top20_owners_with_source_driven_history():
@@ -683,9 +683,9 @@ def test_dashboard_prioritizes_trade_tape_and_states_scope():
     assert 'id="coverage"' in html
     assert '/api/coverage' in js and '/api/coverage' in server
     assert 'LOCAL_INDEX_ONLY' in (Handler.static_root.parent/"frank.py").read_text()
-    assert '脚本不执行' in js
-    assert '登录或访问墙不绕过' in js
-    assert '官方归属未核实' in js
+    assert '脚本不执行' not in js
+    assert '登录或访问墙不绕过' not in js
+    assert '历史与审计' not in html
 
 def test_frank_wallet_live_rpc_audit_diff_reports_missing_signatures():
     import runpy

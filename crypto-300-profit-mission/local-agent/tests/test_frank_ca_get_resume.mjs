@@ -52,6 +52,7 @@ function makeHarness(results = [], saved = null, opts = {}) {
     renderClusterReport:(row)=>rendered.push(row),
     // Optional sidecar rendering is exercised by the complete-app render suite.
     loadClusterNarrativeSupplement:async()=>{},
+    loadClusterSeries:async()=>{},
     clusterProgressDetail:()=> '已查询信息',
     clusterErrorMessage:x=>String(x),
     loadLatestCluster:async()=>true,
@@ -67,10 +68,10 @@ function makeHarness(results = [], saved = null, opts = {}) {
       return entry;
     },
     clearTimeout:t=>{ if(t) t.cancelled=true; },
-    console:{warn(){}}, Date, Math, Number, String, JSON,
+    console:{warn(){},error(){}}, Date, Math, Number, String, JSON,
   };
   vm.createContext(context);
-  vm.runInContext(opts.realCache ? source.replace('function clusterShowRecovery(',loader+'\nfunction clusterShowRecovery(') : source,context);
+  vm.runInContext(opts.realCache ? source.replace('function clusterShowRecovery(',()=>loader+'\nfunction clusterShowRecovery(') : source,context);
   if (opts.submit) vm.runInContext(submitSource,context);
   return {context,nodes,elements,listeners,delays,calls,statuses,storage,rendered,
     async next() {
@@ -107,7 +108,7 @@ test('two transient connection failures retry only GET and retain the exact job'
   assert.equal(h.elements('cluster-recovery').hidden,true);
   assert.equal(await h.next(),1200);
   assert.equal(h.storage.has('mission-meme-cluster-pending-v1'),false);
-  assert.match(h.statuses.at(-1).join(' '),/无法独立证明与本次分析一一对应/);
+  assert.match(h.statuses.at(-1).join(' '),/历史报告/);
   assert.equal(h.elements('cluster-submit').disabled,false);
   assert.equal(h.calls.length,4);
   assert.ok(h.calls.every(path=>path==='/api/cluster-analysis?job_id='+id));
@@ -126,8 +127,7 @@ test('404 stops retries and offers historical reading without claiming same job'
   await h.listeners['cluster-read-cached']();
   assert.equal(h.calls.length,2);
   assert.equal(h.calls[1],'/api/cluster-latest?mint='+encodeURIComponent(mint));
-  assert.match(h.statuses.at(-1).join(' '),/与当前任务的关联未经核实/);
-  assert.match(h.statuses.at(-1).join(' '),/覆盖仍不完整/);
+  assert.match(h.statuses.at(-1).join(' '),/历史报告/);
 });
 
 test('manual resume reads the SAME ID and full backoff stops after three retries',async()=>{
@@ -255,7 +255,7 @@ test('P2-3: failed new POST B cannot resurrect previous pending job A after refr
   h.elements('cluster-preset').value='deep';
   await h.listeners['cluster-form']({preventDefault(){}});
   assert.equal(h.storage.has('mission-meme-cluster-pending-v1'),false);
-  assert.match(h.statuses.at(-1).join(' '),/提交状态未核实/);
+  assert.match(h.statuses.at(-1).join(' '),/未确认查询是否开始/);
   assert.equal(h.elements('cluster-recovery').hidden,false);
   assert.equal(h.elements('cluster-resume-get').hidden,true);
   assert.equal(h.elements('cluster-mint').value,mintB);
@@ -278,8 +278,8 @@ test('DONE job renders same-ID persisted report with verified identity, not blan
   assert.equal(h.rendered[0].ca_job_id,id);
   assert.equal(h.calls[1],'/api/cluster-latest?mint='+mint+'&job_id='+id);
   assert.equal(h.storage.has('mission-meme-cluster-pending-v1'),false);
-  assert.match(h.statuses.at(-1).join(' '),/任务编号与已结束任务一致/);
-  assert.match(h.statuses.at(-1).join(' '),/完整性仍须另行核实/);
+  assert.equal(vm.runInContext('clusterLastReportJobVerified',h.context),true);
+  assert.doesNotMatch((h.statuses.at(-1) || []).join(' '),/历史报告/);
   assert.ok(h.calls.every(path=>!path.startsWith('POST:')));
 });
 
@@ -311,8 +311,8 @@ test('legacy report without ca_job_id remains explicit unverified historical rea
   h.context.clusterSetJob(id,mint);
   await h.context.pollClusterJob(id);
   assert.equal(h.rendered.length,1);
-  assert.match(h.statuses.at(-1).join(' '),/缺少可核对的本次任务编号/);
-  assert.doesNotMatch(h.statuses.at(-1).join(' '),/任务编号与已结束任务一致/);
+  assert.match(h.statuses.at(-1).join(' '),/历史报告/);
+  assert.equal(vm.runInContext('clusterLastReportJobVerified',h.context),false);
 });
 
 

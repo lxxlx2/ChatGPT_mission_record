@@ -78,7 +78,7 @@ def test_priority_panel_states_are_explanatory_not_executable():
 
 def test_ca_research_form_and_history_sections_not_removed():
     markup, page = parsed()
-    assert "CA 链上查询" in markup
+    assert "CA 查询" in markup
     assert "历史判断记录" in markup
     assert "最近结束" in markup
     assert "待复核链上行为" in markup

@@ -79,3 +79,11 @@ Solscan Chrome 的钱包原始交易表可以打开，时间列提供 UTC 自定
 独立钱包参考的公开 GET 仍未补齐。Solscan 增强交易入口返回 HTTP 401，SolanaFM 返回 HTTP 403。待补范围仍包括同钱包完整交易分母、独立同槽持有人和池、复杂协议真实样本及端到端通知覆盖。运行切换保持 NO_GO。 [Solscan 增强交易入口](https://pro-api.solscan.io/pro-api-docs/v2.0/playground/v2-account-transactions-enhanced) · [SolanaFM 钱包交易说明](https://docs.solana.fm/reference/get_account_transactions)
 
 复现命令为 `python -B -m pytest -q -p no:cacheprovider tests/test_meme_holder_binary.py tests/test_meme_launch_origin.py` 和 `node --test tests/*_ui.mjs tests/test_frank_ca_get_resume.mjs tests/test_frank_ca_report_render.mjs`，分别通过 56 和 259 项。全量 `pytest -q -p no:cacheprovider --tb=no tests` 在拦截外部网络的进程内完成，2,973 通过，1 项备用 Chromium 测试跳过。Mac Chrome 的 45 个市场卡和 117 笔买入分页验收单独执行，证据范围见上表。
+
+## 2026-11-26 研究台界面重做
+
+以 `744498c801a58913228c2dbcc513524f913bb9db` 为基线，完成反查 UI01–UI05 对应的页面和查询分流。操作审计保留旧地址，从主导航移除。普通 CA 摘要只读身份、行情、叙事及轻量持有人样本，样本不用来计算或展示全局 Top10。选定交易池后自动读取 K 线和近期成交；切池和周期仅重读相应市场数据。首次读取全 Mint、开盘和独立来源在完整尽调。现有单任务队列中，已开始的完整尽调仍可能占用队列。
+
+买入页面不显示原币和数量。可选美元证据文件位于 Dashboard 控制目录的 `frank-buy-usd-evidence.json`。其版本为 `1`，记录键为钱包、交易签名、槽位、区块时间、交易原件哈希、目标 Mint 和支付币。证据同时记录来源、原件哈希和成交时点，并提供已核实美元花费或该时点的支付币美元折算价，二者填其一。美元花费和单价保持十进制原精度，页面才舍入。现有冻结账本的 125 笔候选主动买入都没有存入成交时点的美元字段，运行目录尚未导入这份外部证据。历史记录的两列对缺失数据留空，仍可进入原交易。
+
+本轮离线 Python 全量 2,992 通过、1 项备用 Chromium 测试跳过。Node 界面与查询恢复 259 通过。Mac Chrome 158.0.8127.38 用两个合成 CA 走通默认 K 线、切池和周期、历史翻页、CA 切换、无美元证据、键盘焦点和 320／390 px 布局。1440／390／320 px 的独立预览复核同时检查关键控件对比度（5.13:1 以上）。两次浏览器验证都使用模拟响应，无真实外部请求、POST 或页面异常。真实美元原件和实时 CA 验收保持待完成，原 8766 运行切换保持 NO_GO。

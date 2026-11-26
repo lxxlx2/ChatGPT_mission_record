@@ -5,7 +5,7 @@ from unittest.mock import Mock
 
 import pytest
 
-from mission_agent.meme.cluster import WalletClusterAnalyzer
+from mission_agent.meme.cluster import RPCError, WalletClusterAnalyzer
 from test_meme_owner_account_history import A, B, MINT, T1, T2, TB, TZ, analyzer
 from test_meme_holder_ranks import account, key
 
@@ -23,6 +23,9 @@ def test_overview_publishes_narrative_early_without_history_or_independent_holde
         query_scope="overview",
         exhaust_history=True,
         read_launch_identity=True,
+        read_launch_flow=True,
+        read_pool_vaults=True,
+        audit_holder_binary=True,
         independent_rpc=Mock(side_effect=AssertionError("overview must not reread owners")),
         progress_callback=lambda stage, details: events.append((stage, details)),
     )
@@ -31,11 +34,12 @@ def test_overview_publishes_narrative_early_without_history_or_independent_holde
     review.launch_snapshot = lambda profile: {
         "pump": {"status": "VERIFIED_CHAIN_STATE", "creator": A, "bonding_curve": T1}
     }
-    flow = {"status": "PARTIAL", "reason": "LAUNCH_WINDOW_NOT_LOCATED", "dev": {"creator": A}}
     from mission_agent.meme import launch_flow
 
-    collect_launch = Mock(return_value=flow)
+    collect_launch = Mock(side_effect=AssertionError("overview must not scan opening history"))
     monkeypatch.setattr(launch_flow, "collect_launch_flow", collect_launch)
+    review.pool_vault_snapshot = Mock(side_effect=AssertionError("overview must not discover pool vaults"))
+    review.special_role_snapshot = Mock(side_effect=AssertionError("overview must not discover all holder roles"))
     report = review.analyze()
 
     stages = [stage for stage, _ in events]
@@ -43,22 +47,64 @@ def test_overview_publishes_narrative_early_without_history_or_independent_holde
     assert stages.index("BASE_READY") < stages.index("NARRATIVE_READY") < stages.index("HOLDERS_READY")
     assert detail["NARRATIVE_READY"]["narrative"]["official_recognition"] == "NO_VERIFIABLE_CLAIM"
     assert detail["NARRATIVE_READY"]["narrative"]["evidence"] == story["evidence"]
-    assert detail["HOLDERS_READY"]["holder_count"] == 2
-    assert detail["LAUNCH_FLOW_READY"]["quick_check"]["dev"]["creator"] == A
-    assert collect_launch.call_args.kwargs["current_balances"] == {A: 150, B: 850}
+    assert detail["HOLDERS_READY"]["top_accounts_resolved"] == 2
+    assert detail["HOLDERS_READY"]["raw_top10_resolved_pct"] is None
+    assert "LAUNCH_FLOW_READY" not in stages and "launch_flow" not in report
+    assert "GLOBAL_OWNER_TOP10_PCT" not in report["metrics"]
+    assert report["holder_rankings"]["status"] == "NOT_REQUESTED"
+    assert {row["owner"] for row in report["holders"]} == {A, B}
     assert report["query_scope"] == "overview"
     assert report["narrative"] == story
     assert report["coverage"]["history_scan_mode"] == "ON_DEMAND"
     assert report["coverage"]["history_windows"] == []
     assert report["metrics"]["LARGEST_PROBABLE_CONTROL_CLUSTER_PCT"] == "UNRESOLVED"
-    assert {"WALLET_HISTORY_ON_DEMAND", "LAUNCH_FLOW_INCOMPLETE"} <= set(report["coverage"]["gaps"])
-    assert rpc.history == []
+    assert {"WALLET_HISTORY_ON_DEMAND", "HOLDER_ENUMERATION_ON_DEMAND",
+            "LAUNCH_FLOW_ON_DEMAND"} <= set(report["coverage"]["gaps"])
+    assert rpc.requests == [] and rpc.history == []
+    collect_launch.assert_not_called()
+    review.pool_vault_snapshot.assert_not_called()
+    review.special_role_snapshot.assert_not_called()
     review.independent_rpc.assert_not_called()
 
 
+def test_overview_holder_failure_keeps_market_and_mint_identity(monkeypatch):
+    overview, rpc = analyzer(monkeypatch, query_scope="overview")
+    market = {"status": "OK", "price_usd": "0.002"}
+    overview.market_snapshot = Mock(return_value=market)
+    overview.holders = Mock(side_effect=RPCError("RPC_RATE_LIMITED"))
+    result = overview.analyze()
+
+    assert result["market"] == market and result["token_profile"]["status"] == "OK"
+    assert result["holders"] == []
+    assert result["holder_rankings"]["status"] == "NOT_REQUESTED"
+    assert rpc.requests == [] and rpc.history == []
+
+
+def test_full_request_reads_opening_and_all_existing_holder_evidence(monkeypatch):
+    from mission_agent.meme import launch_flow
+
+    full, rpc = analyzer(monkeypatch, read_launch_identity=True, read_launch_flow=True, exhaust_history=True)
+    launch = {"pump": {"status": "VERIFIED_CHAIN_STATE", "creator": A, "bonding_curve": T1}}
+    full.launch_snapshot = Mock(return_value=launch)
+    flow = {"status": "OK", "dev": {"creator": A}, "summary": {"first_buyers": {"count": 70}}}
+    collect = Mock(return_value=flow)
+    monkeypatch.setattr(launch_flow, "collect_launch_flow", collect)
+    result = full.analyze()
+
+    assert result["launch_flow"] == flow
+    assert result["quick_check"]["first_buyers"]["count"] == 70
+    assert collect.call_args.args == (MINT, rpc)
+    assert collect.call_args.kwargs["launch"] == launch
+    assert collect.call_args.kwargs["current_balances"] == {A: 150, B: 850}
+    assert result["holder_rankings"]["status"] == "COMPLETE_SNAPSHOT"
+    assert any(method == "getProgramAccounts" for method, _ in rpc.requests)
+    assert {T1, T2, TZ} <= {address for address, _ in rpc.history}
+    assert result["coverage"]["history_scan_mode"] == "SOURCE_END"
+
+
 def test_wallet_scope_reuses_parent_and_scans_only_selected_accounts_to_source_end(monkeypatch):
-    summary, _ = analyzer(monkeypatch, query_scope="overview", exhaust_history=True)
-    base = summary.analyze()
+    base_analyzer, _ = analyzer(monkeypatch, query_scope="full", exhaust_history=True)
+    base = base_analyzer.analyze()
     original = deepcopy(base)
     wallet, rpc = analyzer(
         monkeypatch,
@@ -90,6 +136,21 @@ def test_wallet_scope_reuses_parent_and_scans_only_selected_accounts_to_source_e
     wallet.token_profile.assert_not_called()
 
 
+def test_wallet_scope_can_drill_a_visible_sample_without_claiming_full_balance(monkeypatch):
+    overview, _ = analyzer(monkeypatch, query_scope="overview", exhaust_history=True)
+    base = overview.analyze()
+    wallet, rpc = analyzer(monkeypatch, query_scope="wallet", focus_owner=A,
+                           wallet_base=base, exhaust_history=True)
+    report = wallet.analyze()
+
+    assert report["wallet_detail"]["deep_scanned"] is True
+    assert report["wallet_detail"]["first_acquisition"]["signature"] == "shared"
+    assert report["wallet_detail"]["raw"] is None
+    assert report["coverage"]["owner_account_history"][0]["account_source_status"] == "OBSERVED_TOP20_ACCOUNTS"
+    assert {address for address, _ in rpc.history} <= {T1, A}
+    assert rpc.requests == []
+
+
 def test_wallet_scope_rejects_wrong_mint_snapshot():
     with pytest.raises(ValueError, match="WALLET_SCOPE_REQUIRES_BOUND_REPORT"):
         WalletClusterAnalyzer(MINT, rpc=Mock(), query_scope="wallet", focus_owner=A, wallet_base={"mint": B})
@@ -105,15 +166,16 @@ def test_narrative_failure_does_not_discard_available_base_evidence(monkeypatch)
     assert report["narrative"]["reason"] == "NARRATIVE_SOURCE_UNAVAILABLE"
     assert report["narrative"]["official_recognition"] == "UNVERIFIED"
     assert dict(events)["NARRATIVE_READY"]["narrative"]["status"] == "UNAVAILABLE"
-    assert report["holder_rankings"]["status"] == "COMPLETE_SNAPSHOT"
+    assert report["holder_rankings"]["status"] == "NOT_REQUESTED"
+    assert report["holders"]
 
 
 def test_wallet_scope_can_read_small_ranked_owner_without_expanding_other_wallets(monkeypatch):
     small_owner, small_account = key(303), key(5)
     records = [account(1, 301, 100), account(2, 301, 50), account(3, 301, 0),
                account(4, 302, 849), account(5, 303, 1)]
-    overview, _ = analyzer(monkeypatch, records=records, query_scope="overview", exhaust_history=True)
-    base = overview.analyze()
+    full, _ = analyzer(monkeypatch, records=records, query_scope="full", exhaust_history=True)
+    base = full.analyze()
     assert small_owner not in {r["owner"] for r in base["holders"]}
     assert small_owner in {r["owner"] for r in base["holder_rankings"]["owners"]}
 

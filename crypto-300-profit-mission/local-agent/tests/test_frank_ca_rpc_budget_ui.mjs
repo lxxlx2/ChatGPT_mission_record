@@ -17,11 +17,10 @@ test('budget exhausted is explicitly incomplete, not generic rate-limit/retry', 
     type: 'RPC_JOB_BUDGET_EXHAUSTED',
     message: 'CLUSTER_ANALYSIS_INCOMPLETE_BUDGET_EXHAUSTED',
   });
-  assert.match(message, /分析未完成/);
-  assert.match(message, /停止追加请求/);
+  assert.equal(message, '本次查询超时');
   assert.doesNotMatch(message, /稍后重试/);
 });
 
-test('legacy normal error path remains intact', () => {
-  assert.match(format({type: 'SomeFailure', message: 'CLUSTER_ANALYSIS_UNAVAILABLE'}), /SomeFailure/);
+test('ordinary errors use a short message without leaking provider details', () => {
+  assert.equal(format({type: 'SomeFailure', message: 'CLUSTER_ANALYSIS_UNAVAILABLE'}), '请稍后重试');
 });

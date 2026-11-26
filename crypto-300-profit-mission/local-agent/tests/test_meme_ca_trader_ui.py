@@ -67,14 +67,15 @@ def test_ca_ui_has_independent_fast_view_and_disclosed_technical_evidence():
     assert html.index('id="cluster-story"') < html.index('id="cluster-quick-check"')
     assert html.index('id="cluster-quick-check"') < html.index('id="cluster-holders"')
     assert html.index('id="cluster-holders"') < html.index('id="cluster-conclusion"')
-    assert html.index('id="cluster-market"') < html.index('id="cluster-holders"')
+    assert html.index('id="cluster-series-panel"') < html.index('id="cluster-holders"') < html.index('id="cluster-market"')
     assert html.index('id="cluster-holders"') < html.index('id="cluster-coverage"')
     assert 'class="panel cluster-detail-fold"' in html
     assert 'id="cluster-frank"' not in html
     assert "$('cluster-frank')" not in js
     assert "renderClusterPreview(job)" in js
     assert "trade_confirmed" not in js.split("function renderClusterPreview(job)")[1].split("function clusterErrorMessage")[0]
-    assert 'data-view="signals"' in html and 'data-view="cluster"' in html
+    assert 'data-view="buys"' in html and 'data-view="cluster"' in html
+    assert 'data-view="signals"' not in html and 'id="signals-view"' in html
 
 
 
