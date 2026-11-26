@@ -297,6 +297,51 @@ def test_dashboard_endpoint_reads_ledger_and_requires_same_origin_header(tmp_pat
             runner.join()
 
 
+def test_dashboard_http_usd_sidecar_precision_and_size_limit(tmp_path):
+    prod, control = tmp_path/"prod", tmp_path/"control"
+    prod.mkdir()
+    control.mkdir()
+    now = int(time.time())
+    config(control/"frank-buy-qualifications.json", as_of=now)
+    db = prod/"forward.sqlite"
+    ledger = Ledger(db)
+    sig = put(ledger, 1, at=now-1)
+    sidecar = control/"frank-buy-usd-evidence.json"
+    record = usd_observation(ledger, sig, USDC, usd_per_quote_unit="0.983456789012345678901")
+    payload = json.dumps({"version": 1, "records": [record]}).replace(
+        '"0.983456789012345678901"', "0.983456789012345678901"
+    ).encode()
+    # Trailing JSON whitespace is valid, so the larger input is rejected only by the bound.
+    cap = 4 * 1024 * 1024
+    at_limit = payload.ljust(cap)
+    before = hashlib.sha256(db.read_bytes()).hexdigest()
+
+    class TestHandler(Handler):
+        state = DashboardState(prod, control)
+
+    with HTTPServer(("127.0.0.1", 0), TestHandler) as server:
+        runner = Thread(target=server.serve_forever, daemon=True)
+        runner.start()
+        request = Request(f"http://127.0.0.1:{server.server_port}/api/frank-buys?days=all",
+                          headers={"X-Frank-Research-Read": "1"})
+        try:
+            for raw, expected in [
+                (at_limit, "0.4917283945061728394505"),
+                (at_limit + b" ", None),
+                (payload.replace(b'"version": 1', b'"version": 1, "version": 1'), None),
+                (payload, "0.4917283945061728394505"),
+            ]:
+                sidecar.write_bytes(raw)
+                with urlopen(request, timeout=3) as response:
+                    row, = json.load(response)["rows"]
+                assert row["signature"] == sig and row["paid"] == "0.5"
+                assert row["spent_usd"] == row["entry_price_usd"] == expected
+        finally:
+            server.shutdown()
+            runner.join()
+    assert hashlib.sha256(db.read_bytes()).hexdigest() == before
+
+
 def test_browser_default_entry_filters_and_prefills_ca(tmp_path):
     """Optional isolated Chromium check: FRANK_TEST_CHROMIUM=/path/to/chromium."""
     import os

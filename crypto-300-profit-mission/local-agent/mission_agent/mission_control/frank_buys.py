@@ -1,7 +1,7 @@
 """Read-only Frank buys over the existing signed trade ledger."""
 import base64
 from contextlib import closing
-from decimal import Decimal, localcontext
+from decimal import Decimal, InvalidOperation, localcontext
 import hashlib
 import json
 import os
@@ -15,11 +15,12 @@ from ..meme.market_parity import number
 from ..signals.buy_admission import EXCLUDED_MINTS, admit_buy, exact_mint, qualification
 from ..signals.classifier import USDT
 from ..signals.policy import USDC
-from ..signals.reconciliation import _object
+from ..signals.reconciliation import _unique_pairs
 
 
 _TRADE_IDENTITY = ("wallet", "signature", "slot", "block_time", "raw_hash", "mint")
 _QUOTE_ASSET = {"SOL": "SOL", "USDC": USDC, "USDT": USDT}
+_MAX_USD_EVIDENCE_BYTES = 4 * 1024 * 1024
 
 
 def _read_usd_evidence(path):
@@ -35,11 +36,13 @@ def _read_usd_evidence(path):
 
     try:
         with open(path, "rb", opener=open_regular) as source:
-            raw = source.read()
-    except OSError:
+            raw = source.read(_MAX_USD_EVIDENCE_BYTES + 1)
+        if len(raw) > _MAX_USD_EVIDENCE_BYTES:
+            return {}, None
+        document = json.loads(raw, parse_float=Decimal, object_pairs_hook=_unique_pairs)
+    except (OSError, ValueError, InvalidOperation, RecursionError):
         return {}, None
-    document = _object(raw)
-    if (document is None or type(document.get("version")) is not int
+    if (not isinstance(document, dict) or type(document.get("version")) is not int
             or document["version"] != 1 or not isinstance(document.get("records"), list)):
         return {}, None
 
