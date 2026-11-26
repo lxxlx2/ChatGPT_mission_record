@@ -208,7 +208,7 @@ def submit(c,key,grant,candidate,height,*,runner=subprocess.run):
         password=pwfile.read_text().strip()
         if not password:raise ValueError()
         version=runner([cli,'--version'],capture_output=True,text=True,timeout=20,check=False)
-        if version.returncode or version.stdout.strip()!='0.9.0':return status(c,'CLI_VERSION_REVIEW_REQUIRED')
+        if version.returncode or version.stdout.strip() not in faucet.REVIEWED_CLI_VERSIONS:return status(c,'CLI_VERSION_REVIEW_REQUIRED')
     except (OSError,ValueError,KeyError,TypeError,subprocess.SubprocessError):
         return status(c,'IDENTITY_OR_CLI_UNVERIFIED')
     aid='cycle-'+hashlib.sha256(key.encode()).hexdigest()[:24]

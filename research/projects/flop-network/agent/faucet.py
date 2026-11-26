@@ -1,4 +1,4 @@
-"""Pinned Testnet D10 first grant using the official CLI 0.9.0.
+"""Pinned Testnet D10 grant using reviewed official CLI releases.
 Persist the nonce before signing. Reconcile only that nonce. Never create a
 second grant until an independent finalized spend/eligibility verifier exists.
 """
@@ -16,6 +16,9 @@ from mail import enqueue
 IDENTITY=DATA/'agent-identity.json'
 GENESIS='0x918abd58fb16306b30ef3886514cfaebffecb4de43e82b6f8ec4795c43cfd800'
 RECHECK_SECONDS=900
+# Official 0.9.1 release uses SDK 0.12.1 and admits runtime 1014039.
+# https://github.com/flop-labs/network/commit/942db04ae9cf3fed442190d824f4f8da6508a751
+REVIEWED_CLI_VERSIONS=frozenset(('0.9.0','0.9.1'))
 
 
 def funding_observation(conn, *, fetch, cli_status, runner=subprocess.run, chain_reader=None):
@@ -175,7 +178,7 @@ def request_initial(conn, confirmed_genesis, *, cli_runner=subprocess.run, clock
         return {'status':'BLOCKED_CLI_NOT_INSTALLED'}
     try:
         version=cli_runner([cli,'--version'],capture_output=True,text=True,timeout=20,check=False)
-        if version.returncode or version.stdout.strip()!='0.9.0':
+        if version.returncode or version.stdout.strip() not in REVIEWED_CLI_VERSIONS:
             return {'status':'BLOCKED_CLI_VERSION_REVIEW_REQUIRED'}
     except (OSError,subprocess.TimeoutExpired):
         return {'status':'BLOCKED_CLI_VERSION_REVIEW_REQUIRED'}

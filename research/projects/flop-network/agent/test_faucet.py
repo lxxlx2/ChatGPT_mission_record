@@ -32,6 +32,7 @@ class FaucetTests(unittest.TestCase):
         self.q.start()
         self.calls=[]
         self.t=1000000
+        self.cli_version='0.9.0'
     def tearDown(self):
         self.q.stop()
         self.p.stop()
@@ -39,7 +40,7 @@ class FaucetTests(unittest.TestCase):
         self.temp.cleanup()
     def call(self,argv,**kw):
         if argv[-1]=='--version':
-            return SimpleNamespace(returncode=0,stdout='0.9.0',stderr='')
+            return SimpleNamespace(returncode=0,stdout=self.cli_version,stderr='')
         self.calls.append(argv)
         self.assertIn('--keystore',argv)
         self.assertNotIn(ADDR,argv)
@@ -50,6 +51,17 @@ class FaucetTests(unittest.TestCase):
         return SimpleNamespace(returncode=0,stdout=json.dumps({'finalized':True,'tx_hash':'0x'+'a'*64}),stderr='')
     def req(self,genesis=faucet.GENESIS):
         return faucet.request_initial(self.db,genesis,cli_runner=self.call,clock=lambda:self.t)
+    def test_reviewed_cli_091_preserves_nonce(self):
+        self.cli_version='0.9.1'
+        self.assertEqual(self.req()['status'],'SAME_NONCE_RECONCILIATION_PENDING')
+        self.t+=901
+        self.assertEqual(self.req()['status'],'CLI_FINALIZED_REPORTED')
+        self.assertEqual(self.calls[0][-1],self.calls[1][-1])
+    def test_unknown_cli_version_refuses_before_signing(self):
+        self.cli_version='0.9.2'
+        self.assertEqual(self.req()['status'],'BLOCKED_CLI_VERSION_REVIEW_REQUIRED')
+        self.assertEqual(self.calls,[])
+        self.assertIsNone(runtime.get(self.db,faucet.base_claim_key(ADDR)))
     def test_invalid_genesis_no_sign(self):
         self.assertEqual(self.req('0x'+'b'*64)['status'],'BLOCKED_NETWORK_GENESIS_NOT_VERIFIED')
         self.assertFalse(self.calls)
