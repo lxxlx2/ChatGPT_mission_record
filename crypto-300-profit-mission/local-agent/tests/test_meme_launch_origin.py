@@ -29,9 +29,29 @@ def curve_account(owner=PUMP_PROGRAM,disc=BONDING_CURVE_DISCRIMINATOR):
 def test_pump_launch_decodes_creator_and_registers_roles():
     out=collect_pump_launch(MINT,One(curve_account()))
     assert out['status']=='VERIFIED_CHAIN_STATE' and out['creator']==CREATOR and out['complete'] is True
-    assert collect_pump_launch(MINT,One(None))['status']=='NOT_PUMP_LAUNCH'
+    absent=collect_pump_launch(MINT,One(None))
+    assert absent['status']=='NOT_PUMP_LAUNCH' and absent['account_present'] is False and absent['slot']==7
     assert collect_pump_launch(MINT,One(curve_account(owner='11111111111111111111111111111111')))['status']=='NOT_PUMP_LAUNCH'
-    assert collect_pump_launch(MINT,One(curve_account(disc=bytes(8))))['reason']=='BONDING_CURVE_LAYOUT_MISMATCH'
+    malformed=collect_pump_launch(MINT,One(curve_account(disc=bytes(8))))
+    assert malformed['status']=='UNAVAILABLE' and malformed['reason']=='BONDING_CURVE_LAYOUT_MISMATCH'
+
+
+@pytest.mark.parametrize("result", [
+    None, {}, {"context":{"slot":97}}, {"value":None},
+    {"context":{"slot":True},"value":None}, {"context":{"slot":0},"value":None},
+    {"context":{"slot":97},"value":{"owner":"unverified"}}, {"context":{"slot":97},"value":[]},
+])
+def test_missing_or_unverifiable_finalized_curve_response_is_not_a_negative(result):
+    from types import SimpleNamespace
+    cases=(_b58(bytes([111])*32),_b58(bytes([171])*32))
+    for mint in cases:
+        calls=[]
+        def read(method,params,ttl=0):
+            calls.append((method,params,ttl))
+            return result
+        report=collect_pump_launch(mint,SimpleNamespace(call=read))
+        assert report["status"]=="UNAVAILABLE" and report["reason"]=="BONDING_CURVE_RESPONSE_UNVERIFIED"
+        assert calls==[("getAccountInfo",[report["bonding_curve"],{"encoding":"base64","commitment":"finalized"}],60)]
 
 
 def test_token2022_metadata_extension_needs_no_extra_read():

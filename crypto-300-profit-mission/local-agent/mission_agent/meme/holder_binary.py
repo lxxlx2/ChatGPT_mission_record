@@ -39,17 +39,26 @@ def _selected(rows,max_full_accounts=MAX_FULL_ACCOUNTS):
 # semantics: TransferFeeConfig/Amount (withheld fees), confidential balances.
 MASS_BLOCKING_EXTENSIONS={1:'transferFeeConfig',2:'transferFeeAmount',4:'confidentialTransferMint',5:'confidentialTransferAccount',
                           16:'confidentialTransferFeeConfig',17:'confidentialTransferFeeAmount',24:'confidentialMintBurn'}
+# Upstream ExtensionType (u16): 0 marks padding; TransferFeeConfig starts at
+# 1 and PermissionedBurn ends at 28. Future types have unknown mass semantics.
+# https://github.com/solana-program/token-2022/blob/main/interface/src/extension/mod.rs
+TOKEN_2022_KNOWN_EXTENSIONS = frozenset(range(1, 29))
+TOKEN_2022_TLV_VERSION = 1
 
 
 def token2022_extension_types(raw):
-    """TLV list after AccountType byte (offset 166). None when malformed."""
-    if len(raw)<=166:return []
-    out=[];o=166
-    while o+4<=len(raw):
-        kind=int.from_bytes(raw[o:o+2],'little');size=int.from_bytes(raw[o+2:o+4],'little')
-        if kind==0 and size==0:break
-        if o+4+size>len(raw):return None
-        out.append(kind);o+=4+size
+    """Read known Token-2022 TLV types, or return None for incomplete proof."""
+    out = []
+    offset = 166
+    while offset < len(raw):
+        kind = int.from_bytes(raw[offset:offset + 2], "little")
+        if kind == 0 or len(raw) - offset < 4:
+            return None if any(raw[offset:]) else out
+        size = int.from_bytes(raw[offset + 2:offset + 4], "little")
+        offset += 4 + size
+        if offset > len(raw) or kind not in TOKEN_2022_KNOWN_EXTENSIONS or kind in out:
+            return None
+        out.append(kind)
     return out
 
 
@@ -128,6 +137,7 @@ def collect_holder_binary_check(mint,source,rpc,*,max_full_accounts=MAX_FULL_ACC
     out['enumeration_relation']=('SAME_SLOT_CONTRADICTION' if conflict else 'SAME_SLOT_SAMPLE_MATCH' if all_valid else 'SAME_SLOT_CHECK_INCOMPLETE') if actual==slot else 'DIFFERENT_FINALIZED_SLOTS'
     t22_ok=program==LEGACY_TOKEN_PROGRAM or (ext_ok and not ext_types & set(MASS_BLOCKING_EXTENSIONS))
     if program!=LEGACY_TOKEN_PROGRAM:
+        out['token_2022_tlv_version']=TOKEN_2022_TLV_VERSION
         out['token_2022_extension_types']=sorted(ext_types)
         out['token_2022_mass_semantics']='NO_WITHHELD_FEE_OR_CONFIDENTIAL_EXTENSION' if t22_ok else 'MASS_AFFECTING_EXTENSION_OR_UNPARSED'
     complete=t22_ok and all_valid and supply>0 and total==supply and "WRAPPED_NATIVE_ACCOUNT" not in flags
@@ -146,9 +156,24 @@ def collect_holder_binary_check(mint,source,rpc,*,max_full_accounts=MAX_FULL_ACC
     return out
 
 
+def _verified_token_2022_mass(check):
+    version = check.get("token_2022_tlv_version")
+    types = check.get("token_2022_extension_types")
+    return (type(version) is int and version == TOKEN_2022_TLV_VERSION
+            and check.get("token_2022_mass_semantics") == "NO_WITHHELD_FEE_OR_CONFIDENTIAL_EXTENSION"
+            and isinstance(types, list)
+            and all(type(kind) is int and kind in TOKEN_2022_KNOWN_EXTENSIONS for kind in types)
+            and len(set(types)) == len(types)
+            and not set(types) & MASS_BLOCKING_EXTENSIONS.keys())
+
+
 def verified_holder_mass(check,mint):
     """Validate this stored version's bounded proof before endorsing metrics."""
-    if not isinstance(check,dict) or type(check.get('version')) is not int or check.get('version')!=1 or check.get('status')!='RECONCILED_NONZERO_BALANCE_MASS' or check.get('full_positive_mass_reconciled') is not True or check.get('all_selected_accounts_decoded') is not True or (check.get('program_id')!=LEGACY_TOKEN_PROGRAM and not (check.get('program_id') in PROGRAMS and check.get('token_2022_mass_semantics')=='NO_WITHHELD_FEE_OR_CONFIDENTIAL_EXTENSION' and isinstance(check.get('token_2022_extension_types'),list) and not set(check['token_2022_extension_types'])&set(MASS_BLOCKING_EXTENSIONS))) or check.get('mint')!=mint or not valid_pubkey(mint) or check.get('independent_provider') is not False or not isinstance(check.get('flags',[]),list) or 'WRAPPED_NATIVE_ACCOUNT' in check.get('flags',[]):return False
+    if not isinstance(check,dict) or type(check.get('version')) is not int or check.get('version')!=1 or check.get('status')!='RECONCILED_NONZERO_BALANCE_MASS' or check.get('full_positive_mass_reconciled') is not True or check.get('all_selected_accounts_decoded') is not True or check.get('mint')!=mint or not valid_pubkey(mint) or check.get('independent_provider') is not False or not isinstance(check.get('flags',[]),list) or 'WRAPPED_NATIVE_ACCOUNT' in check.get('flags',[]):return False
+    program = check.get("program_id")
+    if program != LEGACY_TOKEN_PROGRAM and (
+            not isinstance(program, str) or program not in PROGRAMS or not _verified_token_2022_mass(check)):
+        return False
     supply=_uint(check.get('mint_supply_raw'));total=_uint(check.get('selected_total_raw'));rows=check.get('records');owners=check.get('owners');selected=check.get('selected_accounts');slot=check.get('snapshot_slot')
     if not supply or total!=supply or type(slot) is not int or slot<=0 or not isinstance(rows,list) or not 1<=len(rows)<=MAX_FULL_ACCOUNTS or type(check.get('selected_account_count')) is not int or len(rows)!=check.get('selected_account_count') or not isinstance(selected,list) or len(selected)!=len(rows) or any(not valid_pubkey(a) for a in selected) or not isinstance(owners,list):return False
     amounts={};seen=set()

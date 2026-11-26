@@ -140,6 +140,36 @@ def test_token2022_without_mass_extensions_reconciles_and_verifies():
     assert verified_holder_mass(out,MINT)
 
 
+@pytest.mark.parametrize("tlv", [
+    bytes.fromhex("01 00 6c"),
+    bytes.fromhex("00 00 00 00 01 00"),
+    bytes.fromhex("ff 7f 00 00"),
+    bytes.fromhex("03 00 20 00"),
+])
+def test_malformed_or_unrecognized_token2022_tlv_never_verifies_balance_mass(tlv):
+    from mission_agent.meme.holder_binary import token2022_extension_types, verified_holder_mass
+    r=source();r['program_id']=P22;rpc=RPC(r)
+    def mint_layout(data):
+        data[165:]=b"\x01"+tlv
+    change_data(rpc.mint,mint_layout)
+    out=run(r,rpc)
+    assert token2022_extension_types(bytes(166)+tlv) is None
+    assert out['status']=='OBSERVED_SAMPLE_ONLY'
+    assert out['owner_top10_pct']=='UNRESOLVED' and not verified_holder_mass(out,MINT)
+
+
+def test_token2022_known_non_mass_extension_and_zero_padding_still_verify():
+    from mission_agent.meme.holder_binary import verified_holder_mass
+    r=source();r['program_id']=P22;rpc=RPC(r)
+    # MetadataPointer is two 32-byte values. Zero bytes at the end are padding.
+    change_data(rpc.mint,lambda b:b.__setitem__(slice(165,None),b"\x01\x12\x00\x40\x00"+bytes(64+7)))
+    out=run(r,rpc)
+    assert out['token_2022_extension_types']==[18] and verified_holder_mass(out,MINT)
+    assert not verified_holder_mass({k:v for k,v in out.items() if k!='token_2022_tlv_version'},MINT)
+    for forged in ([{}],[True],[18,18],[65535]):
+        assert not verified_holder_mass({**out,'token_2022_extension_types':forged},MINT)
+
+
 def test_token2022_transfer_fee_extension_does_not_prove_economic_mass():
     from mission_agent.meme.holder_binary import token2022_extension_types
     r=source();r['program_id']=P22;rpc=RPC(r)

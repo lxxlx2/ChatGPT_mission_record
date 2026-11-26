@@ -60,3 +60,22 @@ Python 专项 224 通过，备用 Chromium 用例跳过。Node 257 通过。Mac 
 Solscan Chrome 的钱包原始交易表可以打开，时间列提供 UTC 自定义日期。浏览器操作未取得覆盖完整窗口的分页结果，当前的独立证据仍是此前 GMGN 对上的 3 笔买入和 1 笔卖出。原始证据、资格文件和备份留在 Mac 隔离目录，8766 切换仍待全范围验收。 [Solscan 原始历史说明](https://info.solscan.io/solscan-supports-full-historical-data-search/)
 
 专项回归 `python -B -m pytest -q -p no:cacheprovider tests/test_frank_rebuild_buys.py tests/test_frank_rebuild_delivery.py tests/test_frank_scanner_reconciliation.py tests/test_frank_archived_wallet_facts.py` 为 60 通过、1 项备用浏览器测试跳过。Node 界面回归 257 通过。Mac Chrome 158 使用由 `DashboardState` 从冻结备份读出的 3 笔结果进行隔离回放，验证 2 笔显示原币支付、1 笔只显示数量，以及按完整 Mint 筛选。测试未监听端口，也无外部请求、POST 或页内异常。冻结账本哈希保持一致。
+
+## 2026-11-26 全量原件复算与分类型查询
+
+比较基线 `7d8fb155397155fb79141fbdc91999c479377deb`。按冻结账本的全部记录复算和对照结果使用以下口径。
+
+| 项目 | 结果 |
+| --- | --- |
+| 买入原件和钱包流水 | 冻结的 10,895 条索引全部与本机归档核对签名、钱包、槽位、时间和标准化交易哈希。复算的 125 笔买入与索引逐笔一致，覆盖 51 个 Mint。另复算出 119 笔卖出、5,688 项普通转账、4,119 项创建代币账户、313 笔失败及 531 项未定。该比对覆盖账本已有记录。 |
+| 真实资格与隔离分页 | 6 个 Mint 有公开来源支持 Meme 资格，2 个有明确排除依据，另有 43 个仍待核。真实资格文件在隔离账本上显示 34 笔，26 笔有直付证据；余 8 笔仅显示取得数量。分页压力场景暂按其余 43 个为合格并保留已知排除，Chrome 读完 49 个 Mint 的 117 笔、4 页，无重复缺页，并测了 3 个完整 Mint 筛选。 |
+| 45 个不同 CA 的行情 | 排除可查验收归档已有的 CA 和此前已核实样本，使用已有 DexScreener 免费 GET 两批取回行情，42 个有基础侧主池、3 个无可用基础侧交易对。主池来源标记覆盖 PumpSwap 29、Raydium 7、Meteora 5、Orca 1。Mac Chrome 用冻结的原始行情和模拟已核 Mint 状态走 45 个报告回读，42 个有价、3 个不可用，无串币、页面异常或外部请求。链上持仓和合约状态未通过此行情回放验收。 [DexScreener 公开接口](https://docs.dexscreener.com/api/reference) |
+| 迁移预检 | 在真实冻结备份跑现有 `check_snapshot`，数据库完整性、Frank 游标与模型版本衔接通过，备份哈希一致。目标服务器安装及运行切换未验收。 |
+
+新核实的公开类别涵盖社区币、同名不同 CA 和明确的协议代币。示例可按原始发行资料核对。 [JEANPHIL 发行](https://pump.fun/coin/GTBxUiw6wJdmmkCGZgRHLyYxqu1vG4KtRpeox6yDpump) · [DCTY 合约](https://solscan.io/token/9hjBLBrc7WZW2H8UQvBAvG5WiTZotXUv2Bdcn4f4pump) · [另一个 Dacity 合约](https://solscan.io/token/nxPqZ4F7ux8Vph5NFu25rEP6Kx9Gr1U6Fmj36Rjpump) · [Metaplex 官方白皮书](https://whitepaper.metaplex.foundation/whitepaper.pdf#page=14)
+
+跨协议离线回归后修正两处错误。Token-2022 二进制持仓核对会将截断扩展、零填充后的非零数据、重复或未知扩展类型保留为未核实，旧报告缺新校验字段时保留数据与来源，撤下由旧二进制证明生成的精确比例。Pump.fun 发行读取只有在收到明确带槽位的空账户或已核对的账户归属时才说明该槽位的状态，残缺响应保留为不可用。 [Token-2022 上游扩展定义](https://github.com/solana-program/token-2022/blob/main/interface/src/extension/mod.rs)
+
+独立钱包参考的公开 GET 仍未补齐。Solscan 增强交易入口返回 HTTP 401，SolanaFM 返回 HTTP 403。待补范围仍包括同钱包完整交易分母、独立同槽持有人和池、复杂协议真实样本及端到端通知覆盖。运行切换保持 NO_GO。 [Solscan 增强交易入口](https://pro-api.solscan.io/pro-api-docs/v2.0/playground/v2-account-transactions-enhanced) · [SolanaFM 钱包交易说明](https://docs.solana.fm/reference/get_account_transactions)
+
+复现命令为 `python -B -m pytest -q -p no:cacheprovider tests/test_meme_holder_binary.py tests/test_meme_launch_origin.py` 和 `node --test tests/*_ui.mjs tests/test_frank_ca_get_resume.mjs tests/test_frank_ca_report_render.mjs`，分别通过 56 和 259 项。全量 `pytest -q -p no:cacheprovider --tb=no tests` 在拦截外部网络的进程内完成，2,973 通过，1 项备用 Chromium 测试跳过。Mac Chrome 的 45 个市场卡和 117 笔买入分页验收单独执行，证据范围见上表。

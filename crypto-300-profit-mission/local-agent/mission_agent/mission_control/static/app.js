@@ -1836,9 +1836,13 @@ function renderLaunchIdentity(report) {
   if (!l || l.version!==1) return '';
   const p=l.pump||{},m=l.metadata||{};
   const acct=a=>a?'<code>'+esc(short(a,6,5))+'</code> <a class="link-btn compact" href="https://solscan.io/account/'+encodeURIComponent(a)+'" target="_blank" rel="noreferrer">↗</a>':'未记录';
+  const checkedSlot=Number.isSafeInteger(p.slot) && p.slot>0;
   const pump=p.status==='VERIFIED_CHAIN_STATE'
     ? '<p>Pump.fun 发射：bonding curve '+acct(p.bonding_curve)+'（由 Mint 推导的 PDA，链上状态已核对）；'+(p.complete?'曲线完成标记为真，迁移状态尚未核实':'仍在曲线阶段')+'。</p><p>链上创建者字段：'+acct(p.creator)+'（创建者手续费接收地址，不等于实际控制人）。</p>'
-    : p.status==='NOT_PUMP_LAUNCH' ? '<p>未找到该 Mint 的 Pump.fun bonding curve 账户，非 Pump.fun 发射或已关闭。</p>' : '<p>发射台身份读取未完成。</p>';
+    : p.status==='NOT_PUMP_LAUNCH' && checkedSlot && p.account_present===false && p.reason==='BONDING_CURVE_ACCOUNT_ABSENT'
+      ? '<p>该槽位未找到此 Mint 的 Pump.fun bonding curve 账户。历史发射身份仍待核实。</p>'
+      : p.status==='NOT_PUMP_LAUNCH' && checkedSlot && p.account_present===true && p.reason==='BONDING_CURVE_OWNER_MISMATCH'
+        ? '<p>该槽位的同地址账户属于其他程序。历史发射身份仍待核实。</p>' : '<p>发射台身份读取未完成。</p>';
   const meta=m.status==='VERIFIED_CHAIN_STATE'
     ? '<p>链上元数据：'+esc((m.name||'')+' / '+(m.symbol||''))+'；元数据'+(m.is_mutable===false?'不可修改':m.is_mutable===true?'仍可被更新权限修改':'可变性未知')+'；来源 '+esc(m.source==='TOKEN_2022_TOKEN_METADATA_EXTENSION'?'Token-2022 元数据扩展':'Metaplex 元数据账户')+'。</p>'
     : '<p>链上元数据未读取到。</p>';
@@ -2253,8 +2257,13 @@ function holderBinaryMassView(c,mint,enumerationHash) {
   const uint=v=>typeof v==='string' && /^[0-9]{1,20}$/.test(v) && BigInt(v)<=18446744073709551615n;
   const hash=v=>typeof v==='string' && /^[0-9a-f]{64}$/.test(v);
   const owners=Array.isArray(c.owners)?c.owners:[],records=Array.isArray(c.records)?c.records:[],selected=Array.isArray(c.selected_accounts)?c.selected_accounts:[];
+  const extensions=c.token_2022_extension_types;
+  const verifiedToken2022=c.program_id==='TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb' && c.token_2022_tlv_version===1 &&
+    c.token_2022_mass_semantics==='NO_WITHHELD_FEE_OR_CONFIDENTIAL_EXTENSION' && Array.isArray(extensions) &&
+    extensions.every(kind=>Number.isInteger(kind) && kind>=1 && kind<=28 && ![1,2,4,5,16,17,24].includes(kind)) &&
+    new Set(extensions).size===extensions.length;
   let verified=c.version===1 && c.status==='RECONCILED_NONZERO_BALANCE_MASS' && c.full_positive_mass_reconciled===true && c.all_selected_accounts_decoded===true &&
-    (c.program_id==='TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA' || (c.program_id==='TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb' && c.token_2022_mass_semantics==='NO_WITHHELD_FEE_OR_CONFIDENTIAL_EXTENSION' && Array.isArray(c.token_2022_extension_types) && !c.token_2022_extension_types.some(x=>[1,2,4,5,16,17,24].includes(x)))) && c.mint===mint && c.independent_provider===false &&
+    (c.program_id==='TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA' || verifiedToken2022) && c.mint===mint && c.independent_provider===false &&
     hash(c.enumeration_response_sha256) && c.enumeration_response_sha256===enumerationHash && hash(c.response_sha256) &&
     Number.isSafeInteger(c.snapshot_slot) && c.snapshot_slot>0 && uint(c.mint_supply_raw) && BigInt(c.mint_supply_raw)>0n && c.selected_total_raw===c.mint_supply_raw &&
     (c.flags===undefined || Array.isArray(c.flags)) && records.length>0 && records.length<=99 && records.length===c.selected_account_count && selected.length===records.length && !(c.flags || []).includes('WRAPPED_NATIVE_ACCOUNT');

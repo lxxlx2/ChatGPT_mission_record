@@ -36,17 +36,27 @@ def pump_bonding_curve_address(mint):
 
 
 def collect_pump_launch(mint,rpc):
-    """One getAccountInfo; absence means 'not a Pump.fun bonding-curve mint'."""
+    """One getAccountInfo; only a bound finalized reply establishes absence."""
     if not valid_pubkey(mint):return {'version':1,'status':'UNAVAILABLE','reason':'MINT_INVALID'}
     curve,bump=pump_bonding_curve_address(mint)
     out={'version':1,'launchpad':'PUMP_FUN','program':PUMP_PROGRAM,'bonding_curve':curve,'bump':bump,
          'derivation':'PDA(["bonding-curve",mint],program)','source':'SOLANA_FINALIZED_ACCOUNT_STATE'}
     result=rpc.call('getAccountInfo',[curve,{'encoding':'base64','commitment':'finalized'}],ttl=60)
-    value=(result or {}).get('value') if isinstance(result,dict) else None
-    out['slot']=((result or {}).get('context') or {}).get('slot') if isinstance(result,dict) else None
+    context = result.get("context") if isinstance(result, dict) else None
+    slot = context.get("slot") if isinstance(context, dict) else None
+    if type(slot) is not int or slot <= 0 or "value" not in result:
+        return {**out, "status": "UNAVAILABLE", "reason": "BONDING_CURVE_RESPONSE_UNVERIFIED"}
+    out["slot"] = slot
+    value = result["value"]
+    out["account_present"] = value is not None
     if value is None:return {**out,'status':'NOT_PUMP_LAUNCH','reason':'BONDING_CURVE_ACCOUNT_ABSENT'}
+    owner = value.get("owner") if isinstance(value, dict) else None
+    if not valid_pubkey(owner):
+        return {**out, "status": "UNAVAILABLE", "reason": "BONDING_CURVE_RESPONSE_UNVERIFIED"}
+    if owner != PUMP_PROGRAM:
+        return {**out, "status": "NOT_PUMP_LAUNCH", "reason": "BONDING_CURVE_OWNER_MISMATCH"}
     try:state=decode_bonding_curve(value)
-    except (ValueError,TypeError):return {**out,'status':'NOT_PUMP_LAUNCH','reason':'BONDING_CURVE_LAYOUT_MISMATCH'}
+    except (ValueError,TypeError):return {**out,'status':'UNAVAILABLE','reason':'BONDING_CURVE_LAYOUT_MISMATCH'}
     return {**out,'status':'VERIFIED_CHAIN_STATE',**state,
             'role_scope':'BONDING_CURVE_IS_PROTOCOL_VAULT; CREATOR_FIELD_IS_ONCHAIN_CREATOR_NOT_BENEFICIAL_CONTROL_PROOF'}
 

@@ -1055,6 +1055,31 @@ test('binary holder proof shows actual bank and unfiltered mass without independ
   assert.match(html,/100%/);assert.match(html,/100.*101/);assert.match(html,/同一 RPC/);assert.match(html,/独立提供方/);
 });
 
+test('Token-2022 percentages require the new TLV proof and a recognized extension list',()=>{
+  const h=harness(),r=binaryHolderReportForUi(),c=r.holder_rankings.raw_balance_check;
+  c.program_id='TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb';
+  c.token_2022_mass_semantics='NO_WITHHELD_FEE_OR_CONFIDENTIAL_EXTENSION';
+  c.token_2022_extension_types=[18];
+  h.context.renderClusterReport(r);
+  assert.doesNotMatch(h.element('cluster-rankings').innerHTML,/同批非零余额已覆盖|100%/);
+  c.token_2022_tlv_version=1;
+  h.context.renderClusterReport(r);
+  assert.match(h.element('cluster-rankings').innerHTML,/同批非零余额已覆盖/);
+  for(const fields of [[18,18],[32767],[{}],[1]]) {
+    c.token_2022_extension_types=fields;
+    h.context.renderClusterReport(r);
+    assert.doesNotMatch(h.element('cluster-rankings').innerHTML,/同批非零余额已覆盖|100%/);
+  }
+});
+
+test('archived inconclusive Pump response and finalized absence have distinct display',()=>{
+  const h=harness(), report={launch_identity:{version:1,pump:{status:'NOT_PUMP_LAUNCH',reason:'BONDING_CURVE_ACCOUNT_ABSENT'}}};
+  assert.match(h.context.renderLaunchIdentity(report),/发射台身份读取未完成/);
+  report.launch_identity.pump.slot=777;
+  report.launch_identity.pump.account_present=false;
+  assert.match(h.context.renderLaunchIdentity(report),/该槽位未找到.*历史发射身份仍待核实/);
+});
+
 test('partial, malformed and legacy binary proofs cannot retain a precise mass percentage',()=>{
   const h=harness(),r=binaryHolderReportForUi();h.context.renderClusterReport(r);
   r.holder_rankings.raw_balance_check.selected_total_raw='99';h.context.renderClusterReport(r);
