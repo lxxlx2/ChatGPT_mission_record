@@ -13,6 +13,7 @@ from .wallet_activity import connect
 from .wallet_activity_paging import _source
 from ..meme.market_parity import number
 from ..signals.buy_admission import EXCLUDED_MINTS, admit_buy, exact_mint, qualification
+from ..signals.category_evidence import read_category_evidence
 from ..signals.classifier import USDT
 from ..signals.policy import USDC
 from ..signals.reconciliation import _unique_pairs
@@ -123,13 +124,17 @@ def _needs_archive_replay(event, identity):
 
 
 def read_buys(database, qualifications, *, as_of, days="7", mint=None, cursor=None,
-              archive_root=None, legacy_archive_root=None, usd_evidence_path=None):
+              archive_root=None, legacy_archive_root=None, usd_evidence_path=None,
+              category_evidence_path=None):
     if days not in ("1", "7", "30", "all") or (mint is not None and not exact_mint(mint)):
         raise ValueError("INVALID_BUY_QUERY")
+    assets = read_category_evidence(category_evidence_path, as_of)
     try:
-        assets = qualification(qualifications, as_of)
+        # Deliberate manual choices, including PENDING, take precedence.
+        assets.update(qualification(qualifications, as_of))
     except FileNotFoundError:
-        return {"status": "QUALIFICATION_UNAVAILABLE", "rows": [], "next_cursor": None}
+        if not assets:
+            return {"status": "QUALIFICATION_UNAVAILABLE", "rows": [], "next_cursor": None}
     observations, evidence_sha = _read_usd_evidence(usd_evidence_path)
     source = _source(database)
     binding = hashlib.sha256(repr((source, days, mint, sorted(assets.items()),

@@ -1268,7 +1268,8 @@ class DashboardState:
         return read_buys(self.frank.database, qualifications, as_of=int(time.time()),
                          archive_root=self.evidence_manifests.archive_root,
                          legacy_archive_root=self.evidence_manifests.legacy_archive_root,
-                         usd_evidence_path=self.control_root / "frank-buy-usd-evidence.json", **query)
+                         usd_evidence_path=self.control_root / "frank-buy-usd-evidence.json",
+                         category_evidence_path=self.control_root / "frank-buy-category-evidence.json", **query)
 
     def frank_signed_activity(self, days=1, *, page_size=None, cursor=None, kind="ALL", mint=None):
         """Complete local indexed ranges; optional pages never cap total history."""

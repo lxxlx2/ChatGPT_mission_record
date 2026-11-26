@@ -480,3 +480,58 @@ def test_exact_official_backpack_exclusion_overrides_a_stale_positive_label(tmp_
     monkeypatch.setattr("mission_agent.signals.engine.evaluate",unexpected_evaluation)
     Engine(ledger,policy,rebuild_assets=qualification(cfg,AS_OF)).drain()
     assert ledger.db.execute("SELECT count(*) FROM outbox").fetchone()[0] == 0
+
+
+def test_dashboard_imports_exact_category_receipts_without_manual_prefill(tmp_path):
+    from mission_agent.signals.category_evidence import COINGECKO_SOLANA
+
+    prod, control = tmp_path/"prod", tmp_path/"control"
+    prod.mkdir()
+    control.mkdir()
+    now = int(time.time())
+    db = prod/"forward.sqlite"
+    ledger = Ledger(db)
+    launch, wrong, conflict, excluded, future = [_b58(bytes([n])*32) for n in range(5, 10)]
+    mints = [MINT, launch, wrong, conflict, excluded, future, BACKPACK_MINT]
+    for i, mint in enumerate(mints, 1):
+        put(ledger, i, mint=mint, at=now-1)
+    before = hashlib.sha256(db.read_bytes()).hexdigest()
+
+    def receipt(mint, categories, *, detail=None, when=now):
+        body = json.dumps({
+            "name": "Same Name", "preview_listing": False,
+            "platforms": {"solana": mint}, "detail_platforms": {"solana": {"contract_address": detail or mint}},
+            "categories": categories,
+        })
+        return {"mint": mint, "observed_at": when, "url": COINGECKO_SOLANA+mint,
+                "body": body, "sha256": hashlib.sha256(body.encode()).hexdigest()}
+
+    path = control/"frank-buy-category-evidence.json"
+    evidence = [
+        receipt(MINT, ["Meme", "Solana Meme"]),
+        receipt(launch, ["Pump.fun Ecosystem"]),
+        receipt(wrong, ["Meme"], detail=MINT),
+        receipt(conflict, ["Meme"]),
+        receipt(conflict, ["Stablecoins"]),
+        receipt(excluded, ["Liquid Staking Tokens"]),
+        receipt(future, ["Meme"], when=now+60),
+        receipt(BACKPACK_MINT, ["Meme"]),
+        receipt(MINT, ["Pump.fun Ecosystem"], when=now-1),
+    ]
+    def write(data):
+        path.write_text(json.dumps({"version": 1, "records": data}))
+
+    write(evidence)
+    dashboard = DashboardState(prod, control)
+    row, = dashboard.frank_buys()["rows"]
+    assert row["mint"] == MINT and row["name"] == "Same Name" and row["paid"] == "0.5"
+    evidence[0]["sha256"] = "0"*64
+    write(evidence)
+    assert dashboard.frank_buys()["rows"] == []
+    manual = control/"frank-buy-qualifications.json"
+    config(manual, as_of=now)
+    assert [row["mint"] for row in dashboard.frank_buys()["rows"]] == [MINT]
+    write([receipt(MINT, ["Meme"])])
+    config(manual, exclude=True, as_of=now)
+    assert dashboard.frank_buys()["rows"] == []
+    assert hashlib.sha256(db.read_bytes()).hexdigest() == before
