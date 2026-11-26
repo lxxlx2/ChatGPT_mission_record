@@ -105,3 +105,30 @@ FRANK_TEST_CHROMIUM="/Applications/Google Chrome.app/Contents/MacOS/Google Chrom
   tests/test_frank_ca_market_series.py tests/test_frank_ca_scoped_analyzer.py \
   tests/test_frank_ca_launch_flow.py
 ```
+
+## 2026-11-26 三线联测
+
+| 范围 | 固定源码和基线 | 交付 |
+| --- | --- | --- |
+| 买入与人物隔离 | `07fd624e8c9d85104c5324452ea03633737171bc` 基于 `efb233a1306716cf9b5f879b6f8448f0950092bd` | [Draft PR #255](https://github.com/lxxlx2/ChatGPT_mission_record/pull/255) |
+| CA 分流与行情刷新 | `cd9d341bd9fa538ba7487dbe45c72e567a6ba8e6` 基于 `07fd624e8c9d85104c5324452ea03633737171bc` | [Draft PR #256](https://github.com/lxxlx2/ChatGPT_mission_record/pull/256) |
+| 联测与时效证据 | `278dcb5eec0597f8338525ed8fe1de5c06a7eb88` 基于 `cd9d341bd9fa538ba7487dbe45c72e567a6ba8e6` | [Draft PR #257](https://github.com/lxxlx2/ChatGPT_mission_record/pull/257) |
+
+### Mac 隔离回归
+
+在固定 SHA 的 `crypto-300-profit-mission/local-agent` 中执行。命令使用本机离线依赖缓存，`FRANK_PLAYWRIGHT_MODULE` 指向本机已装的 Node Playwright。也可省略该变量，使用当前 Node 环境可解析的 `playwright`。
+
+```zsh
+uv run --isolated --offline --no-project --with pytest==8.3.5 --with playwright \
+  python -B -m scripts.accept_frank_rebuild \
+  --source-sha 278dcb5eec0597f8338525ed8fe1de5c06a7eb88 --chrome
+```
+
+- Python 328 项通过。覆盖真实 Scanner 解析路径的合成签名、同签名多钱包、对象时钟和游标隔离、BP 模拟投递零尝试、迟到资格不释放旧通知，以及完整尽调阻塞时概览和钱包任务完成。
+- 机器矩阵 Node 207 项通过。Mac Chrome 158 的真实本机 HTTP 测试通过 1 项。另一个 Chrome 隔离会话使用两枚合成 CA，通过切池、切周期、显式刷新、双向分页与 A→B→A 切换，覆盖桌面、320/390 像素和键盘焦点。该会话没有监听端口，截获外部请求或写请求数为 0。
+- 使用 `--require-wallet-window` 且缺失独立窗口时，程序以 2 退出。错误源码 SHA 以 1 退出。钱包参考不齐时报告 `BLOCKED`，未设置阈值时 SLA 为 `NOT_SCORED`。
+- 补跑 `node --test --test-reporter=spec tests/*.mjs` 时，260 项通过，旧 `test_frank_ca_browser.mjs` 在启动阶段等待历史入口可见时超时。对基线 `efb233a1306716cf9b5f879b6f8448f0950092bd` 单跑该脚本复现相同超时。该脚本当前断言历史按钮默认可见，现有页面把它收在默认折叠区。此项仍失败。
+
+### 结果与待补证据
+
+本机定向回归通过。合成测试只证明各机制在测试条件下按预期运行。可信源文件能自动计算分类和美元，当前缺少一条持续提供全量新币分类和成交秒美元观察的免费来源链路。既有 Scanner 备份只有窗口请求，独立对账窗口标记 `NOT_CAPTURED`。真实行情耗时、持有人和池的同槽对账以及收件端证据依旧缺失。总状态 `PARTIAL`，生产 `NO_GO`。
