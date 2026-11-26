@@ -18,14 +18,21 @@ def main(argv=None):
     parser.add_argument("--buy-qualifications", type=Path, help="Optional pinned offline buy qualification file")
     parser.add_argument("--buy-qualifications-sha256")
     parser.add_argument("--buy-qualification-as-of", type=int, help="Qualification observation cutoff in Unix seconds")
+    parser.add_argument("--buy-archive-root", type=Path, help="Trusted absolute archive directory for legacy buys")
+    parser.add_argument("--buy-legacy-archive-root", type=Path, help="Optional second trusted archive directory")
     args = parser.parse_args(argv)
     buy_options = (args.buy_qualifications, args.buy_qualifications_sha256, args.buy_qualification_as_of)
     if any(x is not None for x in buy_options) and not all(x is not None for x in buy_options):
         parser.error("supply all three buy qualification options or none")
+    if ((args.buy_archive_root is not None and (None in buy_options or not args.buy_archive_root.is_absolute()))
+            or (args.buy_legacy_archive_root is not None
+                and (args.buy_archive_root is None or not args.buy_legacy_archive_root.is_absolute()))):
+        parser.error("supply buy qualification inputs and absolute archive paths, with the primary archive first")
     try:
         result = reconcile_snapshot(args.snapshot, args.snapshot_sha256, args.reference,
                                     args.reference_sha256, scanner_source_id=args.scanner_source_id,
-                                    buy_qualifications=buy_options if args.buy_qualifications is not None else None)
+                                    buy_qualifications=buy_options if args.buy_qualifications is not None else None,
+                                    buy_archive_root=args.buy_archive_root, buy_legacy_archive_root=args.buy_legacy_archive_root)
     except ReconciliationError as error:
         print(json.dumps({"status": "INVALID_INPUT", "reason": str(error)}))
         return 2

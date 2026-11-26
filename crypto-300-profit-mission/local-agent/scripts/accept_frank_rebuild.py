@@ -17,6 +17,8 @@ from mission_agent.signals.reconciliation import ReconciliationError, reconcile_
 ROOT = Path(__file__).resolve().parents[1]
 PYTHON_TESTS = (
     "tests/test_frank_local_signals.py", "tests/test_frank_v1.py",
+    "tests/test_frank_category_capture.py", "tests/test_frank_historical_usd_tick.py",
+    "tests/test_frank_historical_holder_compare.py", "tests/test_meme_market_and_rpc.py",
     "tests/test_frank_rebuild_buys.py", "tests/test_frank_rebuild_delivery.py",
     "tests/test_frank_scanner_reconciliation.py", "tests/test_frank_wallet_reconciliation_v2.py",
     "tests/test_ca_job_checkpoint.py", "tests/test_frank_ca_job_rpc_budget.py",
@@ -58,8 +60,10 @@ def _chrome():
     http = _run((sys.executable, "-B", "-m", "pytest", "-q", "-p", "no:cacheprovider",
                  "tests/test_frank_rebuild_buys.py::test_browser_default_entry_filters_and_prefills_ca"),
                 env={**os.environ, "FRANK_TEST_CHROMIUM": str(binary)})
-    status = "PASS" if web["status"] == http["status"] == "PASS" else "FAIL"
-    return {"status": status, "intercepted_assets": web, "local_http": http}
+    ca = _run(("node", "tests/test_frank_ca_browser.mjs"),
+              env={**os.environ, "FRANK_PYTHON": sys.executable})
+    status = "PASS" if web["status"] == http["status"] == ca["status"] == "PASS" else "FAIL"
+    return {"status": status, "intercepted_assets": web, "local_http": http, "ca_worker": ca}
 
 
 def _wallet(args):
@@ -71,6 +75,7 @@ def _wallet(args):
             args.snapshot, args.snapshot_sha256, args.reference, args.reference_sha256,
             scanner_source_id=args.scanner_source_id,
             buy_qualifications=evidence if args.qualifications is not None else None,
+            buy_archive_root=args.buy_archive_root, buy_legacy_archive_root=args.buy_legacy_archive_root,
         )
     except ReconciliationError:
         return {"status": "FAIL", "reason": "WINDOW_INPUT_REJECTED"}
@@ -99,6 +104,8 @@ def main(argv=None):
     parser.add_argument("--qualifications", type=Path)
     parser.add_argument("--qualifications-sha256")
     parser.add_argument("--qualification-as-of", type=int)
+    parser.add_argument("--buy-archive-root", type=Path, help="Trusted absolute archive directory for legacy buys")
+    parser.add_argument("--buy-legacy-archive-root", type=Path, help="Optional second trusted archive directory")
     args = parser.parse_args(argv)
     window = (args.snapshot, args.snapshot_sha256, args.reference,
               args.reference_sha256, args.scanner_source_id)
@@ -107,6 +114,10 @@ def main(argv=None):
             or (any(value is not None for value in qualification)
                 and (None in qualification or None in window))):
         parser.error("supply all of the window inputs, and all qualification inputs if used")
+    if ((args.buy_archive_root is not None and (None in qualification or not args.buy_archive_root.is_absolute()))
+            or (args.buy_legacy_archive_root is not None
+                and (args.buy_archive_root is None or not args.buy_legacy_archive_root.is_absolute()))):
+        parser.error("supply buy qualification inputs and absolute archive paths, with the primary archive first")
     threshold = args.max_index_p95_seconds
     if threshold is not None and (not math.isfinite(threshold) or threshold <= 0):
         parser.error("P95 threshold must be finite and positive")

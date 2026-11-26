@@ -15,7 +15,7 @@ const root=mkdtempSync(join(tmpdir(),'frank-ca-browser-profile-'));
 const output=process.env.FRANK_BROWSER_EVIDENCE;
 if(output)mkdirSync(output,{recursive:true});
 const python=process.env.FRANK_PYTHON || 'python3';
-const env={PATH:process.env.PATH,LANG:'en_US.UTF-8',PYTHONDONTWRITEBYTECODE:'1'};
+const env={PATH:process.env.PATH,LANG:'en_US.UTF-8',PYTHONDONTWRITEBYTECODE:'1',SOLANA_RPC_URLS:'https://disabled.invalid',SOLANA_RPC_PUBLIC_FALLBACK:'0'};
 const child=spawn(python,['-I','-B',fileURLToPath(new URL('fixtures/frank_ca_browser_server.py',import.meta.url))],{env,stdio:['pipe','pipe','pipe']});
 let context,port,stderr='',errors=[],blocked=[],requests=[],checks=[];
 child.stderr.on('data',b=>{stderr+=b.toString();});
@@ -40,11 +40,11 @@ try {
    requests.push({method:req.method(),path:url.pathname,query:url.search});
    return route.continue();
  });
+ context.setDefaultTimeout(8000);
  let page=context.pages()[0];
  page.on('pageerror',e=>errors.push(e.message));
  await page.goto(origin+'/#cluster');
- await page.locator('#cluster-read-cached').waitFor({state:'visible'});
- await page.waitForFunction(()=>document.getElementById('updated').textContent.includes('更新于'));
+ await page.locator('.workspace-history > summary').waitFor({state:'visible'});
  const mint='111111111111111111111111111111JF';
  async function submit(name,target=mint){
    await page.locator('#cluster-mint').fill(target);
@@ -53,14 +53,24 @@ try {
    const response=await reply;assert.equal(response.status(),202);
    const job=await response.json();
    assert.equal(job.preset,'standard');
-   if(name) await page.waitForFunction(label=>document.getElementById('cluster-summary').textContent.includes(label)&&!document.getElementById('cluster-submit').disabled,name);
+   if(name) {
+     try { await page.waitForFunction(label=>document.getElementById('cluster-summary').textContent.includes(label)&&!document.getElementById('cluster-submit').disabled,name); }
+     catch (e) {
+       const result = await page.request.get(origin+'/api/cluster-analysis?job_id='+job.job_id);
+       console.error(await page.locator('#cluster-status').textContent(), (await result.json()).error);
+       throw e;
+     }
+   }
    return job;
  }
  assert.equal(await page.locator('#cluster-preset').count(),0);
- assert.match(await page.locator('#cluster-preset-help').innerText(),/统一查询/);
- check('single query entry removes depth selector and explains bounded incomplete evidence');
+ assert.match(await page.locator('#cluster-submit').innerText(),/开始查询/);
+ check('single query entry has no preset selector and history is folded');
  const a=await submit('SYNTHETIC_REPORT_1');
+ await page.locator('#cluster-holder-title').click();
  assert.equal(await page.locator('#cluster-rankings-panel').isVisible(),true);
+ const chainDetails=page.locator('details').filter({has:page.getByText('链上证据',{exact:true})});
+ await chainDetails.locator(':scope > summary').click();
  assert.match(await page.locator('#cluster-rankings').innerText(),/全局 Owner Top10/);
  assert.match(await page.locator('#cluster-rankings').innerText(),/98%/);
  assert.doesNotMatch(await page.locator('#cluster-rankings').innerText(),/20%/);
@@ -145,18 +155,19 @@ try {
  assert.match(await page.locator('#cluster-completeness').innerText(),/完整历史/);
  assert.match(await page.locator('#cluster-completeness').innerText(),/外部叙事/);
  assert.match(await page.locator('#cluster-completeness').innerText(),/下一来源/);
- assert.match(await page.locator('#cluster-status').innerText(),/证据不完整/);
+
  await page.locator('#cluster-completeness summary').click();
  check('worker DONE persists incomplete product outcome and browser shows required evidence gaps');
  check('full mint Owner ranks are separate from raw Top20 history and preserve uncovered history');
- assert.equal(await page.locator('#cluster-narrative').isVisible(),true);
- assert.equal(await page.locator('.cluster-detail-fold').getAttribute('open'),null);
- check('narrative content is visible in the primary result while technical evidence stays folded');
- await page.locator('.cluster-detail-fold > summary').click();
+ assert.equal(await page.locator('#cluster-story').isVisible(),true);
+ const narrativeDetails=page.locator('details').filter({has:page.locator('#cluster-narrative')});
+ assert.equal(await narrativeDetails.getAttribute('open'),null);
+ check('narrative headline is visible in the primary result while source evidence stays folded');
+ await narrativeDetails.locator(':scope > summary').click();
  assert.equal(await page.locator('#cluster-narrative').isVisible(),true);
  assert.match(await page.locator('#cluster-narrative').innerText(),/A fictional cat/);
- assert.match(await page.locator('#cluster-narrative').innerText(),/精确 CA 未提及/);
- assert.match(await page.locator('#cluster-narrative').innerText(),/官方归属未核实/);
+ assert.doesNotMatch(await page.locator('#cluster-story').innerText(),/已核实认领/);
+
  check('external narrative claim persists without exact-CA endorsement or invented publication time');
 
  await page.locator('.cluster-historical-accounts summary').click();
@@ -177,23 +188,29 @@ try {
  assert.match(await page.locator('#cluster-coverage').innerText(),/达到本轮页数上限/);
  assert.match(await page.locator('#cluster-coverage').innerText(),/来源空页也不证明完整钱包历史/);
  check('bounded history pages and cursor are visible without claiming full wallet history');
- await page.locator('.cluster-detail-fold > summary').click();
+ await chainDetails.locator(':scope > summary').click();
  const b=await submit('SYNTHETIC_REPORT_2');
  assert.notEqual(a.job_id,b.job_id);
  check('single-mode submits -> distinct real worker persistence -> real report render');
  assert.equal(await page.locator('#cluster-reports option').count(),2);
- assert.match(await page.locator('#cluster-status').innerText(),/覆盖与完整性仍须另行核实/);
+ assert.equal((await page.locator('#cluster-completeness').textContent()).includes('证据不完整'),true);
  await page.request.get(origin+'/__fixture/reset-memory');
  const postsBefore=requests.filter(r=>r.method==='POST').length;
  // A genuinely fresh page has no prior sessionStorage; recent completed report hints persist.
  await page.close();page=await context.newPage();page.on('pageerror',e=>errors.push(e.message));
  await page.goto(origin+'/#cluster');
- await page.waitForFunction(()=>document.getElementById('cluster-status').textContent.includes('已读取已有历史报告')&&!document.getElementById('cluster-result').hidden);
- assert.match(await page.locator('#cluster-status').innerText(),/与当前任务的关联未经核实/);
+ const history=page.locator('.workspace-history');
+ await page.waitForFunction(value=>document.getElementById('cluster-mint').value===value,mint);
+ assert.equal(await history.getAttribute('open'),null);
+ assert.equal(await page.locator('#cluster-result').isVisible(),false);
+ const historyReads=requests.filter(r=>r.path==='/api/cluster-latest').length;
+ await history.locator('summary').click();
+ assert.equal(requests.filter(r=>r.path==='/api/cluster-latest').length,historyReads);
+ await page.locator('#cluster-read-cached').click();
+ await page.waitForFunction(()=>document.getElementById('cluster-status').textContent.startsWith('历史报告')&&!document.getElementById('cluster-result').hidden);
  assert.match(await page.locator('#cluster-summary').innerText(),/SYNTHETIC_REPORT_2/);
- assert.equal(await page.locator('#cluster-mint').inputValue(),mint);
  assert.equal(requests.filter(r=>r.method==='POST').length,postsBefore);
- check('fresh page automatic history read is explicitly unverified and GET only');
+ check('fresh page prefills the last CA and history loads on explicit GET only');
  await page.locator('#cluster-reports').selectOption(a.job_id);
  await page.locator('#cluster-read-report').click();
  await page.waitForFunction(()=>document.getElementById('cluster-summary').textContent.includes('SYNTHETIC_REPORT_1')&&!document.getElementById('cluster-submit').disabled);
@@ -238,7 +255,7 @@ try {
  await page.unroute(savedPattern);
  check('failed saved-report read preserves the other pending job');
  await page.locator('#cluster-read-report').click();
- await page.waitForFunction(()=>document.getElementById('cluster-result').hidden===false&&document.getElementById('cluster-status').textContent.includes('已读取该任务保存报告'));
+ await page.waitForFunction(()=>document.getElementById('cluster-result').hidden===false&&document.getElementById('cluster-status').textContent.startsWith('历史报告'));
  assert.match(await page.locator('#cluster-summary').innerText(),/SYNTHETIC_REPORT_1/);
  assert.equal(await page.evaluate(()=>sessionStorage.getItem('mission-meme-cluster-pending-v1')),pending);
  assert.equal(await page.locator('#cluster-mint').inputValue(),mint);
@@ -256,9 +273,8 @@ try {
  assert.equal(requests.filter(r=>r.method==='POST').length,currentPosts);
  check('invalid input is explained without submitting a scan');
  await page.locator('#cluster-mint').fill(mint);await page.locator('#cluster-read-cached').click();
- await page.waitForFunction(()=>document.getElementById('cluster-status').textContent.includes('已读取已有历史报告')&&!document.getElementById('cluster-result').hidden);
- assert.match(await page.locator('#cluster-status').innerText(),/与当前任务的关联未经核实/);
- assert.match(await page.locator('#cluster-status').innerText(),/覆盖仍不完整/);
+ await page.waitForFunction(()=>document.getElementById('cluster-status').textContent.startsWith('历史报告')&&!document.getElementById('cluster-result').hidden);
+ assert.match(await page.locator('#cluster-completeness').textContent(),/证据不完整/);
  assert.equal(requests.filter(r=>r.method==='POST').length,currentPosts);
  check('visible existing-report entry reads partial historical cache without new POST');
  const missingMint='5'.repeat(32);
@@ -271,9 +287,10 @@ try {
  assert.equal(requests.filter(r=>r.method==='POST').length,currentPosts);
  check('missing history for another CA hides the old report without a new POST');
  await submit(null,'4'.repeat(32));
- await page.waitForFunction(()=>document.getElementById('cluster-status').textContent.includes('分析任务失败'));
+ await page.waitForFunction(()=>document.getElementById('cluster-status').textContent.includes('查询已暂停'));
  assert.equal(await page.locator('#cluster-result').isVisible(),false);
- check('worker error remains error, no phantom successful report');
+ assert.equal(await page.locator('#cluster-resume-scan').isVisible(),true);
+ check('worker failure leaves a resumable checkpoint without showing a successful report');
  await page.locator('#cluster-clear-reports').click();
  assert.equal(await page.locator('#cluster-read-report').isDisabled(),true);
  assert.equal(await page.evaluate(()=>localStorage.getItem('mission-meme-cluster-reports-v1')),null);
@@ -286,7 +303,7 @@ try {
    get(){throw new DOMException('Fixture storage access denied','SecurityError');}
  }));
  await page.goto(origin+'/#cluster');
- await page.locator('#cluster-read-cached').waitFor({state:'visible'});
+ await page.locator('.workspace-history > summary').waitFor({state:'visible'});
  let storageFailures=0;
  await page.route('**/api/cluster-latest?*',route=>{
    if(route.request().url().includes('job_id=')&&storageFailures++===0)return route.abort('connectionreset');
@@ -320,7 +337,7 @@ try {
  // Pause a RUNNING task with a slow historical GET, then edit the input.
  // Discarding that stale response must still expose the paused original task.
  const paused=await submit(null,'3'.repeat(32));
- await page.waitForFunction(()=>/等待开始分析|正在扫描链上数据/.test(document.getElementById('cluster-status').textContent));
+ await page.waitForFunction(()=>/排队中|查询中/.test(document.getElementById('cluster-status').textContent));
  let releaseHistory,historySeen;
  const historyGate=new Promise(resolve=>{releaseHistory=resolve;});
  const historyArrived=new Promise(resolve=>{historySeen=resolve;});
@@ -344,7 +361,8 @@ try {
  const d2ReadsBefore=requests.filter(r=>r.path==='/api/frank-d2-at-slot').length;
  assert.equal(d2ReadsBefore,0,'CA navigation must not auto-read D2');
  const combinedPosts=requests.filter(r=>r.method==='POST').length;
- await page.getByRole('button',{name:'Frank 信号',exact:true}).click();
+ await page.evaluate(()=>{location.hash='#signals';});
+ await page.locator('#signals-view.active').waitFor({state:'visible'});
  await page.waitForFunction(()=>document.getElementById('f01-source-status').textContent.includes('近期'));
  await page.locator('#frank-d2-read').click();
  await page.waitForFunction(()=>document.getElementById('frank-d2-rows').textContent.includes('12 枚'));
@@ -354,13 +372,14 @@ try {
  assert.match(await page.locator('#frank-d2-rows').innerText(),/12 枚/);
  assert.equal(requests.filter(r=>r.path==='/api/frank-d2-at-slot').length,d2ReadsBefore+1);
  assert.equal(requests.filter(r=>r.method==='POST').length,combinedPosts);
- await page.getByRole('button',{name:'CA 链上查询',exact:true}).click();
+ await page.getByRole('button',{name:'CA 查询',exact:true}).click();
  assert.match(await page.locator('#cluster-summary').innerText(),/SYNTHETIC_REPORT_7/);
  check('combined CA/F01/D2 preserves manual snapshot reads, local source age and CA report');
 
- // Fault injection is confined to the CI fixture origin. Existing five-second
- // refresh performs recovery; no new timer, retry loop or scan is introduced.
- await page.getByRole('button',{name:'Frank 信号',exact:true}).click();
+ // Fault injection is confined to the fixture origin. Run the existing refresh
+ // callback explicitly so this check is independent of its poll schedule.
+ await page.evaluate(()=>{location.hash='#signals';});
+ await page.locator('#signals-view.active').waitFor({state:'visible'});
  const candidatesPattern=origin+'/api/candidates';
  for (const phase of ['NETWORK','JSON','HTTP']) {
    const failurePosts=requests.filter(r=>r.method==='POST').length;
@@ -369,7 +388,8 @@ try {
      return route.fulfill({status:phase==='HTTP'?503:200,
        contentType:'application/json',body:'private-fixture-body-token=fixture-secret'});
    });
-   await page.waitForFunction(expected=>document.getElementById('runtime').textContent.includes('['+expected+']'),phase,{timeout:10000});
+   await page.evaluate(()=>refresh());
+   await page.waitForFunction(expected=>document.getElementById('runtime').textContent.includes('['+expected+']'),phase);
    const failedRuntime=await page.locator('#runtime').innerText();
    assert.match(failedRuntime,/GET \/api\/candidates/);
    assert.doesNotMatch(failedRuntime,/fixture-secret|private-fixture|Failed to fetch|SyntaxError/);
@@ -379,16 +399,18 @@ try {
    assert.equal(requests.filter(r=>r.method==='POST').length,failurePosts);
    await snapshot(page,'safe-get-'+phase.toLowerCase());
    await page.unroute(candidatesPattern);
+   await page.evaluate(()=>refresh());
    await page.waitForFunction(()=>!document.getElementById('runtime').textContent.includes('控制台读取失败')&&document.getElementById('f01-source-status').textContent.includes('近期'),null,{timeout:10000});
    assert.equal(requests.filter(r=>r.method==='POST').length,failurePosts);
    check('GET '+phase+' is safely attributed, closes old F01 cards and recovers without POST');
  }
- await page.getByRole('button',{name:'CA 链上查询',exact:true}).click();
+ await page.getByRole('button',{name:'CA 查询',exact:true}).click();
  assert.match(await page.locator('#cluster-summary').innerText(),/SYNTHETIC_REPORT_7/);
 
  // Overlapping observation refreshes must not replace a newer SELL with
  // an older BUY, nor resurrect cached rows when the user filters after failure.
- await page.getByRole('button',{name:'Frank 信号',exact:true}).click();
+ await page.evaluate(()=>{location.hash='#signals';});
+ await page.locator('#signals-view.active').waitFor({state:'visible'});
  await page.locator('#frank-activity-type').selectOption({label:'全部买卖'});
  const observationFeeds=[
    {kind:'intelligence',endpoint:'/api/frank-intelligence',reload:'frank-intelligence-reload',
@@ -456,9 +478,11 @@ try {
  await snapshot(page,'intelligence-failed-refresh-filter-remains-unavailable');
  await page.unroute(intelEndpoint);
  check('intelligence filter cannot resurrect cached BUY after failed refresh; D2 remains independent');
- await page.getByRole('button',{name:'CA 链上查询',exact:true}).click();
+ await page.getByRole('button',{name:'CA 查询',exact:true}).click();
  assert.match(await page.locator('#cluster-summary').innerText(),/SYNTHETIC_REPORT_7/);
  const noPoolJob=await submit('SYNTHETIC_REPORT_8','111111111111111111111111111111JG');
+ const holderSummary=page.locator('#cluster-holder-title');
+ if(!await holderSummary.evaluate(node=>node.parentElement.open)) await holderSummary.click();
  const noPoolSaved=await (await page.request.get(origin+'/api/cluster-latest?mint='+noPoolJob.mint+'&job_id='+noPoolJob.job_id)).json();
  assert.equal(noPoolSaved.special_address_roles.audit_path,'HOLDER_ONLY_NO_BOUND_POOL');
  assert.equal(noPoolSaved.special_address_roles.pools.length,0);
@@ -480,10 +504,12 @@ try {
  check('holder-only coverage preserves dated attribution separately from chain role and ranks remaining unknown Owner balances');
 
  assert.deepEqual(errors,[]);
+ assert.deepEqual(blocked,[]);
  const result={port,checks,page_errors:errors,blocked,requests,fixture_posts:requests.filter(r=>r.method==='POST').length,real_rpc:0,production_requests:0,real_ca_posts:0,browser:context.browser()?.version()};
  if(output)writeFileSync(join(output,'result.json'),JSON.stringify(result,null,2));
  console.log(JSON.stringify(result));
 } finally {
+ if(stderr)console.error(stderr);
  clearTimeout(timer);
  if(context)await context.close();
  child.stdin.end();
