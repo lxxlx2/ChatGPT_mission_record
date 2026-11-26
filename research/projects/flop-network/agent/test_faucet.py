@@ -66,6 +66,19 @@ class FaucetTests(unittest.TestCase):
         self.ident.chmod(0o644)
         self.assertEqual(self.req()['status'],'BLOCKED_AGENT_IDENTITY_NOT_READY')
         self.assertFalse(self.calls)
+    def test_funding_observation_distinguishes_balance_and_grant(self):
+        self.req()
+        def read(url):
+            if url.endswith('/chain'):
+                return json.dumps({'network':'testnet','genesisHash':faucet.GENESIS})
+            return json.dumps({'network':'testnet','stale':False,'asOf':'2026-11-26T01:00:00Z','faucet':{'balanceFlop':'100','pendingGrants':3,'dailyCap':{'remainingFlop':'50'},'agent':{'grantFlop':10}}})
+        def bal(argv,**kw):
+            return SimpleNamespace(returncode=0,stdout='{"free":"10000000000000000000","reserved":"0"}')
+        faucet.funding_observation(self.db,fetch=read,cli_status={'observed_genesis':faucet.GENESIS,'rpc_genesis_matches_expected':True},runner=bal)
+        self.assertEqual(runtime.get(self.db,'wallet_free_flop'),'10')
+        self.assertEqual(runtime.get(self.db,'faucet_daily_remaining_flop'),'50')
+        self.assertEqual(runtime.get(self.db,'faucet_claim_status'),'SAME_NONCE_RECONCILIATION_PENDING')
+        self.assertEqual(runtime.get(self.db,'faucet_claim_tx'),'UNVERIFIED')
     def test_current_official_format(self):
         doc='FLOP Testnet went live on 24 November 2026. This opening is unscored. Genesis block hash '+faucet.GENESIS
         r=runtime.official_testnet_state(lambda _:doc)

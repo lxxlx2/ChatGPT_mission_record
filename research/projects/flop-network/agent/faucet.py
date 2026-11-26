@@ -17,6 +17,74 @@ IDENTITY=DATA/'agent-identity.json'
 GENESIS='0x918abd58fb16306b30ef3886514cfaebffecb4de43e82b6f8ec4795c43cfd800'
 RECHECK_SECONDS=900
 
+
+def funding_observation(conn, *, fetch, cli_status, runner=subprocess.run):
+    """Read-only observations, never infer a grant from balance alone."""
+    def save(k,v):
+        conn.execute('INSERT OR REPLACE INTO kv VALUES (?,?)',(k,str(v)))
+    for k in ('faucet_pool_flop','faucet_daily_remaining_flop','faucet_pending_grants',
+              'faucet_grant_flop','faucet_limits_asof','wallet_free_flop','wallet_reserved_flop',
+              'wallet_balance_at','wallet_address'):
+        save(k,'UNVERIFIED')
+    save('funding_observed_at',utc())
+    save('faucet_claim_status','NOT_ATTEMPTED_OR_NOT_RECORDED')
+    for k in ('faucet_claim_at','faucet_claim_nonce','faucet_claim_tx','faucet_claim_reason','faucet_claim_retry_at'):
+        save(k,'UNVERIFIED')
+    try:
+        obj=json.loads(IDENTITY.read_text())
+        address=obj.get('address')
+        if not isinstance(address,str) or not re.fullmatch(r'[1-9A-HJ-NP-Za-km-z]{42,55}',address):
+            raise ValueError('INVALID_ADDRESS')
+        save('wallet_address',address)
+        key='initial-faucet-'+hashlib.sha256((GENESIS+':'+address).encode()).hexdigest()[:24]
+        row=conn.execute('SELECT value FROM kv WHERE key=?',(key,)).fetchone()
+        if row:
+            claim=json.loads(row[0])
+            for field,k in (('status','faucet_claim_status'),('at','faucet_claim_at'),
+                            ('nonce','faucet_claim_nonce'),('tx_hash','faucet_claim_tx'),
+                            ('reason','faucet_claim_reason'),('retry_at','faucet_claim_retry_at')):
+                save(k,claim.get(field,'UNVERIFIED'))
+    except (OSError,ValueError,TypeError,AttributeError):
+        address=None
+    try:
+        chain=json.loads(fetch('https://faucet.flop.network/chain'))
+        limits=json.loads(fetch('https://faucet.flop.network/limits'))
+        if chain.get('network')!='testnet' or chain.get('genesisHash')!=GENESIS or limits.get('network')!='testnet' or limits.get('stale') is not False:
+            raise ValueError('FAUCET_IDENTITY_OR_FRESHNESS')
+        f=limits['faucet']
+        for k,v in (('faucet_pool_flop',f.get('balanceFlop')),
+                    ('faucet_daily_remaining_flop',f.get('dailyCap',{}).get('remainingFlop')),
+                    ('faucet_pending_grants',f.get('pendingGrants')),
+                    ('faucet_grant_flop',f.get('agent',{}).get('grantFlop'))):
+            if re.fullmatch(r'[0-9]{1,30}',str(v)):
+                save(k,v)
+        if isinstance(limits.get('asOf'),str):
+            save('faucet_limits_asof',limits['asOf'][:40])
+    except (OSError,ValueError,TypeError,KeyError,AttributeError):
+        pass
+    if address and cli_status.get('observed_genesis')==GENESIS and cli_status.get('rpc_genesis_matches_expected') is True:
+        try:
+            cli=shutil.which('flop')
+            if not cli:
+                raise ValueError('NO_CLI')
+            cp=runner([cli,'--network','testnet','balance',address,'--json'],capture_output=True,text=True,timeout=35,check=False)
+            if cp.returncode:
+                raise ValueError('BALANCE_FAILED')
+            bal=json.loads(cp.stdout)
+            # CLI reports chain base units, 18 decimals. No heuristic unit conversion.
+            if not isinstance(bal,dict):
+                raise ValueError('BALANCE_SCHEMA')
+            for field,k in (('free','wallet_free_flop'),('reserved','wallet_reserved_flop')):
+                value=bal.get(field)
+                if type(value) in (int,str) and re.fullmatch(r'[0-9]{1,40}',str(value)):
+                    from decimal import Decimal
+                    save(k,format(Decimal(str(value))/Decimal(10**18),'f'))
+            save('wallet_balance_at',utc())
+        except (OSError,ValueError,TypeError,subprocess.SubprocessError):
+            pass
+    conn.commit()
+
+
 def request_initial(conn, confirmed_genesis, *, cli_runner=subprocess.run, clock=time.time):
     if confirmed_genesis!=GENESIS:
         return {'status':'BLOCKED_NETWORK_GENESIS_NOT_VERIFIED'}
@@ -66,8 +134,8 @@ def request_initial(conn, confirmed_genesis, *, cli_runner=subprocess.run, clock
     env=dict(os.environ,FLOP_KEY_PASSWORD=password)
     try:
         cp=cli_runner([cli,'--network','testnet','--keystore',str(keyfile),
-                       '--password-env','FLOP_KEY_PASSWORD','--json','faucet','request',
-                       '--nonce',attempt['nonce']],env=env,capture_output=True,text=True,
+                       '--password-env','FLOP_KEY_PASSWORD','faucet','request',
+                       '--json','--nonce',attempt['nonce']],env=env,capture_output=True,text=True,
                        timeout=150,check=False)
         attempt['return_code']=cp.returncode
         response={}
@@ -79,10 +147,16 @@ def request_initial(conn, confirmed_genesis, *, cli_runner=subprocess.run, clock
                     break
             except (ValueError,TypeError):
                 pass
+        reason=response.get('reason') or response.get('code')
+        if isinstance(reason,str) and re.fullmatch(r'[A-Za-z0-9_.:-]{1,100}',reason):
+            attempt['reason']=reason
+        reported=response.get('status') or response.get('outcome')
+        if isinstance(reported,str) and re.fullmatch(r'[A-Za-z0-9_.:-]{1,80}',reported):
+            attempt['reported_status']=reported
         tx=response.get('tx_hash') or response.get('txHash')
         if isinstance(tx,str) and re.fullmatch(r'0x[0-9a-fA-F]{64}',tx):
             attempt['tx_hash']=tx
-        if cp.returncode==0 and response.get('finalized') is True and attempt.get('tx_hash'):
+        if cp.returncode==0 and (response.get('finalized') is True or response.get('status')=='finalized') and attempt.get('tx_hash'):
             attempt['status']='CLI_FINALIZED_REPORTED'
         elif response.get('action') in ('fix_request','report_to_operator'):
             attempt['status']='REFUSED_NO_AUTO_RETRY'
@@ -91,8 +165,9 @@ def request_initial(conn, confirmed_genesis, *, cli_runner=subprocess.run, clock
             delay=response.get('retryAfterSeconds')
             if type(delay) is int and delay>0:
                 attempt['retry_at']=now+max(RECHECK_SECONDS,delay)
-    except (OSError,subprocess.TimeoutExpired):
+    except (OSError,subprocess.TimeoutExpired) as exc:
         attempt['status']='SAME_NONCE_RECONCILIATION_PENDING'
+        attempt['reason']=type(exc).__name__
     finally:
         env.pop('FLOP_KEY_PASSWORD',None)
         password=''
@@ -103,4 +178,8 @@ def request_initial(conn, confirmed_genesis, *, cli_runner=subprocess.run, clock
                 '[FLOP] 首次 Testnet Faucet 返回 finalized',
                 'CLI reported finalized; independent chain verification still required. '
                 'Testnet grant is not voucher credit. Transaction: '+attempt['tx_hash'])
+    elif attempt.get('tx_hash'):
+        enqueue(conn,'faucet-tx-'+hashlib.sha256(key.encode()).hexdigest()[:15],
+                '[FLOP] 首次 Faucet 已返回交易｜等待最终核验',
+                '交易哈希：'+attempt['tx_hash']+'\n尚未确认最终到账；不会另起 nonce。')
     return attempt

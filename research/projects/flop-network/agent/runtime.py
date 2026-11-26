@@ -314,6 +314,22 @@ def ready_to_send(conn, config=None, *, fetch=_json_response, cli_status=cli_net
         cli=cli_status()
     except (OSError,ValueError,subprocess.SubprocessError):
         cli={'ready':False,'reason':'CLI_NETWORK_STATUS_UNAVAILABLE'}
+    # Public machine-readable chain identity is authoritative for funding only.
+    # A page-rendering failure must not hide a pinned live faucet; explicit
+    # planned status or chain mismatch still fails closed.
+    if doc['status'] in ('UNVERIFIED_DOC_FORMAT','OFFICIAL_DOC_UNAVAILABLE','OFFICIAL_GENESIS_NOT_PUBLISHED') and cli.get('ready'):
+        try:
+            from faucet import GENESIS
+            chain=json.loads(fetch('https://faucet.flop.network/chain'))
+            limits=json.loads(fetch('https://faucet.flop.network/limits'))
+            if (chain.get('network')=='testnet' and chain.get('genesisHash')==GENESIS
+                    and cli.get('genesis')==GENESIS and limits.get('network')=='testnet'
+                    and limits.get('stale') is False and limits['faucet']['status']=='open'
+                    and limits['faucet']['agent']['claimPath']=='/v1/testnet/agent-claims'):
+                doc={'ready':True,'status':'CANONICAL_FAUCET_CHAIN_VERIFIED',
+                     'genesis':GENESIS,'scoring_status':'UNVERIFIED'}
+        except (OSError,ValueError,TypeError,KeyError,AttributeError):
+            pass
     put(conn,'official_document_status',doc['status'])
     put(conn,'scoring_status',doc.get('scoring_status','UNVERIFIED'))
     for field in ('profile_status','rpc_reachable','rpc_genesis_matches_expected',
@@ -510,7 +526,19 @@ def queue_summary(conn):
         '已核验有效结算次数：'+str(sum(int(x['chain_verified']) for x in conn.execute('SELECT chain_verified FROM session_attempts'))),
         '尚未核验/可能已支付的会话：'+str(sum(v for k,v in states.items() if k not in ('DIRECT_CHAIN_VERIFIED',))),
         '最后一次成功：'+latest,
-        '余额 / Faucet 可用配额：未核实',
+        '钱包地址：'+get(conn,'wallet_address','未核实'),
+        '钱包可用余额（Test FLOP）：'+get(conn,'wallet_free_flop','未核实'),
+        '钱包锁定余额（Test FLOP）：'+get(conn,'wallet_reserved_flop','未核实'),
+        '钱包余额采样时间：'+get(conn,'wallet_balance_at','未核实'),
+        '首次领取状态：'+get(conn,'faucet_claim_status','未记录'),
+        '领取请求时间：'+get(conn,'faucet_claim_at','未记录'),
+        '领取交易哈希：'+get(conn,'faucet_claim_tx','未确认'),
+        '领取错误/原因：'+get(conn,'faucet_claim_reason','未记录'),
+        '下次同 nonce 查询最早时间（Unix UTC 秒）：'+get(conn,'faucet_claim_retry_at','未记录'),
+        'Faucet 当前余额 / 每日剩额度：'+get(conn,'faucet_pool_flop','未核实')+' / '+get(conn,'faucet_daily_remaining_flop','未核实')+' Test FLOP',
+        '官方待处理申请 / 单次额度：'+get(conn,'faucet_pending_grants','未核实')+' / '+get(conn,'faucet_grant_flop','未核实'),
+        '官方额度采样时间：'+get(conn,'faucet_limits_asof','未核实'),
+        '领取到账需独立核验 finalized 交易；余额及 CLI 回执不等于空投积分。',
         '当前异常：'+block,
         'FLOP 空投分配与 USD 收益：未确认',
         'Gmail SENT 必须独立回读才能视为送达。'
@@ -611,6 +639,12 @@ def tick(*, fetch=_json_response, cli_status=cli_network_status, execution=do_di
                         put(conn,'execution_mode','WAITING_FOR_PRIVATE_CONFIG')
             except (OSError,TimeoutError,ValueError,subprocess.SubprocessError) as exc:
                 notify_error(conn,'NETWORK_CHECK_FAILED',type(exc).__name__)
+        from faucet import funding_observation
+        funding_observation(conn,fetch=fetch,cli_status={
+            'observed_genesis':get(conn,'observed_genesis'),
+            'rpc_genesis_matches_expected':get(conn,'rpc_genesis_matches_expected')=='true'
+                and get(conn,'rpc_reachable')=='true'
+                and get(conn,'profile_status')=='live'})
         dashboard_state=check_dashboard_health_from_tick(conn)
         queue_summary(conn)
         delivery=pump(conn)

@@ -22,7 +22,7 @@ button{background:#395d97;border:0;color:white;border-radius:6px;padding:8px;cur
 <section class="card"><small>已核验有效推理消费</small><div class="value" id="spent">0 test FLOP</div><small>仅计最终结算且付款人属自己的会话</small></section>
 <section class="card"><small>链上核验成功会话</small><div class="value" id="success">0</div><small>CLI 返回成功不计入</small></section>
 <section class="card"><small>未知结算与阻塞</small><div class="value warn" id="pending">0</div><small>存在未知结算时不自动付款</small></section>
-<section class="card"><small>Faucet 余额与剩余额度</small><div class="value warn">未核实</div><small>官方 Testnet Faucet 尚无可信额度数据源</small></section>
+<section class="card"><small>Faucet 余额与剩余额度</small><div class="value" style="font-size:19px" id="faucet-quota">未核实</div><small id="faucet-pending">等待官方采样</small></section>
 <section class="card"><small>最近一次有效成功</small><div class="value" style="font-size:15px" id="last-success">暂无</div><small>UTC 时间戳</small></section>
 <section class="card"><small>邮件送达</small><div class="value" id="mail">未确认</div><small id="mail-extra">Gmail Sent 未回读前不算成功</small></section>
 </div>
@@ -34,6 +34,10 @@ button{background:#395d97;border:0;color:white;border-radius:6px;padding:8px;cur
 <tr><th>RPC / 最终确认区块</th><td id="rpc-state">未核实</td></tr>
 <tr><th>RPC 观察到的 Genesis</th><td id="genesis">未核实</td></tr>
 <tr><th>Faucet 连通 / 就绪</th><td id="faucet-state">未核实</td></tr>
+<tr><th>钱包可用余额</th><td id="wallet-balance">未核实</td></tr>
+<tr><th>领取状态</th><td id="claim-state">未记录</td></tr>
+<tr><th>领取交易</th><td id="claim-tx">未确认</td></tr>
+<tr><th>领取原因 / 请求时间</th><td id="claim-error">未记录</td></tr>
 <tr><th>当前网络阻塞</th><td id="network-blocker">未核实</td></tr>
 <tr><th>Agent 执行模式</th><td id="mode">未启动</td></tr>
 <tr><th>上次调度检查</th><td id="last-tick">暂无</td></tr>
@@ -75,6 +79,12 @@ set('profile',known(d.official_document_status)+' / '+known(d.profile_status));
 set('rpc-state',flag(d.rpc_reachable)+' / '+known(d.finalized_height));
 set('genesis',known(d.observed_genesis)+' | 官方 pin 匹配：'+flag(d.rpc_genesis_matches_expected));
 set('faucet-state',flag(d.faucet_reachable)+' / '+flag(d.faucet_ready));
+set('faucet-quota',known(d.faucet_pool_flop)+' / '+known(d.faucet_daily_remaining_flop));
+set('faucet-pending','待处理 '+known(d.faucet_pending_grants)+' | '+known(d.faucet_limits_asof));
+set('wallet-balance',known(d.wallet_free_flop)+' Test FLOP | '+known(d.wallet_balance_at));
+set('claim-state',known(d.faucet_claim_status)+'（CLI 回执不等于独立链上核验）');
+set('claim-tx',known(d.faucet_claim_tx));
+set('claim-error',known(d.faucet_claim_reason)+' / '+known(d.faucet_claim_at));
 set('network-blocker',known(d.network_blocker));
 set('mode',d.execution_mode||'未开始');
 set('last-tick',d.last_scheduler_tick_utc||'暂无');
