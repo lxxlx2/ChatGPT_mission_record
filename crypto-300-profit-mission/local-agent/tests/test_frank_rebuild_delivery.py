@@ -219,3 +219,55 @@ def test_scope_blocked_local_inflight_recovers_receipt_without_invoking_os(tmp_p
     drain(ledger, notifier, delivery_gate=gate)
     states = {row[0] for row in ledger.db.execute("SELECT status FROM outbox WHERE channel='local'")}
     assert states == {"COMMAND_ACCEPTED", "SENT_UNVERIFIED"}
+
+
+def test_late_qualification_updates_history_without_releasing_legacy_pending_mail(tmp_path, monkeypatch):
+    from mission_agent.mission_control.frank_buys import read_buys
+
+    ledger, cfg, gate, _ = prepare(tmp_path, [MINT], gate_at_enqueue=False, registry=False)
+    GmailOutbox(ledger).sync()  # legacy producer knew nothing about qualification
+    cfg_doc = {"version": 1, "records": [
+        {"chain": "solana", "mint": MINT, "name": "Fixture Meme", "status": "VERIFIED_MEME",
+         "source": "synthetic source", "observed_at": AS_OF},
+    ]}
+    cfg.write_text(json.dumps(cfg_doc))
+    history = read_buys(tmp_path / "db", cfg, as_of=AS_OF)["rows"]
+    assert len(history) == 3 and all(row["mint"] == MINT for row in history)
+
+    provider = Provider()
+    box = GmailOutbox(ledger, delivery_gate=gate)
+    box.drain(provider)
+    row = ledger.db.execute("SELECT status,last_error,attempt_count FROM gmail_delivery").fetchone()
+    assert tuple(row) == ("MEME_SCOPE_BLOCKED", "LEGACY_QUALIFICATION_OBSERVED_LATE", 0)
+    assert provider.actions == []
+    monkeypatch.setattr("mission_agent.signals.gmail.kick", lambda *a, **k: None)
+    notified = []
+    drain(ledger, notified.append, delivery_gate=gate)
+    assert notified == []
+    assert {row[0] for row in ledger.db.execute("SELECT status FROM outbox")} == {"MEME_SCOPE_BLOCKED"}
+
+    reopened = Ledger(tmp_path / "db")
+    GmailOutbox(reopened, delivery_gate=gate).drain(provider)
+    assert provider.actions == []
+
+
+def test_enqueue_bound_qualification_may_follow_chain_time_without_being_a_replay(tmp_path):
+    cfg = tmp_path / "qualifications.json"
+    config(cfg)
+    doc = json.loads(cfg.read_text())
+    doc["records"][0]["observed_at"] = AS_OF
+    cfg.write_text(json.dumps(doc))
+    ledger = Ledger(tmp_path / "db")
+    indexed_buys(ledger, tmp_path / "raw", [MINT])
+    gate = BuyDeliveryGate(cfg, clock=lambda: AS_OF)
+    eng = Engine(ledger, load_policy(POLICY), dry_run=False, delivery_gate=gate)
+    assert eng.drain() == 3
+    body, = ledger.db.execute(
+        "SELECT body FROM signals WHERE signal_type='FRANK_MULTIPLE_SIGNAL'"
+    ).fetchone()
+    signal = json.loads(body)
+    assert signal["triggered_at"] < AS_OF
+    assert signal["verified_buy"]["mint"] == MINT
+    provider = Provider()
+    assert GmailOutbox(ledger, delivery_gate=gate).drain(provider)["sent_verified"] == 1
+    assert len(provider.sent) == 1

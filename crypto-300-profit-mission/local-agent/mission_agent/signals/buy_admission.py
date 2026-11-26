@@ -97,9 +97,9 @@ class BuyDeliveryGate:
         self.clock = clock
 
     def block_reason(self, db, signal):
-        return self.assess(db, signal)[1]
+        return self.assess(db, signal, for_delivery=True)[1]
 
-    def assess(self, db, signal):
+    def assess(self, db, signal, *, for_delivery=False):
         if not isinstance(signal, dict):
             return None, "TRIGGER_IS_NOT_PROVEN_BUY"
         if signal.get("delivery_mode") != "LIVE" or signal.get("delivery_forbidden"):
@@ -141,6 +141,14 @@ class BuyDeliveryGate:
                              slot=row["slot"], block_time=row["block_time"], raw_hash=row["raw_hash"], mint=mint)
             if fact:
                 frozen = signal.get("verified_buy")
+                if for_delivery and frozen is None:
+                    # With no enqueue-time proof, a newly observed classification
+                    # must not turn an old pending signal into a new notification.
+                    trigger = signal.get("triggered_at")
+                    if type(trigger) is not int or trigger <= 0:
+                        return None, "LEGACY_SIGNAL_TRIGGER_TIME_UNVERIFIED"
+                    if asset.observed_at > trigger:
+                        return None, "LEGACY_QUALIFICATION_OBSERVED_LATE"
                 if frozen is not None and (
                     not isinstance(frozen, dict)
                     or any(frozen.get(key) != value for key, value in fact.items() if key != "name")
