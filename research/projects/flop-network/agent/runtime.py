@@ -30,7 +30,7 @@ from mail import enqueue, pump, mail_status
 
 BKK = zoneinfo.ZoneInfo('Asia/Bangkok')
 LAUNCH_UTC = datetime(2026, 11, 24, 7, 0, tzinfo=timezone.utc)
-STATUS_URL = 'https://docs.flop.network/networks/testnet'
+STATUS_URL = 'https://docs.flop.network/docs/network-testnet'
 CONF = DATA / 'private-testnet.json'
 MONITOR = DATA / 'monitor.sqlite3'
 LAST_ALARM_INTERVAL = 3600
@@ -127,13 +127,14 @@ def official_testnet_state(fetch=_json_response):
     lower=' '.join(' '.join(p.parts).lower().split())
     if re.search(r'network:\s*testnet\s*\(planned\)|status:\s*planned|release:\s*next\s*\(unreleased\)',lower):
         return {'ready':False,'status':'PLANNED','source':STATUS_URL}
-    if not re.search(r'network:\s*testnet\s*\((live|active|launched)\)',lower):
+    if not (re.search(r'network:\s*testnet\s*\((live|active|launched)\)',lower) or 'flop testnet went live on' in lower):
         return {'ready':False,'status':'UNVERIFIED_DOC_FORMAT','source':STATUS_URL}
-    match=re.search(r'(?:expected genesis|genesis hash)\s*:?\s*(0x[0-9a-f]{64})(?![0-9a-f])',lower)
+    match=re.search(r'(?:expected genesis|genesis block hash|genesis hash)\s*:?\s*(0x[0-9a-f]{64})(?![0-9a-f])',lower)
     if not match:
         return {'ready':False,'status':'OFFICIAL_GENESIS_NOT_PUBLISHED','source':STATUS_URL}
     return {'ready':True,'status':'PUBLISHED_TESTNET',
-            'genesis':match.group(1),'source':STATUS_URL}
+            'genesis':match.group(1),'source':STATUS_URL,
+            'scoring_status':'UNSCORED' if 'opening is unscored' in lower else 'UNVERIFIED'}
 
 
 def private_config(path=CONF):
@@ -314,6 +315,7 @@ def ready_to_send(conn, config=None, *, fetch=_json_response, cli_status=cli_net
     except (OSError,ValueError,subprocess.SubprocessError):
         cli={'ready':False,'reason':'CLI_NETWORK_STATUS_UNAVAILABLE'}
     put(conn,'official_document_status',doc['status'])
+    put(conn,'scoring_status',doc.get('scoring_status','UNVERIFIED'))
     for field in ('profile_status','rpc_reachable','rpc_genesis_matches_expected',
                   'observed_genesis','rpc_chain','rpc_spec_version','faucet_reachable',
                   'faucet_ready','faucet_matches_rpc','finalized_head','finalized_height'):
@@ -352,7 +354,9 @@ def ready_to_send(conn, config=None, *, fetch=_json_response, cli_status=cli_net
         return {'ready':False,'reason':'CHAIN_FINALITY_NOT_VERIFIED'}
     if cli['genesis']!=config['expected_genesis'].lower():
         return {'ready':False,'reason':'CONFIG_RPC_GENESIS_MISMATCH'}
-    return {'ready':True,'reason':'DOC_CLI_RPC_FAUCET_CHAIN_MATCH',
+    # Network readiness is not scoring or miner readiness. The independent
+    # scoring and settlement adapters are not implemented; never auto-spend.
+    return {'ready':False,'reason':'WAITING_FOR_VERIFIED_SCORING',
             'genesis':cli['genesis']}
 
 
@@ -582,12 +586,17 @@ def tick(*, fetch=_json_response, cli_status=cli_network_status, execution=do_di
                                            'RPC_NOT_REACHABLE_AND_PINNED','FAUCET_NOT_READY_OR_GENESIS_MISMATCH',
                                            'CHAIN_FINALITY_NOT_VERIFIED','BEFORE_OFFICIAL_LAUNCH_TARGET'):
                         put(conn,'execution_mode','WAITING_FOR_CONFIRMED_TESTNET')
-                    elif state['reason']=='PRIVATE_CONFIG_NOT_CONFIGURED' and state.get('genesis'):
+                    elif state['reason'] in ('PRIVATE_CONFIG_NOT_CONFIGURED','WAITING_FOR_VERIFIED_SCORING') and state.get('genesis'):
                         from faucet import request_initial
-                        result=request_initial(conn,state['genesis'])
+                        if not mail_preflight or mail_preflight[0]!='SENT_VERIFIED':
+                            notify_error(conn,'EMAIL_TEST_NOT_VERIFIED','Verify existing mail setup before requesting a Testnet grant')
+                            result={'status':'BLOCKED_EMAIL_NOT_VERIFIED'}
+                        else:
+                            result=request_initial(conn,state['genesis'])
+                        put(conn,'faucet_claim_status',result.get('status','UNVERIFIED'))
                         put(conn,'network_status','TESTNET_VERIFIED_NO_DIRECT_MINER')
                         put(conn,'execution_mode','WAITING_FOR_INDEPENDENT_MINER_AND_MODEL')
-                        if result.get('status') in ('REJECTED_OR_UNKNOWN_NO_RETRY','OUTCOME_UNKNOWN_NO_RETRY'):
+                        if result.get('status') in ('REJECTED_OR_UNKNOWN_NO_RETRY','OUTCOME_UNKNOWN_NO_RETRY','BLOCKED_LEGACY_ATTEMPT','REFUSED_NO_AUTO_RETRY'):
                             notify_error(conn,'FAUCET_RESULT_NEEDS_RECONCILIATION',result['status'])
                         elif result.get('status')=='BLOCKED_AGENT_IDENTITY_NOT_READY':
                             notify_error(conn,'TEST_WALLET_NOT_READY',result['status'])

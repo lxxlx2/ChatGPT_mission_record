@@ -1,69 +1,77 @@
-"""Offline faucet tests: no real network calls, no actual claims."""
+"""Offline D10 tests; no signing, networking, real claims or emails."""
 import json
-from pathlib import Path
 import sqlite3
 import tempfile
 import unittest
+from pathlib import Path
 from unittest.mock import patch
-
+from types import SimpleNamespace
+import subprocess
 import faucet
 import runtime
 import mail
 
 ADDR='5DRhi7dvWicmgUPfKpxdV5p4kxXiQUbLUFXtwp4EcAWLtu4D'
-GENESIS='0x'+'a'*64
-
 class FaucetTests(unittest.TestCase):
     def setUp(self):
         self.temp=tempfile.TemporaryDirectory()
-        self.data=Path(self.temp.name)
-        self.db=sqlite3.connect(self.data/'monitor.sqlite3')
+        root=Path(self.temp.name)
+        self.db=sqlite3.connect(root/'monitor.sqlite3')
         self.db.row_factory=sqlite3.Row
         runtime.ensure_state(self.db)
         mail.init(self.db)
-        ident=self.data/'agent-identity.json'
-        ident.write_text(json.dumps({'address':ADDR}))
-        ident.chmod(0o600)
-        self.patcher=patch.object(faucet,'IDENTITY',ident)
-        self.patcher.start()
+        self.ident=root/'agent-identity.json'
+        for p,body in ((self.ident,json.dumps({'address':ADDR,'purpose':'FLOP_TESTNET_ONLY'})),
+                       (root/'agent-key.json',json.dumps({'address':ADDR})),
+                       (root/'agent-password','synthetic-test-only')):
+            p.write_text(body)
+            p.chmod(0o600)
+        self.p=patch.object(faucet,'IDENTITY',self.ident)
+        self.p.start()
+        self.q=patch.object(faucet.shutil,'which',return_value='/fake/flop')
+        self.q.start()
+        self.calls=[]
+        self.t=1000000
     def tearDown(self):
-        self.patcher.stop()
+        self.q.stop()
+        self.p.stop()
         self.db.close()
         self.temp.cleanup()
-    def test_no_unverified_network_faucet(self):
-        called=[]
-        with patch.object(faucet.shutil,'which',return_value='/bin/flop'):
-            self.assertEqual(faucet.request_initial(self.db,'bad',cli_runner=lambda *a,**k:called.append(a))['status'],
-                             'BLOCKED_NETWORK_GENESIS_NOT_VERIFIED')
-        self.assertFalse(called)
-    def test_faucet_claim_is_precommitted_once(self):
-        calls=[]
-        def fake_run(argv,**kwargs):
-            calls.append(argv)
-            self.assertEqual(argv[1:4],['--network','testnet','faucet'])
-            self.assertEqual(argv[4:6],['request',ADDR])
-            self.assertIn('--json',argv)
-            return type('CP',(),{'returncode':0,'stdout':'{"status":"accepted"}','stderr':''})()
-        with patch.object(faucet.shutil,'which',return_value='/usr/local/bin/flop'):
-            first=faucet.request_initial(self.db,GENESIS,cli_runner=fake_run)
-            second=faucet.request_initial(self.db,GENESIS,cli_runner=fake_run)
-        self.assertEqual(first['status'],'CLI_ACCEPTED_UNVERIFIED')
-        self.assertEqual(second['status'],'EXISTING_ATTEMPT_NO_AUTO_RESEND')
-        self.assertEqual(len(calls),1)
-        self.assertEqual(self.db.execute("SELECT COUNT(*) FROM flop_mail").fetchone()[0],1)
-    def test_timeout_never_auto_retries(self):
-        import subprocess
-        def timeout(*a,**kw):raise subprocess.TimeoutExpired('flop',100)
-        with patch.object(faucet.shutil,'which',return_value='/usr/local/bin/flop'):
-            first=faucet.request_initial(self.db,GENESIS,cli_runner=timeout)
-            second=faucet.request_initial(self.db,GENESIS,cli_runner=timeout)
-        self.assertEqual(first['status'],'OUTCOME_UNKNOWN_NO_RETRY')
-        self.assertEqual(second['status'],'EXISTING_ATTEMPT_NO_AUTO_RESEND')
-    def test_private_identity_is_mandatory(self):
-        faucet.IDENTITY.chmod(0o644)
-        with patch.object(faucet.shutil,'which',return_value='/usr/local/bin/flop'):
-            self.assertEqual(faucet.request_initial(self.db,GENESIS)['status'],
-                             'BLOCKED_AGENT_IDENTITY_NOT_READY')
+    def call(self,argv,**kw):
+        if argv[-1]=='--version':
+            return SimpleNamespace(returncode=0,stdout='0.9.0',stderr='')
+        self.calls.append(argv)
+        self.assertIn('--keystore',argv)
+        self.assertNotIn(ADDR,argv)
+        self.assertEqual(kw['env']['FLOP_KEY_PASSWORD'],'synthetic-test-only')
+        self.assertIn('--nonce',argv)
+        if len(self.calls)==1:
+            raise subprocess.TimeoutExpired('flop',150)
+        return SimpleNamespace(returncode=0,stdout=json.dumps({'finalized':True,'tx_hash':'0x'+'a'*64}),stderr='')
+    def req(self,genesis=faucet.GENESIS):
+        return faucet.request_initial(self.db,genesis,cli_runner=self.call,clock=lambda:self.t)
+    def test_invalid_genesis_no_sign(self):
+        self.assertEqual(self.req('0x'+'b'*64)['status'],'BLOCKED_NETWORK_GENESIS_NOT_VERIFIED')
+        self.assertFalse(self.calls)
+    def test_same_nonce_after_timeout_then_stop(self):
+        self.assertEqual(self.req()['status'],'SAME_NONCE_RECONCILIATION_PENDING')
+        self.assertEqual(self.req()['status'],'SAME_NONCE_BACKOFF')
+        self.t+=901
+        self.assertEqual(self.req()['status'],'CLI_FINALIZED_REPORTED')
+        self.assertEqual(self.calls[0][-1],self.calls[1][-1])
+        self.t+=86401
+        self.assertEqual(self.req()['status'],'CLI_FINALIZED_REPORTED')
+        self.assertEqual(len(self.calls),2)
+    def test_no_regenerate(self):
+        self.ident.chmod(0o644)
+        self.assertEqual(self.req()['status'],'BLOCKED_AGENT_IDENTITY_NOT_READY')
+        self.assertFalse(self.calls)
+    def test_current_official_format(self):
+        doc='FLOP Testnet went live on 24 November 2026. This opening is unscored. Genesis block hash '+faucet.GENESIS
+        r=runtime.official_testnet_state(lambda _:doc)
+        self.assertTrue(r['ready'])
+        self.assertEqual(r['genesis'],faucet.GENESIS)
+        self.assertEqual(r['scoring_status'],'UNSCORED')
 
 if __name__=='__main__':
     unittest.main()

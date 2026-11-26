@@ -153,3 +153,7 @@ C. 正常状态报告：曼谷 08:00 和 20:00 发送，含实际已核验消费
 官方 Testnet 目前仍为 planned，正式 genesis、RPC、Faucet 限额、Miner 身份尚未核实。禁止用 Devnet 的虚拟值或历史配置填充测试网配置。Mac 睡眠、关机或未登录会使本地 LaunchAgents 无法在预定时刻执行。所有实际钱包签名要以 Testnet 固定身份、预算和已通过邮件通道为前置门禁。
 
 当前实现的长期自动运行包括只读开放状态检查、Gmail 半日摘要、错误告警与看板；真实自动推理在首笔独立链上核验前保持阻塞。它尚不具备真实的长期赚钱能力，严禁声称已经开始计算空投。仍保持 NO_GO 交易环境，不触碰其他监控。
+
+## 2026-11-26: signed first-grant adapter (pending isolated verification)
+
+Pinned official CLI 0.9.0 supports signed D10 faucet request with --nonce. Existing test-only encrypted wallet is preserved. Current official Testnet page parser recognizes the live/unscored format. First grant uses a persisted nonce and 15-minute minimum reconciliation delay; legacy attempts without nonce require review. A CLI finalized report is not independent chain verification. No subsequent grant or inference is authorized by this adapter; scoring, miner discovery, independent settlement and spend eligibility remain unimplemented. Existing launchd cadence and mail remain unchanged. Review and run isolated tests before deployment. Source: https://www.npmjs.com/package/@flop-labs/cli?activeTab=dependencies ; https://docs.flop.network/docs/network-testnet .
