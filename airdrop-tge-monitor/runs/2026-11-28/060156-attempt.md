@@ -1,0 +1,1 @@
+Run attempt: 2026-11-28 06:01:56 +0700 (runtime context). Nearest scheduled slot 06:00 Asia/Bangkok; shard 2. Verification pending; not a completion artifact.
