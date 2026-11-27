@@ -251,3 +251,30 @@ uv run --isolated --offline --no-project --with pytest==8.3.5 python -B -m pytes
 ```
 
 两组 Python 分别 100 和 126 项通过。第一组的 1 项可选 Chrome 用例以真实 Mac Chrome 单独启动并通过。两日买入历史验收通过，完整同槽与当前实源深查、候选实际收件仍未通过门禁。整体 `PARTIAL`，本地切换和生产发布为 `NO_GO`。
+
+## 2026-11-28 池与持有人联合抽样
+
+候选源码 `72f1bc3b0c613535a5361f97175fa80efd817e6e`，直接基线 `e75376f66200815f6e7c94d000ec9f735f160dac`。上一轮归档的池快照和独立持有人复核来自不同请求，实测交集为 0。完整尽调在原有逐地址核对完成后，使用已核实主池和同一主／第二来源执行联合抽样。
+
+每个来源读一个 finalized `getMultipleAccounts` 批次，地址按同一顺序发送。池、两侧金库和两侧 Mint 占 5 个地址，剩余地址用于抽样持有人，单批遵守现有免费第二来源的 10 地址限制。原全量枚举和逐批地址核对继续执行。只有两边实际返回的槽位相同才给出同槽一致或同槽差异。第二来源请求使用第一来源返回的槽位作为下界。池和金库按最新同批原件复验身份，抽样账户的 Token Program、完整 Mint、所有者、原始余额及状态须可重算。缺失账户计入缺失。报告记录两个响应 SHA-256 和实际槽位，页面在持有人证据内展示抽样结果。 [Solana getMultipleAccounts 接口](https://solana.com/developers/docs/rpc/http/getmultipleaccounts)
+
+本机归档重新执行上一节 21 份 DONE 和回执重放。18 份池原件继续通过，独立持有人同槽槽位与已有池槽位交集仍为 0。组合清单 SHA-256 为 `6dddad599ff4d92eb7f3143f2b547bd6afea0bea054f81b047ecc5bb0e409d35`，归档重算结果 SHA-256 `93322b02fcd9e9d058cf570f15cdb72b0ee0917d6e401f8905bc128d1a02c460`。真实归档还没有池和抽样账户在同一批的双来源响应，联合抽样的正例由隔离回归覆盖。
+
+在 `crypto-300-profit-mission/local-agent` 实际执行：
+
+```zsh
+uv run --isolated --offline --no-project --with pytest==8.3.5 python -B -m pytest -q -p no:cacheprovider \
+  tests/test_meme_pool_vaults.py tests/test_ca_secondary_checkpoint.py tests/test_ca_job_checkpoint.py \
+  tests/test_frank_independent_sample_identity.py tests/test_meme_independent_check_lifecycle.py \
+  tests/test_meme_independent_error_evidence.py tests/test_meme_independent_full_accounts.py \
+  tests/test_meme_pool_holder_roles.py tests/test_meme_wallet_cluster.py
+node --test tests/*_ui.mjs tests/test_frank_ca_get_resume.mjs tests/test_frank_ca_report_render.mjs
+PYTHONPATH=. PYTHONDONTWRITEBYTECODE=1 python3 -B "$private/joint-slot-2b4ab742/check.py"
+uv run --isolated --offline --no-project --with playwright python -B "$private/joint-slot-72f1bc3b/chrome.py"
+```
+
+Python 定向 215 项、Node 269 项通过。Mac Chrome 158.0.8127.38 打开真实前端并展开持有人面板，在四份独立的隔离报告中验证同槽一致、同槽差异、跨槽和矛盾字段省略。0 个页面异常及外部请求，浏览器请求由测试拦截器直接返回，未建监听端口。报告 SHA-256 `71ef01e976971f2a1180a4e132484f1a31528c114fda527f0ed07d6cb75dee79`。同版本检查点用原响应重放两次读取，外部调用为 0。
+
+全量 Python 用 `uv run --isolated --offline --no-project --with pytest==8.3.5 --with numpy python -B -` 启动进程内外连护栏后执行 `pytest.main(["-q", "-p", "no:cacheprovider", "--tb=short", "tests"])`，3,069 通过，1 项 Chrome 用例从全量分开。用 `FRANK_TEST_CHROMIUM='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'` 和 `--with playwright` 运行 `tests/test_frank_rebuild_buys.py::test_browser_default_entry_filters_and_prefills_ca`，该用例通过。
+
+联合抽样源码及隔离验收为 `PASS`。实际双来源联合响应、独立持有人全集、完整 CA 查询的实源时延和候选实际收件仍为待验。整体 `PARTIAL`，本地 8766 切换与生产发布为 `NO_GO`。
