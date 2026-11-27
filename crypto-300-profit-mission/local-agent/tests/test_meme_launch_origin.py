@@ -1,7 +1,7 @@
 """Pump.fun launch identity, creator metadata/post chain and second-provider parity (injected I/O)."""
 import base64,hashlib
 import pytest
-from mission_agent.meme.holder_ranks import find_program_address,b58decode32,_b58,on_ed25519_curve
+from mission_agent.meme.holder_ranks import LEGACY_TOKEN_PROGRAM,find_program_address,b58decode32,_b58,on_ed25519_curve
 from mission_agent.meme.launch_identity import collect_pump_launch,collect_token_metadata,PUMP_PROGRAM,BONDING_CURVE_DISCRIMINATOR
 from mission_agent.meme.narrative import collect_origin,ipfs_candidates
 from mission_agent.meme.independent_check import collect_independent_balance_check
@@ -128,8 +128,13 @@ class Parsed:
     def call(self,method,params,ttl=0):
         vals=[]
         for a in params[0]:
-            if a==MINT:vals.append({'data':{'parsed':{'info':{'supply':'100'}}}})
-            elif a in self.amounts:vals.append({'data':{'parsed':{'info':{'tokenAmount':{'amount':self.amounts[a]},'owner':'o','mint':MINT}}}})
+            if a==MINT:
+                vals.append({'owner':LEGACY_TOKEN_PROGRAM,'executable':False,'data':{'parsed':{
+                    'type':'mint','info':{'supply':'100','decimals':0,'isInitialized':True}}}})
+            elif a in self.amounts:
+                vals.append({'owner':LEGACY_TOKEN_PROGRAM,'executable':False,'data':{'parsed':{
+                    'type':'account','info':{'tokenAmount':{'amount':self.amounts[a],'decimals':0},
+                    'owner':CREATOR,'mint':MINT,'state':'initialized'}}}})
             else:vals.append(None)
         return {'context':{'slot':self.slot},'value':vals}
 

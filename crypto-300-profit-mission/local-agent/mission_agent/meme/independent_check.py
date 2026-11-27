@@ -39,39 +39,46 @@ def _last_source_error(rpc):
     return code if code in {'TimeoutError','URLError','OSError','ValueError','JSONDecodeError'} else None
 
 
-def _read(rpc,addresses,*,strict_mint=None,expected_program=None):
+def _read(rpc,addresses,*,strict_mint,expected_program=None):
     r=rpc.call('getMultipleAccounts',[addresses,{'encoding':'jsonParsed','commitment':'finalized'}])
-    slot=((r or {}).get('context') or {}).get('slot') if isinstance(r,dict) else None
-    values=(r or {}).get('value') if isinstance(r,dict) else None
+    context=r.get('context') if isinstance(r,dict) else None
+    slot=context.get('slot') if isinstance(context,dict) else None
+    values=r.get('value') if isinstance(r,dict) else None
     if type(slot) is not int or slot<=0 or not isinstance(values,list) or len(values)!=len(addresses):raise ValueError('RESPONSE_INVALID')
     out={}
     for address,v in zip(addresses,values):
-        info=(((v or {}).get('data') or {}).get('parsed') or {}).get('info') if isinstance(v,dict) and isinstance(v.get('data'),dict) else None
-        if not isinstance(info,dict):
-            if strict_mint is not None and v is not None:raise ValueError('RESPONSE_INVALID')
+        if v is None:
             out[address]=None;continue
-        if strict_mint is not None:
-            is_mint=address==strict_mint
-            amount=info if is_mint else info.get('tokenAmount')
-            amount=amount if isinstance(amount,dict) else {}
-            raw=amount.get('supply' if is_mint else 'amount')
-            decimals=amount.get('decimals')
-            program=v.get('owner')
-            parsed=v['data']['parsed']
-            if (not isinstance(program,str) or program not in PROGRAMS or v.get('executable') is not False
-                or (expected_program is not None and program!=expected_program)
-                or parsed.get('type')!=('mint' if is_mint else 'account')
-                or not isinstance(raw,str) or not re.fullmatch(r'(?:0|[1-9][0-9]{0,19})',raw)
-                or int(raw)>2**64-1 or type(decimals) is not int or not 0<=decimals<=255
-                or (is_mint and info.get('isInitialized') is not True)
-                or (not is_mint and (not valid_pubkey(info.get('owner')) or info.get('mint')!=strict_mint
-                                     or info.get('state') not in ('initialized','frozen')))):
-                raise ValueError('RESPONSE_INVALID')
-            out[address]={'kind':'mint' if is_mint else 'account','raw':raw,'decimals':decimals,'program':program}
-            if not is_mint:out[address].update(owner=info['owner'],mint=info['mint'])
-            continue
-        if 'supply' in info:out[address]={'kind':'mint','raw':str(info.get('supply'))}
-        else:out[address]={'kind':'account','raw':str((info.get('tokenAmount') or {}).get('amount')),'owner':info.get('owner'),'mint':info.get('mint')}
+        if not isinstance(v,dict):raise ValueError('RESPONSE_INVALID')
+        data=v.get('data')
+        parsed=data.get('parsed') if isinstance(data,dict) else None
+        info=parsed.get('info') if isinstance(parsed,dict) else None
+        if not isinstance(info,dict):raise ValueError('RESPONSE_INVALID')
+        is_mint=address==strict_mint
+        amount=info if is_mint else info.get('tokenAmount')
+        amount=amount if isinstance(amount,dict) else {}
+        raw=amount.get('supply' if is_mint else 'amount')
+        decimals=amount.get('decimals')
+        program=v.get('owner')
+        if (not isinstance(program,str) or program not in PROGRAMS or v.get('executable') is not False
+            or (expected_program is not None and program!=expected_program)
+            or parsed.get('type')!=('mint' if is_mint else 'account')
+            or not isinstance(raw,str) or not re.fullmatch(r'(?:0|[1-9][0-9]{0,19})',raw)
+            or int(raw)>2**64-1 or type(decimals) is not int or not 0<=decimals<=255
+            or (is_mint and info.get('isInitialized') is not True)
+            or (not is_mint and (not valid_pubkey(info.get('owner')) or info.get('mint')!=strict_mint
+                                 or info.get('state') not in ('initialized','frozen')))):
+            raise ValueError('RESPONSE_INVALID')
+        out[address]={'kind':'mint' if is_mint else 'account','raw':raw,'decimals':decimals,'program':program}
+        if not is_mint:out[address].update(owner=info['owner'],mint=info['mint'])
+    # This check is local to a single bank response containing the mint.
+    # Non-overlapping full-set batches still use their validated program ID
+    # when the original enumeration supplied one.
+    mint_row=out.get(strict_mint)
+    if mint_row is not None and any(
+            row is not None and (row['program'],row['decimals'])!=(mint_row['program'],mint_row['decimals'])
+            for row in out.values()):
+        raise ValueError('RESPONSE_INVALID')
     return slot,out
 
 
@@ -207,16 +214,17 @@ def collect_independent_balance_check(mint,accounts,primary,secondary,*,label='P
     if full_accounts:return _collect_full_set(mint,accounts,primary,secondary,label,clock,progress,enumeration)
     base={'version':1,'status':'UNAVAILABLE','secondary_provider':label,'scope':'LARGEST_TOKEN_ACCOUNTS_AND_MINT_SUPPLY; NOT_FULL_ENUMERATION','secondary_wire_attempts':0,'last_source_error':None}
     if secondary is None:return {**base,'status':'NOT_REQUESTED','reason':'NO_SECONDARY_PROVIDER'}
+    if not valid_pubkey(mint):return {**base,'reason':'INVALID_MINT'}
     addresses=[mint]+[a for a in dict.fromkeys(accounts) if valid_pubkey(a) and a!=mint][:MAX_ACCOUNTS]
     try:
-        p_slot,p=_read(primary,addresses);p_at=clock()
+        p_slot,p=_read(primary,addresses,strict_mint=mint);p_at=clock()
     except RPCJobBudgetExceeded:raise
     except Exception as exc:return {**base,'reason':_safe_reason(exc)}
     rpc=secondary
     try:
         if not callable(getattr(rpc,'call',None)):rpc=secondary()
         if rpc is None:return {**base,'reason':'SECONDARY_PROVIDER_UNAVAILABLE'}
-        s_slot,s=_read(rpc,addresses);s_at=clock()
+        s_slot,s=_read(rpc,addresses,strict_mint=mint);s_at=clock()
     except CheckpointError:raise
     except Exception as exc:return {**base,'reason':_safe_reason(exc),'secondary_wire_attempts':_wire_attempts(rpc),'last_source_error':_last_source_error(rpc)}
     base['secondary_wire_attempts']=_wire_attempts(rpc)

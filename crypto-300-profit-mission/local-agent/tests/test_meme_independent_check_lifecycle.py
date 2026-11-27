@@ -4,6 +4,7 @@ import json
 import pytest
 
 from mission_agent.meme.cluster import RPCError, RPCJobBudgetExceeded, SolanaReadOnlyRPC
+from mission_agent.meme.holder_ranks import LEGACY_TOKEN_PROGRAM
 from mission_agent.meme.independent_check import collect_independent_balance_check
 from mission_agent.meme.job_checkpoint import CheckpointError
 from mission_agent.mission_control import server
@@ -27,7 +28,8 @@ class Response:
 
 def payload():
     return {'context': {'slot': 7}, 'value': [
-        {'data': {'parsed': {'info': {'supply': '100'}}}}
+        {'owner': LEGACY_TOKEN_PROGRAM, 'executable': False,
+         'data': {'parsed': {'type': 'mint', 'info': {'supply': '100', 'decimals': 0, 'isInitialized': True}}}}
     ]}
 
 

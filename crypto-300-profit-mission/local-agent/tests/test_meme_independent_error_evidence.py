@@ -5,6 +5,7 @@ import urllib.error
 import pytest
 
 from mission_agent.meme.cluster import RPCError, SolanaReadOnlyRPC
+from mission_agent.meme.holder_ranks import LEGACY_TOKEN_PROGRAM
 from mission_agent.meme.independent_check import collect_independent_balance_check
 
 MINT = 'So11111111111111111111111111111111111111112'
@@ -19,7 +20,8 @@ class Clock:
 
 def payload():
     return {'context': {'slot': 7}, 'value': [
-        {'data': {'parsed': {'info': {'supply': '100'}}}}
+        {'owner': LEGACY_TOKEN_PROGRAM, 'executable': False,
+         'data': {'parsed': {'type': 'mint', 'info': {'supply': '100', 'decimals': 0, 'isInitialized': True}}}}
     ]}
 
 
