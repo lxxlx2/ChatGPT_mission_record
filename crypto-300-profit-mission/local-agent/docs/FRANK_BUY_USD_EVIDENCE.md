@@ -12,3 +12,11 @@ Version 2 keeps the same `records` and adds `captures`. Each capture contains:
 Record only genuine complete responses. The hash checks consistency, not exchange authenticity; the operator remains responsible for provenance. Do not pass private wallet/transaction identifiers to an exchange. One observation can serve signed buys in the same asset and second, but is used only for an admitted buy with attributable payment. Empty, saturated, mismatched, duplicate or disagreeing captures are not priced. Neither nearby ticks nor a stablecoin peg is a fallback. The entire file remains capped at 4 MiB. Use a private file and publish a replacement atomically if updating live staging.
 
 The exact USD fields remain null for market conversions. The UI marks the separate estimate with ≈ and describes it as a same-second payment-asset estimate, not a USD fill. No captures are supplied by default. This path does not demonstrate real source availability or coverage for any historical window.
+
+To package saved receipts offline from the local-agent directory, use
+`python -m scripts.frank_build_usd_evidence --output <new-private-json> --receipt SOL <unix-second> '<actual-request-url>' <local-raw-response>`.
+Repeat `--receipt` for distinct asset/second pairs, and optionally pass `--legacy`
+to carry forward an existing version 1 file. This checks inputs and creates a new
+owner-only file, without calling Kraken, opening the ledger, activating the
+Dashboard, or replacing a deployed sidecar. Exact legacy JSON decimals are
+preserved as decimal strings.
