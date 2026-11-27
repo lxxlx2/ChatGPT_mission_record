@@ -1,0 +1,78 @@
+{
+  "schema": "BSC_P4B_2026_DRAGON_D503_E11B_FIVE_ORIGINAL_EXTERNAL_TX_FEE_PRECOMMIT_V1",
+  "date": "2026-10-18",
+  "head_prior": "469217b11f50e609785c48b67df9aedc356988d4",
+  "objective": "Obtain original realized outside-frozen23 signer D503 full buy Gas/fee and sell receipts from independent free explorer, preserve one buy-only E11B negative/control (UNKNOWN_EXIT), tie to original four EOA native balance blocks; NOT public observer following DDAC.",
+  "cohort": {
+    "original_23_wallets": 23,
+    "original_19_CA": 19,
+    "locked_total_437": 437,
+    "external_buyers_outside_original_23": 2
+  },
+  "token_exact_CA": "0xeccbb861c0dda7efd964010085488b69317e4444",
+  "source_pins": {
+    "original_signed_seven": "b06b2ef565ebd74bc7f83ad4a2ea731eeb5cb2b9",
+    "original_4_blocks_native": "9ac3c2bef80e5ada78c87f0949d19f80eb55ecab",
+    "original_12_inventory_samples": "06bba24e15530cf9f0f7fde24ab876fcc764d173",
+    "original_DDAC_exited_before_D503": "4e76eea4d7ab001360af82f15de5eefc8509c501"
+  },
+  "frozen_reads": [
+    {
+      "id": "D503_BUY_1",
+      "wallet": "0xd503f69b37efbfe510e37f46a4ca34e0adb1a7aa",
+      "block": 83636000,
+      "hash": "0xd099d33a83c217e47f21b618483ae48de6018fb7fd26d093924f2eb25d219118"
+    },
+    {
+      "id": "D503_SELL_1",
+      "wallet": "0xd503f69b37efbfe510e37f46a4ca34e0adb1a7aa",
+      "block": 83636018,
+      "hash": "0x854ce4c5edc725bf9d763c043e29e0d8ef8a9ab89a3c39bdf7fba31dda98416d"
+    },
+    {
+      "id": "D503_BUY_2",
+      "wallet": "0xd503f69b37efbfe510e37f46a4ca34e0adb1a7aa",
+      "block": 83636084,
+      "hash": "0xbc1622bb9a1850b5966f7c056d0344e586c3ffcf7b882df84cb07673bd13bfb5"
+    },
+    {
+      "id": "D503_SELL_2",
+      "wallet": "0xd503f69b37efbfe510e37f46a4ca34e0adb1a7aa",
+      "block": 83636094,
+      "hash": "0x25122e07f529fc935856f99cc948f442587ac09d1e339a859eb86537e93eca0a"
+    },
+    {
+      "id": "E11B_BUY_1",
+      "wallet": "0xe11b917d591db3bf40ecb5bf7ea4ea5af503460c",
+      "block": 83636000,
+      "hash": "0xc0262a91f9e2036a5700f88753aec82496104410b8d8a02610f33c8a2d5a6c7a"
+    }
+  ],
+  "read_provider": "Blockscout public BNB chain 56 enriched transaction read-only; independent of earlier Alchemy truncated 8098-character receipt",
+  "max_live_reads": 5,
+  "no_retries": true,
+  "no_reselection": true,
+  "expected_fields": [
+    "gas_used",
+    "gas_price",
+    "fee",
+    "block",
+    "tx_hash",
+    "status",
+    "token_transfers"
+  ],
+  "fail_policy": "If provider rate limited, gated, unsupported or incomplete, report UNKNOWN, do not infer Gas as zero or fabricate full proceeds. Do not buy paid plan.",
+  "prohibitions": [
+    "Do not treat D503 later trade as DDAC causal follower",
+    "Do not count E11B as realized loss if no verified sell",
+    "Do not aggregate unrelated same-block wallet activity into isolated per-tx profit",
+    "Do not combine native EOA block delta with separate fees again",
+    "NO_MERGE NO_DEPLOY NO_GMAIL NO_TRADE"
+  ],
+  "statuses": {
+    "P4_B": "PARTIAL",
+    "PUBLIC_EXECUTABLE_U": "UNRESOLVED",
+    "P5": "BLOCKED",
+    "production": "NO_GO"
+  }
+}

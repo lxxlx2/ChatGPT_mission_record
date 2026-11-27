@@ -1,0 +1,65 @@
+{
+  "schema": "BSC_P4B_FLAP_2026_NIULAI_MARSCOIN_FOUR_ORIGINAL_PORTAL_BLOCK_LOGS_PRECOMMIT",
+  "scope": "Frozen two 2026 major CA x creator and first distinct token transfer tx. Query exact historical block on verified official Flap BSC Portal only; retain ALL portal logs in that single block and independently select exact tx hash and original token CA from unindexed event data. This neither proves first whole-market buy nor executed follower sell.",
+  "network": "bnb-mainnet",
+  "portal": "0xe2ce6ab80874fa9fa2aae65d277dd6b8e65c9de0",
+  "official_portal_reference": "https://docs.flap.sh/flap/developers/deployed-contract-addresses",
+  "official_event_ABI_reference": "https://github.com/flap-sh/FlapVaultExample/blob/main/src/flap/IPortal.sol",
+  "source_git_manifest": [
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4b-2026-major3-pre-dex-tx-precommit-2026-10-14.json",
+      "git_blob_sha": "57a13cfddd239d5c1705cfa31fb3182cac07c2aa"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4b-2026-major3-first-txs-part2-2026-10-14.json",
+      "git_blob_sha": "7e2e4f3cb779cd9511c2d5670e3a90f403616684"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4b-2026-major3-first-txs-part3-2026-10-14.json",
+      "git_blob_sha": "5208fe6dbffdef6ed642697bcab1ff29e2bf1b9b"
+    }
+  ],
+  "queries": [
+    {
+      "token": "牛来",
+      "role": "EARLIEST_TOKEN_MINT_TRANSFER_TX",
+      "block": 115628768,
+      "tx": "0x907beed290b7daeb45cd2f05085c7ca67f997c06749f716c40ed431b2b2eb62d",
+      "tx_from": "0x6af3f52369c39f6ca2d9a50799723feff7ff679e",
+      "tx_to": "0xe2ce6ab80874fa9fa2aae65d277dd6b8e65c9de0",
+      "value": "0x3b9aca00",
+      "input_selector": "0x8cb5772c"
+    },
+    {
+      "token": "牛来",
+      "role": "FIRST_DISTINCT_POST_MINT_TRANSFER_TX",
+      "block": 115628774,
+      "tx": "0xcb89b7adafacdfb5f844102c4e27ed474abec8947c74476d461be70a9b0e8fa5",
+      "tx_from": "0xb0d0c4c1ee4ba9fac874db4ede587718ad9484d9",
+      "tx_to": "0xb300000b72deaeb607a12d5f54773d1c19c7028d",
+      "value": "0x0",
+      "input_selector": "0x810c705b"
+    },
+    {
+      "token": "MARSCOIN",
+      "role": "EARLIEST_TOKEN_MINT_TRANSFER_TX",
+      "block": 112441387,
+      "tx": "0xb499cc66534db949c6040dbc914ba0e3e50423a408717f69a193a8e29eeeb7a2",
+      "tx_from": "0x85de3316eeca740ba049a8d9c9d68ab21cb282e5",
+      "tx_to": "0xe2ce6ab80874fa9fa2aae65d277dd6b8e65c9de0",
+      "value": "0x3b9aca00",
+      "input_selector": "0x8cb5772c"
+    },
+    {
+      "token": "MARSCOIN",
+      "role": "FIRST_DISTINCT_POST_MINT_TRANSFER_TX",
+      "block": 112441394,
+      "tx": "0x6bb75edb235d86747fcaa1b6f13c820601973fe840ef22eb54aa22e54d36d028",
+      "tx_from": "0x504ba7b11be98c66a379a3e5de91dc5ab2dde3ea",
+      "tx_to": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "value": "0x770ecbffd9cf2a8",
+      "input_selector": "0x4d819a2a"
+    }
+  ],
+  "production": "NO_GO"
+}

@@ -1,0 +1,132 @@
+{
+  "schema": "BSC_P4C_V3_POST_REVIEW_OUTCOME_AWARE_COHORT_RECONCILIATION_V1",
+  "date": "2026-10-16",
+  "type": "POST_REVIEW_CORRECTION_NOT_A_NEW_UNTOUCHED_PRECOMMIT",
+  "review_that_triggered": "Independent reviewer REQUEST_CHANGES on fixed d66aa8cb91ec037196e67e213311a29d7141cc74: H1 provenance of silent outcome-aware 13→15 replacement, H2 calendar raw headers, H3 truncated status proof, M4 adverse tests.",
+  "source_paths": {
+    "p2_ledger": {
+      "name": "bsc-meme-address-model-v1-p2-evidence-ledger-2026-10-13.json",
+      "git_blob": "2a19dbd88c2971efff60a15894d952d0d05e64d9"
+    },
+    "original_V1": {
+      "name": "bsc-meme-address-model-v1-p4c-fiveowners-fourmajors-replay-precommit-2026-10-16.json",
+      "git_blob": "81766a70568c49ceac5e4906307b324c0a263d3f"
+    },
+    "corrected_V2": {
+      "name": "bsc-meme-address-model-v1-p4c-fiveowners-fourmajors-replay-precommit-corrected-v2-2026-10-16.json",
+      "git_blob": "93ccf47b87661fd734613d5b6c45aa2ddca26cd6"
+    },
+    "previous_14_transaction_manifest": {
+      "name": "bsc-meme-address-model-v1-p4c-fiveowners-fourmajors-original14-pre-rpc-2026-10-16.json",
+      "git_blob": "723de3bb9aad1fb916eb8b958173e633d8338796"
+    },
+    "positive_case_13_source": {
+      "name": "BSC_MEME_STAGE23_8E6B_REPEAT_WINNER_HAJIMI_LOBSTER_IFML_CROSS_MAJOR_ROUNDS_2026-10-13.json",
+      "git_blob": "6227e69fabd6c0d991add0d7ff5c6e406babd40b"
+    }
+  },
+  "admission_of_V1_to_V2_change": {
+    "source_p2_13_apr2026_valid": true,
+    "removed_index_13_without_reason_in_prior_V2": true,
+    "removed_index_13_positive_wei": "253300282319389315",
+    "p2_42_2025_dec29_invalid_calendar": true,
+    "added_index_15_negative_and_44_positive_already_known": true,
+    "meaning": "BOTH index 13→15 and 42→44 changed outcome composition. While correction occurred before NEW RPC and old Git files were retained, all P2 outcomes were already exposed. Prior V2 described only the calendar error and inaccurately implied preserving old selection. This version makes both replacements explicit and reports V1, V2, V3 instead of calling V2 unbiased or solely date-corrected."
+  },
+  "cohort_comparisons": {
+    "v1": {
+      "ids": [
+        13,
+        31,
+        38,
+        46,
+        42
+      ],
+      "native_scope_sum_wei": "223671359895044206",
+      "positive": 3,
+      "negative": 2,
+      "unique_wallets": 5,
+      "unique_CAs": 4
+    },
+    "v2": {
+      "ids": [
+        15,
+        31,
+        38,
+        46,
+        44
+      ],
+      "native_scope_sum_wei": "-400073738684035463",
+      "positive": 2,
+      "negative": 3,
+      "unique_wallets": 5,
+      "unique_CAs": 4
+    },
+    "v3": {
+      "ids": [
+        13,
+        15,
+        31,
+        38,
+        46,
+        44
+      ],
+      "native_scope_sum_wei": "-146773456364646148",
+      "positive": 3,
+      "negative": 3,
+      "unique_wallets": 5,
+      "unique_CAs": 4
+    }
+  },
+  "corrected_scope": {
+    "p2_indices": [
+      13,
+      15,
+      31,
+      38,
+      46,
+      44
+    ],
+    "selection": "FULL V1 non-2025 original four indices [13,31,38,46] plus V2 extra negative 15 and 2026 substitute 44, all outcomes retained; 6 episodes / 5 owners / 4 exact CAs / 3 pos 3 neg; NOT the prior 5-case estimator.",
+    "grade": "SOURCE_NATIVE_WALLET_BLOCK_SCOPE_UNLESS_ORIGINALLY_GRADED_HIGHER",
+    "year_rejection_contract": "Use independently retrieved original block header timestamp UTC for each included first/last block, not P2 is_2026_major_priority flag or an index blacklist.",
+    "original_source_2026_date_witnesses": {
+      "13": "2026-04-20T05:53:09Z",
+      "15": "2026-01-21T11:18:34Z",
+      "31": null,
+      "38": "2026-07-28T13:29:09.000Z",
+      "42": "2025-12-29T11:18:55.000Z",
+      "44": "2026-09-14T05:40:56.000Z",
+      "46": "2026-08-15T14:51:35.000Z"
+    },
+    "positive_episode13_original_two_transactions": [
+      {
+        "hash": "0xe96df53014497d00b74d6a08fb903661b35a4ceea42851bcb31de80fca223f34",
+        "block": 93584281
+      },
+      {
+        "hash": "0xd3b7eafb4d5193be7f7ff9dd62b968a65fae16b37c430726e13207ed51c71530",
+        "block": 94208823
+      }
+    ],
+    "original14_source_case_count": 5,
+    "total_six_episode_expected_original_transaction_count": 16,
+    "already_exposed": true,
+    "NO_P5_HOLDOUT": true,
+    "source_economic_signs_are_not_realized_profit": true
+  },
+  "reviewer_requested_fix_targets": {
+    "H1": "explicit both swaps and all three aggregates",
+    "H2": "separate live historical headers with block hashes, timestamps, UTC and exact 2026 check",
+    "H3": "include raw exact response excerpts and provenance; until verified reclassify partial statuses as UNVERIFIED rather than 0x1 presumed reliable",
+    "M4": "adversarial tests for all three",
+    "L5": "IFML=我踏马来了, Dragon=龙虾 exact CA mapping"
+  },
+  "PRODUCTION": "NO_GO",
+  "P4_C": "PARTIAL",
+  "P5": "BLOCKED",
+  "NO_MERGE": true,
+  "NO_DEPLOY": true,
+  "NO_GMAIL": true,
+  "NO_TRADE": true
+}

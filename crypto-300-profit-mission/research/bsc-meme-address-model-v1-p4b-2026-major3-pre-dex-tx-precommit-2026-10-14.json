@@ -1,0 +1,179 @@
+{
+  "schema": "BSC_P4B_FROZEN_2026_MAJOR3_PREDEX_FIRST_MINT_AND_DISTRIBUTION_TX",
+  "scope": "Only the three frozen 2026 majors (龙虾 牛来 MARSCOIN) and their first 10 source-indexed ERC20 transfer events. For each token, one earliest mint-tx plus first distinct transfer-tx, before sampled scoped DEX liquidity. ERC20 transfers alone are not sales; review original full transaction and receipt events for platform trade.",
+  "raw_index_git_blobs": [
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4b-first10-erc20-pre-dex-part4-2026-10-14.json",
+      "git_blob_sha": "ed68cd1ae0245132ec1eafa8d7803d12c802d685"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4b-first10-erc20-pre-dex-part5-2026-10-14.json",
+      "git_blob_sha": "7607887812df4ef0219bac8aa069776451b9249a"
+    }
+  ],
+  "rows": [
+    {
+      "token": "龙虾",
+      "exact_CA": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "earliest_scoped_dex_block": 83636128,
+      "selected_role": "EARLIEST_TOKEN_MINT_TRANSFER_TX",
+      "selected_tx_hash": "0x822621d8b11dc2d0e36ffaf8219a6c79564ad707d885e450ac73e80554c7b616",
+      "reported_first_transfer_block": 83635770,
+      "selected_transfer": {
+        "blockNum": "0x4fc2e3a",
+        "uniqueId": "0x822621d8b11dc2d0e36ffaf8219a6c79564ad707d885e450ac73e80554c7b616:log:116",
+        "hash": "0x822621d8b11dc2d0e36ffaf8219a6c79564ad707d885e450ac73e80554c7b616",
+        "from": "0x0000000000000000000000000000000000000000",
+        "to": "0x757eba15a64468e6535532fcf093cef90e226f85",
+        "value": 1000000000,
+        "erc721TokenId": null,
+        "erc1155Metadata": [],
+        "tokenId": null,
+        "asset": "龙虾",
+        "category": "erc20",
+        "rawContract": {
+          "value": "0x33b2e3c9fd0803ce8000000",
+          "address": "0xeccbb861c0dda7efd964010085488b69317e4444",
+          "decimal": "0x12"
+        },
+        "metadata": null
+      }
+    },
+    {
+      "token": "龙虾",
+      "exact_CA": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "earliest_scoped_dex_block": 83636128,
+      "selected_role": "FIRST_DISTINCT_POST_MINT_TRANSFER_TX",
+      "selected_tx_hash": "0x35793699fbf006cfb07d5775991f50c106af64ea840db10a2f580b4661a0df12",
+      "reported_first_transfer_block": 83635776,
+      "selected_transfer": {
+        "blockNum": "0x4fc2e40",
+        "uniqueId": "0x35793699fbf006cfb07d5775991f50c106af64ea840db10a2f580b4661a0df12:log:3",
+        "hash": "0x35793699fbf006cfb07d5775991f50c106af64ea840db10a2f580b4661a0df12",
+        "from": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+        "to": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+        "value": 99069253.5103,
+        "erc721TokenId": null,
+        "erc1155Metadata": [],
+        "tokenId": null,
+        "asset": "龙虾",
+        "category": "erc20",
+        "rawContract": {
+          "value": "0x51f2bafe7e98ea859a3a00",
+          "address": "0xeccbb861c0dda7efd964010085488b69317e4444",
+          "decimal": "0x12"
+        },
+        "metadata": null
+      }
+    },
+    {
+      "token": "牛来",
+      "exact_CA": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "earliest_scoped_dex_block": 115919205,
+      "selected_role": "EARLIEST_TOKEN_MINT_TRANSFER_TX",
+      "selected_tx_hash": "0x907beed290b7daeb45cd2f05085c7ca67f997c06749f716c40ed431b2b2eb62d",
+      "reported_first_transfer_block": 115628768,
+      "selected_transfer": {
+        "blockNum": "0x6e45ae0",
+        "uniqueId": "0x907beed290b7daeb45cd2f05085c7ca67f997c06749f716c40ed431b2b2eb62d:log:257",
+        "hash": "0x907beed290b7daeb45cd2f05085c7ca67f997c06749f716c40ed431b2b2eb62d",
+        "from": "0x0000000000000000000000000000000000000000",
+        "to": "0xe2ce6ab80874fa9fa2aae65d277dd6b8e65c9de0",
+        "value": 1000000000,
+        "erc721TokenId": null,
+        "erc1155Metadata": [],
+        "tokenId": null,
+        "asset": "牛来",
+        "category": "erc20",
+        "rawContract": {
+          "value": "0x33b2e3c9fd0803ce8000000",
+          "address": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+          "decimal": "0x12"
+        },
+        "metadata": null
+      }
+    },
+    {
+      "token": "牛来",
+      "exact_CA": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "earliest_scoped_dex_block": 115919205,
+      "selected_role": "FIRST_DISTINCT_POST_MINT_TRANSFER_TX",
+      "selected_tx_hash": "0xcb89b7adafacdfb5f844102c4e27ed474abec8947c74476d461be70a9b0e8fa5",
+      "reported_first_transfer_block": 115628774,
+      "selected_transfer": {
+        "blockNum": "0x6e45ae6",
+        "uniqueId": "0xcb89b7adafacdfb5f844102c4e27ed474abec8947c74476d461be70a9b0e8fa5:log:258",
+        "hash": "0xcb89b7adafacdfb5f844102c4e27ed474abec8947c74476d461be70a9b0e8fa5",
+        "from": "0xe2ce6ab80874fa9fa2aae65d277dd6b8e65c9de0",
+        "to": "0x9e698d361bb2375bd335dad156accbbad45bf364",
+        "value": 37956445.90718254,
+        "erc721TokenId": null,
+        "erc1155Metadata": [],
+        "tokenId": null,
+        "asset": "牛来",
+        "category": "erc20",
+        "rawContract": {
+          "value": "0x1f65970e3d19442b831db1",
+          "address": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+          "decimal": "0x12"
+        },
+        "metadata": null
+      }
+    },
+    {
+      "token": "MARSCOIN",
+      "exact_CA": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "earliest_scoped_dex_block": 112642885,
+      "selected_role": "EARLIEST_TOKEN_MINT_TRANSFER_TX",
+      "selected_tx_hash": "0xb499cc66534db949c6040dbc914ba0e3e50423a408717f69a193a8e29eeeb7a2",
+      "reported_first_transfer_block": 112441387,
+      "selected_transfer": {
+        "blockNum": "0x6b3b82b",
+        "uniqueId": "0xb499cc66534db949c6040dbc914ba0e3e50423a408717f69a193a8e29eeeb7a2:log:77",
+        "hash": "0xb499cc66534db949c6040dbc914ba0e3e50423a408717f69a193a8e29eeeb7a2",
+        "from": "0x0000000000000000000000000000000000000000",
+        "to": "0xe2ce6ab80874fa9fa2aae65d277dd6b8e65c9de0",
+        "value": 1000000000,
+        "erc721TokenId": null,
+        "erc1155Metadata": [],
+        "tokenId": null,
+        "asset": "MarsCoin",
+        "category": "erc20",
+        "rawContract": {
+          "value": "0x33b2e3c9fd0803ce8000000",
+          "address": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+          "decimal": "0x12"
+        },
+        "metadata": null
+      }
+    },
+    {
+      "token": "MARSCOIN",
+      "exact_CA": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "earliest_scoped_dex_block": 112642885,
+      "selected_role": "FIRST_DISTINCT_POST_MINT_TRANSFER_TX",
+      "selected_tx_hash": "0x6bb75edb235d86747fcaa1b6f13c820601973fe840ef22eb54aa22e54d36d028",
+      "reported_first_transfer_block": 112441394,
+      "selected_transfer": {
+        "blockNum": "0x6b3b832",
+        "uniqueId": "0x6bb75edb235d86747fcaa1b6f13c820601973fe840ef22eb54aa22e54d36d028:log:158",
+        "hash": "0x6bb75edb235d86747fcaa1b6f13c820601973fe840ef22eb54aa22e54d36d028",
+        "from": "0xe2ce6ab80874fa9fa2aae65d277dd6b8e65c9de0",
+        "to": "0x1de460f363af910f51726def188f9004276bf4bc",
+        "value": 77163604.47833037,
+        "erc721TokenId": null,
+        "erc1155Metadata": [],
+        "tokenId": null,
+        "asset": "MarsCoin",
+        "category": "erc20",
+        "rawContract": {
+          "value": "0x3fd407616fb745ea0560a1",
+          "address": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+          "decimal": "0x12"
+        },
+        "metadata": null
+      }
+    }
+  ],
+  "production": "NO_GO"
+}

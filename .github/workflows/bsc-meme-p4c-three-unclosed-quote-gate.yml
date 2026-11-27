@@ -1,0 +1,26 @@
+name: BSC P4C three frozen quote-route blockers
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/bsc-meme-p4c-three-unclosed-quote-gate.yml"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4c_three_quote_gate.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4c_three_quote_gate.py"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-three-unclosed-owner-token-quote-gate-2026-10-15.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  evidence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify only actual signed token close no false quote profit
+        run: |
+          cd crypto-300-profit-mission/research
+          python3 -B -m unittest -v test_bsc_meme_address_model_v1_p4c_three_quote_gate.py
+          python3 -B bsc_meme_address_model_v1_p4c_three_quote_gate.py --output /tmp/p4c-quote-closed-but-unknown.json
+          python3 -B -c 'import json; from pathlib import Path; a=json.loads(Path("/tmp/p4c-quote-closed-but-unknown.json").read_text()); b=json.loads(Path("bsc-meme-address-model-v1-p4c-three-unclosed-owner-token-quote-gate-2026-10-15.json").read_text()); assert a==b; assert a["summary"]["source_canonical_token_inventory_closed"]==3; assert a["summary"]["new_settled_native_profitable_rounds"]==0; assert a["summary"]["unrelated_same_block_Q3B_outflows_excluded"]==1; assert a["summary"]["production"]=="NO_GO"'

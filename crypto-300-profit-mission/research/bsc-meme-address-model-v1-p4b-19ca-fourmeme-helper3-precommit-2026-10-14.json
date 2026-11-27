@@ -1,0 +1,206 @@
+{
+  "schema": "BSC_P4B_19CA_FOURMEME_HELPER3_HISTORICAL_ORIGIN_PRECOMMIT",
+  "network": "bnb-mainnet",
+  "protocol_reference": "https://github.com/four-meme-community/fourmeme-docs/blob/5f7f589b042e4e3b41c2c214d0fe3a81b36725a9/docs/trade-guide.md",
+  "helper_contract": "0xf251f83e40a78868fcfa3fa4599dad6494e46034",
+  "manager_v1": "0xec4549cadce5da21df6e6422d448034b5233bfbc",
+  "manager_v2": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+  "method_signature": "getTokenInfo(address)",
+  "selector_keccak256": "0x1f69565f",
+  "method_output_expected_words": 12,
+  "query_scope": "One historical eth_call per frozen exact CA at one block PRIOR to earliest positively identified amongst scoped 36 PancakeSwap pool first liquidity blocks; source origin table does not include other venues; Version 0/revert not proof of non-Four launch; positive canonical version/manager only a Four integration witness, not first trade",
+  "source_crossvenue_git_blob_sha": "49377dad6324a1089ca1233a7db6327443d0e4e6",
+  "rows": [
+    {
+      "index": 0,
+      "token": "TST",
+      "exact_CA": "0x86bb94ddd16efc8bc58e6b056e8df71d9e666429",
+      "earliest_scoped_active_block": 46411402,
+      "helper_read_block": 46411401,
+      "first_scoped_pool": "0x16969fa79651bae11736f2f6576a86fe2726b42b",
+      "first_scoped_protocol": "V3",
+      "first_scoped_quote": "WBNB"
+    },
+    {
+      "index": 1,
+      "token": "CHEEMS",
+      "exact_CA": "0x0df0587216a4a1bb7d5082fdc491d93d2dd4b413",
+      "earliest_scoped_active_block": 42638390,
+      "helper_read_block": 42638389,
+      "first_scoped_pool": "0x38231d4ef9d33ebea944c75a21301ff6986499c3",
+      "first_scoped_protocol": "V3",
+      "first_scoped_quote": "WBNB"
+    },
+    {
+      "index": 2,
+      "token": "MUBARAK",
+      "exact_CA": "0x5c85d6c6825ab4032337f11ee92a72df936b46f6",
+      "earliest_scoped_active_block": 47425645,
+      "helper_read_block": 47425644,
+      "first_scoped_pool": "0x90a54475d512b8f3852351611c38fad30a513491",
+      "first_scoped_protocol": "V3",
+      "first_scoped_quote": "WBNB"
+    },
+    {
+      "index": 3,
+      "token": "TUT",
+      "exact_CA": "0xcaae2a2f939f51d97cdfa9a86e79e3f085b799f3",
+      "earliest_scoped_active_block": 46484226,
+      "helper_read_block": 46484225,
+      "first_scoped_pool": "0x6dafbf0ab4fd72e2a5c0ad5a1ed277d3bf8a8d1f",
+      "first_scoped_protocol": "V3",
+      "first_scoped_quote": "WBNB"
+    },
+    {
+      "index": 4,
+      "token": "BROCCOLI714",
+      "exact_CA": "0x6d5ad1592ed9d6d1df9b93c793ab759573ed6714",
+      "earliest_scoped_active_block": 46627251,
+      "helper_read_block": 46627250,
+      "first_scoped_pool": "0xa5067360b13fc7a2685dc82dcd1bf2b4b8d7868b",
+      "first_scoped_protocol": "V3",
+      "first_scoped_quote": "WBNB"
+    },
+    {
+      "index": 5,
+      "token": "BROCCOLIF3B",
+      "exact_CA": "0x12b4356c65340fb02cdff01293f95febb1512f3b",
+      "earliest_scoped_active_block": 46627261,
+      "helper_read_block": 46627260,
+      "first_scoped_pool": "0xdb25c09d96c165b62f6e6f9d9b17174738d897ba",
+      "first_scoped_protocol": "V3",
+      "first_scoped_quote": "WBNB"
+    },
+    {
+      "index": 6,
+      "token": "SIREN",
+      "exact_CA": "0x997a58129890bbda032231a52ed1ddc845fc18e1",
+      "earliest_scoped_active_block": 46488279,
+      "helper_read_block": 46488278,
+      "first_scoped_pool": "0xb2af49dbf526054faf19602860a5e298a79f3d05",
+      "first_scoped_protocol": "V3",
+      "first_scoped_quote": "WBNB"
+    },
+    {
+      "index": 7,
+      "token": "BANANAS31",
+      "exact_CA": "0x3d4f0513e8a29669b960f9dbca61861548a9a760",
+      "earliest_scoped_active_block": 44113219,
+      "helper_read_block": 44113218,
+      "first_scoped_pool": "0x7f51bbf34156ba802deb0e38b7671dc4fa32041d",
+      "first_scoped_protocol": "V3",
+      "first_scoped_quote": "WBNB"
+    },
+    {
+      "index": 8,
+      "token": "BOB",
+      "exact_CA": "0x51363f073b1e4920fda7aa9e9d84ba97ede1560e",
+      "earliest_scoped_active_block": 44007572,
+      "helper_read_block": 44007571,
+      "first_scoped_pool": "0x3c79593e01a7f7fed5d0735b16621e2d52a6bc58",
+      "first_scoped_protocol": "V2",
+      "first_scoped_quote": "WBNB"
+    },
+    {
+      "index": 9,
+      "token": "BULLA",
+      "exact_CA": "0x595e21b20e78674f8a64c1566a20b2b316bc3511",
+      "earliest_scoped_active_block": 50972313,
+      "helper_read_block": 50972312,
+      "first_scoped_pool": "0x626f90c9a2d9fbaecd11fa350bbf568f81ab06c1",
+      "first_scoped_protocol": "V3",
+      "first_scoped_quote": "WBNB"
+    },
+    {
+      "index": 10,
+      "token": "4",
+      "exact_CA": "0x0a43fc31a73013089df59194872ecae4cae14444",
+      "earliest_scoped_active_block": 63056879,
+      "helper_read_block": 63056878,
+      "first_scoped_pool": "0xf0a949d3d93b833c183a27ee067165b6f2c9625e",
+      "first_scoped_protocol": "V2",
+      "first_scoped_quote": "WBNB"
+    },
+    {
+      "index": 11,
+      "token": "GIGGLE",
+      "exact_CA": "0x20d6015660b3fe52e6690a889b5c51f69902ce0e",
+      "earliest_scoped_active_block": 61963725,
+      "helper_read_block": 61963724,
+      "first_scoped_pool": "0xd6b652aecb704b0aebec6317315afb90ba641d57",
+      "first_scoped_protocol": "V2",
+      "first_scoped_quote": "WBNB"
+    },
+    {
+      "index": 12,
+      "token": "币安人生",
+      "exact_CA": "0x924fa68a0fc644485b8df8abfa0a41c2e7744444",
+      "earliest_scoped_active_block": 63454407,
+      "helper_read_block": 63454406,
+      "first_scoped_pool": "0x66f289de31eef70d52186729d2637ac978cfc56b",
+      "first_scoped_protocol": "V2",
+      "first_scoped_quote": "WBNB"
+    },
+    {
+      "index": 13,
+      "token": "我踏马来了",
+      "exact_CA": "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
+      "earliest_scoped_active_block": 73658906,
+      "helper_read_block": 73658905,
+      "first_scoped_pool": "0xa651c8deb3ff9f8d56a26e72042b7a8a1f433480",
+      "first_scoped_protocol": "V2",
+      "first_scoped_quote": "WBNB"
+    },
+    {
+      "index": 14,
+      "token": "龙虾",
+      "exact_CA": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "earliest_scoped_active_block": 83636128,
+      "helper_read_block": 83636127,
+      "first_scoped_pool": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+      "first_scoped_protocol": "V2",
+      "first_scoped_quote": "WBNB"
+    },
+    {
+      "index": 15,
+      "token": "牛来",
+      "exact_CA": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "earliest_scoped_active_block": 115919205,
+      "helper_read_block": 115919204,
+      "first_scoped_pool": "0xab058332a7279f1e64162be08f59ac0cd9601759",
+      "first_scoped_protocol": "V3",
+      "first_scoped_quote": "USDT"
+    },
+    {
+      "index": 16,
+      "token": "MARSCOIN",
+      "exact_CA": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "earliest_scoped_active_block": 112642885,
+      "helper_read_block": 112642884,
+      "first_scoped_pool": "0x4a4bea953813c118c260be9a26b2321e57aa62e5",
+      "first_scoped_protocol": "V3",
+      "first_scoped_quote": "USDT"
+    },
+    {
+      "index": 17,
+      "token": "哈基米 / HAJIMI",
+      "exact_CA": "0x82ec31d69b3c289e541b50e30681fd1acad24444",
+      "earliest_scoped_active_block": 63838943,
+      "helper_read_block": 63838942,
+      "first_scoped_pool": "0xc33bacff9141da689875e6381c1932348ab4c5cb",
+      "first_scoped_protocol": "V2",
+      "first_scoped_quote": "WBNB"
+    },
+    {
+      "index": 18,
+      "token": "BUBB",
+      "exact_CA": "0xd5369a3cac0f4448a9a96bb98af9c887c92fc37b",
+      "earliest_scoped_active_block": 47612405,
+      "helper_read_block": 47612404,
+      "first_scoped_pool": "0xc8255e3fa0f4c6e6678807d663f9e2263e23a8e8",
+      "first_scoped_protocol": "V3",
+      "first_scoped_quote": "WBNB"
+    }
+  ],
+  "production": "NO_GO"
+}

@@ -1,0 +1,710 @@
+{
+  "schema": "BSC_MEME_ADDRESS_MODEL_V1_P2_STAGE3_THREE_OWNER_SIGNED_SAMPLE_RAW_INVENTORY_CYCLES",
+  "as_of": "2026-10-13",
+  "production": "NO_GO",
+  "source_git_refs": [
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_ADFF_WOTAMALA_FULL_CURSOR_BALANCE_QA_2026-10-12.json",
+      "blob_sha": "0aa7b926a74735af86d2e870f37d1e8b1beddc40"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_ADFF_LOBSTER_FULL_CURSOR_BALANCE_QA_2026-10-12.json",
+      "blob_sha": "b5a4d76d5239d9ee204aac7e20cb00e3df1694b0"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_2ADF_NIULAI_FULL_CURSOR_BALANCE_QA_2026-10-12.json",
+      "blob_sha": "c6098dd06a723cdb609abd0b832b739f99e40c67"
+    }
+  ],
+  "original_frozen_23_wallets": true,
+  "scope": "Three source-certain signed episodes, 8 BNB mainnet original transactions and N-1/N historical balances verified this session, plus source-based raw inventory segmentation for all three exact CA histories. All other raw segments are UNSIGNED_UNVERIFIED and DO NOT enter economic ledger.",
+  "sample_rounds": [
+    {
+      "round_key": "ADFF_IFML_R1",
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "token": "我踏马来了",
+      "exact_ca": "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
+      "source": {
+        "path": "crypto-300-profit-mission/research/BSC_MEME_ADFF_WOTAMALA_FULL_CURSOR_BALANCE_QA_2026-10-12.json",
+        "sha": "0aa7b926a74735af86d2e870f37d1e8b1beddc40"
+      },
+      "selected_raw_inventory_episode_index": 1,
+      "first_block": 73336282,
+      "last_block": 73336305,
+      "first_UTC": "2025-12-29T10:32:52Z",
+      "last_UTC": "2025-12-29T10:33:10Z",
+      "transfer_logs": 4,
+      "original_unique_signed_transactions": 4,
+      "source_round_hashes": [
+        "0xa0678662cd6ea430e95d8fd3e1d3521c133821e999dd317d101fb8015d19f710",
+        "0xbd7191a8d616e9497e58026ea59970c4f682ac18d81786e38a059a9697567a03",
+        "0x1309735fa3019dca171a558978d8e12561b9eef3c2c356b4f8c8aeb7d4904801",
+        "0x747ee4f75c3ac257a13a189b98beb3eef72edeaab2906846152187f59f1aba17"
+      ],
+      "all_original_signers_self": true,
+      "all_receipt_status_success": true,
+      "raw_token_round_inventory_closed": true,
+      "actual_net_original_wallet_native_block_wei": "15276607477319522",
+      "sign": "POSITIVE_NATIVE_SCOPE",
+      "non_BNB_quote_legs": "UNVERIFIED",
+      "internal_cashflow_trace": "UNVERIFIED",
+      "complete_receipt_bodies": 3,
+      "transactions": [
+        {
+          "hash": "0xa0678662cd6ea430e95d8fd3e1d3521c133821e999dd317d101fb8015d19f710",
+          "block": 73336282,
+          "original_EOA_signer": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+          "original_signed_from_confirmed": true,
+          "receipt_success_confirmed": true,
+          "full_receipt_body_parsed": false,
+          "receipt_gas_wei": null,
+          "native_msg_value_wei": "60000000000000000",
+          "wallet_native_N_minus_1_to_N_delta_wei": "-60170301999999986"
+        },
+        {
+          "hash": "0xbd7191a8d616e9497e58026ea59970c4f682ac18d81786e38a059a9697567a03",
+          "block": 73336293,
+          "original_EOA_signer": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+          "original_signed_from_confirmed": true,
+          "receipt_success_confirmed": true,
+          "full_receipt_body_parsed": true,
+          "receipt_gas_wei": "108667500000000",
+          "native_msg_value_wei": "0",
+          "wallet_native_N_minus_1_to_N_delta_wei": "37140173856831172"
+        },
+        {
+          "hash": "0x1309735fa3019dca171a558978d8e12561b9eef3c2c356b4f8c8aeb7d4904801",
+          "block": 73336300,
+          "original_EOA_signer": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+          "original_signed_from_confirmed": true,
+          "receipt_success_confirmed": true,
+          "full_receipt_body_parsed": true,
+          "receipt_gas_wei": "108667500000000",
+          "native_msg_value_wei": "0",
+          "wallet_native_N_minus_1_to_N_delta_wei": "18832251984916449"
+        },
+        {
+          "hash": "0x747ee4f75c3ac257a13a189b98beb3eef72edeaab2906846152187f59f1aba17",
+          "block": 73336305,
+          "original_EOA_signer": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+          "original_signed_from_confirmed": true,
+          "receipt_success_confirmed": true,
+          "full_receipt_body_parsed": true,
+          "receipt_gas_wei": "106267500000000",
+          "native_msg_value_wei": "0",
+          "wallet_native_N_minus_1_to_N_delta_wei": "19474483635571887"
+        }
+      ]
+    },
+    {
+      "round_key": "ADFF_LOBSTER_R4",
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "token": "龙虾",
+      "exact_ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "source": {
+        "path": "crypto-300-profit-mission/research/BSC_MEME_ADFF_LOBSTER_FULL_CURSOR_BALANCE_QA_2026-10-12.json",
+        "sha": "b5a4d76d5239d9ee204aac7e20cb00e3df1694b0"
+      },
+      "selected_raw_inventory_episode_index": 4,
+      "first_block": 83656622,
+      "last_block": 83656734,
+      "first_UTC": "2026-02-27T11:24:23Z",
+      "last_UTC": "2026-02-27T11:25:13Z",
+      "transfer_logs": 2,
+      "original_unique_signed_transactions": 2,
+      "source_round_hashes": [
+        "0xf295cea8ca007cf8bbf00889acf7be78d9d035300be51da67a194fe50c33a3e3",
+        "0xcbd78ec6eed55dba0f9f90bdfa342c48644d3d626d975aa77e931ad0ffe69045"
+      ],
+      "all_original_signers_self": true,
+      "all_receipt_status_success": true,
+      "raw_token_round_inventory_closed": true,
+      "actual_net_original_wallet_native_block_wei": "4522437855804654",
+      "sign": "POSITIVE_NATIVE_SCOPE",
+      "non_BNB_quote_legs": "UNVERIFIED",
+      "internal_cashflow_trace": "UNVERIFIED",
+      "complete_receipt_bodies": 1,
+      "transactions": [
+        {
+          "hash": "0xf295cea8ca007cf8bbf00889acf7be78d9d035300be51da67a194fe50c33a3e3",
+          "block": 83656622,
+          "original_EOA_signer": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+          "original_signed_from_confirmed": true,
+          "receipt_success_confirmed": true,
+          "full_receipt_body_parsed": true,
+          "receipt_gas_wei": "108843900000000",
+          "native_msg_value_wei": "200000000000000000",
+          "wallet_native_N_minus_1_to_N_delta_wei": "-200108843900000000"
+        },
+        {
+          "hash": "0xcbd78ec6eed55dba0f9f90bdfa342c48644d3d626d975aa77e931ad0ffe69045",
+          "block": 83656734,
+          "original_EOA_signer": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+          "original_signed_from_confirmed": true,
+          "receipt_success_confirmed": true,
+          "full_receipt_body_parsed": false,
+          "receipt_gas_wei": null,
+          "native_msg_value_wei": "0",
+          "wallet_native_N_minus_1_to_N_delta_wei": "204631281755804654"
+        }
+      ]
+    },
+    {
+      "round_key": "2ADF_NIULAI_R1",
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "token": "牛来",
+      "exact_ca": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "source": {
+        "path": "crypto-300-profit-mission/research/BSC_MEME_2ADF_NIULAI_FULL_CURSOR_BALANCE_QA_2026-10-12.json",
+        "sha": "c6098dd06a723cdb609abd0b832b739f99e40c67"
+      },
+      "selected_raw_inventory_episode_index": 1,
+      "first_block": 115862004,
+      "last_block": 115862908,
+      "first_UTC": "2026-08-14T09:09:32Z",
+      "last_UTC": "2026-08-14T09:16:18Z",
+      "transfer_logs": 3,
+      "original_unique_signed_transactions": 2,
+      "source_round_hashes": [
+        "0x4ed9e3d87b54fe4de7b7625382280538ce6fc2e9734942fa01959af90a5fa281",
+        "0x93b918f45fdd92e725fe932167735cd13b78f4876ccd2c6d166a8d4254f73f70"
+      ],
+      "all_original_signers_self": true,
+      "all_receipt_status_success": true,
+      "raw_token_round_inventory_closed": true,
+      "actual_net_original_wallet_native_block_wei": "-22303778278468502",
+      "sign": "NEGATIVE_NATIVE_SCOPE",
+      "non_BNB_quote_legs": "UNVERIFIED",
+      "internal_cashflow_trace": "UNVERIFIED",
+      "complete_receipt_bodies": 0,
+      "transactions": [
+        {
+          "hash": "0x4ed9e3d87b54fe4de7b7625382280538ce6fc2e9734942fa01959af90a5fa281",
+          "block": 115862004,
+          "original_EOA_signer": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+          "original_signed_from_confirmed": true,
+          "receipt_success_confirmed": true,
+          "full_receipt_body_parsed": false,
+          "receipt_gas_wei": null,
+          "native_msg_value_wei": "100000000000000000",
+          "wallet_native_N_minus_1_to_N_delta_wei": "-100061008960000000"
+        },
+        {
+          "hash": "0x93b918f45fdd92e725fe932167735cd13b78f4876ccd2c6d166a8d4254f73f70",
+          "block": 115862908,
+          "original_EOA_signer": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+          "original_signed_from_confirmed": true,
+          "receipt_success_confirmed": true,
+          "full_receipt_body_parsed": false,
+          "receipt_gas_wei": null,
+          "native_msg_value_wei": "0",
+          "wallet_native_N_minus_1_to_N_delta_wei": "77757230681531498"
+        }
+      ]
+    }
+  ],
+  "full_raw_quantity_segmentation": [
+    {
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "token": "我踏马来了",
+      "ca": "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
+      "source": {
+        "path": "crypto-300-profit-mission/research/BSC_MEME_ADFF_WOTAMALA_FULL_CURSOR_BALANCE_QA_2026-10-12.json",
+        "sha": "0aa7b926a74735af86d2e870f37d1e8b1beddc40"
+      },
+      "all_raw_transfer_logs": 35,
+      "unique_transaction_hashes": 35,
+      "source_tokens_latest_balance_raw": "0",
+      "inventory_fully_zero": true,
+      "zero_to_zero_raw_inventory_segments": 12,
+      "all_raw_inventory_segmentation": [
+        {
+          "original_episode_index": 1,
+          "first_block": 73336282,
+          "last_block": 73336305,
+          "transfer_logs": 4,
+          "unique_tx_hashes": [
+            "0xa0678662cd6ea430e95d8fd3e1d3521c133821e999dd317d101fb8015d19f710",
+            "0xbd7191a8d616e9497e58026ea59970c4f682ac18d81786e38a059a9697567a03",
+            "0x1309735fa3019dca171a558978d8e12561b9eef3c2c356b4f8c8aeb7d4904801",
+            "0x747ee4f75c3ac257a13a189b98beb3eef72edeaab2906846152187f59f1aba17"
+          ],
+          "in_log_count": 1,
+          "out_log_count": 3,
+          "trade_signer_verified": true,
+          "quote_settlement_verified": false
+        },
+        {
+          "original_episode_index": 2,
+          "first_block": 73336433,
+          "last_block": 73336473,
+          "transfer_logs": 2,
+          "unique_tx_hashes": [
+            "0x8ebe4e38363050f4b850773a708b86043616fcc11d67e75ca02f00b314bfee2d",
+            "0xaa666274666044e636bc616b78730dbd6a268b87f45b90d0eddbd506bbeaadbe"
+          ],
+          "in_log_count": 1,
+          "out_log_count": 1,
+          "trade_signer_verified": null,
+          "quote_settlement_verified": false
+        },
+        {
+          "original_episode_index": 3,
+          "first_block": 73338331,
+          "last_block": 73338341,
+          "transfer_logs": 2,
+          "unique_tx_hashes": [
+            "0x369314228253f7c538a4ad5218f1c323f25be9657bde6f3745dfb839257ea725",
+            "0x99e09da5149aa7219073c58cab404feb1ceb34e747d68999e5b1f567560cfca9"
+          ],
+          "in_log_count": 1,
+          "out_log_count": 1,
+          "trade_signer_verified": null,
+          "quote_settlement_verified": false
+        },
+        {
+          "original_episode_index": 4,
+          "first_block": 73339965,
+          "last_block": 73339992,
+          "transfer_logs": 2,
+          "unique_tx_hashes": [
+            "0x2d81f2b316c8b54d232ca03c04269cb4a6ce031b24760a10815b83d5fb5b1622",
+            "0x35224cc19da5549ab4e2e3a6bda712f2c137127375be85c1e5578804674fe15c"
+          ],
+          "in_log_count": 1,
+          "out_log_count": 1,
+          "trade_signer_verified": null,
+          "quote_settlement_verified": false
+        },
+        {
+          "original_episode_index": 5,
+          "first_block": 73348954,
+          "last_block": 73348976,
+          "transfer_logs": 2,
+          "unique_tx_hashes": [
+            "0x6b9b13448a60ed7c0b71d60c464822eefb5aed5117ca38481ed6f6ccb2473b30",
+            "0x9b0d5f3762da0ef37e07a0acefba819cebaa340f6fbfd418337121215dc8b193"
+          ],
+          "in_log_count": 1,
+          "out_log_count": 1,
+          "trade_signer_verified": null,
+          "quote_settlement_verified": false
+        },
+        {
+          "original_episode_index": 6,
+          "first_block": 73658928,
+          "last_block": 73658939,
+          "transfer_logs": 2,
+          "unique_tx_hashes": [
+            "0xb98f76afcd9b2dfdc6fb86f7cbaaddc6e273e581fd3710a698ac00609fab5cca",
+            "0xeb4d7ae420a5ca6a490a9dc84b7fa2188a86f58ed70cc7ebeaf342d3d88b66c1"
+          ],
+          "in_log_count": 1,
+          "out_log_count": 1,
+          "trade_signer_verified": null,
+          "quote_settlement_verified": false
+        },
+        {
+          "original_episode_index": 7,
+          "first_block": 73660835,
+          "last_block": 73660841,
+          "transfer_logs": 2,
+          "unique_tx_hashes": [
+            "0xefca50e9dfe0664976559f37b816ac2fb327a4969be028d09dca97a02bf347ef",
+            "0x82c5037190fcb2261017a5cad65295bd40e502de69058669a2d1c70ec7f74d55"
+          ],
+          "in_log_count": 1,
+          "out_log_count": 1,
+          "trade_signer_verified": null,
+          "quote_settlement_verified": false
+        },
+        {
+          "original_episode_index": 8,
+          "first_block": 73663308,
+          "last_block": 73663891,
+          "transfer_logs": 3,
+          "unique_tx_hashes": [
+            "0xa2c20791c789872a10099bda85f6093606a1b91ee76284bacbaf65360865db79",
+            "0x00da55debf053183cafd46f1a7e1f7242469c0e02c56d6861633b2911ff4d5b9",
+            "0x273f6c3a086d60a516a4d3747c1647c977c56e7d463013217b539bbf62563c04"
+          ],
+          "in_log_count": 2,
+          "out_log_count": 1,
+          "trade_signer_verified": null,
+          "quote_settlement_verified": false
+        },
+        {
+          "original_episode_index": 9,
+          "first_block": 73663955,
+          "last_block": 73664205,
+          "transfer_logs": 2,
+          "unique_tx_hashes": [
+            "0xfe56e369851c6652ae29cfc3f1d8d359a516e43f166f662ef1be205cdd64b87c",
+            "0x03723ef9ce3406bf3b5e73091b9fe4e40e4453f40fe103d8887ab1ea915a5a2a"
+          ],
+          "in_log_count": 1,
+          "out_log_count": 1,
+          "trade_signer_verified": null,
+          "quote_settlement_verified": false
+        },
+        {
+          "original_episode_index": 10,
+          "first_block": 73668006,
+          "last_block": 73668017,
+          "transfer_logs": 2,
+          "unique_tx_hashes": [
+            "0xe66dddf40ded82618aaef2e11f158f19d1c8965b6c9eff27e2f16afa0b39b8f5",
+            "0x77eab68427b6d0d0f32c66b41fd9154ba7539f2229569700cb2c6d37c0573691"
+          ],
+          "in_log_count": 1,
+          "out_log_count": 1,
+          "trade_signer_verified": null,
+          "quote_settlement_verified": false
+        },
+        {
+          "original_episode_index": 11,
+          "first_block": 73680995,
+          "last_block": 73681109,
+          "transfer_logs": 2,
+          "unique_tx_hashes": [
+            "0xf60762afcf27ce4c6fdcc78e7f4e4a38f2cbac1780f3045df39a99eae90afaed",
+            "0x7b821452f4b42b68ddd246ca0dd654b03f24fee88008d91207bd983ba1156751"
+          ],
+          "in_log_count": 1,
+          "out_log_count": 1,
+          "trade_signer_verified": null,
+          "quote_settlement_verified": false
+        },
+        {
+          "original_episode_index": 12,
+          "first_block": 76554488,
+          "last_block": 76559716,
+          "transfer_logs": 10,
+          "unique_tx_hashes": [
+            "0xe0e0b9e8010f11eece1e5e747624849835230234b76455af1ec5cd5129c8d7d1",
+            "0xaa62770e199bb6800e91333a4ec566d76b1a9b0232e5663c341fdc830500a9b4",
+            "0x0401e006b5a6ff996da4fa07334c7e41c9f9dcb629eb955422323b1bd59eb1b4",
+            "0x217a6abb265ffb243a730a3c7605c1350784d75f88427ce24d095d91ba285d12",
+            "0x7beb5d1555be8e969b26469c19721959b752177a6ec394dbf658bbfab87b6ec9",
+            "0x1c10368b29f748c8b0e35eecc072c093d9fb707da4e95fc8fe2edf49899951bc",
+            "0xfa445af865b1559cf93a01dd24eeee3fb702a54a7c2715ce098928de34a0133c",
+            "0x1212396764042f337af65b6015a7e0cf1cc5e2c2d1889350b817478536a64493",
+            "0x75befc682b36bac8fa7806f8ff87a5796dd8d07b53a581cf3725ae566d32a133",
+            "0xa7612a4be60f5082a94bae1801d199187fc706e80e32e038b14d9de7938300f8"
+          ],
+          "in_log_count": 8,
+          "out_log_count": 2,
+          "trade_signer_verified": null,
+          "quote_settlement_verified": false
+        }
+      ]
+    },
+    {
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "token": "龙虾",
+      "ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "source": {
+        "path": "crypto-300-profit-mission/research/BSC_MEME_ADFF_LOBSTER_FULL_CURSOR_BALANCE_QA_2026-10-12.json",
+        "sha": "b5a4d76d5239d9ee204aac7e20cb00e3df1694b0"
+      },
+      "all_raw_transfer_logs": 30,
+      "unique_transaction_hashes": 29,
+      "source_tokens_latest_balance_raw": "0",
+      "inventory_fully_zero": true,
+      "zero_to_zero_raw_inventory_segments": 6,
+      "all_raw_inventory_segmentation": [
+        {
+          "original_episode_index": 1,
+          "first_block": 83637881,
+          "last_block": 83638058,
+          "transfer_logs": 11,
+          "unique_tx_hashes": [
+            "0xe70ab24f678d5fd0c663630d9f85dcfacdcb741ab57a1b2c03448a89c072f2d2",
+            "0xd51fe93f584aede38b58ab6b6f7362c2da27e6c9702eb9f65b4de36e1c448530",
+            "0x8c26e18be36732c259262f41374a4eac166e08bfc09449a3dea9f7d1cc91b420",
+            "0xa3812e13c40ea7848f327903cb3c0839f5e2d29cc38c57eacf91ce014dd7208a",
+            "0x3f826d65acddc2c089aeb8ca4a9ec00a8df057d3713b4b340afa08abdfb9eea5",
+            "0x03afd61de68f0d8180e7fb44cee2523a2c53c880b1589d1d80435475fe59efdf",
+            "0x6d31a6efe80433a598363c376192b66a5fca3c82485b1c1fd0fe5b3cbf23ab41",
+            "0x0b3d3ba898712cd7502710aa7da237ba08a93c9bab181c8703be73f9b7b7d87a",
+            "0xa364266be370c8885e5114c18b585a8c472c03075ca13c0186fa4ebb25a66521",
+            "0x56ab8c47dd3aebfe7078eb410f5e8f050f9cc00729a92d0e3e3f6d5ca0bc87cb",
+            "0x851b6d235ac3b142ccb956662684781984d3bec3431777fcf809f3de7174768c"
+          ],
+          "in_log_count": 2,
+          "out_log_count": 9,
+          "trade_signer_verified": null,
+          "quote_settlement_verified": false
+        },
+        {
+          "original_episode_index": 2,
+          "first_block": 83638672,
+          "last_block": 83639779,
+          "transfer_logs": 7,
+          "unique_tx_hashes": [
+            "0x1dab3676520d0243830d95a19186b7945c505e966db0e90d96dc25f067a16460",
+            "0x5311d21a174a6d74a4612ce173c8e2129b8e8c26719bed3acd9db6501318729d",
+            "0xeae0a9ff64e97018c3a82c3d7e185faf1df5beed6ed1cbfc91a70563273bc025",
+            "0x92105a40e1b4849a42d40814aa9a7b00f10b52a4365c326b8b6793ca518f9d40",
+            "0x3bb51da96ecfac9da9f2ef3cfcde7a56e2d082f014a19c7ef37179c3f5f185d2",
+            "0x6ec0025938ef0b57e0258bbd6bb71d2cf921d5c51e266a38a400bea73686bd58",
+            "0xfe21e9d59c1b79070a06ff1b99e6e662e4cd456e7c3f26bcf2980c42fb5c3c48"
+          ],
+          "in_log_count": 3,
+          "out_log_count": 4,
+          "trade_signer_verified": null,
+          "quote_settlement_verified": false
+        },
+        {
+          "original_episode_index": 3,
+          "first_block": 83641082,
+          "last_block": 83641362,
+          "transfer_logs": 5,
+          "unique_tx_hashes": [
+            "0xcec0081f11c9dedbfaae82c4a62f321c57d59f51cad2cbfc9baffbfdeccc6249",
+            "0x38fb8b0743e1c0c543b2c79b881d536e061e690724d65988648d7ef737319473",
+            "0xeb21d506fffded131dd957e2879d36e5f1fb64fc6d6984ad1d81430655366710",
+            "0xe42b4beb80adcb295145eed89fce8e520070cd5c38cc14b9837409ff660d607f",
+            "0x4603838f68f2d1f4d2e558a2c9c134b61e3c6ea1a7661a72ca0534a579372efa"
+          ],
+          "in_log_count": 2,
+          "out_log_count": 3,
+          "trade_signer_verified": null,
+          "quote_settlement_verified": false
+        },
+        {
+          "original_episode_index": 4,
+          "first_block": 83656622,
+          "last_block": 83656734,
+          "transfer_logs": 2,
+          "unique_tx_hashes": [
+            "0xf295cea8ca007cf8bbf00889acf7be78d9d035300be51da67a194fe50c33a3e3",
+            "0xcbd78ec6eed55dba0f9f90bdfa342c48644d3d626d975aa77e931ad0ffe69045"
+          ],
+          "in_log_count": 1,
+          "out_log_count": 1,
+          "trade_signer_verified": true,
+          "quote_settlement_verified": false
+        },
+        {
+          "original_episode_index": 5,
+          "first_block": 84962371,
+          "last_block": 84963046,
+          "transfer_logs": 2,
+          "unique_tx_hashes": [
+            "0x7d2a5ae4c18d56b9ed8dec99d15ba307b99d8cbd54fb900b7f833dd11b2258b1",
+            "0x650b9e4e945ff0cecc22b2f57c2c3339913d48bc1c1042f43b384335afa9b7aa"
+          ],
+          "in_log_count": 1,
+          "out_log_count": 1,
+          "trade_signer_verified": null,
+          "quote_settlement_verified": false
+        },
+        {
+          "original_episode_index": 6,
+          "first_block": 121783426,
+          "last_block": 121786352,
+          "transfer_logs": 3,
+          "unique_tx_hashes": [
+            "0x13f5678b90e1bd0e2b703e23934a7777ba639f75ec1c8c70200f350ff43c4952",
+            "0xc0098aafadbf7a3789d7beb64717b4f5f7c0c1698f1e5d5386419f7b57cc9fbd"
+          ],
+          "in_log_count": 2,
+          "out_log_count": 1,
+          "trade_signer_verified": null,
+          "quote_settlement_verified": false
+        }
+      ]
+    },
+    {
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "token": "牛来",
+      "ca": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "source": {
+        "path": "crypto-300-profit-mission/research/BSC_MEME_2ADF_NIULAI_FULL_CURSOR_BALANCE_QA_2026-10-12.json",
+        "sha": "c6098dd06a723cdb609abd0b832b739f99e40c67"
+      },
+      "all_raw_transfer_logs": 49,
+      "unique_transaction_hashes": 33,
+      "source_tokens_latest_balance_raw": "0",
+      "inventory_fully_zero": true,
+      "zero_to_zero_raw_inventory_segments": 10,
+      "all_raw_inventory_segmentation": [
+        {
+          "original_episode_index": 1,
+          "first_block": 115862004,
+          "last_block": 115862908,
+          "transfer_logs": 3,
+          "unique_tx_hashes": [
+            "0x4ed9e3d87b54fe4de7b7625382280538ce6fc2e9734942fa01959af90a5fa281",
+            "0x93b918f45fdd92e725fe932167735cd13b78f4876ccd2c6d166a8d4254f73f70"
+          ],
+          "in_log_count": 1,
+          "out_log_count": 2,
+          "trade_signer_verified": true,
+          "quote_settlement_verified": false
+        },
+        {
+          "original_episode_index": 2,
+          "first_block": 115916276,
+          "last_block": 116008081,
+          "transfer_logs": 11,
+          "unique_tx_hashes": [
+            "0x28e980c13b2d8b1f2504af7d81c019e95eec51ddcd4ffa6c02d5a625b55c756c",
+            "0x81d8749437f8b2099f041552f2d04d5cec6264667a2a6409b948df1cb03620b3",
+            "0x9e7f7c35352a8e5d1c87fa6be617a03ab72005d86dea5ba295ab10809db1f28c",
+            "0x65eeabc8246e544d1d03021c1628704d79b73fc59c8560a5113c1c82b9c35ff8",
+            "0x36e1d9d999418897e4d09be1c8f0bf487170df9dfc6e0ab182f1cc1cda7522b9",
+            "0x7bfa5dfc49d09b1210ae2e729d829c52b731d1aeb5a5296ec60ef1d4b619b767"
+          ],
+          "in_log_count": 1,
+          "out_log_count": 10,
+          "trade_signer_verified": null,
+          "quote_settlement_verified": false
+        },
+        {
+          "original_episode_index": 3,
+          "first_block": 116038180,
+          "last_block": 116087810,
+          "transfer_logs": 3,
+          "unique_tx_hashes": [
+            "0x5b9f98b8feff8b9589b9a229bd64485689d11f7aa08d7973d7553fd18ba35e1e",
+            "0xc4a493cc5fba197f70e225de4927937b2532cfd18de4efefeb4ebbe3a350d40f"
+          ],
+          "in_log_count": 1,
+          "out_log_count": 2,
+          "trade_signer_verified": null,
+          "quote_settlement_verified": false
+        },
+        {
+          "original_episode_index": 4,
+          "first_block": 116099537,
+          "last_block": 116211969,
+          "transfer_logs": 4,
+          "unique_tx_hashes": [
+            "0xf83f69d2d411b237bc10c7be7f16bfc57ae0567bdd00bf245e576688be3b4549",
+            "0xff6b642aa397450042ddbbb3010cd622dbb617b0479f5a2769aa93a8c1b03dc4",
+            "0x1e5aea53c25c41c0a9c84472f89774d0c93ff19be721ae8333fb0aafd264e366"
+          ],
+          "in_log_count": 1,
+          "out_log_count": 3,
+          "trade_signer_verified": null,
+          "quote_settlement_verified": false
+        },
+        {
+          "original_episode_index": 5,
+          "first_block": 116236103,
+          "last_block": 116380025,
+          "transfer_logs": 4,
+          "unique_tx_hashes": [
+            "0x6bb26cbd29a006b1b9a1697099eef20e8fe3581e767d7321aa03a47c7d5f0429",
+            "0x39633b6564e9641f1163b14e7294c576627433a6c35d8437c49016980322094d",
+            "0x72a5a6f915c657612aa42b6193a1bf05d85bb176aecfa17eb04643c5a5ea2c84"
+          ],
+          "in_log_count": 2,
+          "out_log_count": 2,
+          "trade_signer_verified": null,
+          "quote_settlement_verified": false
+        },
+        {
+          "original_episode_index": 6,
+          "first_block": 116381974,
+          "last_block": 116424522,
+          "transfer_logs": 3,
+          "unique_tx_hashes": [
+            "0x91448a53580ade3660ae8f9f7e6539e42eea08eeadc506325ac5afe23168b046",
+            "0xc805ce8bd17be10b8d4640e4971dae7ef380fa97050dff711033fac78cc0412f"
+          ],
+          "in_log_count": 1,
+          "out_log_count": 2,
+          "trade_signer_verified": null,
+          "quote_settlement_verified": false
+        },
+        {
+          "original_episode_index": 7,
+          "first_block": 116507881,
+          "last_block": 116869638,
+          "transfer_logs": 8,
+          "unique_tx_hashes": [
+            "0x531db757b8136591743e175e7581d958327d223c8ce6cea9cfc6781cf002af4f",
+            "0xd1ca948a082127cf0e16b23f457767fcdf72624385ae2979ba8bbcb7ce57a351",
+            "0x39a23df3a2798d4d24a3df3826359bca5525a85dfd153d043a0ecf363ba63bb1",
+            "0x618ca0c2254f0b8448c72c32d62ac6ff00ed8f338a91f29fe0fbecb06f92a3e3",
+            "0x511576485ac418becc6fac2de02542e08019d3aa9a6f7da51e54cf6f4cbde5db",
+            "0xea0788ba6d328a82d69ab595fbc217cb6f25f28ba3a647a5132adb396fa1181e",
+            "0xe9f86577ed48106012d86e1765145ec93cf2dc5b2de208f63b68fdebbafff62b"
+          ],
+          "in_log_count": 6,
+          "out_log_count": 2,
+          "trade_signer_verified": null,
+          "quote_settlement_verified": false
+        },
+        {
+          "original_episode_index": 8,
+          "first_block": 118947297,
+          "last_block": 119097043,
+          "transfer_logs": 2,
+          "unique_tx_hashes": [
+            "0x4d0b1dcae3fa68f5c7e1af681875c03b8421f6cc33609ace2ed7548cab683db3",
+            "0x39794afa6dbcc6ef59aa34ea348061da38b240c422ddfd778bb72e882891d985"
+          ],
+          "in_log_count": 1,
+          "out_log_count": 1,
+          "trade_signer_verified": null,
+          "quote_settlement_verified": false
+        },
+        {
+          "original_episode_index": 9,
+          "first_block": 119884788,
+          "last_block": 119884915,
+          "transfer_logs": 6,
+          "unique_tx_hashes": [
+            "0x663f64d27ea8fc2af772197125b1ade75cd14078ed808d55bfde8428e26ea759",
+            "0x6b6215018a633019acba65cf6a475155dd362c3be5d3d0242d2dd619909420b1",
+            "0x24b15d333acb144a538a5b7707f5237af55e71edfd8ec7db4d6254be76f2e646"
+          ],
+          "in_log_count": 4,
+          "out_log_count": 2,
+          "trade_signer_verified": null,
+          "quote_settlement_verified": false
+        },
+        {
+          "original_episode_index": 10,
+          "first_block": 120261925,
+          "last_block": 122988185,
+          "transfer_logs": 5,
+          "unique_tx_hashes": [
+            "0x2ae0f20fcfd6be9b2ca09c9b01e91bc00cb657bdaef64e5a62bc7c985d80a205",
+            "0xe1520b559ea7186bc733c290ba34c64e9486d9a4daf2380a2240c1993af59b9a",
+            "0xc81eadbe91ba27a418a7e574e327d3cc4d47eea8ec13221a42b746795ca4bb72"
+          ],
+          "in_log_count": 3,
+          "out_log_count": 2,
+          "trade_signer_verified": null,
+          "quote_settlement_verified": false
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "wallets_rechecked": 2,
+    "coins_rechecked": 3,
+    "source_erc20_events": 114,
+    "source_inventory_zero_cycles": 28,
+    "source_quantity_segments_not_economic": 25,
+    "new_economic_event_block_scope_episodes": 3,
+    "new_positive_native_scope_episodes": 2,
+    "new_negative_native_scope_episodes": 1,
+    "original_self_signed_receipt_success": 8,
+    "complete_receipt_body_parsed": 4,
+    "original_historical_wallet_balance_N_minus_1_and_N_verified": 8,
+    "block_utc_header_samples": 6
+  },
+  "limits": [
+    "First ADFF IFML round happened 2025-12-29 UTC, not January 2026; it is included as a historically adjacent event for 2026-priority token, with actual date retained.",
+    "The other 25 raw inventory segments are NOT proven trading (self-signer, quote settlement and internal cashflow unverified).",
+    "Some receipt JSON truncated; receipt success status prefix is confirmed but entire Gas and inner transfer path could not be parsed.",
+    "Wallet BNB event-block scope may include unrelated same-block money movements; this is not strict per-tx causal realized PnL.",
+    "First-pass V21 complete token transfer quantity does not imply causal quote PnL; no 2026 recently-active signed trades or lag profitability claimed."
+  ]
+}

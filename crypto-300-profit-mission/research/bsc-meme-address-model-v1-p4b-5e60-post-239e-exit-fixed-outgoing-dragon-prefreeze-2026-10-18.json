@@ -1,0 +1,60 @@
+{
+  "schema": "BSC_P4B_2026_R2_REAL_5E60_POST_ADD_OUTBOUND_DRAGON_TRANSFER_FIXED_WINDOW_PREFREEZE_V1",
+  "date": "2026-10-18",
+  "baseline_head": "81588c0406f1f390f0e4fe0c4fb892e860f35121",
+  "why": "Determine whether confirmed external 1000 USDT add-to-existing position later actually sent Dragon to router, buyer or other wallet; do NOT infer sell or PnL from mere outbound transfer.",
+  "network": "bnb-mainnet",
+  "provider": "Alchemy existing free getAssetTransfers",
+  "method": "getAssetTransfers",
+  "source_refs": {
+    "real_paid_1000_USDT_and_fee": "4288f9819f2815cb4d899c93116b23e19e6fe0ba",
+    "real_after_token_balance_4_checkpoints": "64900a1e544cb7ecba5cb49ef974befd1d9312bc",
+    "real_original_239e_owner_two_rounds": "46e90123b98d5324e05388b17b8a3bbb77cb5361"
+  },
+  "external_signed_wallet": "0x5e600e259e3cff0757e3736223685958665866c6",
+  "token_contract": "0xeccbb861c0dda7efd964010085488b69317e4444",
+  "original_real_buy_block": 85959962,
+  "original_owner_real_sell_block": 85961371,
+  "first_scope": {
+    "from_block": 85961372,
+    "to_block": 86000000,
+    "category": [
+      "erc20"
+    ],
+    "fromAddress": "0x5e600e259e3cff0757e3736223685958665866c6",
+    "contractAddresses": [
+      "0xeccbb861c0dda7efd964010085488b69317e4444"
+    ],
+    "order": "asc",
+    "maxCount": "0xa",
+    "excludeZeroValue": true
+  },
+  "second_scope_if_first_exhaustively_empty": {
+    "from_block": 86000001,
+    "to_block": 86060000,
+    "category": [
+      "erc20"
+    ],
+    "fromAddress": "0x5e600e259e3cff0757e3736223685958665866c6",
+    "contractAddresses": [
+      "0xeccbb861c0dda7efd964010085488b69317e4444"
+    ],
+    "order": "asc",
+    "maxCount": "0xa",
+    "excludeZeroValue": true
+  },
+  "max_top_level_queries": 2,
+  "max_pages_per_window": 1,
+  "on_more_than_10_records": "Do not claim window exhaustive; mark CENSORED and make separate new precommit for scoped next page if needed. Do not select which trades to keep by result.",
+  "if_unsupported": "Record unsupported and stop; do not label no exits.",
+  "if_true_outgoing": "All returned transfers are candidates only. A transferred token may be gift, internal move, LP deposit or router sale. Later independently freeze signature, receipt, quote-token reimbursement and actual BNB/native/USDT balance checks.",
+  "if_empty": "Only source-specific scoped no outgoing ERC20 movements; cannot prove wallet did not swap via another contract mechanism, did not hold other assets, or never exits later.",
+  "also_require": "No public follower observation timestamp; original owner trade preceding does not imply causal follow.",
+  "gates": {
+    "P4_B": "PARTIAL",
+    "PUBLIC_EXECUTABLE_U": "UNRESOLVED",
+    "P5": "BLOCKED",
+    "PRODUCTION": "NO_GO",
+    "permissions": "NO_MERGE NO_DEPLOY NO_GMAIL NO_TRADE"
+  }
+}

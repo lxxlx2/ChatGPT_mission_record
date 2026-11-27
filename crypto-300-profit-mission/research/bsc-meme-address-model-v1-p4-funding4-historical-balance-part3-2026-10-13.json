@@ -1,0 +1,43 @@
+{
+  "schema": "BSC_P4_FUNDING4_SNAPSHOT_PART",
+  "source_precommit_sha": "9b0a5f08a9009af016de7d8cbea9f6ad16c7165c",
+  "sample_index": 3,
+  "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+  "first_confirmed_swap_tx": "0xae1def223a10ca11bf4e13f716f475b99693047e4e541c465e9dde0a30b24189",
+  "first_swap_block": 122582898,
+  "pre_swap_block": 122582897,
+  "reads": {
+    "native_bnb_before": {
+      "key": "native_bnb_before",
+      "state": "CONFIRMED",
+      "raw_hex": "0x45feb7f90ad2852",
+      "raw_integer": "315229432059865170"
+    },
+    "native_bnb_swap_block": {
+      "key": "native_bnb_swap_block",
+      "state": "CONFIRMED",
+      "raw_hex": "0x46b1a32667292b0",
+      "raw_integer": "318377002429223600"
+    },
+    "nonce_before": {
+      "key": "nonce_before",
+      "state": "CONFIRMED",
+      "raw_hex": "0x6731",
+      "raw_integer": "26417"
+    },
+    "wbnb_before": {
+      "key": "wbnb_before",
+      "state": "CONFIRMED",
+      "raw_hex": "0x0000000000000000000000000000000000000000000000000000000000000000",
+      "raw_integer": "0"
+    },
+    "usdt_before": {
+      "key": "usdt_before",
+      "state": "CONFIRMED",
+      "raw_hex": "0x0000000000000000000000000000000000000000000000000000000000000000",
+      "raw_integer": "0"
+    }
+  },
+  "interpretation": "historical native and selected token balances at first confirmed P3 swap; not trade funding attribution",
+  "production": "NO_GO"
+}

@@ -1,0 +1,108 @@
+{
+  "schema": "BSC_P4B_2026_FOUR_OWNER_HOLDING_BLOCK_END_REAL_BALANCE_AND_ALCHEMY_FREE_10BLOCK_LOG_GATE_V1",
+  "source_precommit": "bsc-meme-address-model-v1-p4b-239e-owner-holding-four-v2-swap-windows-precommit-2026-10-18.json",
+  "chain": "bnb-mainnet",
+  "provider": "Alchemy existing free read-only app",
+  "exact_calls_in_batch": 10,
+  "pair_tokens": [
+    {
+      "method": "eth_call",
+      "selector": "0x0dfe1681",
+      "read_block": 85954138,
+      "returned_hex": "0x000000000000000000000000bb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "decoded_token0": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c"
+    },
+    {
+      "method": "eth_call",
+      "selector": "0xd21220a7",
+      "read_block": 85954138,
+      "returned_hex": "0x000000000000000000000000eccbb861c0dda7efd964010085488b69317e4444",
+      "decoded_token1": "0xeccbb861c0dda7efd964010085488b69317e4444"
+    }
+  ],
+  "holding_readbacks": [
+    {
+      "case": "R1",
+      "window": "POST_BUY_EARLY",
+      "block": 85954149,
+      "hex": "0x00000000000000000000000000000000000000000000009574e87a063039535b",
+      "balance_raw": "2756988984252717159259",
+      "read_grade": "VALID_32BYTE_TOOL_PARSED"
+    },
+    {
+      "case": "R1",
+      "window": "POST_BUY_LATER",
+      "block": 85954749,
+      "hex": "0x00000000000000000000000000000000000000000000009574e87a063039535b",
+      "balance_raw": "2756988984252717159259",
+      "read_grade": "VALID_32BYTE_TOOL_PARSED"
+    },
+    {
+      "case": "R2",
+      "window": "POST_BUY_EARLY",
+      "block": 85959973,
+      "hex": "0x0000000000000000000000000000000000000000000001f97550ec29327783c0",
+      "balance_raw": "9324059273385582494656",
+      "read_grade": "VALID_32BYTE_TOOL_PARSED"
+    },
+    {
+      "case": "R2",
+      "window": "POST_BUY_LATER",
+      "block": 85960573,
+      "hex": "0x0000000000000000000000000000000000000000000001f97550ec29327783c0",
+      "balance_raw": "9324059273385582494656",
+      "read_grade": "VALID_32BYTE_TOOL_PARSED"
+    }
+  ],
+  "log_queries": [
+    {
+      "case": "R1",
+      "window": "POST_BUY_EARLY",
+      "from": 85954138,
+      "to": 85954149,
+      "status": "RPC_REJECTED_FREE_TIER_GT_10_BLOCKS"
+    },
+    {
+      "case": "R1",
+      "window": "POST_BUY_LATER",
+      "from": 85954737,
+      "to": 85954749,
+      "status": "RPC_REJECTED_FREE_TIER_GT_10_BLOCKS"
+    },
+    {
+      "case": "R2",
+      "window": "POST_BUY_EARLY",
+      "from": 85959962,
+      "to": 85959973,
+      "status": "RPC_REJECTED_FREE_TIER_GT_10_BLOCKS"
+    },
+    {
+      "case": "R2",
+      "window": "POST_BUY_LATER",
+      "from": 85960561,
+      "to": 85960573,
+      "status": "RPC_REJECTED_FREE_TIER_GT_10_BLOCKS"
+    }
+  ],
+  "exact_provider_error": "RPC error (-32600): Under the Free tier plan, you can make eth_getLogs requests with up to a 10 block range. Upgrade to PAYG for expanded block range.",
+  "swap_log_total": "UNAVAILABLE_DUE_TO_PROVIDER_WINDOW_LIMIT",
+  "prove_no_swaps": false,
+  "source_grade": "REAL_CHAIN_ETH_CALL_BALANCEOF_FOUR_BLOCKENDS; ETH_GETLOGS_PROVIDER_INVALID_ARGUMENT_NO_DATA",
+  "no_paid_upgrade": true,
+  "no_retries_to_same_exact_scope": true,
+  "limits": [
+    "Nonzero ERC20 original owner balance is true only at the four specific end-block checkpoints",
+    "Source wallet may trade other intervening times or be temporarily flat; no intrablock or live wallet history proven",
+    "No qualified independent other wallet trader U, buy, sell, or profit derived from denied logs"
+  ],
+  "gates": {
+    "P4_B": "PARTIAL",
+    "PUBLIC_EXECUTABLE_U": "UNRESOLVED",
+    "P5": "BLOCKED",
+    "PRODUCTION": "NO_GO",
+    "NO_MERGE": true,
+    "NO_DEPLOY": true,
+    "NO_GMAIL": true,
+    "NO_TRADE": true
+  }
+}

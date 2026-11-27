@@ -1,0 +1,33 @@
+{
+  "schema": "BSC_P4C_DRAGON_DDAC_HISTORIC_SALE_SOURCE_PRECOMMIT",
+  "source_two_out_git_blob_sha": "a5dc8fba570be1d05164dd25f1e38affbbd48d1e",
+  "abi_source": "four-meme-community/fourmeme-docs/abi/TokenManager2.lite.json",
+  "manager": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+  "sale_signature": "TokenSale(address,address,uint256,uint256,uint256,uint256,uint256,uint256)",
+  "sale_topic0": "0x0a5575b3648bae2210cee56bf33254cc1ddfbc7bf637c0af2ac18b14fb1bae19",
+  "token_CA": "0xeccbb861c0dda7efd964010085488b69317e4444",
+  "owner": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+  "selected": [
+    {
+      "block": 83635800,
+      "txhash": "0xd63edbb070a8171af5aa37cfb2953ae868a77ff6607b5a1a4f5378abb2249219",
+      "from": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "to": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+      "raw_amount": "99069253510299993000000000",
+      "unique": "0xd63edbb070a8171af5aa37cfb2953ae868a77ff6607b5a1a4f5378abb2249219:log:170",
+      "check_call": "eth_getTransactionByHash",
+      "source_sale_logs_read": "eth_getLogs(manager,TokenSale,block,block) exact tx filter; retain zero and unrelated events"
+    },
+    {
+      "block": 84007473,
+      "txhash": "0xb6e9bf6e4f9ceb0e39b5665bfb1b15345e383670f13d98689e8767401e438fe8",
+      "from": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "to": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+      "raw_amount": "195581662531433206271053",
+      "unique": "0xb6e9bf6e4f9ceb0e39b5665bfb1b15345e383670f13d98689e8767401e438fe8:log:850",
+      "check_call": "eth_getTransactionByHash",
+      "source_sale_logs_read": "eth_getLogs(manager,TokenSale,block,block) exact tx filter; retain zero and unrelated events"
+    }
+  ],
+  "production": "NO_GO"
+}

@@ -1,0 +1,145 @@
+{
+  "schema": "BSC_MEME_P3_FROZEN_OWNER37_TOKEN_TRANSFER_LOG_PROOF",
+  "part": 4,
+  "range": [
+    21,
+    27
+  ],
+  "precommit_sha": "9d1a95b864a631b6c8559bf65817c30e871da19e",
+  "records": [
+    {
+      "hash": "0x5c853608c3bc8793e3ea53e25289bc3fbeadc377a04e266d05c6cfdebef23849",
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "block": 123682058,
+      "source_log_query_state": "FULL_EVENT_QUERY",
+      "all_block_filtered_token_logs": 1,
+      "exact_tx_token_transfer_events": [
+        {
+          "ca": "0x924fa68a0fc644485b8df8abfa0a41c2e7744444",
+          "from": "0x66f289de31eef70d52186729d2637ac978cfc56b",
+          "to": "0xa83b73f5644cde337b61da79589f10ea15548811",
+          "raw": "615828789188748976583",
+          "logIndex": 9
+        }
+      ],
+      "error": null
+    },
+    {
+      "hash": "0x1c69f5bcf9acfbb07340890713a290e280d8f3d8dfd0957aa86c3044b92d9fe6",
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "block": 123682061,
+      "source_log_query_state": "FULL_EVENT_QUERY",
+      "all_block_filtered_token_logs": 3,
+      "exact_tx_token_transfer_events": [
+        {
+          "ca": "0x924fa68a0fc644485b8df8abfa0a41c2e7744444",
+          "from": "0xa83b73f5644cde337b61da79589f10ea15548811",
+          "to": "0xe2ce6ab80874fa9fa2aae65d277dd6b8e65c9de0",
+          "raw": "615828789188748976583",
+          "logIndex": 299
+        },
+        {
+          "ca": "0x924fa68a0fc644485b8df8abfa0a41c2e7744444",
+          "from": "0xe2ce6ab80874fa9fa2aae65d277dd6b8e65c9de0",
+          "to": "0x8a08d98cbb218fceb318ecf3abc1ba43d8a7ab0e",
+          "raw": "6158287891887489765",
+          "logIndex": 308
+        }
+      ],
+      "error": null
+    },
+    {
+      "hash": "0xe276fb4ca7b1d0c8eed1eb7fed6f0ff44a8afd3cee5c4edb0eb0ed41926da503",
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "block": 123685688,
+      "source_log_query_state": "FULL_EVENT_QUERY",
+      "all_block_filtered_token_logs": 1,
+      "exact_tx_token_transfer_events": [
+        {
+          "ca": "0x924fa68a0fc644485b8df8abfa0a41c2e7744444",
+          "from": "0xa83b73f5644cde337b61da79589f10ea15548811",
+          "to": "0x66f289de31eef70d52186729d2637ac978cfc56b",
+          "raw": "79605467597849162175",
+          "logIndex": 2
+        }
+      ],
+      "error": null
+    },
+    {
+      "hash": "0x0688c737243ad718ab3f9fae4ee4d1fbcf3208dd092fb5af3f7a66e47bc61929",
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "block": 126467804,
+      "source_log_query_state": "FULL_EVENT_QUERY",
+      "all_block_filtered_token_logs": 1,
+      "exact_tx_token_transfer_events": [
+        {
+          "ca": "0x3d4f0513e8a29669b960f9dbca61861548a9a760",
+          "from": "0xa83b73f5644cde337b61da79589f10ea15548811",
+          "to": "0x7f51bbf34156ba802deb0e38b7671dc4fa32041d",
+          "raw": "1958881327072375562774",
+          "logIndex": 39
+        }
+      ],
+      "error": null
+    },
+    {
+      "hash": "0xaa57afb7da6d5bb86ce2eacedec42abf6e99749972321d85adc0f352ef1c4065",
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "block": 126467931,
+      "source_log_query_state": "FULL_EVENT_QUERY",
+      "all_block_filtered_token_logs": 2,
+      "exact_tx_token_transfer_events": [
+        {
+          "ca": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+          "from": "0xa83b73f5644cde337b61da79589f10ea15548811",
+          "to": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+          "raw": "5049222310291438582",
+          "logIndex": 49
+        },
+        {
+          "ca": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+          "from": "0xa83b73f5644cde337b61da79589f10ea15548811",
+          "to": "0x595d70977dff3c841df0bc0138ce89f80c7c9423",
+          "raw": "499873008718852419645",
+          "logIndex": 51
+        }
+      ],
+      "error": null
+    },
+    {
+      "hash": "0xd581b586b41038a4a0d3ea573a65a4a2c06b9b7674d7f5f84a5e768809209dab",
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "block": 126468036,
+      "source_log_query_state": "FULL_EVENT_QUERY",
+      "all_block_filtered_token_logs": 1,
+      "exact_tx_token_transfer_events": [
+        {
+          "ca": "0x82ec31d69b3c289e541b50e30681fd1acad24444",
+          "from": "0xa83b73f5644cde337b61da79589f10ea15548811",
+          "to": "0xc33bacff9141da689875e6381c1932348ab4c5cb",
+          "raw": "283657269119369491643",
+          "logIndex": 2
+        }
+      ],
+      "error": null
+    },
+    {
+      "hash": "0xe651156fb79e04c22e6e3740e1930e657ba106c0134dd79fcc59563711de1db1",
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "block": 126468121,
+      "source_log_query_state": "FULL_EVENT_QUERY",
+      "all_block_filtered_token_logs": 1,
+      "exact_tx_token_transfer_events": [
+        {
+          "ca": "0x6d5ad1592ed9d6d1df9b93c793ab759573ed6714",
+          "from": "0xa83b73f5644cde337b61da79589f10ea15548811",
+          "to": "0xa5067360b13fc7a2685dc82dcd1bf2b4b8d7868b",
+          "raw": "1040360660688252204166",
+          "logIndex": 146
+        }
+      ],
+      "error": null
+    }
+  ],
+  "production": "NO_GO"
+}

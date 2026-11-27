@@ -1,0 +1,350 @@
+{
+  "schema": "BSC_MEME_P4_PRIORITY4_V2_FIRST_MINT_RESERVE_WITNESS",
+  "scope": "4 frozen priority wallets / WBNB V2 pools, first source-backed positive V2 reserves in pool-creation transaction, NOT universal earliest market across alternative pools, fees, taxes or executable follower entry",
+  "network": "bnb-mainnet",
+  "source_precommit_sha": "fdaf91ec445a7b94c24508335ce9a6f017326c73",
+  "binary_proof_git_blob_sha": "702784130e13c086b685caa0702e89fb0a36d7f3",
+  "batch_source_sha": [
+    "caa968f2640212443f26530f2f1e108f1cdc86cd",
+    "aae7f29afb821f0b9d283a2bd7dbff54ba30769c"
+  ],
+  "summary": {
+    "pools": 4,
+    "complete_pair_creation_event_and_boundary": 4,
+    "first_mint_same_tx": 4,
+    "positive_initial_reserves_WBNB": 4,
+    "first_swap_same_block": 2,
+    "first_executable_UTC_claimed": 0,
+    "qualified_misses": 0,
+    "production": "NO_GO"
+  },
+  "records": [
+    {
+      "token": "龙虾",
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "pool": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+      "block": 83636128,
+      "token0": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "token1": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "factory": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "factory_getPair_before": "0x0000000000000000000000000000000000000000000000000000000000000000",
+      "factory_getPair_at": "0x00000000000000000000000022af7297243c4eef12e2d5a4f888b92e56bf127c",
+      "pair_created_event": {
+        "address": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73",
+        "topics": [
+          "0x0d3648bd0f6ba80134a33ba9275ac585d9d315f0ad8355cddefde31afa28d0e9",
+          "0x000000000000000000000000bb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+          "0x000000000000000000000000eccbb861c0dda7efd964010085488b69317e4444"
+        ],
+        "data": "0x00000000000000000000000022af7297243c4eef12e2d5a4f888b92e56bf127c000000000000000000000000000000000000000000000000000000000024eb9e",
+        "blockNumber": "0x4fc2fa0",
+        "transactionHash": "0x843382ac52f04c8b0321fb366b3de2de0047e736d733bf405116bbd4823adad7",
+        "transactionIndex": "0x14",
+        "blockHash": "0xa1e6a5a34a8d344bc5000b7281f6951d4aa03f83cb2ec16547f7924a64c0af6c",
+        "blockTimestamp": "0x69a15ae0",
+        "logIndex": "0x68",
+        "removed": false
+      },
+      "initial_mint_event": {
+        "address": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+        "topics": [
+          "0x4c209b5fc8ad50758f13e2e1088ba56a560dff690a1c6fef26394f4c03821c4f",
+          "0x00000000000000000000000010ed43c718714eb63d5aa57b78b54704e256024e"
+        ],
+        "data": "0x000000000000000000000000000000000000000000000000f4cdde89a01334fc000000000000000000000000000000000000000000a56fa5b99019a5c8000000",
+        "blockHash": "0xa1e6a5a34a8d344bc5000b7281f6951d4aa03f83cb2ec16547f7924a64c0af6c",
+        "blockNumber": "0x4fc2fa0",
+        "blockTimestamp": "0x69a15ae0",
+        "transactionHash": "0x843382ac52f04c8b0321fb366b3de2de0047e736d733bf405116bbd4823adad7",
+        "transactionIndex": "0x14",
+        "logIndex": "0x70",
+        "removed": false
+      },
+      "initial_sync_event": {
+        "address": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+        "topics": [
+          "0x1c411e9a96e071241c2f21f7726b17ae89e3cab4c78be50e062b03a9fffbbad1"
+        ],
+        "data": "0x000000000000000000000000000000000000000000000000f4cdde89a01334fc000000000000000000000000000000000000000000a56fa5b99019a5c8000000",
+        "blockHash": "0xa1e6a5a34a8d344bc5000b7281f6951d4aa03f83cb2ec16547f7924a64c0af6c",
+        "blockNumber": "0x4fc2fa0",
+        "blockTimestamp": "0x69a15ae0",
+        "transactionHash": "0x843382ac52f04c8b0321fb366b3de2de0047e736d733bf405116bbd4823adad7",
+        "transactionIndex": "0x14",
+        "logIndex": "0x6f",
+        "removed": false
+      },
+      "creation_block_swaps": [],
+      "first_initial_mint_reserves_raw": [
+        "17639999998157599996",
+        "200000000000000000000000000"
+      ],
+      "initial_wbnb_wei": "17639999998157599996",
+      "initial_wbnb_BNB": "17.639999998157602",
+      "mint_same_tx": true,
+      "event_order_verified": true,
+      "initial_reserves_positive": true,
+      "first_positive_reserves_at_pair_creation_tx": true,
+      "creation_UTC": "2026-02-27T08:50:40.000Z",
+      "confirmed_execution_same_block": false,
+      "final_trade_profit": "UNRESOLVED",
+      "earliest_qualified_follower_entry": "UNRESOLVED"
+    },
+    {
+      "token": "币安人生",
+      "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "ca": "0x924fa68a0fc644485b8df8abfa0a41c2e7744444",
+      "pool": "0x66f289de31eef70d52186729d2637ac978cfc56b",
+      "block": 63454407,
+      "token0": "0x924fa68a0fc644485b8df8abfa0a41c2e7744444",
+      "token1": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "factory": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "factory_getPair_before": "0x0000000000000000000000000000000000000000000000000000000000000000",
+      "factory_getPair_at": "0x00000000000000000000000066f289de31eef70d52186729d2637ac978cfc56b",
+      "pair_created_event": {
+        "address": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73",
+        "topics": [
+          "0x0d3648bd0f6ba80134a33ba9275ac585d9d315f0ad8355cddefde31afa28d0e9",
+          "0x000000000000000000000000924fa68a0fc644485b8df8abfa0a41c2e7744444",
+          "0x000000000000000000000000bb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c"
+        ],
+        "data": "0x00000000000000000000000066f289de31eef70d52186729d2637ac978cfc56b00000000000000000000000000000000000000000000000000000000001e6c3b",
+        "blockHash": "0x0fc32408322d854267081eb177a2e9a9c9429ee35ddf19e3c652a4d2384ad08e",
+        "blockNumber": "0x3c83cc7",
+        "blockTimestamp": "0x68e136cc",
+        "transactionHash": "0xa4ce8497bbae8c3d6739ea652ea7ae69caca230cefb56c56e344836aa65369f1",
+        "transactionIndex": "0x2c",
+        "logIndex": "0xa6",
+        "removed": false
+      },
+      "initial_mint_event": {
+        "address": "0x66f289de31eef70d52186729d2637ac978cfc56b",
+        "topics": [
+          "0x4c209b5fc8ad50758f13e2e1088ba56a560dff690a1c6fef26394f4c03821c4f",
+          "0x00000000000000000000000010ed43c718714eb63d5aa57b78b54704e256024e"
+        ],
+        "data": "0x000000000000000000000000000000000000000000a56fa5b99019a5c8000000000000000000000000000000000000000000000000000000f4cdde89a01334fc",
+        "blockNumber": "0x3c83cc7",
+        "transactionHash": "0xa4ce8497bbae8c3d6739ea652ea7ae69caca230cefb56c56e344836aa65369f1",
+        "transactionIndex": "0x2c",
+        "blockHash": "0x0fc32408322d854267081eb177a2e9a9c9429ee35ddf19e3c652a4d2384ad08e",
+        "blockTimestamp": "0x68e136cc",
+        "logIndex": "0xae",
+        "removed": false
+      },
+      "initial_sync_event": {
+        "address": "0x66f289de31eef70d52186729d2637ac978cfc56b",
+        "topics": [
+          "0x1c411e9a96e071241c2f21f7726b17ae89e3cab4c78be50e062b03a9fffbbad1"
+        ],
+        "data": "0x000000000000000000000000000000000000000000a56fa5b99019a5c8000000000000000000000000000000000000000000000000000000f4cdde89a01334fc",
+        "blockHash": "0x0fc32408322d854267081eb177a2e9a9c9429ee35ddf19e3c652a4d2384ad08e",
+        "blockNumber": "0x3c83cc7",
+        "blockTimestamp": "0x68e136cc",
+        "transactionHash": "0xa4ce8497bbae8c3d6739ea652ea7ae69caca230cefb56c56e344836aa65369f1",
+        "transactionIndex": "0x2c",
+        "logIndex": "0xad",
+        "removed": false
+      },
+      "creation_block_swaps": [
+        {
+          "address": "0x66f289de31eef70d52186729d2637ac978cfc56b",
+          "topics": [
+            "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822",
+            "0x00000000000000000000000010ed43c718714eb63d5aa57b78b54704e256024e",
+            "0x000000000000000000000000ab01e0d2e1b06e21d519a50ce24ede2b55a24dac"
+          ],
+          "data": "0x000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006f05b59d3b20000000000000000000000000000000000000000000000048c845f22d80cb747482c0000000000000000000000000000000000000000000000000000000000000000",
+          "blockHash": "0x0fc32408322d854267081eb177a2e9a9c9429ee35ddf19e3c652a4d2384ad08e",
+          "blockNumber": "0x3c83cc7",
+          "blockTimestamp": "0x68e136cc",
+          "transactionHash": "0x2af9884e236381a99afb95d34878c79cff686440f5df7bb8c78297790b73bda3",
+          "transactionIndex": "0x2d",
+          "logIndex": "0xb4",
+          "removed": false
+        }
+      ],
+      "first_initial_mint_reserves_raw": [
+        "200000000000000000000000000",
+        "17639999998157599996"
+      ],
+      "initial_wbnb_wei": "17639999998157599996",
+      "initial_wbnb_BNB": "17.639999998157602",
+      "mint_same_tx": true,
+      "event_order_verified": true,
+      "initial_reserves_positive": true,
+      "first_positive_reserves_at_pair_creation_tx": true,
+      "creation_UTC": "2025-10-04T15:01:32.000Z",
+      "confirmed_execution_same_block": true,
+      "final_trade_profit": "UNRESOLVED",
+      "earliest_qualified_follower_entry": "UNRESOLVED"
+    },
+    {
+      "token": "MARSCOIN",
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "pool": "0x9f286c9bd510150c62a08da72af797ac45311ae0",
+      "block": 112668701,
+      "token0": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "token1": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "factory": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "factory_getPair_before": "0x0000000000000000000000000000000000000000000000000000000000000000",
+      "factory_getPair_at": "0x0000000000000000000000009f286c9bd510150c62a08da72af797ac45311ae0",
+      "pair_created_event": {
+        "address": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73",
+        "topics": [
+          "0x0d3648bd0f6ba80134a33ba9275ac585d9d315f0ad8355cddefde31afa28d0e9",
+          "0x000000000000000000000000bb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+          "0x000000000000000000000000fe189e97832da1573e4e4ff034f4ffc3a15c7777"
+        ],
+        "data": "0x0000000000000000000000009f286c9bd510150c62a08da72af797ac45311ae000000000000000000000000000000000000000000000000000000000002870fd",
+        "blockHash": "0xc646cffa9be596eadbae9b47717dd771c95829e0ee2d856180e06526114f534e",
+        "blockNumber": "0x6b7301d",
+        "blockTimestamp": "0x6a68eb64",
+        "transactionHash": "0x17e2f283b285a3c9a3f4dc00e82fe9a0efea4080a5d6adc13f4f043ced53a214",
+        "transactionIndex": "0x1",
+        "logIndex": "0x0",
+        "removed": false
+      },
+      "initial_mint_event": {
+        "address": "0x9f286c9bd510150c62a08da72af797ac45311ae0",
+        "topics": [
+          "0x4c209b5fc8ad50758f13e2e1088ba56a560dff690a1c6fef26394f4c03821c4f",
+          "0x00000000000000000000000010ed43c718714eb63d5aa57b78b54704e256024e"
+        ],
+        "data": "0x0000000000000000000000000000000000000000000000000003a8c7901e60000000000000000000000000000000000000000000000000000d7621dc58210000",
+        "blockHash": "0xc646cffa9be596eadbae9b47717dd771c95829e0ee2d856180e06526114f534e",
+        "blockNumber": "0x6b7301d",
+        "blockTimestamp": "0x6a68eb64",
+        "transactionHash": "0x17e2f283b285a3c9a3f4dc00e82fe9a0efea4080a5d6adc13f4f043ced53a214",
+        "transactionIndex": "0x1",
+        "logIndex": "0xb",
+        "removed": false
+      },
+      "initial_sync_event": {
+        "address": "0x9f286c9bd510150c62a08da72af797ac45311ae0",
+        "topics": [
+          "0x1c411e9a96e071241c2f21f7726b17ae89e3cab4c78be50e062b03a9fffbbad1"
+        ],
+        "data": "0x0000000000000000000000000000000000000000000000000003a8c7901e60000000000000000000000000000000000000000000000000000d7621dc58210000",
+        "blockHash": "0xc646cffa9be596eadbae9b47717dd771c95829e0ee2d856180e06526114f534e",
+        "blockNumber": "0x6b7301d",
+        "blockTimestamp": "0x6a68eb64",
+        "transactionHash": "0x17e2f283b285a3c9a3f4dc00e82fe9a0efea4080a5d6adc13f4f043ced53a214",
+        "transactionIndex": "0x1",
+        "logIndex": "0xa",
+        "removed": false
+      },
+      "creation_block_swaps": [
+        {
+          "address": "0x9f286c9bd510150c62a08da72af797ac45311ae0",
+          "topics": [
+            "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822",
+            "0x000000000000000000000000c5610d040644b0d92b911fd382e2531938193c32",
+            "0x000000000000000000000000c5610d040644b0d92b911fd382e2531938193c32"
+          ],
+          "data": "0x000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000084191793b59e17b0000000000000000000000000000000000000000000000000000351f2cc7716970000000000000000000000000000000000000000000000000000000000000000",
+          "blockHash": "0xc646cffa9be596eadbae9b47717dd771c95829e0ee2d856180e06526114f534e",
+          "blockNumber": "0x6b7301d",
+          "blockTimestamp": "0x6a68eb64",
+          "transactionHash": "0x511f04ae99dffd3aeecd4ef996229c16175ab73c389d8e68b1717876eed5fd13",
+          "transactionIndex": "0x2",
+          "logIndex": "0x19",
+          "removed": false
+        }
+      ],
+      "first_initial_mint_reserves_raw": [
+        "1030000000000000",
+        "970000000000000000"
+      ],
+      "initial_wbnb_wei": "1030000000000000",
+      "initial_wbnb_BNB": "0.00103",
+      "mint_same_tx": true,
+      "event_order_verified": true,
+      "initial_reserves_positive": true,
+      "first_positive_reserves_at_pair_creation_tx": true,
+      "creation_UTC": "2026-07-28T17:48:20.000Z",
+      "confirmed_execution_same_block": true,
+      "final_trade_profit": "UNRESOLVED",
+      "earliest_qualified_follower_entry": "UNRESOLVED"
+    },
+    {
+      "token": "牛来",
+      "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "ca": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "pool": "0xbfc26980d8068ae744f5405d3abf6e7df02e11b3",
+      "block": 116314917,
+      "token0": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "token1": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "factory": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73",
+      "quote_CA": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "factory_getPair_before": "0x0000000000000000000000000000000000000000000000000000000000000000",
+      "factory_getPair_at": "0x000000000000000000000000bfc26980d8068ae744f5405d3abf6e7df02e11b3",
+      "pair_created_event": {
+        "address": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73",
+        "topics": [
+          "0x0d3648bd0f6ba80134a33ba9275ac585d9d315f0ad8355cddefde31afa28d0e9",
+          "0x000000000000000000000000bb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+          "0x000000000000000000000000beea1d618e533a387d941f58a7d4c9b7bd377777"
+        ],
+        "data": "0x000000000000000000000000bfc26980d8068ae744f5405d3abf6e7df02e11b3000000000000000000000000000000000000000000000000000000000028ed13",
+        "blockHash": "0x50061dff3d8503276fbfdedcb496934d6f915f5ed904d261eebe692f7e799dc8",
+        "blockNumber": "0x6eed325",
+        "blockTimestamp": "0x6a81f7a5",
+        "transactionHash": "0x01aa8554e5a6be546bd8341e95d4fb89c0e0b2965b6c6c572c6fd4ad8c2bd8d7",
+        "transactionIndex": "0x5",
+        "logIndex": "0x71",
+        "removed": false
+      },
+      "initial_mint_event": {
+        "address": "0xbfc26980d8068ae744f5405d3abf6e7df02e11b3",
+        "topics": [
+          "0x4c209b5fc8ad50758f13e2e1088ba56a560dff690a1c6fef26394f4c03821c4f",
+          "0x00000000000000000000000010ed43c718714eb63d5aa57b78b54704e256024e"
+        ],
+        "data": "0x000000000000000000000000000000000000000000000000016345785d8a0000000000000000000000000000000000000000000000000064238d72d40fb0bf84",
+        "blockHash": "0x50061dff3d8503276fbfdedcb496934d6f915f5ed904d261eebe692f7e799dc8",
+        "blockNumber": "0x6eed325",
+        "blockTimestamp": "0x6a81f7a5",
+        "transactionHash": "0x01aa8554e5a6be546bd8341e95d4fb89c0e0b2965b6c6c572c6fd4ad8c2bd8d7",
+        "transactionIndex": "0x5",
+        "logIndex": "0x7c",
+        "removed": false
+      },
+      "initial_sync_event": {
+        "address": "0xbfc26980d8068ae744f5405d3abf6e7df02e11b3",
+        "topics": [
+          "0x1c411e9a96e071241c2f21f7726b17ae89e3cab4c78be50e062b03a9fffbbad1"
+        ],
+        "data": "0x000000000000000000000000000000000000000000000000016345785d8a0000000000000000000000000000000000000000000000000064238d72d40fb0bf84",
+        "blockHash": "0x50061dff3d8503276fbfdedcb496934d6f915f5ed904d261eebe692f7e799dc8",
+        "blockNumber": "0x6eed325",
+        "blockTimestamp": "0x6a81f7a5",
+        "transactionHash": "0x01aa8554e5a6be546bd8341e95d4fb89c0e0b2965b6c6c572c6fd4ad8c2bd8d7",
+        "transactionIndex": "0x5",
+        "logIndex": "0x7b",
+        "removed": false
+      },
+      "creation_block_swaps": [],
+      "first_initial_mint_reserves_raw": [
+        "100000000000000000",
+        "1847236237389120716676"
+      ],
+      "initial_wbnb_wei": "100000000000000000",
+      "initial_wbnb_BNB": "0.1",
+      "mint_same_tx": true,
+      "event_order_verified": true,
+      "initial_reserves_positive": true,
+      "first_positive_reserves_at_pair_creation_tx": true,
+      "creation_UTC": "2026-08-16T17:47:17.000Z",
+      "confirmed_execution_same_block": false,
+      "final_trade_profit": "UNRESOLVED",
+      "earliest_qualified_follower_entry": "UNRESOLVED"
+    }
+  ],
+  "conclusion": "Four V2 WBNB candidate pools were created with >0 WBNB in the same PairCreated transaction. This proves initial deposited liquidity within this venue, not generalized first buy eligibility, post-tax sellability or profitable follower trade."
+}

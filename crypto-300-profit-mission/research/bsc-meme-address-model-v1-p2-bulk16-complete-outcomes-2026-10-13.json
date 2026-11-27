@@ -1,0 +1,1127 @@
+{
+  "schema": "BSC_MEME_V1_P2_BULK16_SIGNED_BALANCE_RECONCILIATION_V1",
+  "as_of": "2026-10-13",
+  "status": "RESEARCH_ONLY_NO_GO",
+  "frozen_precommit_path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p2-bulk16-precommit-2026-10-13.json",
+  "frozen_precommit_git_blob_sha": "b080c58ad3ddaf625c7d6fef73a8af1e36236cbb",
+  "source_manifest": [
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p2-bulk16-precommit-2026-10-13.json",
+      "sha": "b080c58ad3ddaf625c7d6fef73a8af1e36236cbb"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p2-bulk16-gate-decisions-2026-10-13.json",
+      "sha": "b2df6c0fa23c735bf453c643e3bfe818a79fdb16"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p2-bulk16-native-part1-2026-10-13.json",
+      "sha": "4e2e62e5b9da3b3b6ce25e46401bfd4494bb9e28"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p2-bulk16-native-part2-2026-10-13.json",
+      "sha": "98be2dc7f80679af8f08ec3898e77315bb330364"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p2-bulk16-native-part3-2026-10-13.json",
+      "sha": "230822f0ae8147698fb94841be533e44e85a511e"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p2-bulk16-native-part4-2026-10-13.json",
+      "sha": "c65b678b6eaf4504ff9febee02ff5ba07257d25a"
+    }
+  ],
+  "selection_before_native_RPCS": true,
+  "all_16_outcomes_included_without_replacement": true,
+  "summary": {
+    "frozen_raw_inventory_cycles": 16,
+    "unique_original_transaction_hashes": 39,
+    "original_owner_signer_verified": 34,
+    "original_tx_success_status": 38,
+    "original_tx_parse_errors": 1,
+    "signer_and_receipt_qualified_cycles": 13,
+    "disqualified_cycles": 3,
+    "qualified_native_wallet_blocks": 31,
+    "qualified_native_wallet_block_balance_failures": 0,
+    "positive_native_scope_cycles": 9,
+    "negative_native_scope_cycles": 4,
+    "zero_native_scope_cycles": 0,
+    "qualified_distinct_wallets": 4,
+    "all_23_wallets_full_PnL_audited": false
+  },
+  "cycles": [
+    {
+      "sample_index": 0,
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "token": "牛来",
+      "exact_ca": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "episode_index": 8,
+      "first_block": 120038802,
+      "last_block": 120039005,
+      "source_raw_transfer_log_count": 3,
+      "precommitted_original_tx_hashes": [
+        "0x3acba5a060c21198390044f2b19642aaf6cfe02c1d4ef41d97597373943e2eb1",
+        "0x7ebdc19aedd605c5f5b6ca80c80e162aeb46161a750e31c48f6684576967a967"
+      ],
+      "tx_verifications": [
+        {
+          "hash": "0x3acba5a060c21198390044f2b19642aaf6cfe02c1d4ef41d97597373943e2eb1",
+          "block": null,
+          "signer": null,
+          "is_owner_signer": null,
+          "status": null,
+          "tx_native_msg_value_wei": null,
+          "receipt_full": false,
+          "source_error": "SyntaxError: Bad control character in string literal in JSON at position 8000 (line 9 column 7819)"
+        },
+        {
+          "hash": "0x7ebdc19aedd605c5f5b6ca80c80e162aeb46161a750e31c48f6684576967a967",
+          "block": 120039005,
+          "signer": "0xa83b73f5644cde337b61da79589f10ea15548811",
+          "is_owner_signer": true,
+          "status": "0x1",
+          "tx_native_msg_value_wei": "0",
+          "receipt_full": false,
+          "source_error": null
+        }
+      ],
+      "owner_signed_success_all": false,
+      "receipt_body_full_count": 0,
+      "gate_decision": "REJECT_ECONOMIC_IMPORT_KEEP_UNRESOLVED",
+      "failure_reason": "TRUNCATED_RPC_ORIGINAL_SENDER_UNVERIFIED",
+      "unique_original_wallet_blocks": [
+        120039005
+      ],
+      "per_unique_block_native_evidence": [],
+      "native_scope_delta_wei": null,
+      "native_scope_sign": "UNKNOWN",
+      "actual_quote_asset_internal_trace": "UNVERIFIED",
+      "native_scope_only_not_wallet_lifetime_PnL": true
+    },
+    {
+      "sample_index": 1,
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "token": "牛来",
+      "exact_ca": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "episode_index": 12,
+      "first_block": 122380364,
+      "last_block": 126467931,
+      "source_raw_transfer_log_count": 4,
+      "precommitted_original_tx_hashes": [
+        "0x1690c38ce30ca5007e2aaa5d726901b1f891c701905d42bf2112bb9a96061017",
+        "0x411a0d6ba1b211133e2a549b71bfdc286dd115d34cc146c6d9c5adcf4de2bf94",
+        "0xaa57afb7da6d5bb86ce2eacedec42abf6e99749972321d85adc0f352ef1c4065"
+      ],
+      "tx_verifications": [
+        {
+          "hash": "0x1690c38ce30ca5007e2aaa5d726901b1f891c701905d42bf2112bb9a96061017",
+          "block": 122380364,
+          "signer": "0x679d8a9a2bb243ca42d0c3a7a49d46203b5a0632",
+          "is_owner_signer": false,
+          "status": "0x1",
+          "tx_native_msg_value_wei": "0",
+          "receipt_full": false,
+          "source_error": null
+        },
+        {
+          "hash": "0x411a0d6ba1b211133e2a549b71bfdc286dd115d34cc146c6d9c5adcf4de2bf94",
+          "block": 123644309,
+          "signer": "0x679d8a9a2bb243ca42d0c3a7a49d46203b5a0632",
+          "is_owner_signer": false,
+          "status": "0x1",
+          "tx_native_msg_value_wei": "0",
+          "receipt_full": false,
+          "source_error": null
+        },
+        {
+          "hash": "0xaa57afb7da6d5bb86ce2eacedec42abf6e99749972321d85adc0f352ef1c4065",
+          "block": 126467931,
+          "signer": "0xa83b73f5644cde337b61da79589f10ea15548811",
+          "is_owner_signer": true,
+          "status": "0x1",
+          "tx_native_msg_value_wei": "0",
+          "receipt_full": false,
+          "source_error": null
+        }
+      ],
+      "owner_signed_success_all": false,
+      "receipt_body_full_count": 0,
+      "gate_decision": "REJECT_ECONOMIC_IMPORT_KEEP_UNRESOLVED",
+      "failure_reason": "THIRD_PARTY_OR_NONOWNER_ORIGINAL_TX",
+      "unique_original_wallet_blocks": [
+        122380364,
+        123644309,
+        126467931
+      ],
+      "per_unique_block_native_evidence": [],
+      "native_scope_delta_wei": null,
+      "native_scope_sign": "UNKNOWN",
+      "actual_quote_asset_internal_trace": "UNVERIFIED",
+      "native_scope_only_not_wallet_lifetime_PnL": true
+    },
+    {
+      "sample_index": 2,
+      "wallet": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "token": "MARSCOIN",
+      "exact_ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "episode_index": 5,
+      "first_block": 112633681,
+      "last_block": 112633805,
+      "source_raw_transfer_log_count": 5,
+      "precommitted_original_tx_hashes": [
+        "0xb24f907d3d49d22cab32c024fb56481a5897891ebfa4dda0abe59432696e9695",
+        "0x6034212914ca925ebb875121f1e7a5c8a4a15a2c63a6bc870ce28634db15423e",
+        "0x971a9ab0217b0bef829991cf12d9eb848e83cfd2fa3e9e11cb82bbc2e752a125"
+      ],
+      "tx_verifications": [
+        {
+          "hash": "0xb24f907d3d49d22cab32c024fb56481a5897891ebfa4dda0abe59432696e9695",
+          "block": 112633681,
+          "signer": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+          "is_owner_signer": true,
+          "status": "0x1",
+          "tx_native_msg_value_wei": "550000000000000000",
+          "receipt_full": false,
+          "source_error": null
+        },
+        {
+          "hash": "0x6034212914ca925ebb875121f1e7a5c8a4a15a2c63a6bc870ce28634db15423e",
+          "block": 112633772,
+          "signer": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+          "is_owner_signer": true,
+          "status": "0x1",
+          "tx_native_msg_value_wei": "0",
+          "receipt_full": false,
+          "source_error": null
+        },
+        {
+          "hash": "0x971a9ab0217b0bef829991cf12d9eb848e83cfd2fa3e9e11cb82bbc2e752a125",
+          "block": 112633805,
+          "signer": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+          "is_owner_signer": true,
+          "status": "0x1",
+          "tx_native_msg_value_wei": "0",
+          "receipt_full": false,
+          "source_error": null
+        }
+      ],
+      "owner_signed_success_all": true,
+      "receipt_body_full_count": 0,
+      "gate_decision": "ADMIT_NATIVE_EVENT_BLOCK_SCOPE_RESEARCH_ONLY",
+      "failure_reason": null,
+      "unique_original_wallet_blocks": [
+        112633681,
+        112633772,
+        112633805
+      ],
+      "per_unique_block_native_evidence": [
+        {
+          "block": 112633681,
+          "balance_before_wei": "18949152016563775184",
+          "balance_after_wei": "18398934275083775184",
+          "net_wei": "-550217741480000000"
+        },
+        {
+          "block": 112633772,
+          "balance_before_wei": "18398934275083775184",
+          "balance_after_wei": "18798865340172219516",
+          "net_wei": "399931065088444332"
+        },
+        {
+          "block": 112633805,
+          "balance_before_wei": "18798865340172219516",
+          "balance_after_wei": "19203766098720264027",
+          "net_wei": "404900758548044511"
+        }
+      ],
+      "native_scope_delta_wei": "254614082156488843",
+      "native_scope_sign": "POSITIVE_NATIVE_SCOPE",
+      "actual_quote_asset_internal_trace": "UNVERIFIED",
+      "native_scope_only_not_wallet_lifetime_PnL": true
+    },
+    {
+      "sample_index": 3,
+      "wallet": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "token": "MARSCOIN",
+      "exact_ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "episode_index": 6,
+      "first_block": 112634149,
+      "last_block": 112634184,
+      "source_raw_transfer_log_count": 5,
+      "precommitted_original_tx_hashes": [
+        "0xb3215e0bf0884fa79f7c061f94730e72ed822b4c32df5879d9e218a33c6b05a9",
+        "0xcfdf1cce9e7d4b17fb86e31cd4eeb93ec54a00ca7e6e6908fc0db0f42fed4f89",
+        "0xeb77015b8189b7dde56ed6cd98d313c5a8e17cf13b254fb9378abe5e9e091d31"
+      ],
+      "tx_verifications": [
+        {
+          "hash": "0xb3215e0bf0884fa79f7c061f94730e72ed822b4c32df5879d9e218a33c6b05a9",
+          "block": 112634149,
+          "signer": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+          "is_owner_signer": true,
+          "status": "0x1",
+          "tx_native_msg_value_wei": "1750000000000000000",
+          "receipt_full": false,
+          "source_error": null
+        },
+        {
+          "hash": "0xcfdf1cce9e7d4b17fb86e31cd4eeb93ec54a00ca7e6e6908fc0db0f42fed4f89",
+          "block": 112634161,
+          "signer": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+          "is_owner_signer": true,
+          "status": "0x1",
+          "tx_native_msg_value_wei": "0",
+          "receipt_full": false,
+          "source_error": null
+        },
+        {
+          "hash": "0xeb77015b8189b7dde56ed6cd98d313c5a8e17cf13b254fb9378abe5e9e091d31",
+          "block": 112634184,
+          "signer": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+          "is_owner_signer": true,
+          "status": "0x1",
+          "tx_native_msg_value_wei": "0",
+          "receipt_full": false,
+          "source_error": null
+        }
+      ],
+      "owner_signed_success_all": true,
+      "receipt_body_full_count": 0,
+      "gate_decision": "ADMIT_NATIVE_EVENT_BLOCK_SCOPE_RESEARCH_ONLY",
+      "failure_reason": null,
+      "unique_original_wallet_blocks": [
+        112634149,
+        112634161,
+        112634184
+      ],
+      "per_unique_block_native_evidence": [
+        {
+          "block": 112634149,
+          "balance_before_wei": "19203766098720264027",
+          "balance_after_wei": "17453529457480264027",
+          "net_wei": "-1750236641240000000"
+        },
+        {
+          "block": 112634161,
+          "balance_before_wei": "17453529457480264027",
+          "balance_after_wei": "18282283572919141413",
+          "net_wei": "828754115438877386"
+        },
+        {
+          "block": 112634184,
+          "balance_before_wei": "18282283572919141413",
+          "balance_after_wei": "19130639071019424059",
+          "net_wei": "848355498100282646"
+        }
+      ],
+      "native_scope_delta_wei": "-73127027700839968",
+      "native_scope_sign": "NEGATIVE_NATIVE_SCOPE",
+      "actual_quote_asset_internal_trace": "UNVERIFIED",
+      "native_scope_only_not_wallet_lifetime_PnL": true
+    },
+    {
+      "sample_index": 4,
+      "wallet": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "token": "MARSCOIN",
+      "exact_ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "episode_index": 10,
+      "first_block": 112642167,
+      "last_block": 112642708,
+      "source_raw_transfer_log_count": 5,
+      "precommitted_original_tx_hashes": [
+        "0xf0296ad811bf38270ee4e14a3cecc150843c3000f34be58c1523f19f25f990d9",
+        "0x138a2f11c4d9a9cc008348342a75a7c367c635661df12e2f6ce6465dddc23bb8",
+        "0x5c9d8a363e66769fb8157b025b44d9934804a942367245b24c7701a4265684a6"
+      ],
+      "tx_verifications": [
+        {
+          "hash": "0xf0296ad811bf38270ee4e14a3cecc150843c3000f34be58c1523f19f25f990d9",
+          "block": 112642167,
+          "signer": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+          "is_owner_signer": true,
+          "status": "0x1",
+          "tx_native_msg_value_wei": "820000000000000000",
+          "receipt_full": false,
+          "source_error": null
+        },
+        {
+          "hash": "0x138a2f11c4d9a9cc008348342a75a7c367c635661df12e2f6ce6465dddc23bb8",
+          "block": 112642382,
+          "signer": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+          "is_owner_signer": true,
+          "status": "0x1",
+          "tx_native_msg_value_wei": "0",
+          "receipt_full": false,
+          "source_error": null
+        },
+        {
+          "hash": "0x5c9d8a363e66769fb8157b025b44d9934804a942367245b24c7701a4265684a6",
+          "block": 112642708,
+          "signer": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+          "is_owner_signer": true,
+          "status": "0x1",
+          "tx_native_msg_value_wei": "0",
+          "receipt_full": false,
+          "source_error": null
+        }
+      ],
+      "owner_signed_success_all": true,
+      "receipt_body_full_count": 0,
+      "gate_decision": "ADMIT_NATIVE_EVENT_BLOCK_SCOPE_RESEARCH_ONLY",
+      "failure_reason": null,
+      "unique_original_wallet_blocks": [
+        112642167,
+        112642382,
+        112642708
+      ],
+      "per_unique_block_native_evidence": [
+        {
+          "block": 112642167,
+          "balance_before_wei": "19859840241317161110",
+          "balance_after_wei": "19039623702357161110",
+          "net_wei": "-820216538960000000"
+        },
+        {
+          "block": 112642382,
+          "balance_before_wei": "19039623702357161110",
+          "balance_after_wei": "19488683156973976938",
+          "net_wei": "449059454616815828"
+        },
+        {
+          "block": 112642708,
+          "balance_before_wei": "19413958796973976938",
+          "balance_after_wei": "19844740842169606533",
+          "net_wei": "430782045195629595"
+        }
+      ],
+      "native_scope_delta_wei": "59624960852445423",
+      "native_scope_sign": "POSITIVE_NATIVE_SCOPE",
+      "actual_quote_asset_internal_trace": "UNVERIFIED",
+      "native_scope_only_not_wallet_lifetime_PnL": true
+    },
+    {
+      "sample_index": 5,
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "token": "我踏马来了",
+      "exact_ca": "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
+      "episode_index": 2,
+      "first_block": 73336433,
+      "last_block": 73336473,
+      "source_raw_transfer_log_count": 2,
+      "precommitted_original_tx_hashes": [
+        "0x8ebe4e38363050f4b850773a708b86043616fcc11d67e75ca02f00b314bfee2d",
+        "0xaa666274666044e636bc616b78730dbd6a268b87f45b90d0eddbd506bbeaadbe"
+      ],
+      "tx_verifications": [
+        {
+          "hash": "0x8ebe4e38363050f4b850773a708b86043616fcc11d67e75ca02f00b314bfee2d",
+          "block": 73336433,
+          "signer": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+          "is_owner_signer": true,
+          "status": "0x1",
+          "tx_native_msg_value_wei": "60000000000000000",
+          "receipt_full": false,
+          "source_error": null
+        },
+        {
+          "hash": "0xaa666274666044e636bc616b78730dbd6a268b87f45b90d0eddbd506bbeaadbe",
+          "block": 73336473,
+          "signer": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+          "is_owner_signer": true,
+          "status": "0x1",
+          "tx_native_msg_value_wei": "0",
+          "receipt_full": true,
+          "source_error": null
+        }
+      ],
+      "owner_signed_success_all": true,
+      "receipt_body_full_count": 1,
+      "gate_decision": "ADMIT_NATIVE_EVENT_BLOCK_SCOPE_RESEARCH_ONLY",
+      "failure_reason": null,
+      "unique_original_wallet_blocks": [
+        73336433,
+        73336473
+      ],
+      "per_unique_block_native_evidence": [
+        {
+          "block": 73336433,
+          "balance_before_wei": "550803476352537915",
+          "balance_after_wei": "490641724352537935",
+          "net_wei": "-60161751999999980"
+        },
+        {
+          "block": 73336473,
+          "balance_before_wei": "490641724352537935",
+          "balance_after_wei": "553854238183424524",
+          "net_wei": "63212513830886589"
+        }
+      ],
+      "native_scope_delta_wei": "3050761830886609",
+      "native_scope_sign": "POSITIVE_NATIVE_SCOPE",
+      "actual_quote_asset_internal_trace": "UNVERIFIED",
+      "native_scope_only_not_wallet_lifetime_PnL": true
+    },
+    {
+      "sample_index": 6,
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "token": "我踏马来了",
+      "exact_ca": "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
+      "episode_index": 3,
+      "first_block": 73338331,
+      "last_block": 73338341,
+      "source_raw_transfer_log_count": 2,
+      "precommitted_original_tx_hashes": [
+        "0x369314228253f7c538a4ad5218f1c323f25be9657bde6f3745dfb839257ea725",
+        "0x99e09da5149aa7219073c58cab404feb1ceb34e747d68999e5b1f567560cfca9"
+      ],
+      "tx_verifications": [
+        {
+          "hash": "0x369314228253f7c538a4ad5218f1c323f25be9657bde6f3745dfb839257ea725",
+          "block": 73338331,
+          "signer": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+          "is_owner_signer": true,
+          "status": "0x1",
+          "tx_native_msg_value_wei": "60000000000000000",
+          "receipt_full": false,
+          "source_error": null
+        },
+        {
+          "hash": "0x99e09da5149aa7219073c58cab404feb1ceb34e747d68999e5b1f567560cfca9",
+          "block": 73338341,
+          "signer": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+          "is_owner_signer": true,
+          "status": "0x1",
+          "tx_native_msg_value_wei": "0",
+          "receipt_full": true,
+          "source_error": null
+        }
+      ],
+      "owner_signed_success_all": true,
+      "receipt_body_full_count": 1,
+      "gate_decision": "ADMIT_NATIVE_EVENT_BLOCK_SCOPE_RESEARCH_ONLY",
+      "failure_reason": null,
+      "unique_original_wallet_blocks": [
+        73338331,
+        73338341
+      ],
+      "per_unique_block_native_evidence": [
+        {
+          "block": 73338331,
+          "balance_before_wei": "507066586870555304",
+          "balance_after_wei": "446904834870555315",
+          "net_wei": "-60161751999999989"
+        },
+        {
+          "block": 73338341,
+          "balance_before_wei": "446904834870555315",
+          "balance_after_wei": "507159153915985886",
+          "net_wei": "60254319045430571"
+        }
+      ],
+      "native_scope_delta_wei": "92567045430582",
+      "native_scope_sign": "POSITIVE_NATIVE_SCOPE",
+      "actual_quote_asset_internal_trace": "UNVERIFIED",
+      "native_scope_only_not_wallet_lifetime_PnL": true
+    },
+    {
+      "sample_index": 7,
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "token": "我踏马来了",
+      "exact_ca": "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
+      "episode_index": 4,
+      "first_block": 73339965,
+      "last_block": 73339992,
+      "source_raw_transfer_log_count": 2,
+      "precommitted_original_tx_hashes": [
+        "0x2d81f2b316c8b54d232ca03c04269cb4a6ce031b24760a10815b83d5fb5b1622",
+        "0x35224cc19da5549ab4e2e3a6bda712f2c137127375be85c1e5578804674fe15c"
+      ],
+      "tx_verifications": [
+        {
+          "hash": "0x2d81f2b316c8b54d232ca03c04269cb4a6ce031b24760a10815b83d5fb5b1622",
+          "block": 73339965,
+          "signer": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+          "is_owner_signer": true,
+          "status": "0x1",
+          "tx_native_msg_value_wei": "60000000000000000",
+          "receipt_full": false,
+          "source_error": null
+        },
+        {
+          "hash": "0x35224cc19da5549ab4e2e3a6bda712f2c137127375be85c1e5578804674fe15c",
+          "block": 73339992,
+          "signer": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+          "is_owner_signer": true,
+          "status": "0x1",
+          "tx_native_msg_value_wei": "0",
+          "receipt_full": true,
+          "source_error": null
+        }
+      ],
+      "owner_signed_success_all": true,
+      "receipt_body_full_count": 1,
+      "gate_decision": "ADMIT_NATIVE_EVENT_BLOCK_SCOPE_RESEARCH_ONLY",
+      "failure_reason": null,
+      "unique_original_wallet_blocks": [
+        73339965,
+        73339992
+      ],
+      "per_unique_block_native_evidence": [
+        {
+          "block": 73339965,
+          "balance_before_wei": "523558244183578048",
+          "balance_after_wei": "463396492183578063",
+          "net_wei": "-60161751999999985"
+        },
+        {
+          "block": 73339992,
+          "balance_before_wei": "463396492183578063",
+          "balance_after_wei": "532011622979568378",
+          "net_wei": "68615130795990315"
+        }
+      ],
+      "native_scope_delta_wei": "8453378795990330",
+      "native_scope_sign": "POSITIVE_NATIVE_SCOPE",
+      "actual_quote_asset_internal_trace": "UNVERIFIED",
+      "native_scope_only_not_wallet_lifetime_PnL": true
+    },
+    {
+      "sample_index": 8,
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "token": "龙虾",
+      "exact_ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "episode_index": 5,
+      "first_block": 84962371,
+      "last_block": 84963046,
+      "source_raw_transfer_log_count": 2,
+      "precommitted_original_tx_hashes": [
+        "0x7d2a5ae4c18d56b9ed8dec99d15ba307b99d8cbd54fb900b7f833dd11b2258b1",
+        "0x650b9e4e945ff0cecc22b2f57c2c3339913d48bc1c1042f43b384335afa9b7aa"
+      ],
+      "tx_verifications": [
+        {
+          "hash": "0x7d2a5ae4c18d56b9ed8dec99d15ba307b99d8cbd54fb900b7f833dd11b2258b1",
+          "block": 84962371,
+          "signer": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+          "is_owner_signer": true,
+          "status": "0x1",
+          "tx_native_msg_value_wei": "200000000000000000",
+          "receipt_full": true,
+          "source_error": null
+        },
+        {
+          "hash": "0x650b9e4e945ff0cecc22b2f57c2c3339913d48bc1c1042f43b384335afa9b7aa",
+          "block": 84963046,
+          "signer": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+          "is_owner_signer": true,
+          "status": "0x1",
+          "tx_native_msg_value_wei": "0",
+          "receipt_full": false,
+          "source_error": null
+        }
+      ],
+      "owner_signed_success_all": true,
+      "receipt_body_full_count": 1,
+      "gate_decision": "ADMIT_NATIVE_EVENT_BLOCK_SCOPE_RESEARCH_ONLY",
+      "failure_reason": null,
+      "unique_original_wallet_blocks": [
+        84962371,
+        84963046
+      ],
+      "per_unique_block_native_evidence": [
+        {
+          "block": 84962371,
+          "balance_before_wei": "2650836981718089506",
+          "balance_after_wei": "2450721218378089506",
+          "net_wei": "-200115763340000000"
+        },
+        {
+          "block": 84963046,
+          "balance_before_wei": "2350601875858089506",
+          "balance_after_wei": "2550375481129760780",
+          "net_wei": "199773605271671274"
+        }
+      ],
+      "native_scope_delta_wei": "-342158068328726",
+      "native_scope_sign": "NEGATIVE_NATIVE_SCOPE",
+      "actual_quote_asset_internal_trace": "UNVERIFIED",
+      "native_scope_only_not_wallet_lifetime_PnL": true
+    },
+    {
+      "sample_index": 9,
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "token": "龙虾",
+      "exact_ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "episode_index": 6,
+      "first_block": 121783426,
+      "last_block": 121786352,
+      "source_raw_transfer_log_count": 3,
+      "precommitted_original_tx_hashes": [
+        "0x13f5678b90e1bd0e2b703e23934a7777ba639f75ec1c8c70200f350ff43c4952",
+        "0xc0098aafadbf7a3789d7beb64717b4f5f7c0c1698f1e5d5386419f7b57cc9fbd"
+      ],
+      "tx_verifications": [
+        {
+          "hash": "0x13f5678b90e1bd0e2b703e23934a7777ba639f75ec1c8c70200f350ff43c4952",
+          "block": 121783426,
+          "signer": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+          "is_owner_signer": true,
+          "status": "0x1",
+          "tx_native_msg_value_wei": "0",
+          "receipt_full": false,
+          "source_error": null
+        },
+        {
+          "hash": "0xc0098aafadbf7a3789d7beb64717b4f5f7c0c1698f1e5d5386419f7b57cc9fbd",
+          "block": 121786352,
+          "signer": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+          "is_owner_signer": true,
+          "status": "0x1",
+          "tx_native_msg_value_wei": "0",
+          "receipt_full": false,
+          "source_error": null
+        }
+      ],
+      "owner_signed_success_all": true,
+      "receipt_body_full_count": 0,
+      "gate_decision": "ADMIT_NATIVE_EVENT_BLOCK_SCOPE_RESEARCH_ONLY",
+      "failure_reason": null,
+      "unique_original_wallet_blocks": [
+        121783426,
+        121786352
+      ],
+      "per_unique_block_native_evidence": [
+        {
+          "block": 121783426,
+          "balance_before_wei": "4852799332649570504",
+          "balance_after_wei": "4852652012474570504",
+          "net_wei": "-147320175000000"
+        },
+        {
+          "block": 121786352,
+          "balance_before_wei": "4860355826768457125",
+          "balance_after_wei": "4866188954739309400",
+          "net_wei": "5833127970852275"
+        }
+      ],
+      "native_scope_delta_wei": "5685807795852275",
+      "native_scope_sign": "POSITIVE_NATIVE_SCOPE",
+      "actual_quote_asset_internal_trace": "UNVERIFIED",
+      "native_scope_only_not_wallet_lifetime_PnL": true
+    },
+    {
+      "sample_index": 10,
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "token": "牛来",
+      "exact_ca": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "episode_index": 3,
+      "first_block": 116038180,
+      "last_block": 116087810,
+      "source_raw_transfer_log_count": 3,
+      "precommitted_original_tx_hashes": [
+        "0x5b9f98b8feff8b9589b9a229bd64485689d11f7aa08d7973d7553fd18ba35e1e",
+        "0xc4a493cc5fba197f70e225de4927937b2532cfd18de4efefeb4ebbe3a350d40f"
+      ],
+      "tx_verifications": [
+        {
+          "hash": "0x5b9f98b8feff8b9589b9a229bd64485689d11f7aa08d7973d7553fd18ba35e1e",
+          "block": 116038180,
+          "signer": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+          "is_owner_signer": true,
+          "status": "0x1",
+          "tx_native_msg_value_wei": "100000000000000000",
+          "receipt_full": false,
+          "source_error": null
+        },
+        {
+          "hash": "0xc4a493cc5fba197f70e225de4927937b2532cfd18de4efefeb4ebbe3a350d40f",
+          "block": 116087810,
+          "signer": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+          "is_owner_signer": true,
+          "status": "0x1",
+          "tx_native_msg_value_wei": "0",
+          "receipt_full": false,
+          "source_error": null
+        }
+      ],
+      "owner_signed_success_all": true,
+      "receipt_body_full_count": 0,
+      "gate_decision": "ADMIT_NATIVE_EVENT_BLOCK_SCOPE_RESEARCH_ONLY",
+      "failure_reason": null,
+      "unique_original_wallet_blocks": [
+        116038180,
+        116087810
+      ],
+      "per_unique_block_native_evidence": [
+        {
+          "block": 116038180,
+          "balance_before_wei": "2588034452061658879",
+          "balance_after_wei": "2487977535581658879",
+          "net_wei": "-100056916480000000"
+        },
+        {
+          "block": 116087810,
+          "balance_before_wei": "2386272524940965280",
+          "balance_after_wei": "2518167128322895779",
+          "net_wei": "131894603381930499"
+        }
+      ],
+      "native_scope_delta_wei": "31837686901930499",
+      "native_scope_sign": "POSITIVE_NATIVE_SCOPE",
+      "actual_quote_asset_internal_trace": "UNVERIFIED",
+      "native_scope_only_not_wallet_lifetime_PnL": true
+    },
+    {
+      "sample_index": 11,
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "token": "牛来",
+      "exact_ca": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "episode_index": 4,
+      "first_block": 116099537,
+      "last_block": 116211969,
+      "source_raw_transfer_log_count": 4,
+      "precommitted_original_tx_hashes": [
+        "0xf83f69d2d411b237bc10c7be7f16bfc57ae0567bdd00bf245e576688be3b4549",
+        "0xff6b642aa397450042ddbbb3010cd622dbb617b0479f5a2769aa93a8c1b03dc4",
+        "0x1e5aea53c25c41c0a9c84472f89774d0c93ff19be721ae8333fb0aafd264e366"
+      ],
+      "tx_verifications": [
+        {
+          "hash": "0xf83f69d2d411b237bc10c7be7f16bfc57ae0567bdd00bf245e576688be3b4549",
+          "block": 116099537,
+          "signer": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+          "is_owner_signer": true,
+          "status": "0x1",
+          "tx_native_msg_value_wei": "100000000000000000",
+          "receipt_full": false,
+          "source_error": null
+        },
+        {
+          "hash": "0xff6b642aa397450042ddbbb3010cd622dbb617b0479f5a2769aa93a8c1b03dc4",
+          "block": 116109420,
+          "signer": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+          "is_owner_signer": true,
+          "status": "0x1",
+          "tx_native_msg_value_wei": "0",
+          "receipt_full": false,
+          "source_error": null
+        },
+        {
+          "hash": "0x1e5aea53c25c41c0a9c84472f89774d0c93ff19be721ae8333fb0aafd264e366",
+          "block": 116211969,
+          "signer": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+          "is_owner_signer": true,
+          "status": "0x1",
+          "tx_native_msg_value_wei": "0",
+          "receipt_full": false,
+          "source_error": null
+        }
+      ],
+      "owner_signed_success_all": true,
+      "receipt_body_full_count": 0,
+      "gate_decision": "ADMIT_NATIVE_EVENT_BLOCK_SCOPE_RESEARCH_ONLY",
+      "failure_reason": null,
+      "unique_original_wallet_blocks": [
+        116099537,
+        116109420,
+        116211969
+      ],
+      "per_unique_block_native_evidence": [
+        {
+          "block": 116099537,
+          "balance_before_wei": "2505563399301006090",
+          "balance_after_wei": "2405514468701006090",
+          "net_wei": "-100048930600000000"
+        },
+        {
+          "block": 116109420,
+          "balance_before_wei": "2682960375835569915",
+          "balance_after_wei": "2782013838226402334",
+          "net_wei": "99053462390832419"
+        },
+        {
+          "block": 116211969,
+          "balance_before_wei": "2604953395354313880",
+          "balance_after_wei": "2685109871110475607",
+          "net_wei": "80156475756161727"
+        }
+      ],
+      "native_scope_delta_wei": "79161007546994146",
+      "native_scope_sign": "POSITIVE_NATIVE_SCOPE",
+      "actual_quote_asset_internal_trace": "UNVERIFIED",
+      "native_scope_only_not_wallet_lifetime_PnL": true
+    },
+    {
+      "sample_index": 12,
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "token": "牛来",
+      "exact_ca": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "episode_index": 5,
+      "first_block": 116236103,
+      "last_block": 116380025,
+      "source_raw_transfer_log_count": 4,
+      "precommitted_original_tx_hashes": [
+        "0x6bb26cbd29a006b1b9a1697099eef20e8fe3581e767d7321aa03a47c7d5f0429",
+        "0x39633b6564e9641f1163b14e7294c576627433a6c35d8437c49016980322094d",
+        "0x72a5a6f915c657612aa42b6193a1bf05d85bb176aecfa17eb04643c5a5ea2c84"
+      ],
+      "tx_verifications": [
+        {
+          "hash": "0x6bb26cbd29a006b1b9a1697099eef20e8fe3581e767d7321aa03a47c7d5f0429",
+          "block": 116236103,
+          "signer": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+          "is_owner_signer": true,
+          "status": "0x1",
+          "tx_native_msg_value_wei": "100000000000000000",
+          "receipt_full": false,
+          "source_error": null
+        },
+        {
+          "hash": "0x39633b6564e9641f1163b14e7294c576627433a6c35d8437c49016980322094d",
+          "block": 116298779,
+          "signer": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+          "is_owner_signer": true,
+          "status": "0x1",
+          "tx_native_msg_value_wei": "100000000000000000",
+          "receipt_full": false,
+          "source_error": null
+        },
+        {
+          "hash": "0x72a5a6f915c657612aa42b6193a1bf05d85bb176aecfa17eb04643c5a5ea2c84",
+          "block": 116380025,
+          "signer": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+          "is_owner_signer": true,
+          "status": "0x1",
+          "tx_native_msg_value_wei": "0",
+          "receipt_full": false,
+          "source_error": null
+        }
+      ],
+      "owner_signed_success_all": true,
+      "receipt_body_full_count": 0,
+      "gate_decision": "ADMIT_NATIVE_EVENT_BLOCK_SCOPE_RESEARCH_ONLY",
+      "failure_reason": null,
+      "unique_original_wallet_blocks": [
+        116236103,
+        116298779,
+        116380025
+      ],
+      "per_unique_block_native_evidence": [
+        {
+          "block": 116236103,
+          "balance_before_wei": "2558735238800526149",
+          "balance_after_wei": "2458696048000526149",
+          "net_wei": "-100039190800000000"
+        },
+        {
+          "block": 116298779,
+          "balance_before_wei": "380060975912378037",
+          "balance_after_wei": "280010461312378037",
+          "net_wei": "-100050514600000000"
+        },
+        {
+          "block": 116380025,
+          "balance_before_wei": "280004583232378037",
+          "balance_after_wei": "624624980957007794",
+          "net_wei": "344620397724629757"
+        }
+      ],
+      "native_scope_delta_wei": "144530692324629757",
+      "native_scope_sign": "POSITIVE_NATIVE_SCOPE",
+      "actual_quote_asset_internal_trace": "UNVERIFIED",
+      "native_scope_only_not_wallet_lifetime_PnL": true
+    },
+    {
+      "sample_index": 13,
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "token": "龙虾",
+      "exact_ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "episode_index": 1,
+      "first_block": 83720393,
+      "last_block": 83720398,
+      "source_raw_transfer_log_count": 2,
+      "precommitted_original_tx_hashes": [
+        "0x45ebe939bb00ca5660ffde899a6096076cb75ed01d5db89537f91380f2424bf4",
+        "0x9a0cc58d9b3a32d79af78b4d543b98c1ab2bb1c13c742866e7f2b7c28b552a36"
+      ],
+      "tx_verifications": [
+        {
+          "hash": "0x45ebe939bb00ca5660ffde899a6096076cb75ed01d5db89537f91380f2424bf4",
+          "block": 83720393,
+          "signer": "0xa83b73f5644cde337b61da79589f10ea15548811",
+          "is_owner_signer": true,
+          "status": "0x1",
+          "tx_native_msg_value_wei": "2400000000000000000",
+          "receipt_full": true,
+          "source_error": null
+        },
+        {
+          "hash": "0x9a0cc58d9b3a32d79af78b4d543b98c1ab2bb1c13c742866e7f2b7c28b552a36",
+          "block": 83720398,
+          "signer": "0xa83b73f5644cde337b61da79589f10ea15548811",
+          "is_owner_signer": true,
+          "status": "0x1",
+          "tx_native_msg_value_wei": "0",
+          "receipt_full": false,
+          "source_error": null
+        }
+      ],
+      "owner_signed_success_all": true,
+      "receipt_body_full_count": 1,
+      "gate_decision": "ADMIT_NATIVE_EVENT_BLOCK_SCOPE_RESEARCH_ONLY",
+      "failure_reason": null,
+      "unique_original_wallet_blocks": [
+        83720393,
+        83720398
+      ],
+      "per_unique_block_native_evidence": [
+        {
+          "block": 83720393,
+          "balance_before_wei": "61123469541251570227",
+          "balance_after_wei": "58722645566251570227",
+          "net_wei": "-2400823975000000000"
+        },
+        {
+          "block": 83720398,
+          "balance_before_wei": "58722645566251570227",
+          "balance_after_wei": "60948841476332641298",
+          "net_wei": "2226195910081071071"
+        }
+      ],
+      "native_scope_delta_wei": "-174628064918928929",
+      "native_scope_sign": "NEGATIVE_NATIVE_SCOPE",
+      "actual_quote_asset_internal_trace": "UNVERIFIED",
+      "native_scope_only_not_wallet_lifetime_PnL": true
+    },
+    {
+      "sample_index": 14,
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "token": "龙虾",
+      "exact_ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "episode_index": 4,
+      "first_block": 93584296,
+      "last_block": 93584365,
+      "source_raw_transfer_log_count": 2,
+      "precommitted_original_tx_hashes": [
+        "0x4bf17ed78e9c142bd6c7b30540dd8ab91dc6be47c74cb8130023d87623c65899",
+        "0xd4aa1ada868308f84b521d4ea6753a30fad58c6eaf47e2a266b5c7823cf20f79"
+      ],
+      "tx_verifications": [
+        {
+          "hash": "0x4bf17ed78e9c142bd6c7b30540dd8ab91dc6be47c74cb8130023d87623c65899",
+          "block": 93584296,
+          "signer": "0xa83b73f5644cde337b61da79589f10ea15548811",
+          "is_owner_signer": true,
+          "status": "0x1",
+          "tx_native_msg_value_wei": "20000000000000000",
+          "receipt_full": true,
+          "source_error": null
+        },
+        {
+          "hash": "0xd4aa1ada868308f84b521d4ea6753a30fad58c6eaf47e2a266b5c7823cf20f79",
+          "block": 93584365,
+          "signer": "0xa83b73f5644cde337b61da79589f10ea15548811",
+          "is_owner_signer": true,
+          "status": "0x1",
+          "tx_native_msg_value_wei": "0",
+          "receipt_full": false,
+          "source_error": null
+        }
+      ],
+      "owner_signed_success_all": true,
+      "receipt_body_full_count": 1,
+      "gate_decision": "ADMIT_NATIVE_EVENT_BLOCK_SCOPE_RESEARCH_ONLY",
+      "failure_reason": null,
+      "unique_original_wallet_blocks": [
+        93584296,
+        93584365
+      ],
+      "per_unique_block_native_evidence": [
+        {
+          "block": 93584296,
+          "balance_before_wei": "65785540297005511889",
+          "balance_after_wei": "65765013272005511889",
+          "net_wei": "-20527025000000000"
+        },
+        {
+          "block": 93584365,
+          "balance_before_wei": "65765013272005511889",
+          "balance_after_wei": "65783780770840527390",
+          "net_wei": "18767498835015501"
+        }
+      ],
+      "native_scope_delta_wei": "-1759526164984499",
+      "native_scope_sign": "NEGATIVE_NATIVE_SCOPE",
+      "actual_quote_asset_internal_trace": "UNVERIFIED",
+      "native_scope_only_not_wallet_lifetime_PnL": true
+    },
+    {
+      "sample_index": 15,
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "token": "龙虾",
+      "exact_ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "episode_index": 5,
+      "first_block": 121452789,
+      "last_block": 121454565,
+      "source_raw_transfer_log_count": 3,
+      "precommitted_original_tx_hashes": [
+        "0x5cd118aaf6d2de13c1173a1dc104d531500e1c96eae3dbd5068402259dd08cfc",
+        "0x7fdf121750f702991b344b709e8d7dfa1e92fc4f40daeb37372e4207fe7e0893",
+        "0x53efc59c9b439e0fae82aaf495caa725b18a59296a3f9ce818168eb9a01fa51c"
+      ],
+      "tx_verifications": [
+        {
+          "hash": "0x5cd118aaf6d2de13c1173a1dc104d531500e1c96eae3dbd5068402259dd08cfc",
+          "block": 121452789,
+          "signer": "0x679d8a9a2bb243ca42d0c3a7a49d46203b5a0632",
+          "is_owner_signer": false,
+          "status": "0x1",
+          "tx_native_msg_value_wei": "0",
+          "receipt_full": false,
+          "source_error": null
+        },
+        {
+          "hash": "0x7fdf121750f702991b344b709e8d7dfa1e92fc4f40daeb37372e4207fe7e0893",
+          "block": 121453442,
+          "signer": "0x679d8a9a2bb243ca42d0c3a7a49d46203b5a0632",
+          "is_owner_signer": false,
+          "status": "0x1",
+          "tx_native_msg_value_wei": "0",
+          "receipt_full": false,
+          "source_error": null
+        },
+        {
+          "hash": "0x53efc59c9b439e0fae82aaf495caa725b18a59296a3f9ce818168eb9a01fa51c",
+          "block": 121454565,
+          "signer": "0xa83b73f5644cde337b61da79589f10ea15548811",
+          "is_owner_signer": true,
+          "status": "0x1",
+          "tx_native_msg_value_wei": "0",
+          "receipt_full": false,
+          "source_error": null
+        }
+      ],
+      "owner_signed_success_all": false,
+      "receipt_body_full_count": 0,
+      "gate_decision": "REJECT_ECONOMIC_IMPORT_KEEP_UNRESOLVED",
+      "failure_reason": "THIRD_PARTY_OR_NONOWNER_ORIGINAL_TX",
+      "unique_original_wallet_blocks": [
+        121452789,
+        121453442,
+        121454565
+      ],
+      "per_unique_block_native_evidence": [],
+      "native_scope_delta_wei": null,
+      "native_scope_sign": "UNKNOWN",
+      "actual_quote_asset_internal_trace": "UNVERIFIED",
+      "native_scope_only_not_wallet_lifetime_PnL": true
+    }
+  ],
+  "anti_double_count_policy": "Count N-1/N native BNB balance difference once per unique wallet|block within each signed zero-inventory cycle. Repeat original tx in same block is not a second balance delta. Do not add cross-asset quote deltas without provenance.",
+  "limitations": [
+    "Zero token inventory cycles selected after prior completed economic samples on fixed 7 pairs; this is selection-filtered, not unbiased all-trades win rate.",
+    "3/16 excluded as nonowner signature or raw oversized tx truncation, never replaced with more profitable alternatives or assigned zero profit.",
+    "Original receipt bodies often truncated; success header and transaction signer verified for qualifying cycles, but direct WBNB/Gas/internal paths are not comprehensively proven.",
+    "Even N-1/N verified per-block BNB net could include unrelated same-block deposits/withdrawals. Treat selected signed episodes as account-balance scope, NOT strict causally attributed strategy PnL.",
+    "Cross-wallet comparisons are not capital/time/fee/latency normalized, not last-30d confirmed active, not follower executable."
+  ]
+}

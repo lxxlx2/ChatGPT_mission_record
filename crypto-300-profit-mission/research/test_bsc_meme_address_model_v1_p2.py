@@ -1,0 +1,333 @@
+#!/usr/bin/env python3
+"""P2 cross-wallet economic import regression using frozen P1 and curated source evidence.
+
+Runs without RPC/API keys, GMGN, installed dependencies or trading.
+"""
+from __future__ import annotations
+
+import copy
+import json
+import unittest
+from pathlib import Path
+
+from bsc_meme_address_model_v1_p2 import EvidenceError, build_economic_comparison
+
+HERE = Path(__file__).resolve().parent
+
+
+def fixtures():
+    return (
+        json.loads((HERE / "bsc-meme-address-model-v1-baseline-2026-10-13.json").read_text(encoding="utf-8")),
+        json.loads((HERE / "bsc-meme-address-model-v1-p2-evidence-ledger-2026-10-13.json").read_text(encoding="utf-8")),
+    )
+
+
+class EconomicCrossWalletP2Tests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.baseline, cls.ledger = fixtures()
+
+    def build(self, baseline=None, ledger=None):
+        return build_economic_comparison(
+            copy.deepcopy(self.baseline) if baseline is None else baseline,
+            copy.deepcopy(self.ledger) if ledger is None else ledger,
+        )
+
+    def test_full_23_wallets_and_no_profit_rank(self):
+        r = self.build()
+        self.assertEqual(r["summary"]["wallets_included"], 23)
+        self.assertEqual(len(r["wallets"]), 23)
+        self.assertFalse(r["summary"]["any_ranked_wallet"])
+        for w in r["wallets"]:
+            self.assertFalse(w["can_rank_by_profit"])
+            self.assertIsNone(w["realized_profit_rank"])
+            self.assertEqual(w["completed_full_wallet_all_CA_PnL"], "UNRESOLVED")
+            self.assertEqual(w["recent_30d_signed_meme_swap"], "UNRESOLVED")
+            self.assertFalse(w["followable_alpha_approved"])
+
+    def test_curated_positive_and_negative_cases_preserved(self):
+        s = self.build()["summary"]
+        self.assertEqual(s["signed_closed_episodes_imported"], 50)
+        self.assertEqual(s["selected_positive_episodes"], 32)
+        self.assertEqual(s["selected_negative_episodes"], 18)
+        self.assertEqual(s["wallets_with_curated_evidence"], 7)
+        self.assertEqual(s["wallets_not_yet_economically_curated"], 16)
+
+    def test_16_uncurated_wallets_are_not_zero_profit(self):
+        for w in self.build()["wallets"]:
+            if w["source_episodes_imported"] == 0:
+                self.assertIsNone(w["native_only_event_block_scope_sum_wei"])
+                self.assertIsNone(w["native_only_scope_excluding_largest_positive_wei"])
+                self.assertEqual(w["economic_evidence_grade"],
+                                 "NO_CURATED_P2_EPISODES_NOT_ZERO_PROFIT")
+
+    def test_a83b_broccoli_negative_retained(self):
+        w = next(w for w in self.build()["wallets"] if w["wallet"].startswith("0xa83b"))
+        self.assertEqual((w["source_episodes_imported"], w["selected_negative_episode_count"]), (4, 4))
+        self.assertEqual(w["native_only_event_block_scope_sum_wei"], "-629874040329694491")
+        self.assertIsNone(w["native_only_largest_positive_episode_wei"])
+
+    def test_ddac_with_ifml_losses_and_MARS_earnings(self):
+        w = next(w for w in self.build()["wallets"] if w["wallet"].startswith("0xddac"))
+        self.assertEqual((w["selected_positive_episode_count"],
+                          w["selected_negative_episode_count"]), (5, 1))
+        self.assertEqual(w["selected_positive_distinct_major_CAs_count"], 2)
+        self.assertEqual(w["source_episodes_imported"], 6)
+        self.assertIsNone(w["mixed_quote_actual_USDT_delta_sum_raw"])
+
+    def test_8e6b_largest_win_concentration_and_real_USDT(self):
+        w = next(w for w in self.build()["wallets"] if w["wallet"].startswith("0x8e6b"))
+        self.assertEqual((w["source_episodes_imported"], w["selected_positive_episode_count"],
+                          w["selected_negative_episode_count"]), (17, 10, 7))
+        self.assertEqual(w["mixed_source_episodes"], 2)
+        self.assertEqual(w["mixed_quote_actual_USDT_delta_sum_raw"], "4061629806775951927704")
+        self.assertEqual(w["native_only_scope_excluding_largest_positive_wei"],
+                         "10619003074952465592")
+        self.assertFalse(w["can_rank_by_profit"])
+
+    def test_2adf_BOB_positive_and_Niulai_negative_kept_separate(self):
+        w = next(w for w in self.build()["wallets"] if w["wallet"].startswith("0x2adf"))
+        self.assertEqual(w["source_episodes_imported"], 5)
+        self.assertEqual((w["selected_positive_episode_count"],
+                          w["selected_negative_episode_count"]), (4, 1))
+        self.assertEqual(w["native_only_event_block_scope_sum_wei"], "242741218967958843")
+        self.assertIsNone(w["mixed_quote_actual_BNB_delta_sum_wei"])
+        self.assertIsNone(w["realized_profit_rank"])
+        self.assertEqual(w["recent_30d_signed_meme_swap"], "UNRESOLVED")
+
+    def test_provenance_mismatch_rejected(self):
+        b, d = fixtures()
+        d["episodes"][0]["provenance"]["source_git_blob_sha"] = "b" * 40
+        with self.assertRaisesRegex(EvidenceError, "source Git SHA"):
+            self.build(b, d)
+
+    def test_baseline_freeze_mismatch_rejected(self):
+        b, d = fixtures()
+        d["frozen_source_sha"] = "f" * 40
+        with self.assertRaisesRegex(EvidenceError, "sha mismatch"):
+            self.build(b, d)
+
+    def test_duplicate_episode_rejected(self):
+        b, d = fixtures()
+        d["episodes"].append(copy.deepcopy(d["episodes"][0]))
+        with self.assertRaisesRegex(EvidenceError, "double-count"):
+            self.build(b, d)
+
+    def test_false_wallet_token_source_rejected(self):
+        b, d = fixtures()
+        d["episodes"][0]["exact_ca"] = "0x" + "f" * 40
+        with self.assertRaisesRegex(EvidenceError, "missing/absent exact CA"):
+            self.build(b, d)
+
+    def test_unverified_native_USDT_not_zero_faked(self):
+        b, d = fixtures()
+        x = next(e for e in d["episodes"]
+                 if e["evidence_grade"] == "SIGNED_NATIVE_BLOCK_SCOPE")
+        x["actual_USDT_delta_raw"] = "0"
+        with self.assertRaisesRegex(EvidenceError, "must remain NULL"):
+            self.build(b, d)
+
+    def test_mixed_mark_missing_rejected(self):
+        b, d = fixtures()
+        x = next(e for e in d["episodes"] if e["evidence_grade"] == "MIXED_BNB_USDT_SPOT_REFERENCE")
+        x["mark_USDT_equivalent_spot_reference_raw"] = None
+        with self.assertRaisesRegex(EvidenceError, "historical quote"):
+            self.build(b, d)
+
+    def test_mixed_mark_fake_sign_rejected(self):
+        b, d = fixtures()
+        x = next(e for e in d["episodes"] if e["evidence_grade"] == "MIXED_BNB_USDT_SPOT_REFERENCE")
+        x["net_classification"] = "NEGATIVE_QUOTE_MARK"
+        with self.assertRaisesRegex(EvidenceError, "mixed quote sign"):
+            self.build(b, d)
+
+    def test_bad_owner_signature_rejected(self):
+        b, d = fixtures()
+        d["episodes"][0]["owner_signed_success_source_record"] = False
+        with self.assertRaisesRegex(EvidenceError, "uncorroborated"):
+            self.build(b, d)
+
+    def test_pnl_or_live_trade_authorization_rejected(self):
+        b, d = fixtures()
+        d["episodes"][0]["is_full_wallet_PnL"] = True
+        with self.assertRaisesRegex(EvidenceError, "improper PnL"):
+            self.build(b, d)
+
+    def test_trade_window_inversion_rejected(self):
+        b, d = fixtures()
+        d["episodes"][0]["first_block"] = 900
+        d["episodes"][0]["last_block"] = 800
+        with self.assertRaisesRegex(EvidenceError, "inverted"):
+            self.build(b, d)
+
+    def test_239e_new_cross_major_positive_and_negative_controls(self):
+        w = next(w for w in self.build()["wallets"] if w["wallet"].startswith("0x239e"))
+        self.assertEqual(w["source_episodes_imported"], 7)
+        self.assertEqual(w["selected_positive_episode_count"], 5)
+        self.assertEqual(w["selected_negative_episode_count"], 2)
+        self.assertEqual(w["selected_positive_distinct_major_CAs_count"], 2)
+        self.assertEqual(w["native_only_event_block_scope_sum_wei"], "296492314017711706")
+        self.assertEqual(w["native_only_scope_excluding_largest_positive_wei"],
+                         "100318745376932943")
+        self.assertEqual(w["mixed_source_episodes"], 0)
+        self.assertIsNone(w["realized_profit_rank"])
+        self.assertEqual(w["recent_30d_signed_meme_swap"], "UNRESOLVED")
+
+    def test_239e_27_signer_receipts_match_raw_closed_quantity_and_native_episodes(self):
+        p = HERE
+        tx = json.loads((p / "BSC_MEME_239E_TWO_MAJOR_FULL_SIGNED_FLOW_SOURCE_2026-10-11.json").read_text(encoding="utf-8"))
+        rounds = json.loads((p / "BSC_MEME_239E_ORIGINAL_LATE_EPISODE_NATIVE_CASHFLOW_CHECK_2026-10-11.json").read_text(encoding="utf-8"))
+        ifml = json.loads((p / "BSC_MEME_239E_IFML_ORIGINAL_TX_RECEIPT_PROVENANCE_2026-10-11.json").read_text(encoding="utf-8"))
+        lobster = json.loads((p / "BSC_MEME_239E_LOBSTER_21_ORIGINAL_SIGNER_RECEIPT_AUDIT_2026-10-11.json").read_text(encoding="utf-8"))
+        wallet = rounds["wallet"]
+        self.assertEqual(sum(len(t["rows"]) for t in tx["tokens"][0]["scopes"]) +
+                         sum(len(t["rows"]) for t in tx["tokens"][1]["scopes"]), 27)
+        self.assertEqual((ifml["self_signed_count"], ifml["receipt_success_count"]), (6, 6))
+        self.assertEqual((lobster["self_signed"], lobster["success"]), (21, 21))
+        for c in rounds["cohorts"]:
+            source = next(t for t in tx["tokens"] if t["token"] == c["token"])
+            self.assertTrue(source["summary"]["complete"])
+            self.assertEqual(source["summary"]["diff_raw"], "0")
+            proof = lobster["rows"] if c["token"] == "龙虾" else ifml["rows"]
+            by_hash = {t["hash"]: t for t in proof}
+            self.assertEqual(len(by_hash), source["summary"]["unique_tx"])
+            movements = sorted(
+                [(t["block"], t["hash"], int(t["raw"], 16) * (1 if s["direction"] == "in" else -1))
+                 for s in source["scopes"] for t in s["rows"]],
+                key=lambda x: x[0],
+            )
+            inventory = 0
+            pending = []
+            closed = []
+            for block, h, delta in movements:
+                self.assertEqual(by_hash[h]["signer"], wallet)
+                self.assertEqual(by_hash[h]["receipt_status"], "0x1")
+                inventory += delta
+                self.assertGreaterEqual(inventory, 0)
+                pending.append((block, h))
+                if inventory == 0:
+                    ep = c["original_episodes"][len(closed)]
+                    self.assertTrue(ep["closed"])
+                    self.assertEqual((ep["first_block"], ep["last_block"], ep["tx_count"]),
+                                     (pending[0][0], pending[-1][0], len(pending)))
+                    current_net = (
+                        sum(int(by_hash[h]["block_native_delta_wei"]) for _, h in pending)
+                        if c["token"] == "龙虾"
+                        else sum(int(x["delta_wei"]) for x in ep["native_wei_ledger"])
+                    )
+                    self.assertEqual(current_net, int(ep["block_native_delta_wei"]))
+                    closed.append(ep)
+                    pending = []
+            self.assertEqual(inventory, 0)
+            self.assertEqual(len(pending), 0)
+            self.assertEqual(len(closed), len(c["original_episodes"]))
+
+    def test_eight_frozen_open_or_partial_cases_not_promoted_to_profit(self):
+        block = json.loads((HERE / "bsc-meme-address-model-v1-p2-2026-eligibility-blocker-queue-2026-10-13.json").read_text(encoding="utf-8"))
+        self.assertEqual(len(block["items"]), 8)
+        b, ledger = fixtures()
+        known_wallets = {w["wallet"]: w for w in b["wallets"]}
+        economics = {(e["wallet"], e["exact_ca"], e["episode_index"]) for e in ledger["episodes"]}
+        for item in block["items"]:
+            self.assertIn(item["wallet"], known_wallets)
+            self.assertTrue(any(c["ca"] == item["ca"] and c["ERC20_presence"] == "PRESENT"
+                                for c in known_wallets[item["wallet"]]["cells"]))
+            proved = {i for wallet, ca, i in economics if (wallet, ca) == (item["wallet"], item["ca"])}
+            self.assertEqual(proved, set(item["audited_closed_episode_indices"]))
+            self.assertTrue(proved.isdisjoint(item["blocked_specific_episode_indices"]))
+            self.assertEqual(item["entire_CA_profit_pnl_state"], "UNRESOLVED")
+            self.assertEqual(item["realized_final_PnL"], "UNRESOLVED")
+            self.assertGreaterEqual(len(item["record_provenance"]), 1)
+            for proof in item["record_provenance"]:
+                self.assertIn(proof["path"].split("/")[-1], block["source_manifest"])
+                self.assertEqual(proof["git_blob_sha"],
+                                 block["source_manifest"][proof["path"].split("/")[-1]]["git_blob_sha"])
+
+    def test_5c0c_untraced_native_66bnb_is_not_importable_as_strict_cash_profit(self):
+        block = json.loads((HERE / "bsc-meme-address-model-v1-p2-2026-eligibility-blocker-queue-2026-10-13.json").read_text(encoding="utf-8"))
+        item = next(item for item in block["items"] if item["wallet"].startswith("0x5c0c"))
+        self.assertEqual(item["audit_state"],
+                         "TWELVE_OWNER_SIGNED_RAW_CLOSED_BUT_INTERNAL_NATIVE_66_BNB_CAUSAL_UNVERIFIED")
+        self.assertEqual(item["native_wallet_block_scope_net_wei"], "66379663211351567593")
+        self.assertEqual(item["realized_final_PnL"], "UNRESOLVED")
+        self.assertEqual(
+            next(w for w in self.build()["wallets"] if w["wallet"].startswith("0x5c0c"))
+            ["completed_full_wallet_all_CA_PnL"], "UNRESOLVED",
+        )
+
+    def test_2026_niulai_open_or_unsigned_is_not_realized(self):
+        block = json.loads((HERE / "bsc-meme-address-model-v1-p2-2026-eligibility-blocker-queue-2026-10-13.json").read_text(encoding="utf-8"))
+        niu = [x for x in block["items"] if x["token"] == "牛来"]
+        self.assertEqual(len(niu), 4)
+        self.assertEqual(
+            next(x for x in niu if x["wallet"].startswith("0x8e6b"))["remaining_token_raw"],
+            "65856455282881733964",
+        )
+        self.assertEqual(
+            next(x for x in niu if x["wallet"].startswith("0xddac"))["audit_state"],
+            "TOKEN_RAW_CLOSED_22_WALLET_BLOCKS_BUT_ORIGINAL_SIGNERS_NOT_AUDITED",
+        )
+
+    def test_3_new_signed_closed_source_rounds_8_tx_exact_native_wei(self):
+        stage3 = json.loads((HERE / "bsc-meme-address-model-v1-p2-stage3-adff-2adf-owner-closed-rounds-2026-10-13.json").read_text(encoding="utf-8"))
+        s = stage3["summary"]
+        self.assertEqual((s["source_erc20_events"], s["source_inventory_zero_cycles"],
+                          s["source_quantity_segments_not_economic"]), (114, 28, 25))
+        self.assertEqual((s["new_economic_event_block_scope_episodes"],
+                          s["new_positive_native_scope_episodes"],
+                          s["new_negative_native_scope_episodes"]), (3, 2, 1))
+        self.assertEqual(s["original_self_signed_receipt_success"], 8)
+        self.assertEqual(s["original_historical_wallet_balance_N_minus_1_and_N_verified"], 8)
+        self.assertEqual(s["complete_receipt_body_parsed"], 4)
+        ledger = json.loads((HERE / "bsc-meme-address-model-v1-p2-evidence-ledger-2026-10-13.json").read_text(encoding="utf-8"))
+        case_results = {"ADFF_IFML_R1": 15276607477319522,
+                        "ADFF_LOBSTER_R4": 4522437855804654,
+                        "2ADF_NIULAI_R1": -22303778278468502}
+        self.assertEqual(len(stage3["sample_rounds"]), 3)
+        for case in stage3["sample_rounds"]:
+            self.assertEqual(sum(int(t["wallet_native_N_minus_1_to_N_delta_wei"])
+                                 for t in case["transactions"]),
+                             case_results[case["round_key"]])
+            self.assertTrue(all(t["receipt_success_confirmed"] and
+                                t["original_signed_from_confirmed"]
+                                for t in case["transactions"]))
+            self.assertTrue(case["raw_token_round_inventory_closed"])
+            match = [e for e in ledger["episodes"] if e["wallet"] == case["wallet"]
+                     and e["exact_ca"] == case["exact_ca"]
+                     and e["episode_index"] == case["selected_raw_inventory_episode_index"]]
+            self.assertEqual(len(match), 1)
+            self.assertEqual(match[0]["net_native_BNB_wallet_event_blocks_wei"],
+                             case["actual_net_original_wallet_native_block_wei"])
+            self.assertEqual(match[0]["evidence_grade"], "SIGNED_NATIVE_BLOCK_SCOPE")
+            self.assertFalse(match[0]["is_followable_alpha"])
+
+    def test_28_quantity_rounds_do_not_become_28_winning_trades(self):
+        stage3 = json.loads((HERE / "bsc-meme-address-model-v1-p2-stage3-adff-2adf-owner-closed-rounds-2026-10-13.json").read_text(encoding="utf-8"))
+        for source in stage3["full_raw_quantity_segmentation"]:
+            self.assertTrue(source["inventory_fully_zero"])
+            self.assertGreater(source["zero_to_zero_raw_inventory_segments"], 0)
+            self.assertEqual(len(source["all_raw_inventory_segmentation"]),
+                             source["zero_to_zero_raw_inventory_segments"])
+            self.assertEqual(sum(r["trade_signer_verified"] is True
+                                 for r in source["all_raw_inventory_segmentation"]), 1)
+            self.assertTrue(all(r["quote_settlement_verified"] is False
+                                for r in source["all_raw_inventory_segmentation"]))
+        self.assertEqual(sum(r["trade_signer_verified"] is None
+                             for source in stage3["full_raw_quantity_segmentation"]
+                             for r in source["all_raw_inventory_segmentation"]), 25)
+
+    def test_adff_two_major_native_positive_not_profit_rank(self):
+        w = next(w for w in self.build()["wallets"] if w["wallet"].startswith("0xadff"))
+        self.assertEqual(w["source_episodes_imported"], 7)
+        self.assertEqual(w["selected_positive_episode_count"], 6)
+        self.assertEqual(w["selected_negative_episode_count"], 1)
+        self.assertEqual(w["selected_positive_distinct_major_CAs_count"], 2)
+        self.assertEqual(w["native_only_event_block_scope_sum_wei"], "36739402732955246")
+        self.assertEqual(w["native_only_largest_positive_episode_wei"],
+                         "15276607477319522")
+        self.assertIsNone(w["realized_profit_rank"])
+        self.assertEqual(w["recent_30d_signed_meme_swap"], "UNRESOLVED")
+
+
+if __name__ == "__main__":
+    unittest.main()

@@ -1,0 +1,36 @@
+{
+  "schema": "BSC_P4B_2026_5E60_PREEXISTING_335173_DRAGON_ORIGIN_FIXED_TRANSFER_PRECOMMIT_V1",
+  "purpose": "Determine source of preexisting 335173.813691889308361853 Dragon in the same real outside signer before the known 1000 USDT incremental buy. Without funding basis do NOT infer 8399 USDT exit is net profit.",
+  "date": "2026-10-18",
+  "preexisting_holder": "0x5e600e259e3cff0757e3736223685958665866c6",
+  "exact_dragon": "0xeccbb861c0dda7efd964010085488b69317e4444",
+  "source_1000_usdt_signed_buy": "bsc-meme-address-model-v1-p4b-239e-r2-external-5e60-real-usdt-debit-gas-and-dragon-readback-2026-10-18.json",
+  "source_full_first_five_exit": "bsc-meme-address-model-v1-p4b-5e60-eight-real-signed-usdt-sells-and-five-full-exit-2026-10-18.json",
+  "source_all_eight_sell_receipts": "bsc-meme-address-model-v1-p4b-5e60-eight-real-sell-success-receipts-and-gas-readback-2026-10-18.json",
+  "network": "bnb-mainnet",
+  "method": "Alchemy free getAssetTransfers",
+  "query": {
+    "toAddress": "0x5e600e259e3cff0757e3736223685958665866c6",
+    "fromBlock": "0x51ebae0",
+    "toBlock": "0x51fa519",
+    "category": [
+      "erc20"
+    ],
+    "contractAddresses": [
+      "0xeccbb861c0dda7efd964010085488b69317e4444"
+    ],
+    "order": "asc",
+    "maxCount": "0xa",
+    "excludeZeroValue": true
+  },
+  "max_queries": 1,
+  "zero_retries": true,
+  "if_page_key": "UNKNOWN_MORE_THAN_ONE_PAGE_NOT_SOURCE_COMPLETE; commit first returned page, only do further research with new freeze.",
+  "if_empty": "Does not prove tokens zero historically; search starts at 85900000 only.",
+  "if_found": "Classify transfers by hash, from, to, raw Dragon quantity; cannot treat as purchase until original signed tx and tokenIn funding verified.",
+  "no_future_hindsight_wallet_selection": true,
+  "P4_B": "PARTIAL",
+  "PUBLIC_EXECUTABLE_U": "UNRESOLVED",
+  "P5": "BLOCKED",
+  "PRODUCTION": "NO_GO"
+}

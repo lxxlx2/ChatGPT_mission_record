@@ -1,0 +1,159 @@
+{
+  "schema": "BSC_P4C_ADFF_DRAGON_ORIGINAL_TWO_SIGNED_TX_TOKEN_WBNB_OWNER_TRANSFER_EXACT_SOURCE",
+  "date": "2026-10-16",
+  "source_manifest_path": "bsc-meme-address-model-v1-p4c-postapprove4-wallets10-wbnb-event-query-scope-2026-10-16.json",
+  "source_manifest_git_blob_sha": "7576ae8dd73ae46169d7baa25b9073fa8042a2a7",
+  "source_owner": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+  "source_ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
+  "exact_txs": [
+    {
+      "hash": "0x13f5678b90e1bd0e2b703e23934a7777ba639f75ec1c8c70200f350ff43c4952",
+      "block": 121783426
+    },
+    {
+      "hash": "0xc0098aafadbf7a3789d7beb64717b4f5f7c0c1698f1e5d5386419f7b57cc9fbd",
+      "block": 121786352
+    }
+  ],
+  "method": "ethGetLogs single original block, exact original CA Dragon and WBNB Transfer topic indexed owner from/to; keep all zero-hits and filter completeness; locally match exact original signed tx hash",
+  "queries": [
+    {
+      "hash": "0x13f5678b90e1bd0e2b703e23934a7777ba639f75ec1c8c70200f350ff43c4952",
+      "block": 121783426,
+      "asset": "Dragon",
+      "direction": "to_owner",
+      "filter_complete": true,
+      "all_block_filter_log_count": 2,
+      "response_char_length": 1458,
+      "exact_original_tx_events": [
+        {
+          "transactionHash": "0x13f5678b90e1bd0e2b703e23934a7777ba639f75ec1c8c70200f350ff43c4952",
+          "logIndex": "0x10f",
+          "topics": [
+            "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+            "0x000000000000000000000000d3604620f75fefab226d0fa50a3894e1d1111137",
+            "0x000000000000000000000000adffbebbd2d9141cff80f8a905846ba8f9e3946d"
+          ],
+          "data": "0x000000000000000000000000000000000000000000000000e1147a4f7e58bc6c",
+          "raw_amount": "16218722639908748396"
+        },
+        {
+          "transactionHash": "0x13f5678b90e1bd0e2b703e23934a7777ba639f75ec1c8c70200f350ff43c4952",
+          "logIndex": "0x118",
+          "topics": [
+            "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+            "0x000000000000000000000000359bf61ca77cbda27a5eb3a8b472f3c02bc2bc75",
+            "0x000000000000000000000000adffbebbd2d9141cff80f8a905846ba8f9e3946d"
+          ],
+          "data": "0x000000000000000000000000000000000000000000000000e29642a856642782",
+          "raw_amount": "16327310789849655170"
+        }
+      ],
+      "unreadable_excerpt": null
+    },
+    {
+      "hash": "0x13f5678b90e1bd0e2b703e23934a7777ba639f75ec1c8c70200f350ff43c4952",
+      "block": 121783426,
+      "asset": "Dragon",
+      "direction": "from_owner",
+      "filter_complete": true,
+      "all_block_filter_log_count": 0,
+      "response_char_length": 2,
+      "exact_original_tx_events": [],
+      "unreadable_excerpt": null
+    },
+    {
+      "hash": "0x13f5678b90e1bd0e2b703e23934a7777ba639f75ec1c8c70200f350ff43c4952",
+      "block": 121783426,
+      "asset": "WBNB",
+      "direction": "to_owner",
+      "filter_complete": true,
+      "all_block_filter_log_count": 1,
+      "response_char_length": 730,
+      "exact_original_tx_events": [
+        {
+          "transactionHash": "0x13f5678b90e1bd0e2b703e23934a7777ba639f75ec1c8c70200f350ff43c4952",
+          "logIndex": "0x106",
+          "topics": [
+            "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+            "0x000000000000000000000000136b7d7f72466b80a99b0d181172274ccbe5d033",
+            "0x000000000000000000000000adffbebbd2d9141cff80f8a905846ba8f9e3946d"
+          ],
+          "data": "0x0000000000000000000000000000000000000000000000000000a05a696d69cb",
+          "raw_amount": "176310176278987"
+        }
+      ],
+      "unreadable_excerpt": null
+    },
+    {
+      "hash": "0x13f5678b90e1bd0e2b703e23934a7777ba639f75ec1c8c70200f350ff43c4952",
+      "block": 121783426,
+      "asset": "WBNB",
+      "direction": "from_owner",
+      "filter_complete": true,
+      "all_block_filter_log_count": 0,
+      "response_char_length": 2,
+      "exact_original_tx_events": [],
+      "unreadable_excerpt": null
+    },
+    {
+      "hash": "0xc0098aafadbf7a3789d7beb64717b4f5f7c0c1698f1e5d5386419f7b57cc9fbd",
+      "block": 121786352,
+      "asset": "Dragon",
+      "direction": "to_owner",
+      "filter_complete": true,
+      "all_block_filter_log_count": 0,
+      "response_char_length": 2,
+      "exact_original_tx_events": [],
+      "unreadable_excerpt": null
+    },
+    {
+      "hash": "0xc0098aafadbf7a3789d7beb64717b4f5f7c0c1698f1e5d5386419f7b57cc9fbd",
+      "block": 121786352,
+      "asset": "Dragon",
+      "direction": "from_owner",
+      "filter_complete": true,
+      "all_block_filter_log_count": 1,
+      "response_char_length": 728,
+      "exact_original_tx_events": [
+        {
+          "transactionHash": "0xc0098aafadbf7a3789d7beb64717b4f5f7c0c1698f1e5d5386419f7b57cc9fbd",
+          "logIndex": "0x1a",
+          "topics": [
+            "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+            "0x000000000000000000000000adffbebbd2d9141cff80f8a905846ba8f9e3946d",
+            "0x00000000000000000000000022af7297243c4eef12e2d5a4f888b92e56bf127c"
+          ],
+          "data": "0x000000000000000000000000000000000000000000000001c3aabcf7d4bce3ee",
+          "raw_amount": "32546033429758403566"
+        }
+      ],
+      "unreadable_excerpt": null
+    },
+    {
+      "hash": "0xc0098aafadbf7a3789d7beb64717b4f5f7c0c1698f1e5d5386419f7b57cc9fbd",
+      "block": 121786352,
+      "asset": "WBNB",
+      "direction": "to_owner",
+      "filter_complete": true,
+      "all_block_filter_log_count": 0,
+      "response_char_length": 2,
+      "exact_original_tx_events": [],
+      "unreadable_excerpt": null
+    },
+    {
+      "hash": "0xc0098aafadbf7a3789d7beb64717b4f5f7c0c1698f1e5d5386419f7b57cc9fbd",
+      "block": 121786352,
+      "asset": "WBNB",
+      "direction": "from_owner",
+      "filter_complete": true,
+      "all_block_filter_log_count": 0,
+      "response_char_length": 2,
+      "exact_original_tx_events": [],
+      "unreadable_excerpt": null
+    }
+  ],
+  "limitations": "This query covers only two assets, Dragon and WBNB. No USDT/BUSD/USDC/other asset transfers, internal calls, or router input cost exhaustive. 0 msg.value and no owner WBNB out do NOT prove zero trade cost or profit; token can arrive from other accounts through aggregator.",
+  "attributable_owner_quote_PnL": "UNRESOLVED",
+  "production": "NO_GO"
+}

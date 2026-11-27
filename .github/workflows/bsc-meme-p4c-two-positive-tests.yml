@@ -1,0 +1,26 @@
+name: BSC P4C 8E6B two native-positive rounds
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/bsc-meme-p4c-two-positive-tests.yml"
+      - "crypto-300-profit-mission/research/bsc_meme_address_model_v1_p4c_8e6b_two_positive.py"
+      - "crypto-300-profit-mission/research/test_bsc_meme_address_model_v1_p4c_8e6b_two_positive.py"
+      - "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-8e6b-hajimi-dragon-two-verified-native-positive-2026-10-15.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Replay source-pinned real owner trades
+        run: |
+          cd crypto-300-profit-mission/research
+          python3 -B -m unittest -v test_bsc_meme_address_model_v1_p4c_8e6b_two_positive.py
+          python3 -B bsc_meme_address_model_v1_p4c_8e6b_two_positive.py --output /tmp/p4c-positive.json
+          python3 -B -c 'import json; from pathlib import Path; a=json.loads(Path("/tmp/p4c-positive.json").read_text()); b=json.loads(Path("bsc-meme-address-model-v1-p4c-8e6b-hajimi-dragon-two-verified-native-positive-2026-10-15.json").read_text()); assert a==b; assert a["summary"]["source_proven_signed_positive_native_rounds"]==2; assert a["summary"]["qualified_observer_trades"]==0; assert a["summary"]["production"]=="NO_GO"'

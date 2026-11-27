@@ -1,0 +1,174 @@
+{
+  "schema": "BSC_P4C_POSTAPPROVE_WBNB_10_TX_PART_A_4_TX_8_QUERIES_V1",
+  "source_scope_blob_sha": "7576ae8dd73ae46169d7baa25b9073fa8042a2a7",
+  "source_scope_path": "bsc-meme-address-model-v1-p4c-postapprove4-wallets10-wbnb-event-query-scope-2026-10-16.json",
+  "source_offsets": [
+    0,
+    4
+  ],
+  "cases": [
+    {
+      "hash": "0xaa53775bf91228b31fa427a3e050bc7bd89a87900df86ff6ff64899d2cba6b13",
+      "block": 86649314,
+      "p2_index": 31,
+      "owner": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+      "token": "龙虾",
+      "scope": "NEGATIVE_NATIVE_SCOPE",
+      "events": [
+        {
+          "type": "Deposit",
+          "full_block_filter_reply": true,
+          "total_block_logs": 2,
+          "response_text_length": 1302,
+          "selected_tx_events": [
+            {
+              "transactionHash": "0xaa53775bf91228b31fa427a3e050bc7bd89a87900df86ff6ff64899d2cba6b13",
+              "logIndex": "0x1f",
+              "topics": [
+                "0xe1fffcc4923d04b559f4d29a8bfc6cda04eb5b0d3c460751c2402c5c5cc9109c",
+                "0x0000000000000000000000001de460f363af910f51726def188f9004276bf4bc"
+              ],
+              "data": "0x000000000000000000000000000000000000000000000000015fb7f9b8c38000",
+              "amount_wei": "99000000000000000"
+            }
+          ],
+          "unreadable_excerpt": null
+        },
+        {
+          "type": "Withdrawal",
+          "full_block_filter_reply": true,
+          "total_block_logs": 2,
+          "response_text_length": 1303,
+          "selected_tx_events": [],
+          "unreadable_excerpt": null
+        }
+      ]
+    },
+    {
+      "hash": "0xd0e5beb5510f3d21c3a318529f80be4f2d507511b484c2fe3f3412dff6b4144b",
+      "block": 87876365,
+      "p2_index": 31,
+      "owner": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+      "token": "龙虾",
+      "scope": "NEGATIVE_NATIVE_SCOPE",
+      "events": [
+        {
+          "type": "Deposit",
+          "full_block_filter_reply": true,
+          "total_block_logs": 0,
+          "response_text_length": 2,
+          "selected_tx_events": [],
+          "unreadable_excerpt": null
+        },
+        {
+          "type": "Withdrawal",
+          "full_block_filter_reply": true,
+          "total_block_logs": 4,
+          "response_text_length": 2604,
+          "selected_tx_events": [
+            {
+              "transactionHash": "0xd0e5beb5510f3d21c3a318529f80be4f2d507511b484c2fe3f3412dff6b4144b",
+              "logIndex": "0xa1",
+              "topics": [
+                "0x7fcf532c15f0a6db0bd6d0e038bea71d30d808c7d98cb3bf7268a95bf5081b65",
+                "0x0000000000000000000000001de460f363af910f51726def188f9004276bf4bc"
+              ],
+              "data": "0x00000000000000000000000000000000000000000000000000c8b5c524a6939c",
+              "amount_wei": "56494853670212508"
+            }
+          ],
+          "unreadable_excerpt": null
+        }
+      ]
+    },
+    {
+      "hash": "0xb3215e0bf0884fa79f7c061f94730e72ed822b4c32df5879d9e218a33c6b05a9",
+      "block": 112634149,
+      "p2_index": 38,
+      "owner": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "token": "MARSCOIN",
+      "scope": "NEGATIVE_NATIVE_SCOPE",
+      "events": [
+        {
+          "type": "Deposit",
+          "full_block_filter_reply": true,
+          "total_block_logs": 6,
+          "response_text_length": 3908,
+          "selected_tx_events": [
+            {
+              "transactionHash": "0xb3215e0bf0884fa79f7c061f94730e72ed822b4c32df5879d9e218a33c6b05a9",
+              "logIndex": "0x3d",
+              "topics": [
+                "0xe1fffcc4923d04b559f4d29a8bfc6cda04eb5b0d3c460751c2402c5c5cc9109c",
+                "0x0000000000000000000000001de460f363af910f51726def188f9004276bf4bc"
+              ],
+              "data": "0x000000000000000000000000000000000000000000000000180b1392215d4000",
+              "amount_wei": "1732500000000000000"
+            },
+            {
+              "transactionHash": "0xb3215e0bf0884fa79f7c061f94730e72ed822b4c32df5879d9e218a33c6b05a9",
+              "logIndex": "0x40",
+              "topics": [
+                "0xe1fffcc4923d04b559f4d29a8bfc6cda04eb5b0d3c460751c2402c5c5cc9109c",
+                "0x0000000000000000000000001de460f363af910f51726def188f9004276bf4bc"
+              ],
+              "data": "0x0000000000000000000000000000000000000000000000000000000000000000",
+              "amount_wei": "0"
+            }
+          ],
+          "unreadable_excerpt": null
+        },
+        {
+          "type": "Withdrawal",
+          "full_block_filter_reply": true,
+          "total_block_logs": 3,
+          "response_text_length": 1957,
+          "selected_tx_events": [],
+          "unreadable_excerpt": null
+        }
+      ]
+    },
+    {
+      "hash": "0xcfdf1cce9e7d4b17fb86e31cd4eeb93ec54a00ca7e6e6908fc0db0f42fed4f89",
+      "block": 112634161,
+      "p2_index": 38,
+      "owner": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "token": "MARSCOIN",
+      "scope": "NEGATIVE_NATIVE_SCOPE",
+      "events": [
+        {
+          "type": "Deposit",
+          "full_block_filter_reply": true,
+          "total_block_logs": 9,
+          "response_text_length": 5863,
+          "selected_tx_events": [],
+          "unreadable_excerpt": null
+        },
+        {
+          "type": "Withdrawal",
+          "full_block_filter_reply": true,
+          "total_block_logs": 5,
+          "response_text_length": 3256,
+          "selected_tx_events": [
+            {
+              "transactionHash": "0xcfdf1cce9e7d4b17fb86e31cd4eeb93ec54a00ca7e6e6908fc0db0f42fed4f89",
+              "logIndex": "0x6e",
+              "topics": [
+                "0x7fcf532c15f0a6db0bd6d0e038bea71d30d808c7d98cb3bf7268a95bf5081b65",
+                "0x0000000000000000000000001de460f363af910f51726def188f9004276bf4bc"
+              ],
+              "data": "0x0000000000000000000000000000000000000000000000000b9f9d288b0176b2",
+              "amount_wei": "837560853170583218"
+            }
+          ],
+          "unreadable_excerpt": null
+        }
+      ]
+    }
+  ],
+  "chain": "bnb-mainnet",
+  "contract": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+  "source_method": "ethGetLogs one exact block per original tx with WBNB Deposit/Withdrawal topic. Always retain zero and clipped responses.",
+  "PnL": "UNRESOLVED",
+  "production": "NO_GO"
+}

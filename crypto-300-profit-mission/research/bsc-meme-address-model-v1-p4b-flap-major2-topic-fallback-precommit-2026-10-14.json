@@ -1,0 +1,83 @@
+{
+  "schema": "BSC_P4B_FLAP_NIULAI_MARSCOIN_ORIGINAL_BLOCK_TOPIC_FALLBACK_PRECOMMIT",
+  "parent_precommit_blob_sha": "a383994f502e67864c61406ee4cf728b7272c98c",
+  "original_unfiltered_note": "One-block unfiltered Portal query exceeded the tool response: retain original negative/error source, query known ABI exact topics of the same frozen block and tx. Filtered source only implies absence/presence of that topic.",
+  "portal": "0xe2ce6ab80874fa9fa2aae65d277dd6b8e65c9de0",
+  "source_ABI": "https://github.com/flap-sh/FlapVaultExample/blob/main/src/flap/IPortal.sol",
+  "events": [
+    {
+      "kind": "TokenCreated",
+      "signature": "TokenCreated(uint256,address,uint256,address,string,string,string)",
+      "topic": "0x504e7f360b2e5fe33cbaaae4c593bc55305328341bf79009e43e0e3b7f699603"
+    },
+    {
+      "kind": "TokenBought",
+      "signature": "TokenBought(uint256,address,address,uint256,uint256,uint256,uint256)",
+      "topic": "0xa800a2038683844fac66747f771bfdfae862eb28b16bcfa387afa9fbacce8ff7"
+    },
+    {
+      "kind": "TokenSold",
+      "signature": "TokenSold(uint256,address,address,uint256,uint256,uint256,uint256)",
+      "topic": "0x03a4693e592f5e75dc7c136acb39b146d2b4966c0e509c34f362dee02b3b861a"
+    }
+  ],
+  "queries": [
+    {
+      "token": "牛来",
+      "role": "EARLIEST_TOKEN_MINT_TRANSFER_TX",
+      "block": 115628768,
+      "tx": "0x907beed290b7daeb45cd2f05085c7ca67f997c06749f716c40ed431b2b2eb62d",
+      "tx_from": "0x6af3f52369c39f6ca2d9a50799723feff7ff679e",
+      "tx_to": "0xe2ce6ab80874fa9fa2aae65d277dd6b8e65c9de0",
+      "value": "0x3b9aca00",
+      "input_selector": "0x8cb5772c",
+      "topics": [
+        "TokenCreated",
+        "TokenBought"
+      ]
+    },
+    {
+      "token": "牛来",
+      "role": "FIRST_DISTINCT_POST_MINT_TRANSFER_TX",
+      "block": 115628774,
+      "tx": "0xcb89b7adafacdfb5f844102c4e27ed474abec8947c74476d461be70a9b0e8fa5",
+      "tx_from": "0xb0d0c4c1ee4ba9fac874db4ede587718ad9484d9",
+      "tx_to": "0xb300000b72deaeb607a12d5f54773d1c19c7028d",
+      "value": "0x0",
+      "input_selector": "0x810c705b",
+      "topics": [
+        "TokenBought",
+        "TokenSold"
+      ]
+    },
+    {
+      "token": "MARSCOIN",
+      "role": "EARLIEST_TOKEN_MINT_TRANSFER_TX",
+      "block": 112441387,
+      "tx": "0xb499cc66534db949c6040dbc914ba0e3e50423a408717f69a193a8e29eeeb7a2",
+      "tx_from": "0x85de3316eeca740ba049a8d9c9d68ab21cb282e5",
+      "tx_to": "0xe2ce6ab80874fa9fa2aae65d277dd6b8e65c9de0",
+      "value": "0x3b9aca00",
+      "input_selector": "0x8cb5772c",
+      "topics": [
+        "TokenCreated",
+        "TokenBought"
+      ]
+    },
+    {
+      "token": "MARSCOIN",
+      "role": "FIRST_DISTINCT_POST_MINT_TRANSFER_TX",
+      "block": 112441394,
+      "tx": "0x6bb75edb235d86747fcaa1b6f13c820601973fe840ef22eb54aa22e54d36d028",
+      "tx_from": "0x504ba7b11be98c66a379a3e5de91dc5ab2dde3ea",
+      "tx_to": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "value": "0x770ecbffd9cf2a8",
+      "input_selector": "0x4d819a2a",
+      "topics": [
+        "TokenBought",
+        "TokenSold"
+      ]
+    }
+  ],
+  "production": "NO_GO"
+}

@@ -1,0 +1,191 @@
+{
+  "schema": "BSC_P4C_NEXT_THREE_OWNERS_TWO_MAJORS_FIVE_ORIGINAL_ROUNDS_PRECOMMIT_V1",
+  "date": "2026-10-15",
+  "network": "bnb-mainnet",
+  "production": "NO_GO",
+  "selection": "Cross-wallet case-control fixed P2 indices [3,4,43,44,48] before new read-only RPC. DDAC IFML ep4/5 positive/negative; ADFF Dragon ep5/6 negative/positive; A83B Dragon ep1 negative. 3 original EOA, 2 distinct 2026 major exact CA, 5 balanced positive-negative original selected episodes; re-check originals and full original token/quote/gas and actual EOA native movement, do not infer full economics from scope. No current recommendation or 1/5/15min P5.",
+  "immutable_source_manifest": [
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p2-evidence-ledger-2026-10-13.json",
+      "git_blob_sha": "2a19dbd88c2971efff60a15894d952d0d05e64d9"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/BSC_MEME_DDAC_IFML_LOBSTER_CLOSED_EPISODES_NATIVE_CASHFLOW_2026-10-11.json",
+      "git_blob_sha": "9fde267e8f85dbe44705789f19f4884f25aafc51"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p2-bulk16-verified-outcomes-2026-10-13.json",
+      "git_blob_sha": "51a41aebe7931c242910470a6907e4c93d217568"
+    }
+  ],
+  "summary": {
+    "wallets": 3,
+    "major_exact_CA": 2,
+    "original_selected_rounds": 5,
+    "precommitted_signed_txs": 11,
+    "source_native_scope_positive": 2,
+    "source_native_scope_negative": 3,
+    "new_economic_upgrades": 0,
+    "public_follower_signals": 0,
+    "production": "NO_GO"
+  },
+  "rounds": [
+    {
+      "p2_index": 3,
+      "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "token": "我踏马来了",
+      "exact_CA": "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
+      "original_episode": 4,
+      "source_grade": "SIGNED_NATIVE_BLOCK_SCOPE",
+      "source_net_sign": "POSITIVE_NATIVE_SCOPE",
+      "source_native_block_scope_net_wei": "30104517152956606",
+      "source_path": "crypto-300-profit-mission/research/BSC_MEME_STAGE17_IFML_DDAC_8E6B_SAME_TOKEN_TIME_COHORT_CASHFLOW_2026-10-13.json",
+      "source_blob_sha": "4cba5016ea4e8539fa454ba152ead1c3a8488cb3",
+      "source_selector": "cohort_ddac.ifml_closed_episodes[3]",
+      "selected_original_txs": [
+        {
+          "hash": "0xb19db9769e263071ebaa9a90d452aaac86cbc5ee5dcceae954996a334e1b8246",
+          "block": 74460512,
+          "original_dir": "in",
+          "source_native_delta_wei": "-500175387000000000"
+        },
+        {
+          "hash": "0xaf25e6a23743c25bae818e760f16919fc7d1617451a34470e1f93fe7999a762e",
+          "block": 74468389,
+          "original_dir": "out",
+          "source_native_delta_wei": "530279904152956606"
+        }
+      ],
+      "economic_status": "UNRESOLVED_QUOTE_GAS",
+      "observer_U": "UNRESOLVED"
+    },
+    {
+      "p2_index": 4,
+      "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "token": "我踏马来了",
+      "exact_CA": "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
+      "original_episode": 5,
+      "source_grade": "SIGNED_NATIVE_BLOCK_SCOPE",
+      "source_net_sign": "NEGATIVE_NATIVE_SCOPE",
+      "source_native_block_scope_net_wei": "-446324586902254802",
+      "source_path": "crypto-300-profit-mission/research/BSC_MEME_STAGE17_IFML_DDAC_8E6B_SAME_TOKEN_TIME_COHORT_CASHFLOW_2026-10-13.json",
+      "source_blob_sha": "4cba5016ea4e8539fa454ba152ead1c3a8488cb3",
+      "source_selector": "cohort_ddac.ifml_closed_episodes[4]",
+      "selected_original_txs": [
+        {
+          "hash": "0x0788b4e8ba13e70c101a0b793445dbf39451d9d0173f0c767161f3b12a94cb0a",
+          "block": 74473636,
+          "original_dir": "in",
+          "source_native_delta_wei": "-1000080758910707647"
+        },
+        {
+          "hash": "0x6dcec649a72a9aaafcdde3b47172d0a7961ec9e68c5784bd553163db0d2912ad",
+          "block": 74473637,
+          "original_dir": "in",
+          "source_native_delta_wei": "-1000072384427689747"
+        },
+        {
+          "hash": "0xd3e43e528a6e60c93e379b2d0f4820be8bc0b1feca73773eb5857cd7af93e19e",
+          "block": 74473641,
+          "original_dir": "out",
+          "source_native_delta_wei": "1553828556436142592"
+        }
+      ],
+      "economic_status": "UNRESOLVED_QUOTE_GAS",
+      "observer_U": "UNRESOLVED"
+    },
+    {
+      "p2_index": 43,
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "token": "龙虾",
+      "exact_CA": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "original_episode": 5,
+      "source_grade": "SIGNED_NATIVE_BLOCK_SCOPE",
+      "source_net_sign": "NEGATIVE_NATIVE_SCOPE",
+      "source_native_block_scope_net_wei": "-342158068328726",
+      "source_path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p2-bulk16-verified-outcomes-2026-10-13.json",
+      "source_blob_sha": "51a41aebe7931c242910470a6907e4c93d217568",
+      "source_selector": "rounds[selection_index=8]",
+      "selected_original_txs": [
+        {
+          "hash": "0x7d2a5ae4c18d56b9ed8dec99d15ba307b99d8cbd54fb900b7f833dd11b2258b1",
+          "block": 84962371,
+          "original_dir": null,
+          "source_native_delta_wei": "-200115763340000000",
+          "original_receipt_full": true
+        },
+        {
+          "hash": "0x650b9e4e945ff0cecc22b2f57c2c3339913d48bc1c1042f43b384335afa9b7aa",
+          "block": 84963046,
+          "original_dir": null,
+          "source_native_delta_wei": "199773605271671274",
+          "original_receipt_full": false
+        }
+      ],
+      "economic_status": "UNRESOLVED_QUOTE_GAS",
+      "observer_U": "UNRESOLVED"
+    },
+    {
+      "p2_index": 44,
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "token": "龙虾",
+      "exact_CA": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "original_episode": 6,
+      "source_grade": "SIGNED_NATIVE_BLOCK_SCOPE",
+      "source_net_sign": "POSITIVE_NATIVE_SCOPE",
+      "source_native_block_scope_net_wei": "5685807795852275",
+      "source_path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p2-bulk16-verified-outcomes-2026-10-13.json",
+      "source_blob_sha": "51a41aebe7931c242910470a6907e4c93d217568",
+      "source_selector": "rounds[selection_index=9]",
+      "selected_original_txs": [
+        {
+          "hash": "0x13f5678b90e1bd0e2b703e23934a7777ba639f75ec1c8c70200f350ff43c4952",
+          "block": 121783426,
+          "original_dir": null,
+          "source_native_delta_wei": "-147320175000000",
+          "original_receipt_full": false
+        },
+        {
+          "hash": "0xc0098aafadbf7a3789d7beb64717b4f5f7c0c1698f1e5d5386419f7b57cc9fbd",
+          "block": 121786352,
+          "original_dir": null,
+          "source_native_delta_wei": "5833127970852275",
+          "original_receipt_full": false
+        }
+      ],
+      "economic_status": "UNRESOLVED_QUOTE_GAS",
+      "observer_U": "UNRESOLVED"
+    },
+    {
+      "p2_index": 48,
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "token": "龙虾",
+      "exact_CA": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "original_episode": 1,
+      "source_grade": "SIGNED_NATIVE_BLOCK_SCOPE",
+      "source_net_sign": "NEGATIVE_NATIVE_SCOPE",
+      "source_native_block_scope_net_wei": "-174628064918928929",
+      "source_path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p2-bulk16-verified-outcomes-2026-10-13.json",
+      "source_blob_sha": "51a41aebe7931c242910470a6907e4c93d217568",
+      "source_selector": "rounds[selection_index=13]",
+      "selected_original_txs": [
+        {
+          "hash": "0x45ebe939bb00ca5660ffde899a6096076cb75ed01d5db89537f91380f2424bf4",
+          "block": 83720393,
+          "original_dir": null,
+          "source_native_delta_wei": "-2400823975000000000",
+          "original_receipt_full": true
+        },
+        {
+          "hash": "0x9a0cc58d9b3a32d79af78b4d543b98c1ab2bb1c13c742866e7f2b7c28b552a36",
+          "block": 83720398,
+          "original_dir": null,
+          "source_native_delta_wei": "2226195910081071071",
+          "original_receipt_full": false
+        }
+      ],
+      "economic_status": "UNRESOLVED_QUOTE_GAS",
+      "observer_U": "UNRESOLVED"
+    }
+  ]
+}

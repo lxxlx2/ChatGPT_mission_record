@@ -1,0 +1,74 @@
+{
+  "schema": "BSC_P4C_NEXT_FOUR_ROUND_ORIGINAL_SIGNED_RECEIPTS",
+  "part": 2,
+  "precommit_sha": "5c9608d13e92f4e36a9fa0950fb065abb9869a0b",
+  "rows": [
+    {
+      "source": {
+        "round": 37,
+        "owner": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+        "ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+        "tx": "0xb24f907d3d49d22cab32c024fb56481a5897891ebfa4dda0abe59432696e9695",
+        "block": 112633681
+      },
+      "status": "TRUNCATED",
+      "head": "{\n  \"type\": \"0x0\",\n  \"status\": \"0x1\",\n  \"cumulativeGasUsed\": \"0x1fd771\",\n  \"logs\": [\n    {\n      \"address\": \"0x1de460f363af910f51726def188f9004276bf4bc\",\n      \"topics\": [\n        \"0x205442d60b70af1203d43cab62352c3b69b94f091be32fe683198057282b5c92\",\n        \"0x0000000000000000000000000000000000000000000000000000000000000000\",\n        \"0x000000000000000000000000877af245c61289b24f0c619a4346cdbc68f1aaac\"\n      ],\n      \"data\": \"0x0000000000000000000"
+    },
+    {
+      "source": {
+        "round": 37,
+        "owner": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+        "ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+        "tx": "0x6034212914ca925ebb875121f1e7a5c8a4a15a2c63a6bc870ce28634db15423e",
+        "block": 112633772
+      },
+      "status": "TRUNCATED",
+      "head": "{\n  \"type\": \"0x0\",\n  \"status\": \"0x1\",\n  \"cumulativeGasUsed\": \"0x22353d\",\n  \"logs\": [\n    {\n      \"address\": \"0xfe189e97832da1573e4e4ff034f4ffc3a15c7777\",\n      \"topics\": [\n        \"0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925\",\n        \"0x000000000000000000000000877af245c61289b24f0c619a4346cdbc68f1aaac\",\n        \"0x0000000000000000000000001de460f363af910f51726def188f9004276bf4bc\"\n      ],\n      \"data\": \"0x0000000000000000000"
+    },
+    {
+      "source": {
+        "round": 37,
+        "owner": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+        "ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+        "tx": "0x971a9ab0217b0bef829991cf12d9eb848e83cfd2fa3e9e11cb82bbc2e752a125",
+        "block": 112633805
+      },
+      "status": "TRUNCATED",
+      "head": "{\n  \"type\": \"0x0\",\n  \"status\": \"0x1\",\n  \"cumulativeGasUsed\": \"0x121a03\",\n  \"logs\": [\n    {\n      \"address\": \"0xfe189e97832da1573e4e4ff034f4ffc3a15c7777\",\n      \"topics\": [\n        \"0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925\",\n        \"0x000000000000000000000000877af245c61289b24f0c619a4346cdbc68f1aaac\",\n        \"0x0000000000000000000000001de460f363af910f51726def188f9004276bf4bc\"\n      ],\n      \"data\": \"0x0000000000000000000"
+    },
+    {
+      "source": {
+        "round": 38,
+        "owner": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+        "ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+        "tx": "0xb3215e0bf0884fa79f7c061f94730e72ed822b4c32df5879d9e218a33c6b05a9",
+        "block": 112634149
+      },
+      "status": "TRUNCATED",
+      "head": "{\n  \"blockHash\": \"0xff8b6075ed2265ef79844ca4a65c1770e3002515f28d3d971b1f594e4aabc39f\",\n  \"blockNumber\": \"0x6b6a925\",\n  \"contractAddress\": null,\n  \"cumulativeGasUsed\": \"0x21f00f\",\n  \"effectiveGasPrice\": \"0x1a39de00\",\n  \"from\": \"0x877af245c61289b24f0c619a4346cdbc68f1aaac\",\n  \"gasUsed\": \"0x834dd\",\n  \"logs\": [\n    {\n      \"address\": \"0x1de460f363af910f51726def188f9004276bf4bc\",\n      \"topics\": [\n        \"0x205442d60b70af1203d43cab62352c3b69b94f091be3"
+    },
+    {
+      "source": {
+        "round": 38,
+        "owner": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+        "ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+        "tx": "0xcfdf1cce9e7d4b17fb86e31cd4eeb93ec54a00ca7e6e6908fc0db0f42fed4f89",
+        "block": 112634161
+      },
+      "status": "TRUNCATED",
+      "head": "{\n  \"blockHash\": \"0x7ecf8ba4cff0a8fcbc70d1cd436457385cd4abda8b273924f92567121b89e8a8\",\n  \"blockNumber\": \"0x6b6a931\",\n  \"contractAddress\": null,\n  \"cumulativeGasUsed\": \"0x2a6c5f\",\n  \"effectiveGasPrice\": \"0x23c34600\",\n  \"from\": \"0x877af245c61289b24f0c619a4346cdbc68f1aaac\",\n  \"gasUsed\": \"0x75a6a\",\n  \"logs\": [\n    {\n      \"address\": \"0xfe189e97832da1573e4e4ff034f4ffc3a15c7777\",\n      \"topics\": [\n        \"0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2"
+    },
+    {
+      "source": {
+        "round": 38,
+        "owner": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+        "ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+        "tx": "0xeb77015b8189b7dde56ed6cd98d313c5a8e17cf13b254fb9378abe5e9e091d31",
+        "block": 112634184
+      },
+      "status": "TRUNCATED",
+      "head": "{\n  \"type\": \"0x0\",\n  \"status\": \"0x1\",\n  \"cumulativeGasUsed\": \"0x924db\",\n  \"logs\": [\n    {\n      \"address\": \"0xfe189e97832da1573e4e4ff034f4ffc3a15c7777\",\n      \"topics\": [\n        \"0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925\",\n        \"0x000000000000000000000000877af245c61289b24f0c619a4346cdbc68f1aaac\",\n        \"0x0000000000000000000000001de460f363af910f51726def188f9004276bf4bc\"\n      ],\n      \"data\": \"0x00000000000000000000"
+    }
+  ],
+  "production": "NO_GO"
+}

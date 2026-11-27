@@ -1,0 +1,84 @@
+{
+  "schema": "BSC_P4C_MAJOR3_FIRST_OUTBOUND_ORIGINAL_SALE_AND_SETTLEMENT_PROBE_PRECOMMIT",
+  "network": "bnb-mainnet",
+  "sources": [
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-dragon-two-outbound-precommit-2026-10-15.json",
+      "git_blob_sha": "a5dc8fba570be1d05164dd25f1e38affbbd48d1e"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4c-flap2-owner-transfer-smallpage-raw-2026-10-15.json",
+      "git_blob_sha": "7ba3f6872af1187f8c1a4bfe802d9180bf51c1cb"
+    }
+  ],
+  "scope": "Exactly DDAC Dragon first original sell-candidate outbound, first TWO ascending owner outflows from Niulai and MARSCOIN (tiny paged and not exhaustive); check signed tx, exact-block Four/Flap sale events, native or quote asset actual credited to signer and call traces if supported. No assumption that transfer to router proves sale; exact first PAGE not entire history. Preserve RPC failures and seller status unknown.",
+  "queries": [
+    {
+      "token": "龙虾",
+      "venue": "FOUR",
+      "contract": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+      "topic0": "0x0a5575b3648bae2210cee56bf33254cc1ddfbc7bf637c0af2ac18b14fb1bae19",
+      "owner": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "exact_CA": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "block": 83635800,
+      "txhash": "0xd63edbb070a8171af5aa37cfb2953ae868a77ff6607b5a1a4f5378abb2249219",
+      "from": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "to": "0x5c952063c7fc8610ffdb798152d69f0b9550762b",
+      "raw_amount": "99069253510299993000000000",
+      "unique": "0xd63edbb070a8171af5aa37cfb2953ae868a77ff6607b5a1a4f5378abb2249219:log:170"
+    },
+    {
+      "token": "牛来",
+      "venue": "FLAP",
+      "contract": "0xe2ce6ab80874fa9fa2aae65d277dd6b8e65c9de0",
+      "topic0": "0x03a4693e592f5e75dc7c136acb39b146d2b4966c0e509c34f362dee02b3b861a",
+      "owner": "0xb0d0c4c1ee4ba9fac874db4ede587718ad9484d9",
+      "exact_CA": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "block": 115853752,
+      "txhash": "0xe336a788b4e7e69a6fab47f130c07c689ae01e8459cf8e3b4d4b4c201216221c",
+      "to": "0xb300000b72deaeb607a12d5f54773d1c19c7028d",
+      "raw_amount": "3795644590718253941359352",
+      "source_order_index": 0
+    },
+    {
+      "token": "牛来",
+      "venue": "FLAP",
+      "contract": "0xe2ce6ab80874fa9fa2aae65d277dd6b8e65c9de0",
+      "topic0": "0x03a4693e592f5e75dc7c136acb39b146d2b4966c0e509c34f362dee02b3b861a",
+      "owner": "0xb0d0c4c1ee4ba9fac874db4ede587718ad9484d9",
+      "exact_CA": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "block": 115853755,
+      "txhash": "0xebf0ec4f9dbc9a3f0d3a06d2297691c35928ae840157656d20553a0bf9962089",
+      "to": "0xb300000b72deaeb607a12d5f54773d1c19c7028d",
+      "raw_amount": "3795644590718253941359352",
+      "source_order_index": 1
+    },
+    {
+      "token": "MARSCOIN",
+      "venue": "FLAP",
+      "contract": "0xe2ce6ab80874fa9fa2aae65d277dd6b8e65c9de0",
+      "topic0": "0x03a4693e592f5e75dc7c136acb39b146d2b4966c0e509c34f362dee02b3b861a",
+      "owner": "0x504ba7b11be98c66a379a3e5de91dc5ab2dde3ea",
+      "exact_CA": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "block": 112441403,
+      "txhash": "0x2af9071f7b71de7d29f3bb7ed5559c1efdc47ee79917e20fa6a8c15f80206392",
+      "to": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "raw_amount": "38581802239165186879696976",
+      "source_order_index": 0
+    },
+    {
+      "token": "MARSCOIN",
+      "venue": "FLAP",
+      "contract": "0xe2ce6ab80874fa9fa2aae65d277dd6b8e65c9de0",
+      "topic0": "0x03a4693e592f5e75dc7c136acb39b146d2b4966c0e509c34f362dee02b3b861a",
+      "owner": "0x504ba7b11be98c66a379a3e5de91dc5ab2dde3ea",
+      "exact_CA": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "block": 112441408,
+      "txhash": "0x7374837ec5eea55bd4572683d7f3ec261b1d17c134cadaf4d362f295d7bdab49",
+      "to": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "raw_amount": "23149081343499112127818185",
+      "source_order_index": 1
+    }
+  ],
+  "production": "NO_GO"
+}

@@ -1,0 +1,150 @@
+{
+  "schema": "BSC_P4C_SEVEN_WALLET_OWNER_TX_SIGNER_READBACK",
+  "part": 2,
+  "precommit_git_blob_sha": "85a39f4c5c9723e98180a1c018b9dd94588fe3b6",
+  "rows": [
+    {
+      "source": {
+        "tx": "0x5b9f98b8feff8b9589b9a229bd64485689d11f7aa08d7973d7553fd18ba35e1e",
+        "block": 116038180,
+        "original_delta_wei": null,
+        "round": "2ADF_NIULAI_R3",
+        "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+        "token": "牛来"
+      },
+      "status": "OWNER_SIGNER_COMPLETE",
+      "tx": {
+        "hash": "0x5b9f98b8feff8b9589b9a229bd64485689d11f7aa08d7973d7553fd18ba35e1e",
+        "from": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+        "to": "0x1de460f363af910f51726def188f9004276bf4bc",
+        "blockNumber": "0x6ea9a24",
+        "nonce": "0x5dec",
+        "value": "0x16345785d8a0000",
+        "gasPrice": "0x7270e00",
+        "selector": "0x4d819a2a"
+      }
+    },
+    {
+      "source": {
+        "tx": "0xc4a493cc5fba197f70e225de4927937b2532cfd18de4efefeb4ebbe3a350d40f",
+        "block": 116087810,
+        "original_delta_wei": null,
+        "round": "2ADF_NIULAI_R3",
+        "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+        "token": "牛来"
+      },
+      "status": "OWNER_SIGNER_COMPLETE",
+      "tx": {
+        "hash": "0xc4a493cc5fba197f70e225de4927937b2532cfd18de4efefeb4ebbe3a350d40f",
+        "from": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+        "to": "0x1de460f363af910f51726def188f9004276bf4bc",
+        "blockNumber": "0x6eb5c02",
+        "nonce": "0x5df2",
+        "value": "0x0",
+        "gasPrice": "0x7270e00",
+        "selector": "0x4d819a2a"
+      }
+    },
+    {
+      "source": {
+        "tx": "0x8a22a65a977409a7e82266d05ceaf1e98074d1f6b50e942486600dacdc672716",
+        "block": 116113193,
+        "round": "A83B_NIULAI_R2",
+        "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+        "token": "牛来"
+      },
+      "status": "OWNER_SIGNER_COMPLETE",
+      "tx": {
+        "hash": "0x8a22a65a977409a7e82266d05ceaf1e98074d1f6b50e942486600dacdc672716",
+        "from": "0xa83b73f5644cde337b61da79589f10ea15548811",
+        "to": "0x1de460f363af910f51726def188f9004276bf4bc",
+        "blockNumber": "0x6ebbf29",
+        "nonce": "0x508af",
+        "value": "0x136dcc951d8c0000",
+        "gasPrice": "0xf5de81400",
+        "selector": "0x4d819a2a"
+      }
+    },
+    {
+      "source": {
+        "tx": "0x3e8b50350c8d2cf87d9662434ad205d08a33595eaf253dac04996134a35e2971",
+        "block": 116113193,
+        "round": "A83B_NIULAI_R2",
+        "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+        "token": "牛来"
+      },
+      "status": "OWNER_SIGNER_COMPLETE",
+      "tx": {
+        "hash": "0x3e8b50350c8d2cf87d9662434ad205d08a33595eaf253dac04996134a35e2971",
+        "from": "0xa83b73f5644cde337b61da79589f10ea15548811",
+        "to": "0x1de460f363af910f51726def188f9004276bf4bc",
+        "blockNumber": "0x6ebbf29",
+        "nonce": "0x508b1",
+        "value": "0x136dcc951d8c0000",
+        "gasPrice": "0xf5de81400",
+        "selector": "0x4d819a2a"
+      }
+    },
+    {
+      "source": {
+        "tx": "0xd0bc93c086a44affed01a7bfb25022cd51e18513401b15d2fbb3692ec1bde9a4",
+        "block": 116113197,
+        "round": "A83B_NIULAI_R2",
+        "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+        "token": "牛来"
+      },
+      "status": "OWNER_SIGNER_COMPLETE",
+      "tx": {
+        "hash": "0xd0bc93c086a44affed01a7bfb25022cd51e18513401b15d2fbb3692ec1bde9a4",
+        "from": "0xa83b73f5644cde337b61da79589f10ea15548811",
+        "to": "0x1de460f363af910f51726def188f9004276bf4bc",
+        "blockNumber": "0x6ebbf2d",
+        "nonce": "0x508b4",
+        "value": "0x0",
+        "gasPrice": "0x3b9aca00",
+        "selector": "0x4d819a2a"
+      }
+    },
+    {
+      "source": {
+        "tx": "0xfbfe1c19521081887048a36144a7c20b4606cd65c958b5dc18dddb8610fe051f",
+        "block": 123398349,
+        "wallet": "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8",
+        "round": "RECENT_ONLY_CONTROL",
+        "token": "UNKNOWN_EXACT_ROUTE"
+      },
+      "status": "OWNER_SIGNER_COMPLETE",
+      "tx": {
+        "hash": "0xfbfe1c19521081887048a36144a7c20b4606cd65c958b5dc18dddb8610fe051f",
+        "from": "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8",
+        "to": "0x1de460f363af910f51726def188f9004276bf4bc",
+        "blockNumber": "0x75ae8cd",
+        "nonce": "0xa1f6",
+        "value": "0x0",
+        "gasPrice": "0x36bcf21d",
+        "selector": "0x4d819a2a"
+      }
+    },
+    {
+      "source": {
+        "tx": "0x158c28e5efafde2a93fa1549d328082b2357369f666fd4cbd48eec0e54ff222b",
+        "block": 122742452,
+        "wallet": "0x498528e32b04bdaa73d5c8943a09aeffd15bd99a",
+        "round": "RECENT_ONLY_CONTROL",
+        "token": "UNKNOWN_EXACT_ROUTE"
+      },
+      "status": "OWNER_SIGNER_COMPLETE",
+      "tx": {
+        "hash": "0x158c28e5efafde2a93fa1549d328082b2357369f666fd4cbd48eec0e54ff222b",
+        "from": "0x498528e32b04bdaa73d5c8943a09aeffd15bd99a",
+        "to": "0x1de460f363af910f51726def188f9004276bf4bc",
+        "blockNumber": "0x750e6b4",
+        "nonce": "0x6df4",
+        "value": "0x0",
+        "gasPrice": "0x7270e00",
+        "selector": "0x4d819a2a"
+      }
+    }
+  ],
+  "production": "NO_GO"
+}

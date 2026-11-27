@@ -1,0 +1,87 @@
+{
+  "schema": "BSC_P4B_FLAP_MAJOR2_QUOTE_TAX_ORIGINAL_SOURCE",
+  "part": 1,
+  "token": "牛来",
+  "source_precommit_git_blob_sha": "b18fc115cf51681b8556493fad773daa02dc447d",
+  "rows": [
+    {
+      "event": "TokenQuoteSet",
+      "token": "牛来",
+      "tx": "0x907beed290b7daeb45cd2f05085c7ca67f997c06749f716c40ed431b2b2eb62d",
+      "block": 115628768,
+      "topic": "0x3ceb902d3c555c21c3415b6aa839104b18e4825b2f8324011ff979089a507a8c",
+      "query_complete": true,
+      "total_topic_logs": 2,
+      "original_creation_tx_events": [
+        {
+          "address": "0xe2ce6ab80874fa9fa2aae65d277dd6b8e65c9de0",
+          "topics": [
+            "0x3ceb902d3c555c21c3415b6aa839104b18e4825b2f8324011ff979089a507a8c"
+          ],
+          "data": "0x000000000000000000000000beea1d618e533a387d941f58a7d4c9b7bd377777000000000000000000000000205812cdbed920aff76c6580abd681a46d11efc7",
+          "blockHash": "0x7640825ccac55a720fbeea3f14b532a5d3a36a7abaa6e4e0cca8cef7afd8b3dd",
+          "blockNumber": "0x6e45ae0",
+          "blockTimestamp": "0x6a7d4122",
+          "transactionHash": "0x907beed290b7daeb45cd2f05085c7ca67f997c06749f716c40ed431b2b2eb62d",
+          "transactionIndex": "0x31",
+          "logIndex": "0x10b",
+          "removed": false
+        }
+      ],
+      "error": null
+    },
+    {
+      "event": "FlapTokenTaxSet",
+      "token": "牛来",
+      "tx": "0x907beed290b7daeb45cd2f05085c7ca67f997c06749f716c40ed431b2b2eb62d",
+      "block": 115628768,
+      "topic": "0x1546924f4680b1b2e093fd251c437c8781d81a21ed8ad1895e1f2c9b78db0cd0",
+      "query_complete": true,
+      "total_topic_logs": 2,
+      "original_creation_tx_events": [
+        {
+          "address": "0xe2ce6ab80874fa9fa2aae65d277dd6b8e65c9de0",
+          "topics": [
+            "0x1546924f4680b1b2e093fd251c437c8781d81a21ed8ad1895e1f2c9b78db0cd0"
+          ],
+          "data": "0x000000000000000000000000beea1d618e533a387d941f58a7d4c9b7bd3777770000000000000000000000000000000000000000000000000000000000000064",
+          "blockHash": "0x7640825ccac55a720fbeea3f14b532a5d3a36a7abaa6e4e0cca8cef7afd8b3dd",
+          "blockNumber": "0x6e45ae0",
+          "blockTimestamp": "0x6a7d4122",
+          "transactionHash": "0x907beed290b7daeb45cd2f05085c7ca67f997c06749f716c40ed431b2b2eb62d",
+          "transactionIndex": "0x31",
+          "logIndex": "0x10e",
+          "removed": false
+        }
+      ],
+      "error": null
+    },
+    {
+      "event": "FlapTokenAsymmetricTaxSet",
+      "token": "牛来",
+      "tx": "0x907beed290b7daeb45cd2f05085c7ca67f997c06749f716c40ed431b2b2eb62d",
+      "block": 115628768,
+      "topic": "0x46cc246a238d1ca0951a15200994903e2d56cbb0389e63f09d66412a787aa3c0",
+      "query_complete": true,
+      "total_topic_logs": 1,
+      "original_creation_tx_events": [
+        {
+          "address": "0xe2ce6ab80874fa9fa2aae65d277dd6b8e65c9de0",
+          "topics": [
+            "0x46cc246a238d1ca0951a15200994903e2d56cbb0389e63f09d66412a787aa3c0"
+          ],
+          "data": "0x000000000000000000000000beea1d618e533a387d941f58a7d4c9b7bd37777700000000000000000000000000000000000000000000000000000000000000640000000000000000000000000000000000000000000000000000000000000064",
+          "blockHash": "0x7640825ccac55a720fbeea3f14b532a5d3a36a7abaa6e4e0cca8cef7afd8b3dd",
+          "blockNumber": "0x6e45ae0",
+          "blockTimestamp": "0x6a7d4122",
+          "transactionHash": "0x907beed290b7daeb45cd2f05085c7ca67f997c06749f716c40ed431b2b2eb62d",
+          "transactionIndex": "0x31",
+          "logIndex": "0x10f",
+          "removed": false
+        }
+      ],
+      "error": null
+    }
+  ],
+  "production": "NO_GO"
+}

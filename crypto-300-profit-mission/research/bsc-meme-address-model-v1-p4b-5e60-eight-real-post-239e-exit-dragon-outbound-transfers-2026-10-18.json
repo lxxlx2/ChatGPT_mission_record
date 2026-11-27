@@ -1,0 +1,162 @@
+{
+  "schema": "BSC_P4B_2026_EXTERNAL_5E60_FIRST_FIXED_POST_SOURCE_EXIT_DRAGON_OUTBOUND_TRANSFERS_V1",
+  "source_prefreeze": {
+    "path": "bsc-meme-address-model-v1-p4b-5e60-post-239e-exit-fixed-outgoing-dragon-prefreeze-2026-10-18.json",
+    "git_blob": "7bbd14b61b0c28c86886ccb4738854bd6ac8e5e9"
+  },
+  "network": "bnb-mainnet",
+  "provider": "Alchemy existing free getAssetTransfers",
+  "provider_response_chars": 5532,
+  "source_grade": "FULL_TOOL_JSON_OBJECT_WITH_RAWCONTRACT_ERC20_VALUE_AND_TRANSACTION_HASHES_NOT_PROVIDER_WIRE",
+  "query": {
+    "category": [
+      "erc20"
+    ],
+    "fromAddress": "0x5e600e259e3cff0757e3736223685958665866c6",
+    "contractAddresses": [
+      "0xeccbb861c0dda7efd964010085488b69317e4444"
+    ],
+    "fromBlock": "0x51faa9c",
+    "toBlock": "0x5204180",
+    "order": "asc",
+    "maxCount": "0xa",
+    "excludeZeroValue": true
+  },
+  "response_total_returned": 8,
+  "has_page_key": false,
+  "second_scope_not_requested_due_to_first_nonempty": true,
+  "transfers": [
+    {
+      "selected_order": 1,
+      "blockNum": "0x51fabe6",
+      "block_dec": 85961702,
+      "hash": "0x473a6f97e4580036e82142e56b1cd9d4b0fd026dd5363dcf33cf8271651777e4",
+      "from": "0x5e600e259e3cff0757e3736223685958665866c6",
+      "to": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+      "token": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "raw_hex": "0x185ef68ce69eceb60000",
+      "raw_uint256": "115088555360000000000000",
+      "decimal_places": 18,
+      "source": "alchemy_getAssetTransfers",
+      "per_transfer_kind": "ACTUAL_OUTBOUND_ERC20_NOT_YET_VERIFIED_SIGNED_SELL"
+    },
+    {
+      "selected_order": 2,
+      "blockNum": "0x51fabef",
+      "block_dec": 85961711,
+      "hash": "0x9d52a9208bae6f42154b2f974745be5c43ad116ea801badba61fc9fd1ec8701f",
+      "from": "0x5e600e259e3cff0757e3736223685958665866c6",
+      "to": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+      "token": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "raw_hex": "0x5afc20fcece19efa000",
+      "raw_uint256": "26853996250000000000000",
+      "decimal_places": 18,
+      "source": "alchemy_getAssetTransfers",
+      "per_transfer_kind": "ACTUAL_OUTBOUND_ERC20_NOT_YET_VERIFIED_SIGNED_SELL"
+    },
+    {
+      "selected_order": 3,
+      "blockNum": "0x51fabfc",
+      "block_dec": 85961724,
+      "hash": "0x67e653802aa2c2907313ecd7428ab93fe0ff92b36f75eb7600e676e278c50984",
+      "from": "0x5e600e259e3cff0757e3736223685958665866c6",
+      "to": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+      "token": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "raw_hex": "0x51e2ea7d845a4f76000",
+      "raw_uint256": "24168596630000000000000",
+      "decimal_places": 18,
+      "source": "alchemy_getAssetTransfers",
+      "per_transfer_kind": "ACTUAL_OUTBOUND_ERC20_NOT_YET_VERIFIED_SIGNED_SELL"
+    },
+    {
+      "selected_order": 4,
+      "blockNum": "0x51fac30",
+      "block_dec": 85961776,
+      "hash": "0xe62f8b2435117348bfb8f320f0533638cd97f21fcced5b15edbad154eb712ef6",
+      "from": "0x5e600e259e3cff0757e3736223685958665866c6",
+      "to": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+      "token": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "raw_hex": "0x1707d1f33f94f0ad4000",
+      "raw_uint256": "108758684820000000000000",
+      "decimal_places": 18,
+      "source": "alchemy_getAssetTransfers",
+      "per_transfer_kind": "ACTUAL_OUTBOUND_ERC20_NOT_YET_VERIFIED_SIGNED_SELL"
+    },
+    {
+      "selected_order": 5,
+      "blockNum": "0x51fac3b",
+      "block_dec": 85961787,
+      "hash": "0xbc1e4d56e0946bf63343e045dd2da459431219acbc80ba2cc0478d28901fd7f2",
+      "from": "0x5e600e259e3cff0757e3736223685958665866c6",
+      "to": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+      "token": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "raw_hex": "0x1707d1f336ab607c8dba",
+      "raw_uint256": "108758684810200760487354",
+      "decimal_places": 18,
+      "source": "alchemy_getAssetTransfers",
+      "per_transfer_kind": "ACTUAL_OUTBOUND_ERC20_NOT_YET_VERIFIED_SIGNED_SELL"
+    },
+    {
+      "selected_order": 6,
+      "blockNum": "0x51ff61e",
+      "block_dec": 85980702,
+      "hash": "0x9c71aaf82a867109076b58bea79ba8f52043f151484de6e0ac40361219750545",
+      "from": "0x5e600e259e3cff0757e3736223685958665866c6",
+      "to": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+      "token": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "raw_hex": "0x33d49a982a2628006000",
+      "raw_uint256": "244762540070000000000000",
+      "decimal_places": 18,
+      "source": "alchemy_getAssetTransfers",
+      "per_transfer_kind": "ACTUAL_OUTBOUND_ERC20_NOT_YET_VERIFIED_SIGNED_SELL"
+    },
+    {
+      "selected_order": 7,
+      "blockNum": "0x51ff644",
+      "block_dec": 85980740,
+      "hash": "0x3fd9ef769f6c294fe2d0a4949c88e5c261935e769c5144470a4570df59b5591a",
+      "from": "0x5e600e259e3cff0757e3736223685958665866c6",
+      "to": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+      "token": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "raw_hex": "0x3c7809b18805e668e000",
+      "raw_uint256": "285556296750000000000000",
+      "decimal_places": 18,
+      "source": "alchemy_getAssetTransfers",
+      "per_transfer_kind": "ACTUAL_OUTBOUND_ERC20_NOT_YET_VERIFIED_SIGNED_SELL"
+    },
+    {
+      "selected_order": 8,
+      "blockNum": "0x51ff64c",
+      "block_dec": 85980748,
+      "hash": "0xf6bba19e1dafc184f6887e672d0f3dbef662465c65ed929172ccf299193062a2",
+      "from": "0x5e600e259e3cff0757e3736223685958665866c6",
+      "to": "0x22af7297243c4eef12e2d5a4f888b92e56bf127c",
+      "token": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "raw_hex": "0x3c7809b18a7ff6f6b8c0",
+      "raw_uint256": "285556296752723286997184",
+      "decimal_places": 18,
+      "source": "alchemy_getAssetTransfers",
+      "per_transfer_kind": "ACTUAL_OUTBOUND_ERC20_NOT_YET_VERIFIED_SIGNED_SELL"
+    }
+  ],
+  "source_owner_239e_signed_exit_block": 85961371,
+  "first_five_outbounds_after_source_exit_blocks": [
+    331,
+    340,
+    353,
+    405,
+    416
+  ],
+  "observed_actual_outbound_raw_total": "1199503651442924047484538",
+  "explicit_limits": [
+    "Transfer to Pair alone proves real outbound Dragon token, not original signed sell, actual fill, refund, post-tax economic cost or net profit.",
+    "No claim that eight transfers are all sales or full historical lifetime; first bounded segment exhausted only within provider's returned page.",
+    "Wallet already held 335173.813691889308361853 Dragon BEFORE real 1000 USDT buy. Do not attribute all later outbound Dragon to the 1000 USDT tranche.",
+    "Eight transfers include possible extra acquisition and internal transfers; signed sender and native/USDT payout still unknown.",
+    "No observed public causal copy of source wallet."
+  ],
+  "P4_B": "PARTIAL",
+  "PUBLIC_EXECUTABLE_U": "UNRESOLVED",
+  "P5": "BLOCKED",
+  "PRODUCTION": "NO_GO"
+}

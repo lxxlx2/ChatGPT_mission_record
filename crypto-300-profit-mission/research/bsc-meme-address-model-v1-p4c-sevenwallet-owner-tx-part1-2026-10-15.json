@@ -1,0 +1,158 @@
+{
+  "schema": "BSC_P4C_SEVEN_WALLET_OWNER_TX_SIGNER_READBACK",
+  "part": 1,
+  "precommit_git_blob_sha": "85a39f4c5c9723e98180a1c018b9dd94588fe3b6",
+  "rows": [
+    {
+      "source": {
+        "tx": "0x379a9f56fa6b47182c30a5854240aeb08a599b61d530ea969a446adfbfa09231",
+        "block": 74741352,
+        "original_delta_wei": "-5005442723000000000",
+        "dir": "in",
+        "round": "8E6B_HAJIMI_R1",
+        "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+        "token": "哈基米 / HAJIMI"
+      },
+      "status": "OWNER_SIGNER_COMPLETE",
+      "tx": {
+        "hash": "0x379a9f56fa6b47182c30a5854240aeb08a599b61d530ea969a446adfbfa09231",
+        "from": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+        "to": "0x1de460f363af910f51726def188f9004276bf4bc",
+        "blockNumber": "0x4747668",
+        "nonce": "0x2a68",
+        "value": "0x4563918244f40000",
+        "gasPrice": "0x7aef40a00",
+        "selector": "0x0b3f5cf9"
+      }
+    },
+    {
+      "source": {
+        "tx": "0x7e6c7bfecd6815c38ad53af6d15faef516f6aec40ca5d5ee7ca2200053357efe",
+        "block": 74741573,
+        "original_delta_wei": "2626703650753062114",
+        "dir": "out",
+        "round": "8E6B_HAJIMI_R1",
+        "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+        "token": "哈基米 / HAJIMI"
+      },
+      "status": "OWNER_SIGNER_COMPLETE",
+      "tx": {
+        "hash": "0x7e6c7bfecd6815c38ad53af6d15faef516f6aec40ca5d5ee7ca2200053357efe",
+        "from": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+        "to": "0x13f4ea83d0bd40e75c8222255bc855a974568dd4",
+        "blockNumber": "0x4747745",
+        "nonce": "0x2a6d",
+        "value": "0x0",
+        "gasPrice": "0x77359400",
+        "selector": "0x5ae401dc"
+      }
+    },
+    {
+      "source": {
+        "tx": "0x3055cbb9f252a4b20a8cb2a127011fea8fc3c4ccaa24464a7f4bd75881d0e95e",
+        "block": 74741587,
+        "original_delta_wei": "2647332065164567819",
+        "dir": "out",
+        "round": "8E6B_HAJIMI_R1",
+        "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+        "token": "哈基米 / HAJIMI"
+      },
+      "status": "OWNER_SIGNER_COMPLETE",
+      "tx": {
+        "hash": "0x3055cbb9f252a4b20a8cb2a127011fea8fc3c4ccaa24464a7f4bd75881d0e95e",
+        "from": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+        "to": "0x13f4ea83d0bd40e75c8222255bc855a974568dd4",
+        "blockNumber": "0x4747753",
+        "nonce": "0x2a6e",
+        "value": "0x0",
+        "gasPrice": "0x77359400",
+        "selector": "0x5ae401dc"
+      }
+    },
+    {
+      "source": {
+        "tx": "0xe96df53014497d00b74d6a08fb903661b35a4ceea42851bcb31de80fca223f34",
+        "block": 93584281,
+        "dir": "in",
+        "round": "8E6B_DRAGON_R2",
+        "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+        "token": "龙虾"
+      },
+      "status": "OWNER_SIGNER_COMPLETE",
+      "tx": {
+        "hash": "0xe96df53014497d00b74d6a08fb903661b35a4ceea42851bcb31de80fca223f34",
+        "from": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+        "to": "0x1de460f363af910f51726def188f9004276bf4bc",
+        "blockNumber": "0x593fb99",
+        "nonce": "0x4005",
+        "value": "0x29a2241af62c0000",
+        "gasPrice": "0x7270e00",
+        "selector": "0x4d819a2a"
+      }
+    },
+    {
+      "source": {
+        "tx": "0xd3b7eafb4d5193be7f7ff9dd62b968a65fae16b37c430726e13207ed51c71530",
+        "block": 94208823,
+        "dir": "out",
+        "round": "8E6B_DRAGON_R2",
+        "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+        "token": "龙虾"
+      },
+      "status": "OWNER_SIGNER_COMPLETE",
+      "tx": {
+        "hash": "0xd3b7eafb4d5193be7f7ff9dd62b968a65fae16b37c430726e13207ed51c71530",
+        "from": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+        "to": "0x13f4ea83d0bd40e75c8222255bc855a974568dd4",
+        "blockNumber": "0x59d8337",
+        "nonce": "0x402b",
+        "value": "0x0",
+        "gasPrice": "0x3b9aca00",
+        "selector": "0x5ae401dc"
+      }
+    },
+    {
+      "source": {
+        "tx": "0xf295cea8ca007cf8bbf00889acf7be78d9d035300be51da67a194fe50c33a3e3",
+        "block": 83656622,
+        "original_delta_wei": "-200108843900000000",
+        "round": "ADFF_DRAGON_R4",
+        "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+        "token": "龙虾"
+      },
+      "status": "OWNER_SIGNER_COMPLETE",
+      "tx": {
+        "hash": "0xf295cea8ca007cf8bbf00889acf7be78d9d035300be51da67a194fe50c33a3e3",
+        "from": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+        "to": "0x1de460f363af910f51726def188f9004276bf4bc",
+        "blockNumber": "0x4fc7fae",
+        "nonce": "0xe8cc",
+        "value": "0x2c68af0bb140000",
+        "gasPrice": "0x2756cd00",
+        "selector": "0x0b3f5cf9"
+      }
+    },
+    {
+      "source": {
+        "tx": "0xcbd78ec6eed55dba0f9f90bdfa342c48644d3d626d975aa77e931ad0ffe69045",
+        "block": 83656734,
+        "original_delta_wei": "204631281755804654",
+        "round": "ADFF_DRAGON_R4",
+        "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+        "token": "龙虾"
+      },
+      "status": "OWNER_SIGNER_COMPLETE",
+      "tx": {
+        "hash": "0xcbd78ec6eed55dba0f9f90bdfa342c48644d3d626d975aa77e931ad0ffe69045",
+        "from": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+        "to": "0x1de460f363af910f51726def188f9004276bf4bc",
+        "blockNumber": "0x4fc801e",
+        "nonce": "0xe8d0",
+        "value": "0x0",
+        "gasPrice": "0x2756cd00",
+        "selector": "0x0b3f5cf9"
+      }
+    }
+  ],
+  "production": "NO_GO"
+}

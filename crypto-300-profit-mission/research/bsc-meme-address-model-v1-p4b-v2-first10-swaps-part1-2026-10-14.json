@@ -1,0 +1,164 @@
+{
+  "schema": "BSC_P4B_V2_FIRST10_ORIGINAL_POOL_SWAP_LOGS",
+  "part": 1,
+  "index_range": [
+    0,
+    4
+  ],
+  "precommit_git_blob_sha": "09e23ee13f2eaaa3fd0c72790b4072b970fec3c8",
+  "scope": "Exact pool topic-filtered full ten-block window. An empty result establishes no Swap only inside this exact window.",
+  "rows": [
+    {
+      "index": 0,
+      "token": "TST",
+      "pool": "0xb36c81707e5ca2bd6f68cd6b71b3178d29c48a4b",
+      "from_block": 46421401,
+      "to_block": 46421410,
+      "query": "eth_getLogs",
+      "query_status": "FAILED_OR_TRUNCATED",
+      "details": "[\n  {\n    \"address\": \"0xb36c81707e5ca2bd6f68cd6b71b3178d29c48a4b\",\n    \"topics\": [\n      \"0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822\",\n      \"0x00000000000000000000000017cd8e8d4c64aa7f2a8db6947b330885da56b833\",\n      \"0x00000000000000000000000017cd8e8d4c64aa7f2a8db6947b330885da56b833\"\n    ],\n    \"data\": \"0x00000000000000000000000000000000000000000000003d2d3ed4f85802945a00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "index": 1,
+      "token": "CHEEMS",
+      "pool": "0xaf0eb8f2f114917ef0026105c070cf08423f488e",
+      "from_block": 42638444,
+      "to_block": 42638453,
+      "query": "eth_getLogs",
+      "query_status": "COMPLETE",
+      "event_count": 0,
+      "logs": []
+    },
+    {
+      "index": 2,
+      "token": "MUBARAK",
+      "pool": "0xb7c6f7db26cde42550e4017bb9855bbaaa20eb44",
+      "from_block": 47442143,
+      "to_block": 47442152,
+      "query": "eth_getLogs",
+      "query_status": "COMPLETE",
+      "event_count": 3,
+      "logs": [
+        {
+          "address": "0xb7c6f7db26cde42550e4017bb9855bbaaa20eb44",
+          "topics": [
+            "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822",
+            "0x000000000000000000000000000000000008d5760657dd664c7096897e1ae801",
+            "0x000000000000000000000000000000000008d5760657dd664c7096897e1ae801"
+          ],
+          "data": "0x000000000000000000000000000000000000000000000025aef12fa40d60872400000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000895dcd1173a14",
+          "blockHash": "0xa850748d359dfa318964ca5c2988464f5c55d627528f726aa2b3a65cee5e1d46",
+          "blockNumber": "0x2d3e8e1",
+          "blockTimestamp": "0x67d36869",
+          "transactionHash": "0xfd4ff6e14292ab047c94ca09ce53dc865862e0934ef3e23c032480f3bdde0af0",
+          "transactionIndex": "0x71",
+          "logIndex": "0xdf",
+          "removed": false
+        },
+        {
+          "address": "0xb7c6f7db26cde42550e4017bb9855bbaaa20eb44",
+          "topics": [
+            "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822",
+            "0x0000000000000000000000000000000d94514cbcf9455c0be85541e5d45cf1f5",
+            "0x0000000000000000000000000000000d94514cbcf9455c0be85541e5d45cf1f5"
+          ],
+          "data": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000010bbe6b404a70400000000000000000000000000000000000000000000004774e1c30293178b7e0000000000000000000000000000000000000000000000000000000000000000",
+          "blockHash": "0x38481a588140346a2549f3af2c2b2d537c30198deaf02de2ca8e1616ad4be2d5",
+          "blockNumber": "0x2d3e8e5",
+          "blockTimestamp": "0x67d36875",
+          "transactionHash": "0xb88d6b01ee470e5b6ab6e3f753c1a0a56ad1f164dc681b26f2c75aec9c1b398e",
+          "transactionIndex": "0x13",
+          "logIndex": "0x3d",
+          "removed": false
+        },
+        {
+          "address": "0xb7c6f7db26cde42550e4017bb9855bbaaa20eb44",
+          "topics": [
+            "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822",
+            "0x00000000000000000000000017cd8e8d4c64aa7f2a8db6947b330885da56b833",
+            "0x00000000000000000000000017cd8e8d4c64aa7f2a8db6947b330885da56b833"
+          ],
+          "data": "0x0000000000000000000000000000000000000000000000065857b2283c818e0a0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000018b147cadcdda",
+          "blockHash": "0x746132e9835c294774e0a8af290149ef38a401c109156d96a81a07b6e09744e7",
+          "blockNumber": "0x2d3e8e7",
+          "blockTimestamp": "0x67d3687b",
+          "transactionHash": "0xc6791820df0ac20c9c671a648191a14ae30f3d0a7fae144ab7c98567256fe84a",
+          "transactionIndex": "0x60",
+          "logIndex": "0x115",
+          "removed": false
+        }
+      ]
+    },
+    {
+      "index": 3,
+      "token": "TUT",
+      "pool": "0xd7efdee04e508502bdc666f67f3d9b006c20318d",
+      "from_block": 46521964,
+      "to_block": 46521973,
+      "query": "eth_getLogs",
+      "query_status": "COMPLETE",
+      "event_count": 3,
+      "logs": [
+        {
+          "address": "0xd7efdee04e508502bdc666f67f3d9b006c20318d",
+          "topics": [
+            "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822",
+            "0x000000000000000000000000edc94232a8ede362ff062459f4940b5794c5a7f4",
+            "0x000000000000000000000000edc94232a8ede362ff062459f4940b5794c5a7f4"
+          ],
+          "data": "0x000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000156d08a956aa8a89ad4000000000000000000000000000000000000000000000000004ce0e76cd21cfa30000000000000000000000000000000000000000000000000000000000000000",
+          "blockHash": "0x5674cbba46309272b828c35d6aec7bd324248e413a38823430bb102fd9a05e6f",
+          "blockNumber": "0x2c5de6c",
+          "blockTimestamp": "0x67a94819",
+          "transactionHash": "0xcd52e9d31b7ef5f7a9afc5914810ca949f997c97c3a656b337da30acd8a9c391",
+          "transactionIndex": "0x4",
+          "logIndex": "0x24",
+          "removed": false
+        },
+        {
+          "address": "0xd7efdee04e508502bdc666f67f3d9b006c20318d",
+          "topics": [
+            "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822",
+            "0x0000000000000000000000001a0a18ac4becddbd6389559687d1a73d8927e416",
+            "0x0000000000000000000000001a0a18ac4becddbd6389559687d1a73d8927e416"
+          ],
+          "data": "0x0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000ac39ca8f85cb17218cd00000000000000000000000000000000000000000000000002583fbadd4c798e0000000000000000000000000000000000000000000000000000000000000000",
+          "blockHash": "0x7ec59cd5c9a9945136bf0c038c390117b80305322d62cdee06e0e6e898314009",
+          "blockNumber": "0x2c5de70",
+          "blockTimestamp": "0x67a94825",
+          "transactionHash": "0xc5d5397244715080a33c25c276ab22198f93231c83f6155b732bbd7b3b1afdd3",
+          "transactionIndex": "0x18",
+          "logIndex": "0x4a",
+          "removed": false
+        },
+        {
+          "address": "0xd7efdee04e508502bdc666f67f3d9b006c20318d",
+          "topics": [
+            "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822",
+            "0x0000000000000000000000004c6f446dd88fd1be8b80d2940806002777dc12a2",
+            "0x00000000000000000000000041cc04d3ceed81ad9e2940338f977ab59e71b02b"
+          ],
+          "data": "0x0000000000000000000000000000000000000000000000000007c2e1d2f9f00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000023ca91cdbf7b13c5a9",
+          "blockHash": "0x55fb608c3f563c3b5254124d5f4f08a9aaa2dcf2ae6d3064455c7a3b7a327e43",
+          "blockNumber": "0x2c5de71",
+          "blockTimestamp": "0x67a94828",
+          "transactionHash": "0x44a970e8d737ae770580b2e5f7a42fe26d430d2ad040207ce253ba883c1f38ab",
+          "transactionIndex": "0x41",
+          "logIndex": "0xa3",
+          "removed": false
+        }
+      ]
+    },
+    {
+      "index": 4,
+      "token": "BROCCOLI714",
+      "pool": "0x9eb0bc7a207f77811ee365729d00152622a745b7",
+      "from_block": 46627714,
+      "to_block": 46627723,
+      "query": "eth_getLogs",
+      "query_status": "FAILED_OR_TRUNCATED",
+      "details": "[\n  {\n    \"address\": \"0x9eb0bc7a207f77811ee365729d00152622a745b7\",\n    \"topics\": [\n      \"0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822\",\n      \"0x000000000000000000000000d6eef0147908a74c76c51c51e037e17aad48cd6a\",\n      \"0x000000000000000000000000d6eef0147908a74c76c51c51e037e17aad48cd6a\"\n    ],\n    \"data\": \"0x0000000000000000000000000000000000000000000000ed09bc1892fae288c200000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    }
+  ],
+  "production": "NO_GO"
+}

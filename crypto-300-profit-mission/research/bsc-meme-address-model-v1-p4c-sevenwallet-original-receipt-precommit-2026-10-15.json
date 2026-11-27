@@ -1,0 +1,107 @@
+{
+  "schema": "BSC_P4C_FROZEN_7WALLET_14TX_ORIGINAL_RECEIPT_SOURCE_SELECTION",
+  "scope": "All 14 source-selected signed candidate transaction hashes (5 closed-inventory candidate rounds and 2 recent activity-only controls), BNB eth_getTransactionReceipt. Keep successful receipt only if exact hash, exact block and status 0x1; parsed complete logs and gas read safely. Truncation does not imply unsuccessful. Do not convert native balance block sum into full causal quote PnL if asset is nonnative or receipt incomplete.",
+  "source_precommit_sha": "85a39f4c5c9723e98180a1c018b9dd94588fe3b6",
+  "source": "BSC_P4C_SEVEN_RECENT_WALLET_BALANCED_SIGNED_ROUND_BATCH_FROZEN",
+  "targets": [
+    {
+      "round": "8E6B_HAJIMI_R1",
+      "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "token": "哈基米 / HAJIMI",
+      "tx": "0x379a9f56fa6b47182c30a5854240aeb08a599b61d530ea969a446adfbfa09231",
+      "block": 74741352
+    },
+    {
+      "round": "8E6B_HAJIMI_R1",
+      "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "token": "哈基米 / HAJIMI",
+      "tx": "0x7e6c7bfecd6815c38ad53af6d15faef516f6aec40ca5d5ee7ca2200053357efe",
+      "block": 74741573
+    },
+    {
+      "round": "8E6B_HAJIMI_R1",
+      "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "token": "哈基米 / HAJIMI",
+      "tx": "0x3055cbb9f252a4b20a8cb2a127011fea8fc3c4ccaa24464a7f4bd75881d0e95e",
+      "block": 74741587
+    },
+    {
+      "round": "8E6B_DRAGON_R2",
+      "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "token": "龙虾",
+      "tx": "0xe96df53014497d00b74d6a08fb903661b35a4ceea42851bcb31de80fca223f34",
+      "block": 93584281
+    },
+    {
+      "round": "8E6B_DRAGON_R2",
+      "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "token": "龙虾",
+      "tx": "0xd3b7eafb4d5193be7f7ff9dd62b968a65fae16b37c430726e13207ed51c71530",
+      "block": 94208823
+    },
+    {
+      "round": "ADFF_DRAGON_R4",
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "token": "龙虾",
+      "tx": "0xf295cea8ca007cf8bbf00889acf7be78d9d035300be51da67a194fe50c33a3e3",
+      "block": 83656622
+    },
+    {
+      "round": "ADFF_DRAGON_R4",
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "token": "龙虾",
+      "tx": "0xcbd78ec6eed55dba0f9f90bdfa342c48644d3d626d975aa77e931ad0ffe69045",
+      "block": 83656734
+    },
+    {
+      "round": "2ADF_NIULAI_R3",
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "token": "牛来",
+      "tx": "0x5b9f98b8feff8b9589b9a229bd64485689d11f7aa08d7973d7553fd18ba35e1e",
+      "block": 116038180
+    },
+    {
+      "round": "2ADF_NIULAI_R3",
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "token": "牛来",
+      "tx": "0xc4a493cc5fba197f70e225de4927937b2532cfd18de4efefeb4ebbe3a350d40f",
+      "block": 116087810
+    },
+    {
+      "round": "A83B_NIULAI_R2",
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "token": "牛来",
+      "tx": "0x8a22a65a977409a7e82266d05ceaf1e98074d1f6b50e942486600dacdc672716",
+      "block": 116113193
+    },
+    {
+      "round": "A83B_NIULAI_R2",
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "token": "牛来",
+      "tx": "0x3e8b50350c8d2cf87d9662434ad205d08a33595eaf253dac04996134a35e2971",
+      "block": 116113193
+    },
+    {
+      "round": "A83B_NIULAI_R2",
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "token": "牛来",
+      "tx": "0xd0bc93c086a44affed01a7bfb25022cd51e18513401b15d2fbb3692ec1bde9a4",
+      "block": 116113197
+    },
+    {
+      "round": "RECENT_ACTIVITY_ONLY",
+      "wallet": "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8",
+      "token": "NOT_CLOSED",
+      "tx": "0xfbfe1c19521081887048a36144a7c20b4606cd65c958b5dc18dddb8610fe051f",
+      "block": 123398349
+    },
+    {
+      "round": "RECENT_ACTIVITY_ONLY",
+      "wallet": "0x498528e32b04bdaa73d5c8943a09aeffd15bd99a",
+      "token": "NOT_CLOSED",
+      "tx": "0x158c28e5efafde2a93fa1549d328082b2357369f666fd4cbd48eec0e54ff222b",
+      "block": 122742452
+    }
+  ],
+  "production": "NO_GO"
+}

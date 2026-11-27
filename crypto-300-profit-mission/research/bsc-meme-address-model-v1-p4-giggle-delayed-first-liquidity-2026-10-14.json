@@ -1,0 +1,236 @@
+{
+  "schema": "BSC_P4_GIGGLE_SOURCE_VERIFIED_FIRST_POSITIVE_V2_SYNC",
+  "pool": "0xd6b652aecb704b0aebec6317315afb90ba641d57",
+  "token_CA": "0x20d6015660b3fe52e6690a889b5c51f69902ce0e",
+  "creation_block": 61963318,
+  "positive_liquidity_block": 61963725,
+  "creation_event": {
+    "address": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73",
+    "topics": [
+      "0x0d3648bd0f6ba80134a33ba9275ac585d9d315f0ad8355cddefde31afa28d0e9",
+      "0x00000000000000000000000020d6015660b3fe52e6690a889b5c51f69902ce0e",
+      "0x000000000000000000000000bb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c"
+    ],
+    "data": "0x000000000000000000000000d6b652aecb704b0aebec6317315afb90ba641d5700000000000000000000000000000000000000000000000000000000001e1d3e",
+    "blockHash": "0xe43058e1fd82b67e2bb1ea0605cb4ebaa6ace1cbf7a2fdd826b28021efd4c62e",
+    "blockNumber": "0x3b17c36",
+    "blockTimestamp": "0x68d024bf",
+    "transactionHash": "0x3decddd55069f03c7ca7099a2a3963a9c3c553fdb98102e7231ae9cf8850a32e",
+    "transactionIndex": "0x6d",
+    "logIndex": "0x19f",
+    "removed": false
+  },
+  "zero_to_positive_boundary": {
+    "previous_block": 61963724,
+    "before_reserves_raw": [
+      "0",
+      "0"
+    ],
+    "after_reserves_raw": [
+      "1000000000000000000000000",
+      "2000000000000000000"
+    ]
+  },
+  "first_positive_sync_event": {
+    "block": 61963725,
+    "hash": "0xda19857aa7ac783bca03558f679d949c9c8b956e51bc529af81ca5b36da5265b",
+    "logIndex": "0x2be",
+    "data": "0x00000000000000000000000000000000000000000000d3c21bcecceda10000000000000000000000000000000000000000000000000000001bc16d674ec80000"
+  },
+  "first_positive_mint_event": {
+    "address": "0xd6b652aecb704b0aebec6317315afb90ba641d57",
+    "topics": [
+      "0x4c209b5fc8ad50758f13e2e1088ba56a560dff690a1c6fef26394f4c03821c4f",
+      "0x00000000000000000000000010ed43c718714eb63d5aa57b78b54704e256024e"
+    ],
+    "data": "0x00000000000000000000000000000000000000000000d3c21bcecceda10000000000000000000000000000000000000000000000000000001bc16d674ec80000",
+    "blockHash": "0xc21aa22ae7b7ef66d597a92b424a7219b9a9b5ab625d08964dd36dc87cc64a3b",
+    "blockNumber": "0x3b17dcd",
+    "blockTimestamp": "0x68d025f0",
+    "transactionHash": "0xda19857aa7ac783bca03558f679d949c9c8b956e51bc529af81ca5b36da5265b",
+    "transactionIndex": "0x98",
+    "logIndex": "0x2bf",
+    "removed": false
+  },
+  "scanned_block_windows": 41,
+  "all_prior_sync_events": 0,
+  "complete_window_ranges": [
+    [
+      61963318,
+      61963327
+    ],
+    [
+      61963328,
+      61963337
+    ],
+    [
+      61963338,
+      61963347
+    ],
+    [
+      61963348,
+      61963357
+    ],
+    [
+      61963358,
+      61963367
+    ],
+    [
+      61963368,
+      61963377
+    ],
+    [
+      61963378,
+      61963387
+    ],
+    [
+      61963388,
+      61963397
+    ],
+    [
+      61963398,
+      61963407
+    ],
+    [
+      61963408,
+      61963417
+    ],
+    [
+      61963418,
+      61963427
+    ],
+    [
+      61963428,
+      61963437
+    ],
+    [
+      61963438,
+      61963447
+    ],
+    [
+      61963448,
+      61963457
+    ],
+    [
+      61963458,
+      61963467
+    ],
+    [
+      61963468,
+      61963477
+    ],
+    [
+      61963478,
+      61963487
+    ],
+    [
+      61963488,
+      61963497
+    ],
+    [
+      61963498,
+      61963507
+    ],
+    [
+      61963508,
+      61963517
+    ],
+    [
+      61963518,
+      61963527
+    ],
+    [
+      61963528,
+      61963537
+    ],
+    [
+      61963538,
+      61963547
+    ],
+    [
+      61963548,
+      61963557
+    ],
+    [
+      61963558,
+      61963567
+    ],
+    [
+      61963568,
+      61963577
+    ],
+    [
+      61963578,
+      61963587
+    ],
+    [
+      61963588,
+      61963597
+    ],
+    [
+      61963598,
+      61963607
+    ],
+    [
+      61963608,
+      61963617
+    ],
+    [
+      61963618,
+      61963627
+    ],
+    [
+      61963628,
+      61963637
+    ],
+    [
+      61963638,
+      61963647
+    ],
+    [
+      61963648,
+      61963657
+    ],
+    [
+      61963658,
+      61963667
+    ],
+    [
+      61963668,
+      61963677
+    ],
+    [
+      61963678,
+      61963687
+    ],
+    [
+      61963688,
+      61963697
+    ],
+    [
+      61963698,
+      61963707
+    ],
+    [
+      61963708,
+      61963717
+    ],
+    [
+      61963718,
+      61963725
+    ]
+  ],
+  "scan_blob_manifest": [
+    "9ffb7e76e6b26709f4809b8a07b355b19ab83a77",
+    "ac261831db0e43e28f3258d7d337c42197363ed0",
+    "7d3955ece2ce8aceb2a7197740d22f3e0462f02b",
+    "aa2122384ece5831ecf6145c6bc853d77ceca0bd",
+    "5085b2040c9f41eda368d81bf81f528a20ecbaf2",
+    "bad0e673a15142bf447da04b8183736e493d822c"
+  ],
+  "source_paircreated_sha": "f0ac9abf5fccbe5e162cf225f4cefd4c00f3b699",
+  "source_caveat": "Strict no prior Sync within pool contract creation to first positive Sync; no all-DEX global tradability inference.",
+  "first_qualified_entry": "UNRESOLVED",
+  "realized_profit": "UNRESOLVED",
+  "production": "NO_GO"
+}

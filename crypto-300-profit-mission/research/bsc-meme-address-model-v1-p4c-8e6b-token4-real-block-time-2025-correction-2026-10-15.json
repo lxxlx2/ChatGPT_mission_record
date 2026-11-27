@@ -1,0 +1,42 @@
+{
+  "schema": "BSC_P4C_8E6B_TOKEN4_2025_TIMESTAMP_SOURCE_ONLY",
+  "read_method": "Alchemy BNB mainnet eth_getBlockByNumber false, exact frozen original 5 tx block numbers, timestamp field extracted from returned JSON (some 8098-character responses truncated and not full-block objects). Epoch => UTC deterministic. Do NOT use truncated full block as a fully validated block body, only timestamp fields; independent fixed signed tx/receipt/block confirmed in other source.",
+  "precommit_git_blob_sha": "738da1a4a3dfc9304ee188b326b7d307da50145c",
+  "source_original_part1_sha": "75372f649a8ce75188d41b011df6febe33ecbe84",
+  "source_original_part2_sha": "79a43a6c97085e8e796a8288fffdf175618d26f3",
+  "rows": [
+    {
+      "block": 63056884,
+      "utc": "2025-10-01T04:08:45.000Z",
+      "timestamp_hex": "0x68dca94d",
+      "scope": "2025 first buy #1"
+    },
+    {
+      "block": 63056949,
+      "utc": "2025-10-01T04:09:34.000Z",
+      "timestamp_hex": "0x68dca97e",
+      "scope": "2025 sell #1"
+    },
+    {
+      "block": 63057889,
+      "utc": "2025-10-01T04:21:19.000Z",
+      "timestamp_hex": "0x68dcac3f",
+      "scope": "2025 first buy #2"
+    },
+    {
+      "block": 63058886,
+      "utc": "2025-10-01T04:33:47.000Z",
+      "timestamp_hex": "0x68dcaf2b",
+      "scope": "2025 first sell #2"
+    },
+    {
+      "block": 64458294,
+      "utc": "2025-10-13T08:13:21.000Z",
+      "timestamp_hex": "0x68ecb4a1",
+      "scope": "2025 final sell #2"
+    }
+  ],
+  "year_is_2026": false,
+  "scope": "Control-only 2025 historical Meme 4 outcomes NOT 2026 major realized winner qualification and NOT real follower alpha.",
+  "production": "NO_GO"
+}

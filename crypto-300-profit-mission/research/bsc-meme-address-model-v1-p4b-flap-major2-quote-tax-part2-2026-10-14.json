@@ -1,0 +1,87 @@
+{
+  "schema": "BSC_P4B_FLAP_MAJOR2_QUOTE_TAX_ORIGINAL_SOURCE",
+  "part": 2,
+  "token": "MARSCOIN",
+  "source_precommit_git_blob_sha": "b18fc115cf51681b8556493fad773daa02dc447d",
+  "rows": [
+    {
+      "event": "TokenQuoteSet",
+      "token": "MARSCOIN",
+      "tx": "0xb499cc66534db949c6040dbc914ba0e3e50423a408717f69a193a8e29eeeb7a2",
+      "block": 112441387,
+      "topic": "0x3ceb902d3c555c21c3415b6aa839104b18e4825b2f8324011ff979089a507a8c",
+      "query_complete": true,
+      "total_topic_logs": 1,
+      "original_creation_tx_events": [
+        {
+          "address": "0xe2ce6ab80874fa9fa2aae65d277dd6b8e65c9de0",
+          "topics": [
+            "0x3ceb902d3c555c21c3415b6aa839104b18e4825b2f8324011ff979089a507a8c"
+          ],
+          "data": "0x000000000000000000000000fe189e97832da1573e4e4ff034f4ffc3a15c7777000000000000000000000000be9d156892e55e7154bcd3cb0fea677f9d3103e1",
+          "blockHash": "0xffa358c76c4c011b255d7584c6d9cedf8e6e3bb7ddf85574ede692faa773a841",
+          "blockNumber": "0x6b3b82b",
+          "blockTimestamp": "0x6a675b9e",
+          "transactionHash": "0xb499cc66534db949c6040dbc914ba0e3e50423a408717f69a193a8e29eeeb7a2",
+          "transactionIndex": "0x6",
+          "logIndex": "0x54",
+          "removed": false
+        }
+      ],
+      "error": null
+    },
+    {
+      "event": "FlapTokenTaxSet",
+      "token": "MARSCOIN",
+      "tx": "0xb499cc66534db949c6040dbc914ba0e3e50423a408717f69a193a8e29eeeb7a2",
+      "block": 112441387,
+      "topic": "0x1546924f4680b1b2e093fd251c437c8781d81a21ed8ad1895e1f2c9b78db0cd0",
+      "query_complete": true,
+      "total_topic_logs": 1,
+      "original_creation_tx_events": [
+        {
+          "address": "0xe2ce6ab80874fa9fa2aae65d277dd6b8e65c9de0",
+          "topics": [
+            "0x1546924f4680b1b2e093fd251c437c8781d81a21ed8ad1895e1f2c9b78db0cd0"
+          ],
+          "data": "0x000000000000000000000000fe189e97832da1573e4e4ff034f4ffc3a15c7777000000000000000000000000000000000000000000000000000000000000012c",
+          "blockHash": "0xffa358c76c4c011b255d7584c6d9cedf8e6e3bb7ddf85574ede692faa773a841",
+          "blockNumber": "0x6b3b82b",
+          "blockTimestamp": "0x6a675b9e",
+          "transactionHash": "0xb499cc66534db949c6040dbc914ba0e3e50423a408717f69a193a8e29eeeb7a2",
+          "transactionIndex": "0x6",
+          "logIndex": "0x57",
+          "removed": false
+        }
+      ],
+      "error": null
+    },
+    {
+      "event": "FlapTokenAsymmetricTaxSet",
+      "token": "MARSCOIN",
+      "tx": "0xb499cc66534db949c6040dbc914ba0e3e50423a408717f69a193a8e29eeeb7a2",
+      "block": 112441387,
+      "topic": "0x46cc246a238d1ca0951a15200994903e2d56cbb0389e63f09d66412a787aa3c0",
+      "query_complete": true,
+      "total_topic_logs": 1,
+      "original_creation_tx_events": [
+        {
+          "address": "0xe2ce6ab80874fa9fa2aae65d277dd6b8e65c9de0",
+          "topics": [
+            "0x46cc246a238d1ca0951a15200994903e2d56cbb0389e63f09d66412a787aa3c0"
+          ],
+          "data": "0x000000000000000000000000fe189e97832da1573e4e4ff034f4ffc3a15c7777000000000000000000000000000000000000000000000000000000000000012c000000000000000000000000000000000000000000000000000000000000012c",
+          "blockHash": "0xffa358c76c4c011b255d7584c6d9cedf8e6e3bb7ddf85574ede692faa773a841",
+          "blockNumber": "0x6b3b82b",
+          "blockTimestamp": "0x6a675b9e",
+          "transactionHash": "0xb499cc66534db949c6040dbc914ba0e3e50423a408717f69a193a8e29eeeb7a2",
+          "transactionIndex": "0x6",
+          "logIndex": "0x58",
+          "removed": false
+        }
+      ],
+      "error": null
+    }
+  ],
+  "production": "NO_GO"
+}

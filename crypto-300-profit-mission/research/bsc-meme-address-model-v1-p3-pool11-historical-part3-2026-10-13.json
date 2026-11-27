@@ -1,0 +1,54 @@
+{
+  "schema": "BSC_MEME_P3_POOL11_HISTORICAL_IDENTITY",
+  "part": 3,
+  "range": [
+    8,
+    10
+  ],
+  "precommit_sha": "e252399af01896a2bfcb05e3a2be73b53c8a8d43",
+  "records": [
+    {
+      "pool": "0xc33bacff9141da689875e6381c1932348ab4c5cb",
+      "earliest_block": 123398349,
+      "reference_hash": "0xfbfe1c19521081887048a36144a7c20b4606cd65c958b5dc18dddb8610fe051f",
+      "target_CA": "0x82ec31d69b3c289e541b50e30681fd1acad24444",
+      "event_topic": "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822",
+      "occurrences": 2,
+      "call_values": {
+        "token0": "0x82ec31d69b3c289e541b50e30681fd1acad24444",
+        "token1": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+        "fee_pips": "NO_FEE_SELECTOR_OR_UNAVAILABLE"
+      },
+      "target_ca_in_pair": true
+    },
+    {
+      "pool": "0xe5ae318389b8d6d09370a675479c64862152d126",
+      "earliest_block": 122742452,
+      "reference_hash": "0x158c28e5efafde2a93fa1549d328082b2357369f666fd4cbd48eec0e54ff222b",
+      "target_CA": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "event_topic": "0x19b47279256b2a23a1665c810c8d55a1758940ee09377d4f8d26497a3577dc83",
+      "occurrences": 2,
+      "call_values": {
+        "token0": "0x55d398326f99059ff775485246999027b3197955",
+        "token1": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+        "fee_pips": 2500
+      },
+      "target_ca_in_pair": true
+    },
+    {
+      "pool": "0xf0a949d3d93b833c183a27ee067165b6f2c9625e",
+      "earliest_block": 122367977,
+      "reference_hash": "0x8ecd40fddcdc93ee3c90328166f098ec412ad4d80f50c00ed98601b0e9bb4fa2",
+      "target_CA": "0x0a43fc31a73013089df59194872ecae4cae14444",
+      "event_topic": "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822",
+      "occurrences": 2,
+      "call_values": {
+        "token0": "0x0a43fc31a73013089df59194872ecae4cae14444",
+        "token1": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+        "fee_pips": "NO_FEE_SELECTOR_OR_UNAVAILABLE"
+      },
+      "target_ca_in_pair": true
+    }
+  ],
+  "production": "NO_GO"
+}

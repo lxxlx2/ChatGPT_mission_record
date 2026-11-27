@@ -1,0 +1,100 @@
+{
+  "schema": "BSC_P4_COMPETING17_UNRESOLVED_NEXT5_BISECT",
+  "stage": 13,
+  "rounds": [
+    26,
+    26
+  ],
+  "source_selection_indices": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "source_precommit_sha": "b1c2395c949ba664c2424c8b8da84924c967ab90",
+  "previous_stage_sha": "d9f162fee6a5595d4d4d17393aca4bf1c37a813d",
+  "from_bounds": [
+    {
+      "lo": 46411400,
+      "hi": 46411402
+    },
+    {
+      "lo": 42638389,
+      "hi": 42638390
+    },
+    {
+      "lo": 47425644,
+      "hi": 47425645
+    },
+    {
+      "lo": 47431637,
+      "hi": 47431639
+    },
+    {
+      "lo": 46484225,
+      "hi": 46484226
+    }
+  ],
+  "to_bounds": [
+    {
+      "lo": 46411401,
+      "hi": 46411402
+    },
+    {
+      "lo": 42638389,
+      "hi": 42638390
+    },
+    {
+      "lo": 47425644,
+      "hi": 47425645
+    },
+    {
+      "lo": 47431638,
+      "hi": 47431639
+    },
+    {
+      "lo": 46484225,
+      "hi": 46484226
+    }
+  ],
+  "probes": [
+    {
+      "index": 0,
+      "round": 26,
+      "block": 46411401,
+      "value": "0x0000000000000000000000000000000000000000",
+      "exists": false
+    },
+    {
+      "index": 1,
+      "round": 26,
+      "block": null,
+      "value": null,
+      "exists": null
+    },
+    {
+      "index": 2,
+      "round": 26,
+      "block": null,
+      "value": null,
+      "exists": null
+    },
+    {
+      "index": 3,
+      "round": 26,
+      "block": 47431638,
+      "value": "0x0000000000000000000000000000000000000000",
+      "exists": false
+    },
+    {
+      "index": 4,
+      "round": 26,
+      "block": null,
+      "value": null,
+      "exists": null
+    }
+  ],
+  "production": "NO_GO",
+  "status": "EXACT_FACTORY_CREATION_BOUNDARIES_PENDING_INDEXED_EVENTS"
+}

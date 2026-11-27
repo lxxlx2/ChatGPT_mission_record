@@ -1,0 +1,470 @@
+{
+  "schema": "BSC_P4_COMPETING_REMAINING13_INDEXED_FACTORY_CREATION_EVENTS",
+  "scope": "All 13 previously unverified competing V2/V3 pools by frozen exact CA/fee/quote, bounded historical factory getPair/getPool 34-round bisection with indexed PairCreated/PoolCreated identity proof.",
+  "source_precommit_git_blob_sha": "b51011fc15eb082d590250b2ac49f7eda5b21b62",
+  "source_latest_bisection_git_blob_sha": "40cfe23a361e0964a341839341ac2928fb1281a7",
+  "events": [
+    {
+      "index": 0,
+      "token": "TST",
+      "CA": "0x86bb94ddd16efc8bc58e6b056e8df71d9e666429",
+      "pool": "0x16969fa79651bae11736f2f6576a86fe2726b42b",
+      "protocol": "V3",
+      "quote": "WBNB",
+      "fee_pips": 10000,
+      "creation_block": 46411402,
+      "creation_UTC": "2025-02-06T04:19:24.000Z",
+      "historical_bracket": {
+        "lo": 46411401,
+        "hi": 46411402
+      },
+      "original_factory_event": {
+        "address": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865",
+        "topics": [
+          "0x783cca1c0412dd0d695e784568c96da2e9c22ff989357a2e8b1d9b2b4e6b7118",
+          "0x00000000000000000000000086bb94ddd16efc8bc58e6b056e8df71d9e666429",
+          "0x000000000000000000000000bb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+          "0x0000000000000000000000000000000000000000000000000000000000002710"
+        ],
+        "data": "0x00000000000000000000000000000000000000000000000000000000000000c800000000000000000000000016969fa79651bae11736f2f6576a86fe2726b42b",
+        "blockHash": "0xc835cff48bbb6e38b13133506d0589acd8308b263a09dd681138f3f769b1b7cf",
+        "blockNumber": "0x2c42e8a",
+        "blockTimestamp": "0x67a4384c",
+        "transactionHash": "0xf8e60a7d489128774e7ab75e46206cdc5f9fa3dd4e09b3e6fa33180355dfae12",
+        "transactionIndex": "0x29",
+        "logIndex": "0x8b",
+        "removed": false
+      },
+      "code_before_event": "UNVERIFIED",
+      "same_block_active_liquidity": "UNRESOLVED",
+      "first_active_liquidity": "UNRESOLVED"
+    },
+    {
+      "index": 1,
+      "token": "CHEEMS",
+      "CA": "0x0df0587216a4a1bb7d5082fdc491d93d2dd4b413",
+      "pool": "0x38231d4ef9d33ebea944c75a21301ff6986499c3",
+      "protocol": "V3",
+      "quote": "WBNB",
+      "fee_pips": 2500,
+      "creation_block": 42638390,
+      "creation_UTC": "2024-09-28T03:42:48.000Z",
+      "historical_bracket": {
+        "lo": 42638389,
+        "hi": 42638390
+      },
+      "original_factory_event": {
+        "address": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865",
+        "topics": [
+          "0x783cca1c0412dd0d695e784568c96da2e9c22ff989357a2e8b1d9b2b4e6b7118",
+          "0x0000000000000000000000000df0587216a4a1bb7d5082fdc491d93d2dd4b413",
+          "0x000000000000000000000000bb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+          "0x00000000000000000000000000000000000000000000000000000000000009c4"
+        ],
+        "data": "0x000000000000000000000000000000000000000000000000000000000000003200000000000000000000000038231d4ef9d33ebea944c75a21301ff6986499c3",
+        "blockHash": "0x3797c2a29fd7dbe3d51f6e6ee6eacddcb56175f7b75dbaea81eb4f1c00c2fc41",
+        "blockNumber": "0x28a9c36",
+        "blockTimestamp": "0x66f77b38",
+        "transactionHash": "0x879373cbce6b533add09195a6779bd6eeb6255324d5fcc5da2a958fd6cbd6b46",
+        "transactionIndex": "0x11",
+        "logIndex": "0x45",
+        "removed": false
+      },
+      "code_before_event": "UNVERIFIED",
+      "same_block_active_liquidity": "UNRESOLVED",
+      "first_active_liquidity": "UNRESOLVED"
+    },
+    {
+      "index": 2,
+      "token": "MUBARAK",
+      "CA": "0x5c85d6c6825ab4032337f11ee92a72df936b46f6",
+      "pool": "0x90a54475d512b8f3852351611c38fad30a513491",
+      "protocol": "V3",
+      "quote": "WBNB",
+      "fee_pips": 2500,
+      "creation_block": 47425645,
+      "creation_UTC": "2025-03-13T09:36:13.000Z",
+      "historical_bracket": {
+        "lo": 47425643,
+        "hi": 47425649
+      },
+      "original_factory_event": {
+        "address": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865",
+        "topics": [
+          "0x783cca1c0412dd0d695e784568c96da2e9c22ff989357a2e8b1d9b2b4e6b7118",
+          "0x0000000000000000000000005c85d6c6825ab4032337f11ee92a72df936b46f6",
+          "0x000000000000000000000000bb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+          "0x00000000000000000000000000000000000000000000000000000000000009c4"
+        ],
+        "data": "0x000000000000000000000000000000000000000000000000000000000000003200000000000000000000000090a54475d512b8f3852351611c38fad30a513491",
+        "blockHash": "0xb63b64ea0c870fa9eefb1c454d48f860e896bda7a11f26831bd5286e991b759c",
+        "blockNumber": "0x2d3a86d",
+        "blockTimestamp": "0x67d2a70d",
+        "transactionHash": "0xc08489e828a7032ea8ae0cdb4795fa3e1cf04e19eb97981ba2ef1556087be1d9",
+        "transactionIndex": "0x6",
+        "logIndex": "0x27",
+        "removed": false
+      },
+      "code_before_event": "UNVERIFIED",
+      "same_block_active_liquidity": "UNRESOLVED",
+      "first_active_liquidity": "UNRESOLVED"
+    },
+    {
+      "index": 3,
+      "token": "MUBARAK",
+      "CA": "0x5c85d6c6825ab4032337f11ee92a72df936b46f6",
+      "pool": "0x8be0d063873f68a08c8b5bca2fe981618bbf5047",
+      "protocol": "V2",
+      "quote": "USDT",
+      "fee_pips": null,
+      "creation_block": 47431639,
+      "creation_UTC": "2025-03-13T14:35:55.000Z",
+      "historical_bracket": {
+        "lo": 47431633,
+        "hi": 47431639
+      },
+      "original_factory_event": {
+        "address": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73",
+        "topics": [
+          "0x0d3648bd0f6ba80134a33ba9275ac585d9d315f0ad8355cddefde31afa28d0e9",
+          "0x00000000000000000000000055d398326f99059ff775485246999027b3197955",
+          "0x0000000000000000000000005c85d6c6825ab4032337f11ee92a72df936b46f6"
+        ],
+        "data": "0x0000000000000000000000008be0d063873f68a08c8b5bca2fe981618bbf504700000000000000000000000000000000000000000000000000000000001b4e12",
+        "blockHash": "0x5e5e2769b6b2af640b59bfb496332189422a2a0545c8e2533e92779040b13e7c",
+        "blockNumber": "0x2d3bfd7",
+        "blockTimestamp": "0x67d2ed4b",
+        "transactionHash": "0xfd956486c6ad68dd433ec5ee07c852d65f3e0c26becc5fad2c12300f6f0c2556",
+        "transactionIndex": "0x1",
+        "logIndex": "0x0",
+        "removed": false
+      },
+      "code_before_event": "UNVERIFIED",
+      "same_block_active_liquidity": "UNRESOLVED",
+      "first_active_liquidity": "UNRESOLVED"
+    },
+    {
+      "index": 4,
+      "token": "TUT",
+      "CA": "0xcaae2a2f939f51d97cdfa9a86e79e3f085b799f3",
+      "pool": "0x6dafbf0ab4fd72e2a5c0ad5a1ed277d3bf8a8d1f",
+      "protocol": "V3",
+      "quote": "WBNB",
+      "fee_pips": 10000,
+      "creation_block": 46484226,
+      "creation_UTC": "2025-02-08T17:01:15.000Z",
+      "historical_bracket": {
+        "lo": 46484225,
+        "hi": 46484227
+      },
+      "original_factory_event": {
+        "address": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865",
+        "topics": [
+          "0x783cca1c0412dd0d695e784568c96da2e9c22ff989357a2e8b1d9b2b4e6b7118",
+          "0x000000000000000000000000bb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+          "0x000000000000000000000000caae2a2f939f51d97cdfa9a86e79e3f085b799f3",
+          "0x0000000000000000000000000000000000000000000000000000000000002710"
+        ],
+        "data": "0x00000000000000000000000000000000000000000000000000000000000000c80000000000000000000000006dafbf0ab4fd72e2a5c0ad5a1ed277d3bf8a8d1f",
+        "blockHash": "0x0dad56d29e031c84e4434f34fd97fbc6aa9e556f858a6880312f98134f2bdfca",
+        "blockNumber": "0x2c54b02",
+        "blockTimestamp": "0x67a78ddb",
+        "transactionHash": "0x9db4620293b5a1666ae03b90030b22f22b2255302f56a8f74e0afb9808298ad8",
+        "transactionIndex": "0x2f",
+        "logIndex": "0x5d",
+        "removed": false
+      },
+      "code_before_event": "UNVERIFIED",
+      "same_block_active_liquidity": "UNRESOLVED",
+      "first_active_liquidity": "UNRESOLVED"
+    },
+    {
+      "index": 5,
+      "token": "BROCCOLI714",
+      "CA": "0x6d5ad1592ed9d6d1df9b93c793ab759573ed6714",
+      "pool": "0xa5067360b13fc7a2685dc82dcd1bf2b4b8d7868b",
+      "protocol": "V3",
+      "quote": "WBNB",
+      "fee_pips": 10000,
+      "creation_block": 46627251,
+      "creation_UTC": "2025-02-13T16:13:04.000Z",
+      "historical_bracket": {
+        "lo": 46627250,
+        "hi": 46627253
+      },
+      "original_factory_event": {
+        "address": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865",
+        "topics": [
+          "0x783cca1c0412dd0d695e784568c96da2e9c22ff989357a2e8b1d9b2b4e6b7118",
+          "0x0000000000000000000000006d5ad1592ed9d6d1df9b93c793ab759573ed6714",
+          "0x000000000000000000000000bb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+          "0x0000000000000000000000000000000000000000000000000000000000002710"
+        ],
+        "data": "0x00000000000000000000000000000000000000000000000000000000000000c8000000000000000000000000a5067360b13fc7a2685dc82dcd1bf2b4b8d7868b",
+        "blockHash": "0xaee94380c9ac15eefb1fa7c58301e19685ef2c6a4e7045751d1e7ebfb2252fc4",
+        "blockNumber": "0x2c779b3",
+        "blockTimestamp": "0x67ae1a10",
+        "transactionHash": "0x6e26bdc3b9772aa0494c1c510f6524fbba6cf3e9fe07fa2b637448672f0d9844",
+        "transactionIndex": "0x235",
+        "logIndex": "0x5c9",
+        "removed": false
+      },
+      "code_before_event": "UNVERIFIED",
+      "same_block_active_liquidity": "UNRESOLVED",
+      "first_active_liquidity": "UNRESOLVED"
+    },
+    {
+      "index": 6,
+      "token": "BROCCOLIF3B",
+      "CA": "0x12b4356c65340fb02cdff01293f95febb1512f3b",
+      "pool": "0xdb25c09d96c165b62f6e6f9d9b17174738d897ba",
+      "protocol": "V3",
+      "quote": "WBNB",
+      "fee_pips": 10000,
+      "creation_block": 46627261,
+      "creation_UTC": "2025-02-13T16:13:34.000Z",
+      "historical_bracket": {
+        "lo": 46627258,
+        "hi": 46627262
+      },
+      "original_factory_event": {
+        "address": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865",
+        "topics": [
+          "0x783cca1c0412dd0d695e784568c96da2e9c22ff989357a2e8b1d9b2b4e6b7118",
+          "0x00000000000000000000000012b4356c65340fb02cdff01293f95febb1512f3b",
+          "0x000000000000000000000000bb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+          "0x0000000000000000000000000000000000000000000000000000000000002710"
+        ],
+        "data": "0x00000000000000000000000000000000000000000000000000000000000000c8000000000000000000000000db25c09d96c165b62f6e6f9d9b17174738d897ba",
+        "blockHash": "0x1e50f62478072a4ada5f35651f6b724058ed75d681238c5805f6aa903ca0cab6",
+        "blockNumber": "0x2c779bd",
+        "blockTimestamp": "0x67ae1a2e",
+        "transactionHash": "0xfbe0b368b8af1231d694e9efe2189ae1cf0395b9227e8354cab3dd1cd0e880da",
+        "transactionIndex": "0x188",
+        "logIndex": "0x55c",
+        "removed": false
+      },
+      "code_before_event": "UNVERIFIED",
+      "same_block_active_liquidity": "UNRESOLVED",
+      "first_active_liquidity": "UNRESOLVED"
+    },
+    {
+      "index": 7,
+      "token": "SIREN",
+      "CA": "0x997a58129890bbda032231a52ed1ddc845fc18e1",
+      "pool": "0xb2af49dbf526054faf19602860a5e298a79f3d05",
+      "protocol": "V3",
+      "quote": "WBNB",
+      "fee_pips": 10000,
+      "creation_block": 46488279,
+      "creation_UTC": "2025-02-08T20:23:54.000Z",
+      "historical_bracket": {
+        "lo": 46488278,
+        "hi": 46488280
+      },
+      "original_factory_event": {
+        "address": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865",
+        "topics": [
+          "0x783cca1c0412dd0d695e784568c96da2e9c22ff989357a2e8b1d9b2b4e6b7118",
+          "0x000000000000000000000000997a58129890bbda032231a52ed1ddc845fc18e1",
+          "0x000000000000000000000000bb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+          "0x0000000000000000000000000000000000000000000000000000000000002710"
+        ],
+        "data": "0x00000000000000000000000000000000000000000000000000000000000000c8000000000000000000000000b2af49dbf526054faf19602860a5e298a79f3d05",
+        "blockHash": "0x5341d4e6e23ccdc87640298ddbafd2c56438f2097e7554ef10911b9a3e2af349",
+        "blockNumber": "0x2c55ad7",
+        "blockTimestamp": "0x67a7bd5a",
+        "transactionHash": "0x384d474608d2f5794c65da347dd49cbaa066eb921e6b295aa635240ce5c3e488",
+        "transactionIndex": "0x56",
+        "logIndex": "0x126",
+        "removed": false
+      },
+      "code_before_event": "UNVERIFIED",
+      "same_block_active_liquidity": "UNRESOLVED",
+      "first_active_liquidity": "UNRESOLVED"
+    },
+    {
+      "index": 8,
+      "token": "BANANAS31",
+      "CA": "0x3d4f0513e8a29669b960f9dbca61861548a9a760",
+      "pool": "0x7f51bbf34156ba802deb0e38b7671dc4fa32041d",
+      "protocol": "V3",
+      "quote": "WBNB",
+      "fee_pips": 100,
+      "creation_block": 44113219,
+      "creation_UTC": "2024-11-18T09:00:01.000Z",
+      "historical_bracket": {
+        "lo": 44113217,
+        "hi": 44113219
+      },
+      "original_factory_event": {
+        "address": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865",
+        "topics": [
+          "0x783cca1c0412dd0d695e784568c96da2e9c22ff989357a2e8b1d9b2b4e6b7118",
+          "0x0000000000000000000000003d4f0513e8a29669b960f9dbca61861548a9a760",
+          "0x000000000000000000000000bb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+          "0x0000000000000000000000000000000000000000000000000000000000000064"
+        ],
+        "data": "0x00000000000000000000000000000000000000000000000000000000000000010000000000000000000000007f51bbf34156ba802deb0e38b7671dc4fa32041d",
+        "blockHash": "0xcf524860c3d4b4fc9d7b7a5982dabcc260f091231c9a081a11d86d90aaae4427",
+        "blockNumber": "0x2a11d43",
+        "blockTimestamp": "0x673b0211",
+        "transactionHash": "0x798ea08f10c067c71545c54781f12d8adf0dd027d3df61b5d98715b6feabfc3e",
+        "transactionIndex": "0x8e",
+        "logIndex": "0x1e3",
+        "removed": false
+      },
+      "code_before_event": "UNVERIFIED",
+      "same_block_active_liquidity": "UNRESOLVED",
+      "first_active_liquidity": "UNRESOLVED"
+    },
+    {
+      "index": 9,
+      "token": "BANANAS31",
+      "CA": "0x3d4f0513e8a29669b960f9dbca61861548a9a760",
+      "pool": "0xf65d3c3f99e431da5dbae7948c0dd1905c268121",
+      "protocol": "V3",
+      "quote": "USDT",
+      "fee_pips": 10000,
+      "creation_block": 44750892,
+      "creation_UTC": "2024-12-10T12:26:37.000Z",
+      "historical_bracket": {
+        "lo": 44750890,
+        "hi": 44750892
+      },
+      "original_factory_event": {
+        "address": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865",
+        "topics": [
+          "0x783cca1c0412dd0d695e784568c96da2e9c22ff989357a2e8b1d9b2b4e6b7118",
+          "0x0000000000000000000000003d4f0513e8a29669b960f9dbca61861548a9a760",
+          "0x00000000000000000000000055d398326f99059ff775485246999027b3197955",
+          "0x0000000000000000000000000000000000000000000000000000000000002710"
+        ],
+        "data": "0x00000000000000000000000000000000000000000000000000000000000000c8000000000000000000000000f65d3c3f99e431da5dbae7948c0dd1905c268121",
+        "blockHash": "0x5d2580ae462545943193809c6f21bc83fc27fdfffeb74ad918d83e3bdfa8016b",
+        "blockNumber": "0x2aad82c",
+        "blockTimestamp": "0x6758337d",
+        "transactionHash": "0x612fb9a7cdd6ebf11e95c14c80817a16d3c87b300bf262e736b12b6c4a094ca5",
+        "transactionIndex": "0x7c",
+        "logIndex": "0x12c",
+        "removed": false
+      },
+      "code_before_event": "UNVERIFIED",
+      "same_block_active_liquidity": "UNRESOLVED",
+      "first_active_liquidity": "UNRESOLVED"
+    },
+    {
+      "index": 10,
+      "token": "BULLA",
+      "CA": "0x595e21b20e78674f8a64c1566a20b2b316bc3511",
+      "pool": "0x626f90c9a2d9fbaecd11fa350bbf568f81ab06c1",
+      "protocol": "V3",
+      "quote": "WBNB",
+      "fee_pips": 10000,
+      "creation_block": 50972313,
+      "creation_UTC": "2025-06-06T09:34:22.000Z",
+      "historical_bracket": {
+        "lo": 50972307,
+        "hi": 50972313
+      },
+      "original_factory_event": {
+        "address": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865",
+        "topics": [
+          "0x783cca1c0412dd0d695e784568c96da2e9c22ff989357a2e8b1d9b2b4e6b7118",
+          "0x000000000000000000000000595e21b20e78674f8a64c1566a20b2b316bc3511",
+          "0x000000000000000000000000bb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+          "0x0000000000000000000000000000000000000000000000000000000000002710"
+        ],
+        "data": "0x00000000000000000000000000000000000000000000000000000000000000c8000000000000000000000000626f90c9a2d9fbaecd11fa350bbf568f81ab06c1",
+        "blockHash": "0xe354ae35faf4751655cf6ad26d765951bb36a9894725a261c1103065c6586896",
+        "blockNumber": "0x309c699",
+        "blockTimestamp": "0x6842b61e",
+        "transactionHash": "0x24ca7af09e9eb1c794460b7d87dbb51de2216d4e60f4a1832315d9c9d9e7f534",
+        "transactionIndex": "0x3",
+        "logIndex": "0x4",
+        "removed": false
+      },
+      "code_before_event": "UNVERIFIED",
+      "same_block_active_liquidity": "UNRESOLVED",
+      "first_active_liquidity": "UNRESOLVED"
+    },
+    {
+      "index": 11,
+      "token": "BULLA",
+      "CA": "0x595e21b20e78674f8a64c1566a20b2b316bc3511",
+      "pool": "0x802c7a20ecd42a383c5ce96a59af062bbaf887d3",
+      "protocol": "V3",
+      "quote": "USDT",
+      "fee_pips": 10000,
+      "creation_block": 50972700,
+      "creation_UTC": "2025-06-06T09:44:02.000Z",
+      "historical_bracket": {
+        "lo": 50972699,
+        "hi": 50972705
+      },
+      "original_factory_event": {
+        "address": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865",
+        "topics": [
+          "0x783cca1c0412dd0d695e784568c96da2e9c22ff989357a2e8b1d9b2b4e6b7118",
+          "0x00000000000000000000000055d398326f99059ff775485246999027b3197955",
+          "0x000000000000000000000000595e21b20e78674f8a64c1566a20b2b316bc3511",
+          "0x0000000000000000000000000000000000000000000000000000000000002710"
+        ],
+        "data": "0x00000000000000000000000000000000000000000000000000000000000000c8000000000000000000000000802c7a20ecd42a383c5ce96a59af062bbaf887d3",
+        "blockHash": "0x98e2174093dbbddd08c4f0a70c9d0195439decee651c9aef858b7f0d067c364d",
+        "blockNumber": "0x309c81c",
+        "blockTimestamp": "0x6842b862",
+        "transactionHash": "0x1589b8fdf5b1538f724e331192727365da79feb6dcf8dff1c1405f3a1e5b84e3",
+        "transactionIndex": "0xef",
+        "logIndex": "0x7d3",
+        "removed": false
+      },
+      "code_before_event": "UNVERIFIED",
+      "same_block_active_liquidity": "UNRESOLVED",
+      "first_active_liquidity": "UNRESOLVED"
+    },
+    {
+      "index": 16,
+      "token": "BUBB",
+      "CA": "0xd5369a3cac0f4448a9a96bb98af9c887c92fc37b",
+      "pool": "0xc8255e3fa0f4c6e6678807d663f9e2263e23a8e8",
+      "protocol": "V3",
+      "quote": "WBNB",
+      "fee_pips": 2500,
+      "creation_block": 47612405,
+      "creation_UTC": "2025-03-19T21:14:54.000Z",
+      "historical_bracket": {
+        "lo": 47612402,
+        "hi": 47612405
+      },
+      "original_factory_event": {
+        "address": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865",
+        "topics": [
+          "0x783cca1c0412dd0d695e784568c96da2e9c22ff989357a2e8b1d9b2b4e6b7118",
+          "0x000000000000000000000000bb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+          "0x000000000000000000000000d5369a3cac0f4448a9a96bb98af9c887c92fc37b",
+          "0x00000000000000000000000000000000000000000000000000000000000009c4"
+        ],
+        "data": "0x0000000000000000000000000000000000000000000000000000000000000032000000000000000000000000c8255e3fa0f4c6e6678807d663f9e2263e23a8e8",
+        "blockHash": "0x1739f9875ee0ab3270126cbd710bffd0dccb8e014ecb287c8596fc33a8f2e9bb",
+        "blockNumber": "0x2d681f5",
+        "blockTimestamp": "0x67db33ce",
+        "transactionHash": "0x4f958351fbb16c4dacd8676196ac3ad364c9356aed405e0913d7e7c1bd54a1a0",
+        "transactionIndex": "0x30",
+        "logIndex": "0x7e",
+        "removed": false
+      },
+      "code_before_event": "UNVERIFIED",
+      "same_block_active_liquidity": "UNRESOLVED",
+      "first_active_liquidity": "UNRESOLVED"
+    }
+  ],
+  "summary": {
+    "frozen_pools": 13,
+    "events_matched": 13,
+    "first_active_liquidity_resolved": 0,
+    "global_first_tradable_resolved": 0,
+    "production": "NO_GO"
+  },
+  "production": "NO_GO"
+}

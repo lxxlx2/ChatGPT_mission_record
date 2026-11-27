@@ -1,0 +1,1180 @@
+{
+  "schema": "BSC_MEME_V1_P2_BULK16_COMPLETE_39_TX_31_BLOCK_OUTCOME_LEDGER",
+  "date": "2026-10-13",
+  "production": "NO_GO",
+  "source_manifest": [
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p2-bulk16-precommit-2026-10-13.json",
+      "git_blob_sha": "b080c58ad3ddaf625c7d6fef73a8af1e36236cbb"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p2-bulk16-gate-decisions-2026-10-13.json",
+      "git_blob_sha": "b2df6c0fa23c735bf453c643e3bfe818a79fdb16"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p2-bulk16-native-part1-2026-10-13.json",
+      "git_blob_sha": "4e2e62e5b9da3b3b6ce25e46401bfd4494bb9e28"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p2-bulk16-native-part2-2026-10-13.json",
+      "git_blob_sha": "98be2dc7f80679af8f08ec3898e77315bb330364"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p2-bulk16-native-part3-2026-10-13.json",
+      "git_blob_sha": "230822f0ae8147698fb94841be533e44e85a511e"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p2-bulk16-native-part4-2026-10-13.json",
+      "git_blob_sha": "c65b678b6eaf4504ff9febee02ff5ba07257d25a"
+    }
+  ],
+  "sample_was_precommitted_before_RPC": true,
+  "accounting": "Sum unique wallet×block N−1/N native deltas exactly once per selected cycle. No double counting repeated tx in same block. Non-owner or unreadable original signer cycles never admitted. Native block delta does not assert full quote causal PnL.",
+  "summary": {
+    "source_roster_pairs": 7,
+    "source_selected_raw_cycles": 16,
+    "source_original_tx_hashes": 39,
+    "origin_owner_gate_passed_cycles": 13,
+    "excluded_cycles": 3,
+    "owner_passed_original_tx_count": 31,
+    "unique_native_wallet_balance_blocks": 31,
+    "positive_native_scope_cycles": 9,
+    "negative_native_scope_cycles": 4,
+    "zero_native_scope_cycles": 0,
+    "fully_traced_onomics_cycles": 0,
+    "cannot_rank_profit": true,
+    "first_block_time_verified_cycles": 13,
+    "eligible_2026_origin_cycles": 10,
+    "eligible_2025_origin_cycles": 3
+  },
+  "per_pair": [
+    {
+      "pair": "0x877af245c61289b24f0c619a4346cdbc68f1aaac/MARSCOIN",
+      "selected": 3,
+      "pos": 2,
+      "neg": 1,
+      "BNB_scope_sum_wei": "241112015308094298"
+    },
+    {
+      "pair": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d/我踏马来了",
+      "selected": 3,
+      "pos": 3,
+      "neg": 0,
+      "BNB_scope_sum_wei": "11596707672307521"
+    },
+    {
+      "pair": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d/龙虾",
+      "selected": 2,
+      "pos": 1,
+      "neg": 1,
+      "BNB_scope_sum_wei": "5343649727523549"
+    },
+    {
+      "pair": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba/牛来",
+      "selected": 3,
+      "pos": 3,
+      "neg": 0,
+      "BNB_scope_sum_wei": "255529386773554402"
+    },
+    {
+      "pair": "0xa83b73f5644cde337b61da79589f10ea15548811/龙虾",
+      "selected": 2,
+      "pos": 0,
+      "neg": 2,
+      "BNB_scope_sum_wei": "-176387591083913428"
+    }
+  ],
+  "rounds": [
+    {
+      "selection_index": 0,
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "token": "牛来",
+      "exact_ca": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "episode_index": 8,
+      "first_block": 120038802,
+      "last_block": 120039005,
+      "raw_log_count": 3,
+      "unique_selected_owner_tx_hashes": [
+        "0x3acba5a060c21198390044f2b19642aaf6cfe02c1d4ef41d97597373943e2eb1",
+        "0x7ebdc19aedd605c5f5b6ca80c80e162aeb46161a750e31c48f6684576967a967"
+      ],
+      "all_selected_tx_owner_signed_receipt_success": false,
+      "gate_reason": "TRUNCATED_RPC_ORIGINAL_SENDER_UNVERIFIED",
+      "owner_signed_eligible": false,
+      "source_native_block_deltas": [],
+      "native_scope_net_wei": null,
+      "native_scope_sign": "UNRESOLVED",
+      "original_owner_successful_txs": 1,
+      "source_txs": [
+        {
+          "hash": "0x3acba5a060c21198390044f2b19642aaf6cfe02c1d4ef41d97597373943e2eb1",
+          "block": null,
+          "signer": null,
+          "is_owner_signer": null,
+          "status": null,
+          "tx_native_msg_value_wei": null,
+          "receipt_full": false,
+          "source_error": "SyntaxError: Bad control character in string literal in JSON at position 8000 (line 9 column 7819)"
+        },
+        {
+          "hash": "0x7ebdc19aedd605c5f5b6ca80c80e162aeb46161a750e31c48f6684576967a967",
+          "block": 120039005,
+          "signer": "0xa83b73f5644cde337b61da79589f10ea15548811",
+          "is_owner_signer": true,
+          "status": "0x1",
+          "tx_native_msg_value_wei": "0",
+          "receipt_full": false,
+          "source_error": null
+        }
+      ],
+      "partial_or_unverified_others_in_same_CA": "UNRESOLVED",
+      "quote_asset_gas_internal_causal_PnL": "UNVERIFIED",
+      "followable_alpha": false,
+      "production": "NO_GO",
+      "first_utc": null,
+      "earliest_block_UTC_verified": false
+    },
+    {
+      "selection_index": 1,
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "token": "牛来",
+      "exact_ca": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "episode_index": 12,
+      "first_block": 122380364,
+      "last_block": 126467931,
+      "raw_log_count": 4,
+      "unique_selected_owner_tx_hashes": [
+        "0x1690c38ce30ca5007e2aaa5d726901b1f891c701905d42bf2112bb9a96061017",
+        "0x411a0d6ba1b211133e2a549b71bfdc286dd115d34cc146c6d9c5adcf4de2bf94",
+        "0xaa57afb7da6d5bb86ce2eacedec42abf6e99749972321d85adc0f352ef1c4065"
+      ],
+      "all_selected_tx_owner_signed_receipt_success": false,
+      "gate_reason": "THIRD_PARTY_OR_NONOWNER_ORIGINAL_TX",
+      "owner_signed_eligible": false,
+      "source_native_block_deltas": [],
+      "native_scope_net_wei": null,
+      "native_scope_sign": "UNRESOLVED",
+      "original_owner_successful_txs": 1,
+      "source_txs": [
+        {
+          "hash": "0x1690c38ce30ca5007e2aaa5d726901b1f891c701905d42bf2112bb9a96061017",
+          "block": 122380364,
+          "signer": "0x679d8a9a2bb243ca42d0c3a7a49d46203b5a0632",
+          "is_owner_signer": false,
+          "status": "0x1",
+          "tx_native_msg_value_wei": "0",
+          "receipt_full": false,
+          "source_error": null
+        },
+        {
+          "hash": "0x411a0d6ba1b211133e2a549b71bfdc286dd115d34cc146c6d9c5adcf4de2bf94",
+          "block": 123644309,
+          "signer": "0x679d8a9a2bb243ca42d0c3a7a49d46203b5a0632",
+          "is_owner_signer": false,
+          "status": "0x1",
+          "tx_native_msg_value_wei": "0",
+          "receipt_full": false,
+          "source_error": null
+        },
+        {
+          "hash": "0xaa57afb7da6d5bb86ce2eacedec42abf6e99749972321d85adc0f352ef1c4065",
+          "block": 126467931,
+          "signer": "0xa83b73f5644cde337b61da79589f10ea15548811",
+          "is_owner_signer": true,
+          "status": "0x1",
+          "tx_native_msg_value_wei": "0",
+          "receipt_full": false,
+          "source_error": null
+        }
+      ],
+      "partial_or_unverified_others_in_same_CA": "UNRESOLVED",
+      "quote_asset_gas_internal_causal_PnL": "UNVERIFIED",
+      "followable_alpha": false,
+      "production": "NO_GO",
+      "first_utc": null,
+      "earliest_block_UTC_verified": false
+    },
+    {
+      "selection_index": 2,
+      "wallet": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "token": "MARSCOIN",
+      "exact_ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "episode_index": 5,
+      "first_block": 112633681,
+      "last_block": 112633805,
+      "raw_log_count": 5,
+      "unique_selected_owner_tx_hashes": [
+        "0xb24f907d3d49d22cab32c024fb56481a5897891ebfa4dda0abe59432696e9695",
+        "0x6034212914ca925ebb875121f1e7a5c8a4a15a2c63a6bc870ce28634db15423e",
+        "0x971a9ab0217b0bef829991cf12d9eb848e83cfd2fa3e9e11cb82bbc2e752a125"
+      ],
+      "all_selected_tx_owner_signed_receipt_success": true,
+      "gate_reason": "OWNER_SIGNED_SUCCESS_ALL_ZERO_RAW_INVENTORY_PENDING_NATIVE_WALLET_PROOF",
+      "owner_signed_eligible": true,
+      "source_native_block_deltas": [
+        {
+          "block": 112633681,
+          "n_minus_1_wei": "18949152016563775184",
+          "n_wei": "18398934275083775184",
+          "native_delta_wei": "-550217741480000000",
+          "selected_owner_txs_same_block": 1
+        },
+        {
+          "block": 112633772,
+          "n_minus_1_wei": "18398934275083775184",
+          "n_wei": "18798865340172219516",
+          "native_delta_wei": "399931065088444332",
+          "selected_owner_txs_same_block": 1
+        },
+        {
+          "block": 112633805,
+          "n_minus_1_wei": "18798865340172219516",
+          "n_wei": "19203766098720264027",
+          "native_delta_wei": "404900758548044511",
+          "selected_owner_txs_same_block": 1
+        }
+      ],
+      "native_scope_net_wei": "254614082156488843",
+      "native_scope_sign": "POSITIVE_NATIVE_SCOPE",
+      "original_owner_successful_txs": 3,
+      "source_txs": [
+        {
+          "hash": "0xb24f907d3d49d22cab32c024fb56481a5897891ebfa4dda0abe59432696e9695",
+          "block": 112633681,
+          "signer": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+          "is_owner_signer": true,
+          "status": "0x1",
+          "tx_native_msg_value_wei": "550000000000000000",
+          "receipt_full": false,
+          "source_error": null
+        },
+        {
+          "hash": "0x6034212914ca925ebb875121f1e7a5c8a4a15a2c63a6bc870ce28634db15423e",
+          "block": 112633772,
+          "signer": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+          "is_owner_signer": true,
+          "status": "0x1",
+          "tx_native_msg_value_wei": "0",
+          "receipt_full": false,
+          "source_error": null
+        },
+        {
+          "hash": "0x971a9ab0217b0bef829991cf12d9eb848e83cfd2fa3e9e11cb82bbc2e752a125",
+          "block": 112633805,
+          "signer": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+          "is_owner_signer": true,
+          "status": "0x1",
+          "tx_native_msg_value_wei": "0",
+          "receipt_full": false,
+          "source_error": null
+        }
+      ],
+      "partial_or_unverified_others_in_same_CA": "UNRESOLVED",
+      "quote_asset_gas_internal_causal_PnL": "UNVERIFIED",
+      "followable_alpha": false,
+      "production": "NO_GO",
+      "first_utc": "2026-07-28T13:25:39.000Z",
+      "earliest_block_UTC_verified": true
+    },
+    {
+      "selection_index": 3,
+      "wallet": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "token": "MARSCOIN",
+      "exact_ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "episode_index": 6,
+      "first_block": 112634149,
+      "last_block": 112634184,
+      "raw_log_count": 5,
+      "unique_selected_owner_tx_hashes": [
+        "0xb3215e0bf0884fa79f7c061f94730e72ed822b4c32df5879d9e218a33c6b05a9",
+        "0xcfdf1cce9e7d4b17fb86e31cd4eeb93ec54a00ca7e6e6908fc0db0f42fed4f89",
+        "0xeb77015b8189b7dde56ed6cd98d313c5a8e17cf13b254fb9378abe5e9e091d31"
+      ],
+      "all_selected_tx_owner_signed_receipt_success": true,
+      "gate_reason": "OWNER_SIGNED_SUCCESS_ALL_ZERO_RAW_INVENTORY_PENDING_NATIVE_WALLET_PROOF",
+      "owner_signed_eligible": true,
+      "source_native_block_deltas": [
+        {
+          "block": 112634149,
+          "n_minus_1_wei": "19203766098720264027",
+          "n_wei": "17453529457480264027",
+          "native_delta_wei": "-1750236641240000000",
+          "selected_owner_txs_same_block": 1
+        },
+        {
+          "block": 112634161,
+          "n_minus_1_wei": "17453529457480264027",
+          "n_wei": "18282283572919141413",
+          "native_delta_wei": "828754115438877386",
+          "selected_owner_txs_same_block": 1
+        },
+        {
+          "block": 112634184,
+          "n_minus_1_wei": "18282283572919141413",
+          "n_wei": "19130639071019424059",
+          "native_delta_wei": "848355498100282646",
+          "selected_owner_txs_same_block": 1
+        }
+      ],
+      "native_scope_net_wei": "-73127027700839968",
+      "native_scope_sign": "NEGATIVE_NATIVE_SCOPE",
+      "original_owner_successful_txs": 3,
+      "source_txs": [
+        {
+          "hash": "0xb3215e0bf0884fa79f7c061f94730e72ed822b4c32df5879d9e218a33c6b05a9",
+          "block": 112634149,
+          "signer": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+          "is_owner_signer": true,
+          "status": "0x1",
+          "tx_native_msg_value_wei": "1750000000000000000",
+          "receipt_full": false,
+          "source_error": null
+        },
+        {
+          "hash": "0xcfdf1cce9e7d4b17fb86e31cd4eeb93ec54a00ca7e6e6908fc0db0f42fed4f89",
+          "block": 112634161,
+          "signer": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+          "is_owner_signer": true,
+          "status": "0x1",
+          "tx_native_msg_value_wei": "0",
+          "receipt_full": false,
+          "source_error": null
+        },
+        {
+          "hash": "0xeb77015b8189b7dde56ed6cd98d313c5a8e17cf13b254fb9378abe5e9e091d31",
+          "block": 112634184,
+          "signer": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+          "is_owner_signer": true,
+          "status": "0x1",
+          "tx_native_msg_value_wei": "0",
+          "receipt_full": false,
+          "source_error": null
+        }
+      ],
+      "partial_or_unverified_others_in_same_CA": "UNRESOLVED",
+      "quote_asset_gas_internal_causal_PnL": "UNVERIFIED",
+      "followable_alpha": false,
+      "production": "NO_GO",
+      "first_utc": "2026-07-28T13:29:09.000Z",
+      "earliest_block_UTC_verified": true
+    },
+    {
+      "selection_index": 4,
+      "wallet": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "token": "MARSCOIN",
+      "exact_ca": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "episode_index": 10,
+      "first_block": 112642167,
+      "last_block": 112642708,
+      "raw_log_count": 5,
+      "unique_selected_owner_tx_hashes": [
+        "0xf0296ad811bf38270ee4e14a3cecc150843c3000f34be58c1523f19f25f990d9",
+        "0x138a2f11c4d9a9cc008348342a75a7c367c635661df12e2f6ce6465dddc23bb8",
+        "0x5c9d8a363e66769fb8157b025b44d9934804a942367245b24c7701a4265684a6"
+      ],
+      "all_selected_tx_owner_signed_receipt_success": true,
+      "gate_reason": "OWNER_SIGNED_SUCCESS_ALL_ZERO_RAW_INVENTORY_PENDING_NATIVE_WALLET_PROOF",
+      "owner_signed_eligible": true,
+      "source_native_block_deltas": [
+        {
+          "block": 112642167,
+          "n_minus_1_wei": "19859840241317161110",
+          "n_wei": "19039623702357161110",
+          "native_delta_wei": "-820216538960000000",
+          "selected_owner_txs_same_block": 1
+        },
+        {
+          "block": 112642382,
+          "n_minus_1_wei": "19039623702357161110",
+          "n_wei": "19488683156973976938",
+          "native_delta_wei": "449059454616815828",
+          "selected_owner_txs_same_block": 1
+        },
+        {
+          "block": 112642708,
+          "n_minus_1_wei": "19413958796973976938",
+          "n_wei": "19844740842169606533",
+          "native_delta_wei": "430782045195629595",
+          "selected_owner_txs_same_block": 1
+        }
+      ],
+      "native_scope_net_wei": "59624960852445423",
+      "native_scope_sign": "POSITIVE_NATIVE_SCOPE",
+      "original_owner_successful_txs": 3,
+      "source_txs": [
+        {
+          "hash": "0xf0296ad811bf38270ee4e14a3cecc150843c3000f34be58c1523f19f25f990d9",
+          "block": 112642167,
+          "signer": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+          "is_owner_signer": true,
+          "status": "0x1",
+          "tx_native_msg_value_wei": "820000000000000000",
+          "receipt_full": false,
+          "source_error": null
+        },
+        {
+          "hash": "0x138a2f11c4d9a9cc008348342a75a7c367c635661df12e2f6ce6465dddc23bb8",
+          "block": 112642382,
+          "signer": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+          "is_owner_signer": true,
+          "status": "0x1",
+          "tx_native_msg_value_wei": "0",
+          "receipt_full": false,
+          "source_error": null
+        },
+        {
+          "hash": "0x5c9d8a363e66769fb8157b025b44d9934804a942367245b24c7701a4265684a6",
+          "block": 112642708,
+          "signer": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+          "is_owner_signer": true,
+          "status": "0x1",
+          "tx_native_msg_value_wei": "0",
+          "receipt_full": false,
+          "source_error": null
+        }
+      ],
+      "partial_or_unverified_others_in_same_CA": "UNRESOLVED",
+      "quote_asset_gas_internal_causal_PnL": "UNVERIFIED",
+      "followable_alpha": false,
+      "production": "NO_GO",
+      "first_utc": "2026-07-28T14:29:18.000Z",
+      "earliest_block_UTC_verified": true
+    },
+    {
+      "selection_index": 5,
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "token": "我踏马来了",
+      "exact_ca": "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
+      "episode_index": 2,
+      "first_block": 73336433,
+      "last_block": 73336473,
+      "raw_log_count": 2,
+      "unique_selected_owner_tx_hashes": [
+        "0x8ebe4e38363050f4b850773a708b86043616fcc11d67e75ca02f00b314bfee2d",
+        "0xaa666274666044e636bc616b78730dbd6a268b87f45b90d0eddbd506bbeaadbe"
+      ],
+      "all_selected_tx_owner_signed_receipt_success": true,
+      "gate_reason": "OWNER_SIGNED_SUCCESS_ALL_ZERO_RAW_INVENTORY_PENDING_NATIVE_WALLET_PROOF",
+      "owner_signed_eligible": true,
+      "source_native_block_deltas": [
+        {
+          "block": 73336433,
+          "n_minus_1_wei": "550803476352537915",
+          "n_wei": "490641724352537935",
+          "native_delta_wei": "-60161751999999980",
+          "selected_owner_txs_same_block": 1
+        },
+        {
+          "block": 73336473,
+          "n_minus_1_wei": "490641724352537935",
+          "n_wei": "553854238183424524",
+          "native_delta_wei": "63212513830886589",
+          "selected_owner_txs_same_block": 1
+        }
+      ],
+      "native_scope_net_wei": "3050761830886609",
+      "native_scope_sign": "POSITIVE_NATIVE_SCOPE",
+      "original_owner_successful_txs": 2,
+      "source_txs": [
+        {
+          "hash": "0x8ebe4e38363050f4b850773a708b86043616fcc11d67e75ca02f00b314bfee2d",
+          "block": 73336433,
+          "signer": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+          "is_owner_signer": true,
+          "status": "0x1",
+          "tx_native_msg_value_wei": "60000000000000000",
+          "receipt_full": false,
+          "source_error": null
+        },
+        {
+          "hash": "0xaa666274666044e636bc616b78730dbd6a268b87f45b90d0eddbd506bbeaadbe",
+          "block": 73336473,
+          "signer": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+          "is_owner_signer": true,
+          "status": "0x1",
+          "tx_native_msg_value_wei": "0",
+          "receipt_full": true,
+          "source_error": null
+        }
+      ],
+      "partial_or_unverified_others_in_same_CA": "UNRESOLVED",
+      "quote_asset_gas_internal_causal_PnL": "UNVERIFIED",
+      "followable_alpha": false,
+      "production": "NO_GO",
+      "first_utc": "2025-12-29T10:34:46.000Z",
+      "earliest_block_UTC_verified": true
+    },
+    {
+      "selection_index": 6,
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "token": "我踏马来了",
+      "exact_ca": "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
+      "episode_index": 3,
+      "first_block": 73338331,
+      "last_block": 73338341,
+      "raw_log_count": 2,
+      "unique_selected_owner_tx_hashes": [
+        "0x369314228253f7c538a4ad5218f1c323f25be9657bde6f3745dfb839257ea725",
+        "0x99e09da5149aa7219073c58cab404feb1ceb34e747d68999e5b1f567560cfca9"
+      ],
+      "all_selected_tx_owner_signed_receipt_success": true,
+      "gate_reason": "OWNER_SIGNED_SUCCESS_ALL_ZERO_RAW_INVENTORY_PENDING_NATIVE_WALLET_PROOF",
+      "owner_signed_eligible": true,
+      "source_native_block_deltas": [
+        {
+          "block": 73338331,
+          "n_minus_1_wei": "507066586870555304",
+          "n_wei": "446904834870555315",
+          "native_delta_wei": "-60161751999999989",
+          "selected_owner_txs_same_block": 1
+        },
+        {
+          "block": 73338341,
+          "n_minus_1_wei": "446904834870555315",
+          "n_wei": "507159153915985886",
+          "native_delta_wei": "60254319045430571",
+          "selected_owner_txs_same_block": 1
+        }
+      ],
+      "native_scope_net_wei": "92567045430582",
+      "native_scope_sign": "POSITIVE_NATIVE_SCOPE",
+      "original_owner_successful_txs": 2,
+      "source_txs": [
+        {
+          "hash": "0x369314228253f7c538a4ad5218f1c323f25be9657bde6f3745dfb839257ea725",
+          "block": 73338331,
+          "signer": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+          "is_owner_signer": true,
+          "status": "0x1",
+          "tx_native_msg_value_wei": "60000000000000000",
+          "receipt_full": false,
+          "source_error": null
+        },
+        {
+          "hash": "0x99e09da5149aa7219073c58cab404feb1ceb34e747d68999e5b1f567560cfca9",
+          "block": 73338341,
+          "signer": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+          "is_owner_signer": true,
+          "status": "0x1",
+          "tx_native_msg_value_wei": "0",
+          "receipt_full": true,
+          "source_error": null
+        }
+      ],
+      "partial_or_unverified_others_in_same_CA": "UNRESOLVED",
+      "quote_asset_gas_internal_causal_PnL": "UNVERIFIED",
+      "followable_alpha": false,
+      "production": "NO_GO",
+      "first_utc": "2025-12-29T10:58:29.000Z",
+      "earliest_block_UTC_verified": true
+    },
+    {
+      "selection_index": 7,
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "token": "我踏马来了",
+      "exact_ca": "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
+      "episode_index": 4,
+      "first_block": 73339965,
+      "last_block": 73339992,
+      "raw_log_count": 2,
+      "unique_selected_owner_tx_hashes": [
+        "0x2d81f2b316c8b54d232ca03c04269cb4a6ce031b24760a10815b83d5fb5b1622",
+        "0x35224cc19da5549ab4e2e3a6bda712f2c137127375be85c1e5578804674fe15c"
+      ],
+      "all_selected_tx_owner_signed_receipt_success": true,
+      "gate_reason": "OWNER_SIGNED_SUCCESS_ALL_ZERO_RAW_INVENTORY_PENDING_NATIVE_WALLET_PROOF",
+      "owner_signed_eligible": true,
+      "source_native_block_deltas": [
+        {
+          "block": 73339965,
+          "n_minus_1_wei": "523558244183578048",
+          "n_wei": "463396492183578063",
+          "native_delta_wei": "-60161751999999985",
+          "selected_owner_txs_same_block": 1
+        },
+        {
+          "block": 73339992,
+          "n_minus_1_wei": "463396492183578063",
+          "n_wei": "532011622979568378",
+          "native_delta_wei": "68615130795990315",
+          "selected_owner_txs_same_block": 1
+        }
+      ],
+      "native_scope_net_wei": "8453378795990330",
+      "native_scope_sign": "POSITIVE_NATIVE_SCOPE",
+      "original_owner_successful_txs": 2,
+      "source_txs": [
+        {
+          "hash": "0x2d81f2b316c8b54d232ca03c04269cb4a6ce031b24760a10815b83d5fb5b1622",
+          "block": 73339965,
+          "signer": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+          "is_owner_signer": true,
+          "status": "0x1",
+          "tx_native_msg_value_wei": "60000000000000000",
+          "receipt_full": false,
+          "source_error": null
+        },
+        {
+          "hash": "0x35224cc19da5549ab4e2e3a6bda712f2c137127375be85c1e5578804674fe15c",
+          "block": 73339992,
+          "signer": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+          "is_owner_signer": true,
+          "status": "0x1",
+          "tx_native_msg_value_wei": "0",
+          "receipt_full": true,
+          "source_error": null
+        }
+      ],
+      "partial_or_unverified_others_in_same_CA": "UNRESOLVED",
+      "quote_asset_gas_internal_causal_PnL": "UNVERIFIED",
+      "followable_alpha": false,
+      "production": "NO_GO",
+      "first_utc": "2025-12-29T11:18:55.000Z",
+      "earliest_block_UTC_verified": true
+    },
+    {
+      "selection_index": 8,
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "token": "龙虾",
+      "exact_ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "episode_index": 5,
+      "first_block": 84962371,
+      "last_block": 84963046,
+      "raw_log_count": 2,
+      "unique_selected_owner_tx_hashes": [
+        "0x7d2a5ae4c18d56b9ed8dec99d15ba307b99d8cbd54fb900b7f833dd11b2258b1",
+        "0x650b9e4e945ff0cecc22b2f57c2c3339913d48bc1c1042f43b384335afa9b7aa"
+      ],
+      "all_selected_tx_owner_signed_receipt_success": true,
+      "gate_reason": "OWNER_SIGNED_SUCCESS_ALL_ZERO_RAW_INVENTORY_PENDING_NATIVE_WALLET_PROOF",
+      "owner_signed_eligible": true,
+      "source_native_block_deltas": [
+        {
+          "block": 84962371,
+          "n_minus_1_wei": "2650836981718089506",
+          "n_wei": "2450721218378089506",
+          "native_delta_wei": "-200115763340000000",
+          "selected_owner_txs_same_block": 1
+        },
+        {
+          "block": 84963046,
+          "n_minus_1_wei": "2350601875858089506",
+          "n_wei": "2550375481129760780",
+          "native_delta_wei": "199773605271671274",
+          "selected_owner_txs_same_block": 1
+        }
+      ],
+      "native_scope_net_wei": "-342158068328726",
+      "native_scope_sign": "NEGATIVE_NATIVE_SCOPE",
+      "original_owner_successful_txs": 2,
+      "source_txs": [
+        {
+          "hash": "0x7d2a5ae4c18d56b9ed8dec99d15ba307b99d8cbd54fb900b7f833dd11b2258b1",
+          "block": 84962371,
+          "signer": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+          "is_owner_signer": true,
+          "status": "0x1",
+          "tx_native_msg_value_wei": "200000000000000000",
+          "receipt_full": true,
+          "source_error": null
+        },
+        {
+          "hash": "0x650b9e4e945ff0cecc22b2f57c2c3339913d48bc1c1042f43b384335afa9b7aa",
+          "block": 84963046,
+          "signer": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+          "is_owner_signer": true,
+          "status": "0x1",
+          "tx_native_msg_value_wei": "0",
+          "receipt_full": false,
+          "source_error": null
+        }
+      ],
+      "partial_or_unverified_others_in_same_CA": "UNRESOLVED",
+      "quote_asset_gas_internal_causal_PnL": "UNVERIFIED",
+      "followable_alpha": false,
+      "production": "NO_GO",
+      "first_utc": "2026-03-06T06:39:39.000Z",
+      "earliest_block_UTC_verified": true
+    },
+    {
+      "selection_index": 9,
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "token": "龙虾",
+      "exact_ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "episode_index": 6,
+      "first_block": 121783426,
+      "last_block": 121786352,
+      "raw_log_count": 3,
+      "unique_selected_owner_tx_hashes": [
+        "0x13f5678b90e1bd0e2b703e23934a7777ba639f75ec1c8c70200f350ff43c4952",
+        "0xc0098aafadbf7a3789d7beb64717b4f5f7c0c1698f1e5d5386419f7b57cc9fbd"
+      ],
+      "all_selected_tx_owner_signed_receipt_success": true,
+      "gate_reason": "OWNER_SIGNED_SUCCESS_ALL_ZERO_RAW_INVENTORY_PENDING_NATIVE_WALLET_PROOF",
+      "owner_signed_eligible": true,
+      "source_native_block_deltas": [
+        {
+          "block": 121783426,
+          "n_minus_1_wei": "4852799332649570504",
+          "n_wei": "4852652012474570504",
+          "native_delta_wei": "-147320175000000",
+          "selected_owner_txs_same_block": 1
+        },
+        {
+          "block": 121786352,
+          "n_minus_1_wei": "4860355826768457125",
+          "n_wei": "4866188954739309400",
+          "native_delta_wei": "5833127970852275",
+          "selected_owner_txs_same_block": 1
+        }
+      ],
+      "native_scope_net_wei": "5685807795852275",
+      "native_scope_sign": "POSITIVE_NATIVE_SCOPE",
+      "original_owner_successful_txs": 2,
+      "source_txs": [
+        {
+          "hash": "0x13f5678b90e1bd0e2b703e23934a7777ba639f75ec1c8c70200f350ff43c4952",
+          "block": 121783426,
+          "signer": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+          "is_owner_signer": true,
+          "status": "0x1",
+          "tx_native_msg_value_wei": "0",
+          "receipt_full": false,
+          "source_error": null
+        },
+        {
+          "hash": "0xc0098aafadbf7a3789d7beb64717b4f5f7c0c1698f1e5d5386419f7b57cc9fbd",
+          "block": 121786352,
+          "signer": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+          "is_owner_signer": true,
+          "status": "0x1",
+          "tx_native_msg_value_wei": "0",
+          "receipt_full": false,
+          "source_error": null
+        }
+      ],
+      "partial_or_unverified_others_in_same_CA": "UNRESOLVED",
+      "quote_asset_gas_internal_causal_PnL": "UNVERIFIED",
+      "followable_alpha": false,
+      "production": "NO_GO",
+      "first_utc": "2026-09-14T05:40:56.000Z",
+      "earliest_block_UTC_verified": true
+    },
+    {
+      "selection_index": 10,
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "token": "牛来",
+      "exact_ca": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "episode_index": 3,
+      "first_block": 116038180,
+      "last_block": 116087810,
+      "raw_log_count": 3,
+      "unique_selected_owner_tx_hashes": [
+        "0x5b9f98b8feff8b9589b9a229bd64485689d11f7aa08d7973d7553fd18ba35e1e",
+        "0xc4a493cc5fba197f70e225de4927937b2532cfd18de4efefeb4ebbe3a350d40f"
+      ],
+      "all_selected_tx_owner_signed_receipt_success": true,
+      "gate_reason": "OWNER_SIGNED_SUCCESS_ALL_ZERO_RAW_INVENTORY_PENDING_NATIVE_WALLET_PROOF",
+      "owner_signed_eligible": true,
+      "source_native_block_deltas": [
+        {
+          "block": 116038180,
+          "n_minus_1_wei": "2588034452061658879",
+          "n_wei": "2487977535581658879",
+          "native_delta_wei": "-100056916480000000",
+          "selected_owner_txs_same_block": 1
+        },
+        {
+          "block": 116087810,
+          "n_minus_1_wei": "2386272524940965280",
+          "n_wei": "2518167128322895779",
+          "native_delta_wei": "131894603381930499",
+          "selected_owner_txs_same_block": 1
+        }
+      ],
+      "native_scope_net_wei": "31837686901930499",
+      "native_scope_sign": "POSITIVE_NATIVE_SCOPE",
+      "original_owner_successful_txs": 2,
+      "source_txs": [
+        {
+          "hash": "0x5b9f98b8feff8b9589b9a229bd64485689d11f7aa08d7973d7553fd18ba35e1e",
+          "block": 116038180,
+          "signer": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+          "is_owner_signer": true,
+          "status": "0x1",
+          "tx_native_msg_value_wei": "100000000000000000",
+          "receipt_full": false,
+          "source_error": null
+        },
+        {
+          "hash": "0xc4a493cc5fba197f70e225de4927937b2532cfd18de4efefeb4ebbe3a350d40f",
+          "block": 116087810,
+          "signer": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+          "is_owner_signer": true,
+          "status": "0x1",
+          "tx_native_msg_value_wei": "0",
+          "receipt_full": false,
+          "source_error": null
+        }
+      ],
+      "partial_or_unverified_others_in_same_CA": "UNRESOLVED",
+      "quote_asset_gas_internal_causal_PnL": "UNVERIFIED",
+      "followable_alpha": false,
+      "production": "NO_GO",
+      "first_utc": "2026-08-15T07:11:15.000Z",
+      "earliest_block_UTC_verified": true
+    },
+    {
+      "selection_index": 11,
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "token": "牛来",
+      "exact_ca": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "episode_index": 4,
+      "first_block": 116099537,
+      "last_block": 116211969,
+      "raw_log_count": 4,
+      "unique_selected_owner_tx_hashes": [
+        "0xf83f69d2d411b237bc10c7be7f16bfc57ae0567bdd00bf245e576688be3b4549",
+        "0xff6b642aa397450042ddbbb3010cd622dbb617b0479f5a2769aa93a8c1b03dc4",
+        "0x1e5aea53c25c41c0a9c84472f89774d0c93ff19be721ae8333fb0aafd264e366"
+      ],
+      "all_selected_tx_owner_signed_receipt_success": true,
+      "gate_reason": "OWNER_SIGNED_SUCCESS_ALL_ZERO_RAW_INVENTORY_PENDING_NATIVE_WALLET_PROOF",
+      "owner_signed_eligible": true,
+      "source_native_block_deltas": [
+        {
+          "block": 116099537,
+          "n_minus_1_wei": "2505563399301006090",
+          "n_wei": "2405514468701006090",
+          "native_delta_wei": "-100048930600000000",
+          "selected_owner_txs_same_block": 1
+        },
+        {
+          "block": 116109420,
+          "n_minus_1_wei": "2682960375835569915",
+          "n_wei": "2782013838226402334",
+          "native_delta_wei": "99053462390832419",
+          "selected_owner_txs_same_block": 1
+        },
+        {
+          "block": 116211969,
+          "n_minus_1_wei": "2604953395354313880",
+          "n_wei": "2685109871110475607",
+          "native_delta_wei": "80156475756161727",
+          "selected_owner_txs_same_block": 1
+        }
+      ],
+      "native_scope_net_wei": "79161007546994146",
+      "native_scope_sign": "POSITIVE_NATIVE_SCOPE",
+      "original_owner_successful_txs": 3,
+      "source_txs": [
+        {
+          "hash": "0xf83f69d2d411b237bc10c7be7f16bfc57ae0567bdd00bf245e576688be3b4549",
+          "block": 116099537,
+          "signer": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+          "is_owner_signer": true,
+          "status": "0x1",
+          "tx_native_msg_value_wei": "100000000000000000",
+          "receipt_full": false,
+          "source_error": null
+        },
+        {
+          "hash": "0xff6b642aa397450042ddbbb3010cd622dbb617b0479f5a2769aa93a8c1b03dc4",
+          "block": 116109420,
+          "signer": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+          "is_owner_signer": true,
+          "status": "0x1",
+          "tx_native_msg_value_wei": "0",
+          "receipt_full": false,
+          "source_error": null
+        },
+        {
+          "hash": "0x1e5aea53c25c41c0a9c84472f89774d0c93ff19be721ae8333fb0aafd264e366",
+          "block": 116211969,
+          "signer": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+          "is_owner_signer": true,
+          "status": "0x1",
+          "tx_native_msg_value_wei": "0",
+          "receipt_full": false,
+          "source_error": null
+        }
+      ],
+      "partial_or_unverified_others_in_same_CA": "UNRESOLVED",
+      "quote_asset_gas_internal_causal_PnL": "UNVERIFIED",
+      "followable_alpha": false,
+      "production": "NO_GO",
+      "first_utc": "2026-08-15T14:51:35.000Z",
+      "earliest_block_UTC_verified": true
+    },
+    {
+      "selection_index": 12,
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "token": "牛来",
+      "exact_ca": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "episode_index": 5,
+      "first_block": 116236103,
+      "last_block": 116380025,
+      "raw_log_count": 4,
+      "unique_selected_owner_tx_hashes": [
+        "0x6bb26cbd29a006b1b9a1697099eef20e8fe3581e767d7321aa03a47c7d5f0429",
+        "0x39633b6564e9641f1163b14e7294c576627433a6c35d8437c49016980322094d",
+        "0x72a5a6f915c657612aa42b6193a1bf05d85bb176aecfa17eb04643c5a5ea2c84"
+      ],
+      "all_selected_tx_owner_signed_receipt_success": true,
+      "gate_reason": "OWNER_SIGNED_SUCCESS_ALL_ZERO_RAW_INVENTORY_PENDING_NATIVE_WALLET_PROOF",
+      "owner_signed_eligible": true,
+      "source_native_block_deltas": [
+        {
+          "block": 116236103,
+          "n_minus_1_wei": "2558735238800526149",
+          "n_wei": "2458696048000526149",
+          "native_delta_wei": "-100039190800000000",
+          "selected_owner_txs_same_block": 1
+        },
+        {
+          "block": 116298779,
+          "n_minus_1_wei": "380060975912378037",
+          "n_wei": "280010461312378037",
+          "native_delta_wei": "-100050514600000000",
+          "selected_owner_txs_same_block": 1
+        },
+        {
+          "block": 116380025,
+          "n_minus_1_wei": "280004583232378037",
+          "n_wei": "624624980957007794",
+          "native_delta_wei": "344620397724629757",
+          "selected_owner_txs_same_block": 1
+        }
+      ],
+      "native_scope_net_wei": "144530692324629757",
+      "native_scope_sign": "POSITIVE_NATIVE_SCOPE",
+      "original_owner_successful_txs": 3,
+      "source_txs": [
+        {
+          "hash": "0x6bb26cbd29a006b1b9a1697099eef20e8fe3581e767d7321aa03a47c7d5f0429",
+          "block": 116236103,
+          "signer": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+          "is_owner_signer": true,
+          "status": "0x1",
+          "tx_native_msg_value_wei": "100000000000000000",
+          "receipt_full": false,
+          "source_error": null
+        },
+        {
+          "hash": "0x39633b6564e9641f1163b14e7294c576627433a6c35d8437c49016980322094d",
+          "block": 116298779,
+          "signer": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+          "is_owner_signer": true,
+          "status": "0x1",
+          "tx_native_msg_value_wei": "100000000000000000",
+          "receipt_full": false,
+          "source_error": null
+        },
+        {
+          "hash": "0x72a5a6f915c657612aa42b6193a1bf05d85bb176aecfa17eb04643c5a5ea2c84",
+          "block": 116380025,
+          "signer": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+          "is_owner_signer": true,
+          "status": "0x1",
+          "tx_native_msg_value_wei": "0",
+          "receipt_full": false,
+          "source_error": null
+        }
+      ],
+      "partial_or_unverified_others_in_same_CA": "UNRESOLVED",
+      "quote_asset_gas_internal_causal_PnL": "UNVERIFIED",
+      "followable_alpha": false,
+      "production": "NO_GO",
+      "first_utc": "2026-08-16T07:56:02.000Z",
+      "earliest_block_UTC_verified": true
+    },
+    {
+      "selection_index": 13,
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "token": "龙虾",
+      "exact_ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "episode_index": 1,
+      "first_block": 83720393,
+      "last_block": 83720398,
+      "raw_log_count": 2,
+      "unique_selected_owner_tx_hashes": [
+        "0x45ebe939bb00ca5660ffde899a6096076cb75ed01d5db89537f91380f2424bf4",
+        "0x9a0cc58d9b3a32d79af78b4d543b98c1ab2bb1c13c742866e7f2b7c28b552a36"
+      ],
+      "all_selected_tx_owner_signed_receipt_success": true,
+      "gate_reason": "OWNER_SIGNED_SUCCESS_ALL_ZERO_RAW_INVENTORY_PENDING_NATIVE_WALLET_PROOF",
+      "owner_signed_eligible": true,
+      "source_native_block_deltas": [
+        {
+          "block": 83720393,
+          "n_minus_1_wei": "61123469541251570227",
+          "n_wei": "58722645566251570227",
+          "native_delta_wei": "-2400823975000000000",
+          "selected_owner_txs_same_block": 1
+        },
+        {
+          "block": 83720398,
+          "n_minus_1_wei": "58722645566251570227",
+          "n_wei": "60948841476332641298",
+          "native_delta_wei": "2226195910081071071",
+          "selected_owner_txs_same_block": 1
+        }
+      ],
+      "native_scope_net_wei": "-174628064918928929",
+      "native_scope_sign": "NEGATIVE_NATIVE_SCOPE",
+      "original_owner_successful_txs": 2,
+      "source_txs": [
+        {
+          "hash": "0x45ebe939bb00ca5660ffde899a6096076cb75ed01d5db89537f91380f2424bf4",
+          "block": 83720393,
+          "signer": "0xa83b73f5644cde337b61da79589f10ea15548811",
+          "is_owner_signer": true,
+          "status": "0x1",
+          "tx_native_msg_value_wei": "2400000000000000000",
+          "receipt_full": true,
+          "source_error": null
+        },
+        {
+          "hash": "0x9a0cc58d9b3a32d79af78b4d543b98c1ab2bb1c13c742866e7f2b7c28b552a36",
+          "block": 83720398,
+          "signer": "0xa83b73f5644cde337b61da79589f10ea15548811",
+          "is_owner_signer": true,
+          "status": "0x1",
+          "tx_native_msg_value_wei": "0",
+          "receipt_full": false,
+          "source_error": null
+        }
+      ],
+      "partial_or_unverified_others_in_same_CA": "UNRESOLVED",
+      "quote_asset_gas_internal_causal_PnL": "UNVERIFIED",
+      "followable_alpha": false,
+      "production": "NO_GO",
+      "first_utc": "2026-02-27T19:22:46.000Z",
+      "earliest_block_UTC_verified": true
+    },
+    {
+      "selection_index": 14,
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "token": "龙虾",
+      "exact_ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "episode_index": 4,
+      "first_block": 93584296,
+      "last_block": 93584365,
+      "raw_log_count": 2,
+      "unique_selected_owner_tx_hashes": [
+        "0x4bf17ed78e9c142bd6c7b30540dd8ab91dc6be47c74cb8130023d87623c65899",
+        "0xd4aa1ada868308f84b521d4ea6753a30fad58c6eaf47e2a266b5c7823cf20f79"
+      ],
+      "all_selected_tx_owner_signed_receipt_success": true,
+      "gate_reason": "OWNER_SIGNED_SUCCESS_ALL_ZERO_RAW_INVENTORY_PENDING_NATIVE_WALLET_PROOF",
+      "owner_signed_eligible": true,
+      "source_native_block_deltas": [
+        {
+          "block": 93584296,
+          "n_minus_1_wei": "65785540297005511889",
+          "n_wei": "65765013272005511889",
+          "native_delta_wei": "-20527025000000000",
+          "selected_owner_txs_same_block": 1
+        },
+        {
+          "block": 93584365,
+          "n_minus_1_wei": "65765013272005511889",
+          "n_wei": "65783780770840527390",
+          "native_delta_wei": "18767498835015501",
+          "selected_owner_txs_same_block": 1
+        }
+      ],
+      "native_scope_net_wei": "-1759526164984499",
+      "native_scope_sign": "NEGATIVE_NATIVE_SCOPE",
+      "original_owner_successful_txs": 2,
+      "source_txs": [
+        {
+          "hash": "0x4bf17ed78e9c142bd6c7b30540dd8ab91dc6be47c74cb8130023d87623c65899",
+          "block": 93584296,
+          "signer": "0xa83b73f5644cde337b61da79589f10ea15548811",
+          "is_owner_signer": true,
+          "status": "0x1",
+          "tx_native_msg_value_wei": "20000000000000000",
+          "receipt_full": true,
+          "source_error": null
+        },
+        {
+          "hash": "0xd4aa1ada868308f84b521d4ea6753a30fad58c6eaf47e2a266b5c7823cf20f79",
+          "block": 93584365,
+          "signer": "0xa83b73f5644cde337b61da79589f10ea15548811",
+          "is_owner_signer": true,
+          "status": "0x1",
+          "tx_native_msg_value_wei": "0",
+          "receipt_full": false,
+          "source_error": null
+        }
+      ],
+      "partial_or_unverified_others_in_same_CA": "UNRESOLVED",
+      "quote_asset_gas_internal_causal_PnL": "UNVERIFIED",
+      "followable_alpha": false,
+      "production": "NO_GO",
+      "first_utc": "2026-04-20T05:53:16.000Z",
+      "earliest_block_UTC_verified": true
+    },
+    {
+      "selection_index": 15,
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "token": "龙虾",
+      "exact_ca": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "episode_index": 5,
+      "first_block": 121452789,
+      "last_block": 121454565,
+      "raw_log_count": 3,
+      "unique_selected_owner_tx_hashes": [
+        "0x5cd118aaf6d2de13c1173a1dc104d531500e1c96eae3dbd5068402259dd08cfc",
+        "0x7fdf121750f702991b344b709e8d7dfa1e92fc4f40daeb37372e4207fe7e0893",
+        "0x53efc59c9b439e0fae82aaf495caa725b18a59296a3f9ce818168eb9a01fa51c"
+      ],
+      "all_selected_tx_owner_signed_receipt_success": false,
+      "gate_reason": "THIRD_PARTY_OR_NONOWNER_ORIGINAL_TX",
+      "owner_signed_eligible": false,
+      "source_native_block_deltas": [],
+      "native_scope_net_wei": null,
+      "native_scope_sign": "UNRESOLVED",
+      "original_owner_successful_txs": 1,
+      "source_txs": [
+        {
+          "hash": "0x5cd118aaf6d2de13c1173a1dc104d531500e1c96eae3dbd5068402259dd08cfc",
+          "block": 121452789,
+          "signer": "0x679d8a9a2bb243ca42d0c3a7a49d46203b5a0632",
+          "is_owner_signer": false,
+          "status": "0x1",
+          "tx_native_msg_value_wei": "0",
+          "receipt_full": false,
+          "source_error": null
+        },
+        {
+          "hash": "0x7fdf121750f702991b344b709e8d7dfa1e92fc4f40daeb37372e4207fe7e0893",
+          "block": 121453442,
+          "signer": "0x679d8a9a2bb243ca42d0c3a7a49d46203b5a0632",
+          "is_owner_signer": false,
+          "status": "0x1",
+          "tx_native_msg_value_wei": "0",
+          "receipt_full": false,
+          "source_error": null
+        },
+        {
+          "hash": "0x53efc59c9b439e0fae82aaf495caa725b18a59296a3f9ce818168eb9a01fa51c",
+          "block": 121454565,
+          "signer": "0xa83b73f5644cde337b61da79589f10ea15548811",
+          "is_owner_signer": true,
+          "status": "0x1",
+          "tx_native_msg_value_wei": "0",
+          "receipt_full": false,
+          "source_error": null
+        }
+      ],
+      "partial_or_unverified_others_in_same_CA": "UNRESOLVED",
+      "quote_asset_gas_internal_causal_PnL": "UNVERIFIED",
+      "followable_alpha": false,
+      "production": "NO_GO",
+      "first_utc": null,
+      "earliest_block_UTC_verified": false
+    }
+  ]
+}

@@ -1,0 +1,196 @@
+{
+  "schema": "BSC_P4B_BOUNDED_ALCHEMY_BNB_EARLY_BUY_READBACK_V1",
+  "capture_date_bangkok": "2026-10-16",
+  "source_fixed_code_approved_SHA": "47945ca77806d23d942fa2abb681c70244e273a7",
+  "provider": "Alchemy BNB mainnet read-only",
+  "source_market": {
+    "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4b-19ca-unified-early-market-buy-evidence-2026-10-14.json",
+    "git_blob_sha": "c42ad01e896f30262f89f7852f927fc84fb3ea18",
+    "token": "MARSCOIN",
+    "exact_CA": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+    "selected_original_early_buy_tx": "0x6bb75edb235d86747fcaa1b6f13c820601973fe840ef22eb54aa22e54d36d028",
+    "selected_early_buy_signer": "0x504ba7b11be98c66a379a3e5de91dc5ab2dde3ea",
+    "selected_early_buy_block": 112441394,
+    "first_scoped_observed_token_transfer_block": 112441387,
+    "first_scoped_pancake_positive_liquidity_block": 112642885,
+    "source_quote_ca": "0xbe9d156892e55e7154bcd3cb0fea677f9d3103e1",
+    "source_quote_metadata_label": "S5B (current metadata only)",
+    "source_event_cost_raw": "2674483304192706318",
+    "source_event_fee_raw": "26744833041927063"
+  },
+  "read_only_rpc": {
+    "transaction_by_hash": {
+      "type": "0x0",
+      "chainId": "0x38",
+      "nonce": "0x792",
+      "gasPrice": "0x7270e00",
+      "gas": "0x162010",
+      "to": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "value": "0x770ecbffd9cf2a8",
+      "input": "0x4d819a2a00000000000000000000000000000000000000000000000000000000000000a000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000770ecbffd9cf2a80000000000000000000000000000000000000000001b1ac563192b128263916100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000003000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000001c000000000000000000000000000000000000000000000000000000000000003200000000000000000000000000000000000000000000000000000000000000001000000000000000000000000bb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c00000000000000000000000055d398326f99059ff775485246999027b3197955000000000000000000000000172fcd41e0913e95784454622d1c3724f546f8490000000000000000000000000000000000000000000000000000000000000064000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000140000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000100000000000000000000000055d398326f99059ff775485246999027b3197955000000000000000000000000be9d156892e55e7154bcd3cb0fea677f9d3103e1000000000000000000000000977daffc095b33872e2741c19568925015c35b4d00000000000000000000000000000000000000000000000000000000000009c40000000000000000000000000000000000000000000000000000000000000032000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001400000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006000000000000000000000000be9d156892e55e7154bcd3cb0fea677f9d3103e1000000000000000000000000fe189e97832da1573e4e4ff034f4ffc3a15c7777000000000000000000000000fe189e97832da1573e4e4ff034f4ffc3a15c77770000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000140000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "r": "0x7c926b174a6cbe7d76ec1d30db0eea3fc5a79a7ebafbf10dbd1ff7d0edc43f22",
+      "s": "0x67180b3181d6aa0e9eb8df342dec920182377aa7603ce0c37d9c332870a5f73c",
+      "v": "0x93",
+      "hash": "0x6bb75edb235d86747fcaa1b6f13c820601973fe840ef22eb54aa22e54d36d028",
+      "blockHash": "0x5775e5d43bf25c590bd882eb383139a5575304de330b495ac6b231a846bfc54d",
+      "blockNumber": "0x6b3b832",
+      "transactionIndex": "0x9",
+      "from": "0x504ba7b11be98c66a379a3e5de91dc5ab2dde3ea",
+      "blockTimestamp": "0x6a675ba1"
+    },
+    "token_transfer_topic0": "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+    "token_transfer_getlogs_query": {
+      "address": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "fromBlock": "0x6b3b82b",
+      "toBlock": "0x6b3b832",
+      "topics": [
+        "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef"
+      ]
+    },
+    "token_transfer_logs": [
+      {
+        "address": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+        "topics": [
+          "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+          "0x0000000000000000000000000000000000000000000000000000000000000000",
+          "0x000000000000000000000000e2ce6ab80874fa9fa2aae65d277dd6b8e65c9de0"
+        ],
+        "data": "0x0000000000000000000000000000000000000000033b2e3c9fd0803ce8000000",
+        "blockNumber": "0x6b3b82b",
+        "transactionHash": "0xb499cc66534db949c6040dbc914ba0e3e50423a408717f69a193a8e29eeeb7a2",
+        "transactionIndex": "0x6",
+        "blockHash": "0xffa358c76c4c011b255d7584c6d9cedf8e6e3bb7ddf85574ede692faa773a841",
+        "blockTimestamp": "0x6a675b9e",
+        "logIndex": "0x4d",
+        "removed": false
+      },
+      {
+        "address": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+        "topics": [
+          "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+          "0x000000000000000000000000e2ce6ab80874fa9fa2aae65d277dd6b8e65c9de0",
+          "0x0000000000000000000000001de460f363af910f51726def188f9004276bf4bc"
+        ],
+        "data": "0x0000000000000000000000000000000000000000003fd407616fb745ea0560a1",
+        "blockNumber": "0x6b3b832",
+        "transactionHash": "0x6bb75edb235d86747fcaa1b6f13c820601973fe840ef22eb54aa22e54d36d028",
+        "transactionIndex": "0x9",
+        "blockHash": "0x5775e5d43bf25c590bd882eb383139a5575304de330b495ac6b231a846bfc54d",
+        "blockTimestamp": "0x6a675ba1",
+        "logIndex": "0x9e",
+        "removed": false
+      },
+      {
+        "address": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+        "topics": [
+          "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+          "0x0000000000000000000000001de460f363af910f51726def188f9004276bf4bc",
+          "0x000000000000000000000000504ba7b11be98c66a379a3e5de91dc5ab2dde3ea"
+        ],
+        "data": "0x0000000000000000000000000000000000000000003fd407616fb745ea0560a1",
+        "blockNumber": "0x6b3b832",
+        "transactionHash": "0x6bb75edb235d86747fcaa1b6f13c820601973fe840ef22eb54aa22e54d36d028",
+        "transactionIndex": "0x9",
+        "blockHash": "0x5775e5d43bf25c590bd882eb383139a5575304de330b495ac6b231a846bfc54d",
+        "blockTimestamp": "0x6a675ba1",
+        "logIndex": "0xad",
+        "removed": false
+      },
+      {
+        "address": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+        "topics": [
+          "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+          "0x000000000000000000000000e2ce6ab80874fa9fa2aae65d277dd6b8e65c9de0",
+          "0x0000000000000000000000001de460f363af910f51726def188f9004276bf4bc"
+        ],
+        "data": "0x000000000000000000000000000000000000000000306cd9fb59d0234e37aaf2",
+        "blockNumber": "0x6b3b832",
+        "transactionHash": "0x85e6a71e9080edc28e0c39bf6a0115b88223223ca059c90505a4aa71c0d4045f",
+        "transactionIndex": "0xa",
+        "blockHash": "0x5775e5d43bf25c590bd882eb383139a5575304de330b495ac6b231a846bfc54d",
+        "blockTimestamp": "0x6a675ba1",
+        "logIndex": "0xc1",
+        "removed": false
+      },
+      {
+        "address": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+        "topics": [
+          "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+          "0x0000000000000000000000001de460f363af910f51726def188f9004276bf4bc",
+          "0x000000000000000000000000ecd85ed6f30d761253bf9c0af96bf5eeec045884"
+        ],
+        "data": "0x000000000000000000000000000000000000000000306cd9fb59d0234e37aaf2",
+        "blockNumber": "0x6b3b832",
+        "transactionHash": "0x85e6a71e9080edc28e0c39bf6a0115b88223223ca059c90505a4aa71c0d4045f",
+        "transactionIndex": "0xa",
+        "blockHash": "0x5775e5d43bf25c590bd882eb383139a5575304de330b495ac6b231a846bfc54d",
+        "blockTimestamp": "0x6a675ba1",
+        "logIndex": "0xd0",
+        "removed": false
+      }
+    ],
+    "signer_native_balance_query": {
+      "address": "0x504ba7b11be98c66a379a3e5de91dc5ab2dde3ea",
+      "blocks": [
+        "0x6b3b831",
+        "0x6b3b832"
+      ]
+    },
+    "signer_native_balance_prev_wei": "4225374413948780923",
+    "signer_native_balance_current_wei": "3689093265313861843",
+    "native_balance_delta_wei": "-536281148634919080",
+    "sampled_block_header": {
+      "hash": "0x5775e5d43bf25c590bd882eb383139a5575304de330b495ac6b231a846bfc54d",
+      "timestamp": "0x6a675ba1",
+      "milliTimestamp": "0x19fa3bdee14",
+      "header_response_truncated_at_tool": false
+    },
+    "receipt_excerpt": {
+      "status": "0x1",
+      "full_receipt_response_truncated_at_tool": true
+    },
+    "quote_erc20_historical_state": {
+      "quote_CA": "0xbe9d156892e55e7154bcd3cb0fea677f9d3103e1",
+      "quote_balanceOf_block_prior": 112441393,
+      "quote_balanceOf_raw_prior": "0",
+      "quote_balanceOf_raw_current": "0",
+      "decimals_at_prior_block": 18,
+      "buyer_incoming_transfer_log_query": {
+        "address": "0xbe9d156892e55e7154bcd3cb0fea677f9d3103e1",
+        "topics": [
+          "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+          null,
+          "0x000000000000000000000000504ba7b11be98c66a379a3e5de91dc5ab2dde3ea"
+        ],
+        "fromBlock": "0x6b3b832",
+        "toBlock": "0x6b3b832"
+      },
+      "buyer_incoming_transfer_logs": [],
+      "buyer_outgoing_transfer_log_query": {
+        "address": "0xbe9d156892e55e7154bcd3cb0fea677f9d3103e1",
+        "topics": [
+          "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+          "0x000000000000000000000000504ba7b11be98c66a379a3e5de91dc5ab2dde3ea"
+        ],
+        "fromBlock": "0x6b3b832",
+        "toBlock": "0x6b3b832"
+      },
+      "buyer_outgoing_transfer_logs": [],
+      "quote_balance_prior_less_than_source_event_cost": true,
+      "source_event_cost_raw": "2674483304192706318",
+      "explanation": "Historical direct ERC20 quote balance is zero in N-1 and N and no sampled-block buyer direct transfer. Archived launch event quote cost may represent internal or intermediary settlement; do not infer that sampled transaction failed or that this is direct wallet-ERC20 debit."
+    }
+  },
+  "observed_limits": {
+    "earlier_buy_signer_outside_original_23": true,
+    "valid_witness_transfer_to_signer": true,
+    "global_first_public_observer_U": "UNRESOLVED",
+    "same_time_executable_buy_and_sell": "UNRESOLVED",
+    "funds_at_public_U": "UNRESOLVED",
+    "real_quote_funding_and_fee_at_original_trade": "UNRESOLVED",
+    "tax_fee_gas_capacity_at_public_U": "UNRESOLVED",
+    "follower_PnL_1_5_15min": "UNRESOLVED",
+    "note": "Finite launch-to-original-buy window; public U, historical actual sell and original quote debit still unproven; this connector truncated receipt JSON, cannot claim complete receipt."
+  },
+  "production": "NO_GO"
+}

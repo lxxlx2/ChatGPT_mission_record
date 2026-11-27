@@ -1,0 +1,1617 @@
+{
+  "schema": "BSC_P4_FROZEN19_171_COMPETING_POOL_EXISTENCE_MATRIX",
+  "scope": "19 exact CAs, 9 alternative V2 USDT/V3 WBNB-USDT factory mappings read at each CA first positive V2 WBNB block; pool presence is not liquid/tradable proof.",
+  "source_manifest": [
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4-19ca-competing171-precommit-2026-10-14.json",
+      "git_blob_sha": "c35d9be300a1cddfa6d6d0bda5cd993b915ba0ad"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4-19ca-competing171-part1-2026-10-14.json",
+      "git_blob_sha": "478d231e965e17e7af7e21e24f17ad100d205d5f"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4-19ca-competing171-part2-2026-10-14.json",
+      "git_blob_sha": "0a2fbcadda5dd4ff69d7dd3ebe3d05a453b5a0b3"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4-19ca-competing171-part3-2026-10-14.json",
+      "git_blob_sha": "799c16027e4a21e5c68e1474598cfe2fc9c88e15"
+    }
+  ],
+  "summary": {
+    "major_exact_CAs": 19,
+    "alternatives_per_CA": 9,
+    "historical_factory_reads": 171,
+    "reads_successful": 171,
+    "reads_unresolved": 0,
+    "nonzero_preexisting_alternative_slots": 22,
+    "competing_pool_liquidity_confirmed": 0,
+    "global_first_tradable_confirmed": 0,
+    "production": "NO_GO"
+  },
+  "by_kind": {
+    "V3/WBNB": 15,
+    "V2/USDT": 2,
+    "V3/USDT": 5
+  },
+  "rows": [
+    {
+      "index": 0,
+      "token": "TST",
+      "CA": "0x86bb94ddd16efc8bc58e6b056e8df71d9e666429",
+      "at_block": 46421401,
+      "query_state": "COMPLETE_AGGREGATE3_WITH_PER_CALL_STATUS",
+      "found": 1,
+      "failed": 0,
+      "slots": [
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 100,
+          "expected_snapshot_pool": "0x5722229f92c8380d29a1a1c27c56ab831d39b0b6",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 500,
+          "expected_snapshot_pool": "0x4d4f11c1c1981ad66958f5d3715c9903ab3226d7",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 2500,
+          "expected_snapshot_pool": "0xcf30172e708b3c90b670f41218c164eb290ae019",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 10000,
+          "expected_snapshot_pool": "0x16969fa79651bae11736f2f6576a86fe2726b42b",
+          "at_baseline_pool": "0x16969fa79651bae11736f2f6576a86fe2726b42b",
+          "state": "EXISTED_BY_V2_LIQUIDITY_BLOCK"
+        },
+        {
+          "protocol": "V2",
+          "quote": "USDT",
+          "fee_pips": null,
+          "expected_snapshot_pool": "0x7b056bcba273d3392da951b798c29ab72e009c92",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 100,
+          "expected_snapshot_pool": "0xe8033458c4ca93db4a271ddba31ef95a98e70c89",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 500,
+          "expected_snapshot_pool": "0x2eff558f7b982c2ad4088ca73afe32eaad3a33fa",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 2500,
+          "expected_snapshot_pool": "0xd0ee4a53d70390a7e1a7e9e10b6fd143924c6e07",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 10000,
+          "expected_snapshot_pool": "0x03a82656095978695d6ec12a145e4e132db5042c",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        }
+      ]
+    },
+    {
+      "index": 1,
+      "token": "CHEEMS",
+      "CA": "0x0df0587216a4a1bb7d5082fdc491d93d2dd4b413",
+      "at_block": 42638444,
+      "query_state": "COMPLETE_AGGREGATE3_WITH_PER_CALL_STATUS",
+      "found": 1,
+      "failed": 0,
+      "slots": [
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 100,
+          "expected_snapshot_pool": null,
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 500,
+          "expected_snapshot_pool": "0xaaab07465b642b7c6cb883c795c49655681e4413",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 2500,
+          "expected_snapshot_pool": "0x38231d4ef9d33ebea944c75a21301ff6986499c3",
+          "at_baseline_pool": "0x38231d4ef9d33ebea944c75a21301ff6986499c3",
+          "state": "EXISTED_BY_V2_LIQUIDITY_BLOCK"
+        },
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 10000,
+          "expected_snapshot_pool": "0xae99ba0c2287b781dd0fbcc205f9258c8b5c1af5",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V2",
+          "quote": "USDT",
+          "fee_pips": null,
+          "expected_snapshot_pool": "0xc04b8bda7c1037ea4fe5c531bd24a955c3c31557",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 100,
+          "expected_snapshot_pool": null,
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 500,
+          "expected_snapshot_pool": null,
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 2500,
+          "expected_snapshot_pool": "0xc68c54cc361a8e1a5ef78642f172035d63a3caab",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 10000,
+          "expected_snapshot_pool": "0x0b969b8b753871a5d5a3b98ce64ab398d75f24ad",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "token": "MUBARAK",
+      "CA": "0x5c85d6c6825ab4032337f11ee92a72df936b46f6",
+      "at_block": 47442143,
+      "query_state": "COMPLETE_AGGREGATE3_WITH_PER_CALL_STATUS",
+      "found": 2,
+      "failed": 0,
+      "slots": [
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 100,
+          "expected_snapshot_pool": "0x2abf8f1f9a36820c5b9d7d87b752c5dbde4ef3f9",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 500,
+          "expected_snapshot_pool": "0xcdca76a135340f0c3f1466acd0d5907f5f291440",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 2500,
+          "expected_snapshot_pool": "0x90a54475d512b8f3852351611c38fad30a513491",
+          "at_baseline_pool": "0x90a54475d512b8f3852351611c38fad30a513491",
+          "state": "EXISTED_BY_V2_LIQUIDITY_BLOCK"
+        },
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 10000,
+          "expected_snapshot_pool": "0xd770176e9102a4a61f1820b211ed1346305de6d2",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V2",
+          "quote": "USDT",
+          "fee_pips": null,
+          "expected_snapshot_pool": "0x8be0d063873f68a08c8b5bca2fe981618bbf5047",
+          "at_baseline_pool": "0x8be0d063873f68a08c8b5bca2fe981618bbf5047",
+          "state": "EXISTED_BY_V2_LIQUIDITY_BLOCK"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 100,
+          "expected_snapshot_pool": null,
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 500,
+          "expected_snapshot_pool": null,
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 2500,
+          "expected_snapshot_pool": "0x99022a96e7e4a935cf998aa811c8827c47cda70a",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 10000,
+          "expected_snapshot_pool": "0xf8651bb82adcc2a9177bba7310f50c4c409070ca",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        }
+      ]
+    },
+    {
+      "index": 3,
+      "token": "TUT",
+      "CA": "0xcaae2a2f939f51d97cdfa9a86e79e3f085b799f3",
+      "at_block": 46521964,
+      "query_state": "COMPLETE_AGGREGATE3_WITH_PER_CALL_STATUS",
+      "found": 1,
+      "failed": 0,
+      "slots": [
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 100,
+          "expected_snapshot_pool": "0x09cf8ac1d6f107dbed81d88280a5fe6b5847d28a",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 500,
+          "expected_snapshot_pool": null,
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 2500,
+          "expected_snapshot_pool": "0xbeccb631ed63fa7779ec2c01d1d4366d978bc75c",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 10000,
+          "expected_snapshot_pool": "0x6dafbf0ab4fd72e2a5c0ad5a1ed277d3bf8a8d1f",
+          "at_baseline_pool": "0x6dafbf0ab4fd72e2a5c0ad5a1ed277d3bf8a8d1f",
+          "state": "EXISTED_BY_V2_LIQUIDITY_BLOCK"
+        },
+        {
+          "protocol": "V2",
+          "quote": "USDT",
+          "fee_pips": null,
+          "expected_snapshot_pool": "0x0e86ba1b2b1a6357d0f4feda63ddd5d85d244fea",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 100,
+          "expected_snapshot_pool": null,
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 500,
+          "expected_snapshot_pool": "0x7010994646e51dcdeeddb22cf21b0e5fab2f6d49",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 2500,
+          "expected_snapshot_pool": "0x27ad51c814a65659d6ed3192197a504b9137a183",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 10000,
+          "expected_snapshot_pool": "0xd40e282e4d932c270b75c7157a9f297d964cceb8",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        }
+      ]
+    },
+    {
+      "index": 4,
+      "token": "BROCCOLI714",
+      "CA": "0x6d5ad1592ed9d6d1df9b93c793ab759573ed6714",
+      "at_block": 46627714,
+      "query_state": "COMPLETE_AGGREGATE3_WITH_PER_CALL_STATUS",
+      "found": 1,
+      "failed": 0,
+      "slots": [
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 100,
+          "expected_snapshot_pool": null,
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 500,
+          "expected_snapshot_pool": "0xa3f649235262cebcadb0dcbb6fbc54bd817392b9",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 2500,
+          "expected_snapshot_pool": "0x5e3f597249a5714eb3df94e08b4eb6da387548ed",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 10000,
+          "expected_snapshot_pool": "0xa5067360b13fc7a2685dc82dcd1bf2b4b8d7868b",
+          "at_baseline_pool": "0xa5067360b13fc7a2685dc82dcd1bf2b4b8d7868b",
+          "state": "EXISTED_BY_V2_LIQUIDITY_BLOCK"
+        },
+        {
+          "protocol": "V2",
+          "quote": "USDT",
+          "fee_pips": null,
+          "expected_snapshot_pool": "0xb1b65c4ddff13eaca79fcfcd06aa047616c116e4",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 100,
+          "expected_snapshot_pool": "0x70975d5b31f41430dd35a91407d9e7135ce09435",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 500,
+          "expected_snapshot_pool": null,
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 2500,
+          "expected_snapshot_pool": "0x3808cb04a4e132c523895d3b38cb5afa3cae08b1",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 10000,
+          "expected_snapshot_pool": "0x0c85adb38c86822e118785e680d85a00a077f56e",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        }
+      ]
+    },
+    {
+      "index": 5,
+      "token": "BROCCOLIF3B",
+      "CA": "0x12b4356c65340fb02cdff01293f95febb1512f3b",
+      "at_block": 46628416,
+      "query_state": "COMPLETE_AGGREGATE3_WITH_PER_CALL_STATUS",
+      "found": 1,
+      "failed": 0,
+      "slots": [
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 100,
+          "expected_snapshot_pool": "0xab0cd4d8ef4713a20c9926c646a14445556ca314",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 500,
+          "expected_snapshot_pool": "0xa60c70b14e872ecfcc523295db5db2b407ca2ac8",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 2500,
+          "expected_snapshot_pool": "0x7ef564a55acd807db3c518ac55c02b89b170a433",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 10000,
+          "expected_snapshot_pool": "0xdb25c09d96c165b62f6e6f9d9b17174738d897ba",
+          "at_baseline_pool": "0xdb25c09d96c165b62f6e6f9d9b17174738d897ba",
+          "state": "EXISTED_BY_V2_LIQUIDITY_BLOCK"
+        },
+        {
+          "protocol": "V2",
+          "quote": "USDT",
+          "fee_pips": null,
+          "expected_snapshot_pool": "0x90ad802804da26cde95066df7cc94653d2634b74",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 100,
+          "expected_snapshot_pool": "0x5f4f68af29cd097c4a9fdfd6aeac80f25eb8dd09",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 500,
+          "expected_snapshot_pool": "0xdfa4efbc97b712d787ab440408b63e632d7b0aae",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 2500,
+          "expected_snapshot_pool": "0x1103b20b74aca62297eebc0097b537efebc01ea7",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 10000,
+          "expected_snapshot_pool": "0xe1e6610688098adbd7ce260d1b8382c327f95b0a",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        }
+      ]
+    },
+    {
+      "index": 6,
+      "token": "SIREN",
+      "CA": "0x997a58129890bbda032231a52ed1ddc845fc18e1",
+      "at_block": 46828822,
+      "query_state": "COMPLETE_AGGREGATE3_WITH_PER_CALL_STATUS",
+      "found": 1,
+      "failed": 0,
+      "slots": [
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 100,
+          "expected_snapshot_pool": "0xa76f47df1495e2e6a9c55492bccd0fe91a979b93",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 500,
+          "expected_snapshot_pool": "0x028ca9e999d3ba038e81f1901c5af3e7a28e3fc6",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 2500,
+          "expected_snapshot_pool": "0x92fc7783bd73b39a90fd4d457926783752d4ae6b",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 10000,
+          "expected_snapshot_pool": "0xb2af49dbf526054faf19602860a5e298a79f3d05",
+          "at_baseline_pool": "0xb2af49dbf526054faf19602860a5e298a79f3d05",
+          "state": "EXISTED_BY_V2_LIQUIDITY_BLOCK"
+        },
+        {
+          "protocol": "V2",
+          "quote": "USDT",
+          "fee_pips": null,
+          "expected_snapshot_pool": "0x04e7f73883bd3da790db3f651749739f82d47dc5",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 100,
+          "expected_snapshot_pool": "0xd15220032c999ae4e4861e0eefdc86f73cffacfe",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 500,
+          "expected_snapshot_pool": "0x9f03b3ef635836a0bcbee31d205a4c75ffcb93da",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 2500,
+          "expected_snapshot_pool": "0xadae5d7f3f506e85b19b2237d6b3683e9e782c1c",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 10000,
+          "expected_snapshot_pool": "0xf661d894a5327c92b11f8a2ff4e01c26457cc40e",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        }
+      ]
+    },
+    {
+      "index": 7,
+      "token": "BANANAS31",
+      "CA": "0x3d4f0513e8a29669b960f9dbca61861548a9a760",
+      "at_block": 46871948,
+      "query_state": "COMPLETE_AGGREGATE3_WITH_PER_CALL_STATUS",
+      "found": 3,
+      "failed": 0,
+      "slots": [
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 100,
+          "expected_snapshot_pool": "0x7f51bbf34156ba802deb0e38b7671dc4fa32041d",
+          "at_baseline_pool": "0x7f51bbf34156ba802deb0e38b7671dc4fa32041d",
+          "state": "EXISTED_BY_V2_LIQUIDITY_BLOCK"
+        },
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 500,
+          "expected_snapshot_pool": "0x7ec3f09a327585f956c875405869540cde645f77",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 2500,
+          "expected_snapshot_pool": "0x30d3c20d9e7b9ea9ee0321a01814f5be401857ae",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 10000,
+          "expected_snapshot_pool": "0xe736f1b0e809ff648e557dd3ea591580f416c2ed",
+          "at_baseline_pool": "0xe736f1b0e809ff648e557dd3ea591580f416c2ed",
+          "state": "EXISTED_BY_V2_LIQUIDITY_BLOCK"
+        },
+        {
+          "protocol": "V2",
+          "quote": "USDT",
+          "fee_pips": null,
+          "expected_snapshot_pool": "0x7ce25e0406ea0818bdfc7732f487aa070e5a4027",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 100,
+          "expected_snapshot_pool": null,
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 500,
+          "expected_snapshot_pool": null,
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 2500,
+          "expected_snapshot_pool": "0x4c4ce11b9cd20f1238236fc4274cd04b3ef77023",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 10000,
+          "expected_snapshot_pool": "0xf65d3c3f99e431da5dbae7948c0dd1905c268121",
+          "at_baseline_pool": "0xf65d3c3f99e431da5dbae7948c0dd1905c268121",
+          "state": "EXISTED_BY_V2_LIQUIDITY_BLOCK"
+        }
+      ]
+    },
+    {
+      "index": 8,
+      "token": "BOB",
+      "CA": "0x51363f073b1e4920fda7aa9e9d84ba97ede1560e",
+      "at_block": 44007572,
+      "query_state": "COMPLETE_AGGREGATE3_WITH_PER_CALL_STATUS",
+      "found": 0,
+      "failed": 0,
+      "slots": [
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 100,
+          "expected_snapshot_pool": null,
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 500,
+          "expected_snapshot_pool": "0x910a64e36da4bec09a0772b11d437869ad07dc4b",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 2500,
+          "expected_snapshot_pool": "0x9fcffefa5770b0d59e20b181acded7bbc9f390f8",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 10000,
+          "expected_snapshot_pool": "0xbc7ff1f31dc4e4293a53ac646a865303f0251fb9",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V2",
+          "quote": "USDT",
+          "fee_pips": null,
+          "expected_snapshot_pool": "0xb283b3099991c29fb9188c41bc215a6259e1f3ef",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 100,
+          "expected_snapshot_pool": null,
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 500,
+          "expected_snapshot_pool": "0x0ec68007d943c725ed788773069eba3bbb21c421",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 2500,
+          "expected_snapshot_pool": "0xfe718ac7997910cf1830eed970c742b28450192f",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 10000,
+          "expected_snapshot_pool": "0x6b4befa0eeccc647158a5584842df80a90fe3683",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        }
+      ]
+    },
+    {
+      "index": 9,
+      "token": "BULLA",
+      "CA": "0x595e21b20e78674f8a64c1566a20b2b316bc3511",
+      "at_block": 50982326,
+      "query_state": "COMPLETE_AGGREGATE3_WITH_PER_CALL_STATUS",
+      "found": 3,
+      "failed": 0,
+      "slots": [
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 100,
+          "expected_snapshot_pool": null,
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 500,
+          "expected_snapshot_pool": null,
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 2500,
+          "expected_snapshot_pool": "0x26b5508768c049d930f0b3c15337b74ed7d244a0",
+          "at_baseline_pool": "0x26b5508768c049d930f0b3c15337b74ed7d244a0",
+          "state": "EXISTED_BY_V2_LIQUIDITY_BLOCK"
+        },
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 10000,
+          "expected_snapshot_pool": "0x626f90c9a2d9fbaecd11fa350bbf568f81ab06c1",
+          "at_baseline_pool": "0x626f90c9a2d9fbaecd11fa350bbf568f81ab06c1",
+          "state": "EXISTED_BY_V2_LIQUIDITY_BLOCK"
+        },
+        {
+          "protocol": "V2",
+          "quote": "USDT",
+          "fee_pips": null,
+          "expected_snapshot_pool": "0x4c5679011dfce5a6c6cd3b126d38f858063b8551",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 100,
+          "expected_snapshot_pool": "0x1976d4ed03f9b99e15a1412cfed5963efea50c50",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 500,
+          "expected_snapshot_pool": "0x039ef0600720d51902b52456ead0840211917e7d",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 2500,
+          "expected_snapshot_pool": "0xb95d56142113de28191f2b77b01fae52cea28f96",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 10000,
+          "expected_snapshot_pool": "0x802c7a20ecd42a383c5ce96a59af062bbaf887d3",
+          "at_baseline_pool": "0x802c7a20ecd42a383c5ce96a59af062bbaf887d3",
+          "state": "EXISTED_BY_V2_LIQUIDITY_BLOCK"
+        }
+      ]
+    },
+    {
+      "index": 10,
+      "token": "4",
+      "CA": "0x0a43fc31a73013089df59194872ecae4cae14444",
+      "at_block": 63056879,
+      "query_state": "COMPLETE_AGGREGATE3_WITH_PER_CALL_STATUS",
+      "found": 0,
+      "failed": 0,
+      "slots": [
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 100,
+          "expected_snapshot_pool": "0xbc8bf094530a4149034474a5e8bf7ae926d91199",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 500,
+          "expected_snapshot_pool": "0x20f2abb3963ffccf4ae53e7f7d6e66f3cb707c70",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 2500,
+          "expected_snapshot_pool": "0xc9f124dccc7095de7bf65d388cd75519669a6b2e",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 10000,
+          "expected_snapshot_pool": "0xfad3b1b70868e16e93e323ea1375e2136a6c829a",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V2",
+          "quote": "USDT",
+          "fee_pips": null,
+          "expected_snapshot_pool": "0xd90c29c0e08be05bd2929e8506ba9b771ce84b22",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 100,
+          "expected_snapshot_pool": "0x371fe68d4da145f6968aa9d88501741ff05afd70",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 500,
+          "expected_snapshot_pool": "0xf732b569b3eada451bba4f78db10fff2b6f0f9a2",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 2500,
+          "expected_snapshot_pool": "0xee04b2a82bab9efefcd626f5d66f51cc2b6fa12a",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 10000,
+          "expected_snapshot_pool": "0xee2c567273d4a503caa919c38f883c7c00fd6dcb",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        }
+      ]
+    },
+    {
+      "index": 11,
+      "token": "GIGGLE",
+      "CA": "0x20d6015660b3fe52e6690a889b5c51f69902ce0e",
+      "at_block": 61963725,
+      "query_state": "COMPLETE_AGGREGATE3_WITH_PER_CALL_STATUS",
+      "found": 0,
+      "failed": 0,
+      "slots": [
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 100,
+          "expected_snapshot_pool": "0x4149b9408e6bfa3981ab8600da02256033e7a9fb",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 500,
+          "expected_snapshot_pool": "0x69dff2dbce428462e55710c14a733b4978c2bb38",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 2500,
+          "expected_snapshot_pool": "0xa2905d8d5dbe04e359d94c7da958088039a75d8a",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 10000,
+          "expected_snapshot_pool": "0xd9704dabefd6500b9b469ee02e00a0b3b0ab6f8a",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V2",
+          "quote": "USDT",
+          "fee_pips": null,
+          "expected_snapshot_pool": "0x5d74c56594cfb33a4bd5e6be7ee24be3a3fb40c3",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 100,
+          "expected_snapshot_pool": "0xaec5b300fe0bd8b5d01bbfd4cef455ee05a3eba6",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 500,
+          "expected_snapshot_pool": "0x3a53e473fc347bb211b078d985c3ab95ac6450fa",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 2500,
+          "expected_snapshot_pool": "0x3bf7cfe74e24c5ff108b7fda059d6308df2bc313",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 10000,
+          "expected_snapshot_pool": "0x0b71d567ca211829a3bea1d96556cf7ec9f7c593",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        }
+      ]
+    },
+    {
+      "index": 12,
+      "token": "币安人生",
+      "CA": "0x924fa68a0fc644485b8df8abfa0a41c2e7744444",
+      "at_block": 63454407,
+      "query_state": "COMPLETE_AGGREGATE3_WITH_PER_CALL_STATUS",
+      "found": 0,
+      "failed": 0,
+      "slots": [
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 100,
+          "expected_snapshot_pool": "0xe83fe17bf9514e4da04f7ff591e0979f5d5883f5",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 500,
+          "expected_snapshot_pool": "0x647adac5da07e38f6d7ec698a97f730ec456e066",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 2500,
+          "expected_snapshot_pool": "0xc397874a6cf0211537a488fa144103a009a6c619",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 10000,
+          "expected_snapshot_pool": "0xb7b43f1fd4b1287b05b23731b7feb532b5bfd79f",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V2",
+          "quote": "USDT",
+          "fee_pips": null,
+          "expected_snapshot_pool": "0x78796f190e2974ca81134b1b0741bd50e4cdda6b",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 100,
+          "expected_snapshot_pool": "0x751501b6a52a95e293535139970878701e35eca1",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 500,
+          "expected_snapshot_pool": "0x30fee42b70527836bf59bfe18ac9b4188019b7eb",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 2500,
+          "expected_snapshot_pool": "0x3d7da1ff0dbc756f21d9aeaddf16c9c0703bad40",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 10000,
+          "expected_snapshot_pool": "0xa1ff9406219ffa6bcc3d89c2719dd91d231d4cee",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        }
+      ]
+    },
+    {
+      "index": 13,
+      "token": "我踏马来了",
+      "CA": "0xc51a9250795c0186a6fb4a7d20a90330651e4444",
+      "at_block": 73658906,
+      "query_state": "COMPLETE_AGGREGATE3_WITH_PER_CALL_STATUS",
+      "found": 0,
+      "failed": 0,
+      "slots": [
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 100,
+          "expected_snapshot_pool": null,
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 500,
+          "expected_snapshot_pool": "0x5f44e294432dc0119e15cd31704c149cd8e28e98",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 2500,
+          "expected_snapshot_pool": "0x516936aa71f93a3763c9cc7464943ee50e958648",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 10000,
+          "expected_snapshot_pool": "0x287dda17c0dfec97fe7b89adf8bfb4cccc409f58",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V2",
+          "quote": "USDT",
+          "fee_pips": null,
+          "expected_snapshot_pool": "0x95548d0d974283237b65136bbf10c3e9dd74bd13",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 100,
+          "expected_snapshot_pool": null,
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 500,
+          "expected_snapshot_pool": "0x301cfebcaf33038b90a76ed8db8082120b8e80d3",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 2500,
+          "expected_snapshot_pool": "0x8c9021fd2c3ab6d0b71048ddbfba71cf51eceea1",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 10000,
+          "expected_snapshot_pool": "0xb6bf78211bec35385dc663d37ea41118205c1303",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        }
+      ]
+    },
+    {
+      "index": 14,
+      "token": "龙虾",
+      "CA": "0xeccbb861c0dda7efd964010085488b69317e4444",
+      "at_block": 83636128,
+      "query_state": "COMPLETE_AGGREGATE3_WITH_PER_CALL_STATUS",
+      "found": 0,
+      "failed": 0,
+      "slots": [
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 100,
+          "expected_snapshot_pool": null,
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 500,
+          "expected_snapshot_pool": null,
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 2500,
+          "expected_snapshot_pool": "0x23ecb1266df4ad88a63f64456f530a997627a5b1",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 10000,
+          "expected_snapshot_pool": "0xe4f63d4fc45ff997308da38f7c15e1a9250e1642",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V2",
+          "quote": "USDT",
+          "fee_pips": null,
+          "expected_snapshot_pool": "0xa6ba19044aae340758d63a714840aa811ea8f955",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 100,
+          "expected_snapshot_pool": null,
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 500,
+          "expected_snapshot_pool": null,
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 2500,
+          "expected_snapshot_pool": "0x791f662371a06a30d69d46b5cfef0fb89ad5c6b3",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 10000,
+          "expected_snapshot_pool": "0x27b5c411a43dea7ca7e60632ea73fd9e74ed06a8",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        }
+      ]
+    },
+    {
+      "index": 15,
+      "token": "牛来",
+      "CA": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "at_block": 116314917,
+      "query_state": "COMPLETE_AGGREGATE3_WITH_PER_CALL_STATUS",
+      "found": 5,
+      "failed": 0,
+      "slots": [
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 100,
+          "expected_snapshot_pool": null,
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 500,
+          "expected_snapshot_pool": null,
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 2500,
+          "expected_snapshot_pool": "0xc461d52be79a3ad77bca0f2e8a7d38c3ad7a6f82",
+          "at_baseline_pool": "0xc461d52be79a3ad77bca0f2e8a7d38c3ad7a6f82",
+          "state": "EXISTED_BY_V2_LIQUIDITY_BLOCK"
+        },
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 10000,
+          "expected_snapshot_pool": "0xab388f885f0bd58d8f98ea8134c67507d67188aa",
+          "at_baseline_pool": "0xab388f885f0bd58d8f98ea8134c67507d67188aa",
+          "state": "EXISTED_BY_V2_LIQUIDITY_BLOCK"
+        },
+        {
+          "protocol": "V2",
+          "quote": "USDT",
+          "fee_pips": null,
+          "expected_snapshot_pool": "0x57143fffeba8aecfe31d18bcbdc9ed590990dc1a",
+          "at_baseline_pool": "0x57143fffeba8aecfe31d18bcbdc9ed590990dc1a",
+          "state": "EXISTED_BY_V2_LIQUIDITY_BLOCK"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 100,
+          "expected_snapshot_pool": "0xf0cae20d64a1af9cd3f50905607f804e3a7de3aa",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 500,
+          "expected_snapshot_pool": "0x53cab475db235f140f09fca4119109b658812296",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 2500,
+          "expected_snapshot_pool": "0xe5ae318389b8d6d09370a675479c64862152d126",
+          "at_baseline_pool": "0xe5ae318389b8d6d09370a675479c64862152d126",
+          "state": "EXISTED_BY_V2_LIQUIDITY_BLOCK"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 10000,
+          "expected_snapshot_pool": "0xab058332a7279f1e64162be08f59ac0cd9601759",
+          "at_baseline_pool": "0xab058332a7279f1e64162be08f59ac0cd9601759",
+          "state": "EXISTED_BY_V2_LIQUIDITY_BLOCK"
+        }
+      ]
+    },
+    {
+      "index": 16,
+      "token": "MARSCOIN",
+      "CA": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "at_block": 112668701,
+      "query_state": "COMPLETE_AGGREGATE3_WITH_PER_CALL_STATUS",
+      "found": 1,
+      "failed": 0,
+      "slots": [
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 100,
+          "expected_snapshot_pool": null,
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 500,
+          "expected_snapshot_pool": null,
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 2500,
+          "expected_snapshot_pool": "0x8860c4d1b9548ee053f00016f1547871063bcc8e",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 10000,
+          "expected_snapshot_pool": "0xf129b19e55ab545f97b9bb301cddbd76f9428e52",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V2",
+          "quote": "USDT",
+          "fee_pips": null,
+          "expected_snapshot_pool": "0x204863ec129d2def697aa70333922482df50216f",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 100,
+          "expected_snapshot_pool": "0xe838b22b130437ec003c1dcb9455fb9662473044",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 500,
+          "expected_snapshot_pool": "0x3674196d5f95d0c98246bfad7e78b0634206cd15",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 2500,
+          "expected_snapshot_pool": "0x14ca9d552ed2cf0d5dfd1f89bc6793a464e2ed16",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 10000,
+          "expected_snapshot_pool": "0x4a4bea953813c118c260be9a26b2321e57aa62e5",
+          "at_baseline_pool": "0x4a4bea953813c118c260be9a26b2321e57aa62e5",
+          "state": "EXISTED_BY_V2_LIQUIDITY_BLOCK"
+        }
+      ]
+    },
+    {
+      "index": 17,
+      "token": "哈基米 / HAJIMI",
+      "CA": "0x82ec31d69b3c289e541b50e30681fd1acad24444",
+      "at_block": 63838943,
+      "query_state": "COMPLETE_AGGREGATE3_WITH_PER_CALL_STATUS",
+      "found": 0,
+      "failed": 0,
+      "slots": [
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 100,
+          "expected_snapshot_pool": "0xe024d6294a9a88460d9a1d02780a938fe93d89ef",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 500,
+          "expected_snapshot_pool": "0xe3410f92f3188ff91145e09458e4f9cd659d5ac4",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 2500,
+          "expected_snapshot_pool": "0x259017a103443f721792a46f76fc73be51183a6f",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 10000,
+          "expected_snapshot_pool": "0xcdfe5db17c92a8baf896d1736b042c644fc62b10",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V2",
+          "quote": "USDT",
+          "fee_pips": null,
+          "expected_snapshot_pool": "0x3355199d372f4c9eb0c2176dc1ac0514858dabea",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 100,
+          "expected_snapshot_pool": "0xff2e24301b91f129b0391ffa239290ef6bf18de9",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 500,
+          "expected_snapshot_pool": "0x5db14660c7674b290371541baa18c20ce1988d0b",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 2500,
+          "expected_snapshot_pool": "0x71f17f5fe6f6284462b980a8e4dc9e5ac757c2cb",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 10000,
+          "expected_snapshot_pool": "0x31d3f4016ff42be89468868ba3ee3f6d70ac6f49",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        }
+      ]
+    },
+    {
+      "index": 18,
+      "token": "BUBB",
+      "CA": "0xd5369a3cac0f4448a9a96bb98af9c887c92fc37b",
+      "at_block": 47620838,
+      "query_state": "COMPLETE_AGGREGATE3_WITH_PER_CALL_STATUS",
+      "found": 2,
+      "failed": 0,
+      "slots": [
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 100,
+          "expected_snapshot_pool": null,
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 500,
+          "expected_snapshot_pool": null,
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 2500,
+          "expected_snapshot_pool": "0xc8255e3fa0f4c6e6678807d663f9e2263e23a8e8",
+          "at_baseline_pool": "0xc8255e3fa0f4c6e6678807d663f9e2263e23a8e8",
+          "state": "EXISTED_BY_V2_LIQUIDITY_BLOCK"
+        },
+        {
+          "protocol": "V3",
+          "quote": "WBNB",
+          "fee_pips": 10000,
+          "expected_snapshot_pool": "0x6a1d472628d9279c53e9d9002c2dae5fff224035",
+          "at_baseline_pool": "0x6a1d472628d9279c53e9d9002c2dae5fff224035",
+          "state": "EXISTED_BY_V2_LIQUIDITY_BLOCK"
+        },
+        {
+          "protocol": "V2",
+          "quote": "USDT",
+          "fee_pips": null,
+          "expected_snapshot_pool": "0xb8b965fc60b6034cd5d523c7810260e4590e8410",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 100,
+          "expected_snapshot_pool": null,
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 500,
+          "expected_snapshot_pool": null,
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 2500,
+          "expected_snapshot_pool": "0x554afb5151ecb121b56e849f39e6c6979ff806b0",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        },
+        {
+          "protocol": "V3",
+          "quote": "USDT",
+          "fee_pips": 10000,
+          "expected_snapshot_pool": "0x20eb78cfe5c27e8961544f5cb12f12bae237acf4",
+          "at_baseline_pool": null,
+          "state": "FACTORY_ZERO_AT_BASELINE"
+        }
+      ]
+    }
+  ]
+}

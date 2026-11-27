@@ -1,0 +1,57 @@
+{
+  "schema": "BSC_P4B_2026_FLAP_NPLUS1_HISTORICAL_TWO_SIDED_MATH_QUOTE_PRECOMMIT_V1",
+  "date": "2026-10-17",
+  "source_reviewed_baseline": "dd3d529c99853b89f2be299235cdb499c2ad365f",
+  "source_only": {
+    "market": "bsc-meme-address-model-v1-p4b-19ca-unified-early-market-buy-evidence-2026-10-14.json",
+    "market_blob_sha": "c42ad01e896f30262f89f7852f927fc84fb3ea18",
+    "historical_prebuy_quotes": "bsc-meme-address-model-v1-p4b-flap-major2-bidirectional-quotes-raw-2026-10-14.json",
+    "historical_prebuy_quotes_blob": "43fe6d36fbeeda43e07a2b65874c4292e5d91606",
+    "historical_selected_original_buy": "bsc-meme-address-model-v1-p4b-flap-major2-original-buys-and-quotes-2026-10-14.json",
+    "original_buy_blob": "d69f2ddfade437a1d8b0fc49585eb4ca0f9268e9"
+  },
+  "network": "bnb-mainnet",
+  "provider": "Alchemy existing read-only app, no wallet transaction",
+  "contract": "0xe2ce6ab80874fa9fa2aae65d277dd6b8e65c9de0",
+  "function": "quoteExactInput((address tokenIn,address tokenOut,uint256 amountIn))",
+  "selector": "0xfc847c2b",
+  "read_strategy": "Only after source witnessed buyer confirmed in N, at historical end-of-N+1 call static quoteExactInput with fixed 0.01 actual historical quote ERC20 token to token, then inverse quoteExactInput at SAME N+1 with output equal to first quote. For each input, if buy quote fails do not infer sell status. Two independent static calls are not a stateful buy then sell sequence.",
+  "amount_quote_in_raw": "10000000000000000",
+  "max_calls": 4,
+  "retry_failed": 0,
+  "cases": [
+    {
+      "token": "牛来",
+      "CA": "0xbeea1d618e533a387d941f58a7d4c9b7bd377777",
+      "quote_CA": "0x205812cdbed920aff76c6580abd681a46d11efc7",
+      "witness_block_N": 115628774,
+      "read_block_Nplus1": 115628775,
+      "source_original_signer": "0xb0d0c4c1ee4ba9fac874db4ede587718ad9484d9",
+      "buyer_is_in_original23": false,
+      "from_earlier_token_creation": "PRE_Dex Flap quote, 1%/1% historical tax configuration"
+    },
+    {
+      "token": "MARSCOIN",
+      "CA": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "quote_CA": "0xbe9d156892e55e7154bcd3cb0fea677f9d3103e1",
+      "witness_block_N": 112441394,
+      "read_block_Nplus1": 112441395,
+      "source_original_signer": "0x504ba7b11be98c66a379a3e5de91dc5ab2dde3ea",
+      "buyer_is_in_original23": false,
+      "from_earlier_token_creation": "PRE_Dex Flap quote, 3%/3% historical tax configuration"
+    }
+  ],
+  "controls": {
+    "dragon": "已有 Four.meme DDAC N+1 0.01 BNB buy-only non-persistent eth_call; use original source, never fake new Flap quote.",
+    "我踏马来了": "market-only token has no original frozen signed earliest witness, deliberately NOT quoted as early signed signal"
+  },
+  "evidence_grade": "RPC_HISTORICAL_END_BLOCK_MATH_ONLY_NOT_REAL_TRANSFER_OR_EXECUTABLE_FOLLOW",
+  "gate": {
+    "public_first_executable_U": "UNRESOLVED",
+    "actual_same_state_buy_and_sell_fill": "UNRESOLVED",
+    "follower_one_five_fifteen_min_PnL": "UNRESOLVED",
+    "P5": "BLOCKED",
+    "production": "NO_GO",
+    "permissions": "NO_MERGE NO_DEPLOY NO_GMAIL NO_TRADE"
+  }
+}

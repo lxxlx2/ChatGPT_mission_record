@@ -1,0 +1,68 @@
+{
+  "schema": "BSC_MEME_P3_POOL11_HISTORICAL_IDENTITY",
+  "part": 2,
+  "range": [
+    4,
+    7
+  ],
+  "precommit_sha": "e252399af01896a2bfcb05e3a2be73b53c8a8d43",
+  "records": [
+    {
+      "pool": "0x7f51bbf34156ba802deb0e38b7671dc4fa32041d",
+      "earliest_block": 126467804,
+      "reference_hash": "0x0688c737243ad718ab3f9fae4ee4d1fbcf3208dd092fb5af3f7a66e47bc61929",
+      "target_CA": "0x3d4f0513e8a29669b960f9dbca61861548a9a760",
+      "event_topic": "0x19b47279256b2a23a1665c810c8d55a1758940ee09377d4f8d26497a3577dc83",
+      "occurrences": 1,
+      "call_values": {
+        "token0": "0x3d4f0513e8a29669b960f9dbca61861548a9a760",
+        "token1": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+        "fee_pips": 100
+      },
+      "target_ca_in_pair": true
+    },
+    {
+      "pool": "0x94f3ed36706c746ad59fadcaf271b7431ab1d8f1",
+      "earliest_block": 122582898,
+      "reference_hash": "0xae1def223a10ca11bf4e13f716f475b99693047e4e541c465e9dde0a30b24189",
+      "target_CA": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+      "event_topic": "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822",
+      "occurrences": 5,
+      "call_values": {
+        "token0": "0xbe9d156892e55e7154bcd3cb0fea677f9d3103e1",
+        "token1": "0xfe189e97832da1573e4e4ff034f4ffc3a15c7777",
+        "fee_pips": "NO_FEE_SELECTOR_OR_UNAVAILABLE"
+      },
+      "target_ca_in_pair": true
+    },
+    {
+      "pool": "0xa5067360b13fc7a2685dc82dcd1bf2b4b8d7868b",
+      "earliest_block": 126468121,
+      "reference_hash": "0xe651156fb79e04c22e6e3740e1930e657ba106c0134dd79fcc59563711de1db1",
+      "target_CA": "0x6d5ad1592ed9d6d1df9b93c793ab759573ed6714",
+      "event_topic": "0x19b47279256b2a23a1665c810c8d55a1758940ee09377d4f8d26497a3577dc83",
+      "occurrences": 1,
+      "call_values": {
+        "token0": "0x6d5ad1592ed9d6d1df9b93c793ab759573ed6714",
+        "token1": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+        "fee_pips": 10000
+      },
+      "target_ca_in_pair": true
+    },
+    {
+      "pool": "0xaf0eb8f2f114917ef0026105c070cf08423f488e",
+      "earliest_block": 126468394,
+      "reference_hash": "0x6875c13bfba6382f1078ea29d26a5e261ba662c52a00131583017f4b326ef7b6",
+      "target_CA": "0x0df0587216a4a1bb7d5082fdc491d93d2dd4b413",
+      "event_topic": "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822",
+      "occurrences": 1,
+      "call_values": {
+        "token0": "0x0df0587216a4a1bb7d5082fdc491d93d2dd4b413",
+        "token1": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+        "fee_pips": "NO_FEE_SELECTOR_OR_UNAVAILABLE"
+      },
+      "target_ca_in_pair": true
+    }
+  ],
+  "production": "NO_GO"
+}

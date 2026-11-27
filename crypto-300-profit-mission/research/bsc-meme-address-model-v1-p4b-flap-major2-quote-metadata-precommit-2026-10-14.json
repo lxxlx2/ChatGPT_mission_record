@@ -1,0 +1,33 @@
+{
+  "schema": "BSC_P4B_FLAP_2026_2QUOTE_METADATA_HISTORICAL_PRECOMMIT",
+  "source_manifest": [
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4b-flap-major2-quote-tax-part1-2026-10-14.json",
+      "git_blob_sha": "302b4983f750c50957d84869d15dcc40ac2af8bd"
+    },
+    {
+      "path": "crypto-300-profit-mission/research/bsc-meme-address-model-v1-p4b-flap-major2-quote-tax-part2-2026-10-14.json",
+      "git_blob_sha": "70f93b2e8ac2be4e1cdb803b3510ae360cb54e77"
+    }
+  ],
+  "query": "eth_call decimals() at creation block and first observed buy block; metadata current is supplemental, not historical quote conversion; buyer funds still require quote transfer evidence",
+  "queries": [
+    {
+      "token": "牛来",
+      "quote_CA": "0x205812cdbed920aff76c6580abd681a46d11efc7",
+      "buy_tax_bps": 100,
+      "sell_tax_bps": 100,
+      "creation_block": 115628768,
+      "creation_tx": "0x907beed290b7daeb45cd2f05085c7ca67f997c06749f716c40ed431b2b2eb62d"
+    },
+    {
+      "token": "MARSCOIN",
+      "quote_CA": "0xbe9d156892e55e7154bcd3cb0fea677f9d3103e1",
+      "buy_tax_bps": 300,
+      "sell_tax_bps": 300,
+      "creation_block": 112441387,
+      "creation_tx": "0xb499cc66534db949c6040dbc914ba0e3e50423a408717f69a193a8e29eeeb7a2"
+    }
+  ],
+  "production": "NO_GO"
+}

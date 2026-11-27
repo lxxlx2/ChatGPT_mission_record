@@ -1,0 +1,53 @@
+{
+  "schema": "BSC_P4B_2026_239E_R2_REAL_5E60_1000_USDT_SPENT_AND_BUY_RECEIPT_FROZEN_V1",
+  "date": "2026-10-18",
+  "purpose": "Prove real signer spent 1000 USDT directly and actually received 48454.704 Dragon by locked tx, and check actual fee only if receipt is complete; do not invent follower PnL.",
+  "source_precommit_tx": "bsc-meme-address-model-v1-p4b-239e-r2-real-external-1000usdt-three-token-route-signed-calldata-2026-10-18.json",
+  "network": "bnb-mainnet",
+  "provider": "Alchemy existing free",
+  "token_source": "0x55d398326f99059ff775485246999027b3197955",
+  "exact_external_wallet": "0x5e600e259e3cff0757e3736223685958665866c6",
+  "exact_hash": "0x2b93cfb6ae16ab4943f5f209fff1820f98368fd357cbdcb4f624708440bf8f47",
+  "block": 85959962,
+  "original_wallet_239e_first_buy": 85959961,
+  "router_amountIn_USDT_raw": "1000000000000000000000",
+  "transfer_topic0": "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+  "queries": [
+    {
+      "method": "eth_call",
+      "purpose": "USDT balanceOf external signer end of original 239E buy block",
+      "block": 85959961
+    },
+    {
+      "method": "eth_call",
+      "purpose": "USDT balanceOf external signer end of external signer next block",
+      "block": 85959962
+    },
+    {
+      "method": "eth_getLogs",
+      "purpose": "USDT Transfer indexed from external signer, exact single historical external buy block, preserve all returned and attribute only same signed tx",
+      "block": 85959962,
+      "from_event_topic_index_1": "0x5e600e259e3cff0757e3736223685958665866c6"
+    },
+    {
+      "method": "ethGetTransactionReceipt",
+      "purpose": "Check status/effectiveGasPrice/gasUsed only if entire receipt full valid JSON; if clipped record UNKNOWN",
+      "hash": "0x2b93cfb6ae16ab4943f5f209fff1820f98368fd357cbdcb4f624708440bf8f47"
+    }
+  ],
+  "max_calls": 4,
+  "no_retries": true,
+  "no_reselection": true,
+  "source_coverage_warning": "WBNB source wallet balance did not change, and there was no WBNB Transfer from buyer; true original paid asset is USDT. Exact signed wallet before already held Dragon, so this is an add-to-position episode.",
+  "classification_if_usdt_transfer_true": "EXTERNAL_SIGNED_BUY_REAL_USDT_FUNDING_AND_DRAGON_DELIVERY_BUT_NO_REALIZED_RETURN",
+  "gates": {
+    "P4_B": "PARTIAL",
+    "PUBLIC_EXECUTABLE_U": "UNRESOLVED",
+    "P5": "BLOCKED",
+    "PRODUCTION": "NO_GO",
+    "NO_MERGE": true,
+    "NO_DEPLOY": true,
+    "NO_GMAIL": true,
+    "NO_TRADE": true
+  }
+}

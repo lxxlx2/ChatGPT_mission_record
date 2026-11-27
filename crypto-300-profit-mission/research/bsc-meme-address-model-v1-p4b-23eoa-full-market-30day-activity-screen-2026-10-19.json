@@ -1,0 +1,359 @@
+{
+  "schema": "BSC_P4B_23EOA_FULL_MARKET_30DAY_ACTIVITY_SCREEN_V1",
+  "scope": "ORIGINAL_23_EOA_ISSUER_NONCE_SCAN_ACROSS_ANY_TOKENS_NOT_NEW_OOOO_YOUNG_ADDRESS_MODULE",
+  "observed_as_of_utc": "2026-10-18T18:34:56Z",
+  "source": {
+    "provider": "USER_CONNECTED_ALCHEMY_READ_ONLY_RPC",
+    "app_id": "h6m5pairkgzet7vz",
+    "chain": "bnb-mainnet",
+    "eth_chain_id": "0x38",
+    "original_grid_git_blob_sha": "f88ed9abfcb0f321ec31e98a029303aca48a8623",
+    "original_research_approved_code_sha": "f8e7ba21f466774b16ed1eef45f8ff31ff7f6243",
+    "method": [
+      "eth_getBlockByNumber",
+      "eth_getTransactionCount",
+      "alchemy_getAssetTransfers_sample",
+      "eth_getTransactionByHash_sample"
+    ],
+    "origin": "read-only observed during chat; no original provider response ZIP; rerun calls to verify",
+    "api_key_recorded": false
+  },
+  "window": {
+    "start_block": 122654260,
+    "start_block_hash": "0xc70553c8b1e0500542ba22604e02a88f3160c65ac823ba45164c1fcfe5e5f1e3",
+    "start_utc": "2026-09-18T18:34:56Z",
+    "end_block": 128411164,
+    "end_block_hash": "0x2cd5712b4b98be8eff100d987d5d5245419679355467a5155df1d4b316af200e",
+    "end_utc": "2026-10-18T18:34:56Z",
+    "scope": "exact two BNB block time anchors 30 days apart; cumulative nonce differences count signer-sent tx including non-swap and failed tx"
+  },
+  "summary": {
+    "wallets_total": 23,
+    "owner_signed_tx_positive": 14,
+    "owner_signed_tx_zero": 9,
+    "at_least_1000_owner_signed_tx": 8,
+    "network_errors": 0,
+    "qualified_profitable_wallets": "UNRESOLVED",
+    "verified_first_public_observer_u": 0
+  },
+  "wallets": [
+    {
+      "original_frozen_grid_order": 1,
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "nonce_at_start_block": 409025,
+      "nonce_at_end_block": 462477,
+      "owner_signed_transaction_count_30d": 53452,
+      "owner_sent_any_transaction_30d": true,
+      "historical_19ca_recent_swap_at_grid_freeze": true,
+      "actual_pnl": "UNRESOLVED"
+    },
+    {
+      "original_frozen_grid_order": 2,
+      "wallet": "0xadffbebbd2d9141cff80f8a905846ba8f9e3946d",
+      "nonce_at_start_block": 142408,
+      "nonce_at_end_block": 142423,
+      "owner_signed_transaction_count_30d": 15,
+      "owner_sent_any_transaction_30d": true,
+      "historical_19ca_recent_swap_at_grid_freeze": true,
+      "actual_pnl": "UNRESOLVED"
+    },
+    {
+      "original_frozen_grid_order": 3,
+      "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "nonce_at_start_block": 23090,
+      "nonce_at_end_block": 24348,
+      "owner_signed_transaction_count_30d": 1258,
+      "owner_sent_any_transaction_30d": true,
+      "historical_19ca_recent_swap_at_grid_freeze": true,
+      "actual_pnl": "UNRESOLVED"
+    },
+    {
+      "original_frozen_grid_order": 4,
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "nonce_at_start_block": 26438,
+      "nonce_at_end_block": 27744,
+      "owner_signed_transaction_count_30d": 1306,
+      "owner_sent_any_transaction_30d": true,
+      "historical_19ca_recent_swap_at_grid_freeze": true,
+      "actual_pnl": "UNRESOLVED"
+    },
+    {
+      "original_frozen_grid_order": 5,
+      "wallet": "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8",
+      "nonce_at_start_block": 40753,
+      "nonce_at_end_block": 47430,
+      "owner_signed_transaction_count_30d": 6677,
+      "owner_sent_any_transaction_30d": true,
+      "historical_19ca_recent_swap_at_grid_freeze": true,
+      "actual_pnl": "UNRESOLVED"
+    },
+    {
+      "original_frozen_grid_order": 6,
+      "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "nonce_at_start_block": 58683,
+      "nonce_at_end_block": 63098,
+      "owner_signed_transaction_count_30d": 4415,
+      "owner_sent_any_transaction_30d": true,
+      "historical_19ca_recent_swap_at_grid_freeze": true,
+      "actual_pnl": "UNRESOLVED"
+    },
+    {
+      "original_frozen_grid_order": 7,
+      "wallet": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "nonce_at_start_block": 70324,
+      "nonce_at_end_block": 79430,
+      "owner_signed_transaction_count_30d": 9106,
+      "owner_sent_any_transaction_30d": true,
+      "historical_19ca_recent_swap_at_grid_freeze": false,
+      "actual_pnl": "UNRESOLVED"
+    },
+    {
+      "original_frozen_grid_order": 8,
+      "wallet": "0x8d8c031fd095b15f6e7ce1b27c1318015723ae25",
+      "nonce_at_start_block": 66789,
+      "nonce_at_end_block": 66814,
+      "owner_signed_transaction_count_30d": 25,
+      "owner_sent_any_transaction_30d": true,
+      "historical_19ca_recent_swap_at_grid_freeze": false,
+      "actual_pnl": "UNRESOLVED"
+    },
+    {
+      "original_frozen_grid_order": 9,
+      "wallet": "0x239e74bfbd02d71cdc70fecc2d505dc13acfb337",
+      "nonce_at_start_block": 4822,
+      "nonce_at_end_block": 4822,
+      "owner_signed_transaction_count_30d": 0,
+      "owner_sent_any_transaction_30d": false,
+      "historical_19ca_recent_swap_at_grid_freeze": false,
+      "actual_pnl": "UNRESOLVED"
+    },
+    {
+      "original_frozen_grid_order": 10,
+      "wallet": "0x498528e32b04bdaa73d5c8943a09aeffd15bd99a",
+      "nonce_at_start_block": 28116,
+      "nonce_at_end_block": 29544,
+      "owner_signed_transaction_count_30d": 1428,
+      "owner_sent_any_transaction_30d": true,
+      "historical_19ca_recent_swap_at_grid_freeze": true,
+      "actual_pnl": "UNRESOLVED"
+    },
+    {
+      "original_frozen_grid_order": 11,
+      "wallet": "0x9d1240b262d91ec3a4ea24bfec5e3b21c2eca35c",
+      "nonce_at_start_block": 41380,
+      "nonce_at_end_block": 41380,
+      "owner_signed_transaction_count_30d": 0,
+      "owner_sent_any_transaction_30d": false,
+      "historical_19ca_recent_swap_at_grid_freeze": false,
+      "actual_pnl": "UNRESOLVED"
+    },
+    {
+      "original_frozen_grid_order": 12,
+      "wallet": "0x5c48a7c2113aa044d9c1381588b9c7b3c352387c",
+      "nonce_at_start_block": 19180,
+      "nonce_at_end_block": 19189,
+      "owner_signed_transaction_count_30d": 9,
+      "owner_sent_any_transaction_30d": true,
+      "historical_19ca_recent_swap_at_grid_freeze": false,
+      "actual_pnl": "UNRESOLVED"
+    },
+    {
+      "original_frozen_grid_order": 13,
+      "wallet": "0xcceea39c8a5b5306a4eabaaca82a2777a39d8037",
+      "nonce_at_start_block": 47111,
+      "nonce_at_end_block": 47111,
+      "owner_signed_transaction_count_30d": 0,
+      "owner_sent_any_transaction_30d": false,
+      "historical_19ca_recent_swap_at_grid_freeze": false,
+      "actual_pnl": "UNRESOLVED"
+    },
+    {
+      "original_frozen_grid_order": 14,
+      "wallet": "0x11a7327957ed5d370d2e009ec250ab0da2ab98d8",
+      "nonce_at_start_block": 13237,
+      "nonce_at_end_block": 13237,
+      "owner_signed_transaction_count_30d": 0,
+      "owner_sent_any_transaction_30d": false,
+      "historical_19ca_recent_swap_at_grid_freeze": false,
+      "actual_pnl": "UNRESOLVED"
+    },
+    {
+      "original_frozen_grid_order": 15,
+      "wallet": "0x5c0c5d788661dde7437842fb7f0bbff7f1607583",
+      "nonce_at_start_block": 538,
+      "nonce_at_end_block": 542,
+      "owner_signed_transaction_count_30d": 4,
+      "owner_sent_any_transaction_30d": true,
+      "historical_19ca_recent_swap_at_grid_freeze": false,
+      "actual_pnl": "UNRESOLVED"
+    },
+    {
+      "original_frozen_grid_order": 16,
+      "wallet": "0x2b40f892a5b8aefdf9868317330ca0f956f70d2b",
+      "nonce_at_start_block": 78383,
+      "nonce_at_end_block": 83032,
+      "owner_signed_transaction_count_30d": 4649,
+      "owner_sent_any_transaction_30d": true,
+      "historical_19ca_recent_swap_at_grid_freeze": false,
+      "actual_pnl": "UNRESOLVED"
+    },
+    {
+      "original_frozen_grid_order": 17,
+      "wallet": "0xd70ce47ec32625420640da206f0b3525c2bec678",
+      "nonce_at_start_block": 18173,
+      "nonce_at_end_block": 18178,
+      "owner_signed_transaction_count_30d": 5,
+      "owner_sent_any_transaction_30d": true,
+      "historical_19ca_recent_swap_at_grid_freeze": false,
+      "actual_pnl": "UNRESOLVED"
+    },
+    {
+      "original_frozen_grid_order": 18,
+      "wallet": "0x3638cd44e7d8449a1adfc423cbc39e06942bc203",
+      "nonce_at_start_block": 876,
+      "nonce_at_end_block": 876,
+      "owner_signed_transaction_count_30d": 0,
+      "owner_sent_any_transaction_30d": false,
+      "historical_19ca_recent_swap_at_grid_freeze": false,
+      "actual_pnl": "UNRESOLVED"
+    },
+    {
+      "original_frozen_grid_order": 19,
+      "wallet": "0x4789f192df5deb559af2bd9185781fda995856d5",
+      "nonce_at_start_block": 6618,
+      "nonce_at_end_block": 6618,
+      "owner_signed_transaction_count_30d": 0,
+      "owner_sent_any_transaction_30d": false,
+      "historical_19ca_recent_swap_at_grid_freeze": false,
+      "actual_pnl": "UNRESOLVED"
+    },
+    {
+      "original_frozen_grid_order": 20,
+      "wallet": "0x47b87148e6ddff25fe765a0ac23aaa4c19f1b429",
+      "nonce_at_start_block": 6152,
+      "nonce_at_end_block": 6152,
+      "owner_signed_transaction_count_30d": 0,
+      "owner_sent_any_transaction_30d": false,
+      "historical_19ca_recent_swap_at_grid_freeze": false,
+      "actual_pnl": "UNRESOLVED"
+    },
+    {
+      "original_frozen_grid_order": 21,
+      "wallet": "0x57c98bc732f0e9ed7156d21f74c17bee4bb0cbf4",
+      "nonce_at_start_block": 13218,
+      "nonce_at_end_block": 13218,
+      "owner_signed_transaction_count_30d": 0,
+      "owner_sent_any_transaction_30d": false,
+      "historical_19ca_recent_swap_at_grid_freeze": false,
+      "actual_pnl": "UNRESOLVED"
+    },
+    {
+      "original_frozen_grid_order": 22,
+      "wallet": "0xbeb713cced9ef608cd349cc14971c32d4e6e2ffc",
+      "nonce_at_start_block": 4127,
+      "nonce_at_end_block": 4131,
+      "owner_signed_transaction_count_30d": 4,
+      "owner_sent_any_transaction_30d": true,
+      "historical_19ca_recent_swap_at_grid_freeze": false,
+      "actual_pnl": "UNRESOLVED"
+    },
+    {
+      "original_frozen_grid_order": 23,
+      "wallet": "0xe54bdcaff91ed27e53a19bb1203b10bc5e2dc568",
+      "nonce_at_start_block": 10287,
+      "nonce_at_end_block": 10287,
+      "owner_signed_transaction_count_30d": 0,
+      "owner_sent_any_transaction_30d": false,
+      "historical_19ca_recent_swap_at_grid_freeze": false,
+      "actual_pnl": "UNRESOLVED"
+    }
+  ],
+  "independently_queried_example_signers": [
+    {
+      "wallet": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "tx_hash": "0xb4e4a141ae885d1166a1363f79f5befb593d6f2308c036c009a2dd9f0ceb7b12",
+      "to": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "method_selector": "0x4d819a2a",
+      "matched_from_signer": true,
+      "associated_erc20_ca": "0x59d87d46f53b1bdefcd406e8a20f059a92127777",
+      "token_symbol_claim": "한화",
+      "block": "0x7a71d5b",
+      "in_original_frozen_19_ca": false
+    },
+    {
+      "wallet": "0x877af245c61289b24f0c619a4346cdbc68f1aaac",
+      "tx_hash": "0x34d72b0fd8c840a5d47baf1ec455c4988154e22ff2d203e054ae393b1e5bdec9",
+      "to": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "method_selector": "0x4d819a2a",
+      "matched_from_signer": true,
+      "associated_erc20_ca": "0x1bd0d654e44a78d9b20dcf09fa61100013c07777",
+      "token_symbol_claim": "尤栗",
+      "block": "0x7a5f44f",
+      "in_original_frozen_19_ca": false
+    },
+    {
+      "wallet": "0x0abb84c976d07b97c1e23b7bfa88bc1f3d9f1fd8",
+      "tx_hash": "0xd2ae8b6edef3ee9e773c63f76466af1758668cdecfb2867ba9d81e1530a3a1e3",
+      "to": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "method_selector": "0x4d819a2a",
+      "matched_from_signer": true,
+      "associated_erc20_ca": "0x61c5a28fe580d7cc79bdcc67f0023e3f503f7777",
+      "token_symbol_claim": "币安手机",
+      "block": "0x7a758af",
+      "in_original_frozen_19_ca": false
+    },
+    {
+      "wallet": "0x8e6b3c9c72ca592bbab470f761fa869c174e9ea0",
+      "tx_hash": "0x9d6c8d64d24367f2f52cdcdb9cebe84c7462209b71ba291377a9056000ac6559",
+      "to": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "method_selector": "0x4d819a2a",
+      "matched_from_signer": true,
+      "associated_erc20_ca": "0x3b7a5c1519731e555782bb623adfb9cfca5c7777",
+      "token_symbol_claim": "FLAP",
+      "block": "0x79f7fc0",
+      "in_original_frozen_19_ca": false
+    },
+    {
+      "wallet": "0xddac928a240bdace3994c2cc0783d4e29a002127",
+      "tx_hash": "0xcee9ee0722a29699906a8acaefbfa568b924ae805392ad385e0deec3a674a22e",
+      "to": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "method_selector": "0x4d819a2a",
+      "matched_from_signer": true,
+      "associated_erc20_ca": "0x9ec1c7fc2cbd74ad0f9badd0c6b7e7260e8c7777",
+      "token_symbol_claim": "Fâché",
+      "block": "0x7a6ff5c",
+      "in_original_frozen_19_ca": false
+    },
+    {
+      "wallet": "0x2adf961b40951736bcff3b36b7fb1cd5775475ba",
+      "tx_hash": "0x092edd1dc44a7b1671d0e6de1e7594bca1b9129a6c12a7ea9967c0326e235c6a",
+      "to": "0x1de460f363af910f51726def188f9004276bf4bc",
+      "method_selector": "0x4d819a2a",
+      "matched_from_signer": true,
+      "associated_erc20_ca": "0xa96402db0112ed21a6613b43cdfb766d9e5c7777",
+      "token_symbol_claim": "yoki酱",
+      "block": "0x7a6133d",
+      "in_original_frozen_19_ca": false
+    }
+  ],
+  "limitations": [
+    "Nonce increase only measures original signer-sent transactions, not profitable meme buys; includes failed tx and non-swap calls.",
+    "Original frozen 19 CA evaluated as separate historical cohort; recent current token examples use other CA and are not a comparable backtest.",
+    "A reported ERC20 Transfer(from=EOA) may be executed by a different tx signer; not equal to nonce count.",
+    "Token asset labels returned by indexed RPC are untrusted and spoofable; use exact CA.",
+    "Only latest 4–6 outbound transfer results per address sampled, with pageKey for many; NOT a full month transfer inventory.",
+    "Sample signed transactions have 0x4d819a2a to the same executor, but fees, net quote movements, complete receipts, direction and realized PnL remain unverified.",
+    "No observed WSS first-seen capture for these transfers; no public-executable strategy evidence or 60/300/900 second follower fills."
+  ],
+  "gates": {
+    "P4_B": "PARTIAL",
+    "P4_C": "PARTIAL",
+    "PUBLIC_EXECUTABLE_U": "UNRESOLVED",
+    "P5": "BLOCKED",
+    "PRODUCTION": "NO_GO",
+    "NO_TRADE": true,
+    "NO_GMAIL": true,
+    "NO_DEPLOY": true,
+    "NO_MERGE": true
+  }
+}
