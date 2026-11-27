@@ -1922,6 +1922,15 @@ test('a priced reverse fallback becomes the initial chart and trade pool, withou
   assert.ok(h.requests.some(({url,method})=>method==='GET' && url.includes('pool='+priced)));
 });
 
+test('same-key combined source reads are distinguished from a separate fetch and cache',()=>{
+  const h=harness();
+  const state={status:'OK',observed_at:1796000000,source_attempted:false,source_coalesced:true};
+  assert.match(h.context.clusterSeriesReadNotice(state),/共用同一来源读取.*本数据读取于/);
+  assert.doesNotMatch(h.context.clusterSeriesReadNotice(state),/本次访问来源|本机缓存/);
+  assert.match(h.context.clusterSeriesReadNotice({...state,status:'STALE'}),/共用的来源读取未返回可用数据，显示上次数据/);
+  assert.match(h.context.clusterSeriesReadNotice({...state,status:'UNAVAILABLE'}),/共用的来源读取未取得数据/);
+});
+
 test('market refresh explicitly attempts the source and labels cache and throttled fallback separately', async()=>{
   const h=harness(), pool='11111111111111111111111111111112', peer='11111111111111111111111111111113';
   const report={...fixture,ca_job_id:jobId,query_scope:'overview',

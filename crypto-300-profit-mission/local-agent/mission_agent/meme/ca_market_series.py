@@ -129,11 +129,18 @@ def _parse_trades(payload,mint,peer,pool,now):
                   if isinstance(payload.get("links",{}),dict) else len(rows)>=MAX_TRADES}
 
 
+class _InFlightRead:
+    def __init__(self):
+        self.ready = threading.Event()
+        self.result = None
+
+
 class CAMarketSeries:
     def __init__(self, *, open_url=_open, clock=time.time, monotonic=time.monotonic, request_budget=None):
         self.open_url,self.clock,self.monotonic=open_url,clock,monotonic
         self.cache=OrderedDict()
         self.lock=threading.Lock()
+        self._inflight = {}
         self.request_budget=request_budget if request_budget is not None else GeckoTerminalRequestBudget(monotonic)
 
     def _read(self,url):
@@ -158,39 +165,61 @@ class CAMarketSeries:
             raise ValueError()
         return json.loads(raw,parse_float=Decimal)
 
+    def _unavailable(self, cached, reason, *, attempted):
+        if cached and self.monotonic()-cached[0] < 1800:
+            return {**cached[1], "status": "STALE", "reason": reason, "cache": "STALE", "source_attempted": attempted}
+        return {"status": "UNAVAILABLE", "rows": [], "reason": reason, "source_attempted": attempted}
+
     def _read_cached(self,mint,pool,peer,kind,period,suffix,before=None,*,refresh=False):
-        key=(mint,pool,peer,kind,period,before)
+        key = (mint,pool,peer,kind,period,before)
         with self.lock:
-            cached=self.cache.get(key)
-            now=self.monotonic()
-            if not refresh and cached and now-cached[0]<60:
-                return {**cached[1],"cache":"FRESH","source_attempted":False}
-            attempted = self.request_budget.admit()
-            if not attempted:
-                reason="RATE_LIMIT"
+            cached = self.cache.get(key)
+            if not refresh and cached and self.monotonic()-cached[0] < 60:
+                self.cache.move_to_end(key)
+                return {**cached[1], "cache": "FRESH", "source_attempted": False}
+            flight = self._inflight.get(key)
+            leader = flight is None
+            if leader:
+                if not self.request_budget.admit():
+                    return self._unavailable(cached, "RATE_LIMIT", attempted=False)
+                flight = self._inflight[key] = _InFlightRead()
+        if not leader:
+            # The exact same read can be shared, but another CA/pool never
+            # waits behind this transport. A stuck source cannot strand peers.
+            if flight.ready.wait(timeout=7):
+                return {**flight.result, "source_attempted": False, "source_coalesced": True}
+            return self._unavailable(cached, "SOURCE_INFLIGHT_WAIT_LIMIT", attempted=False)
+
+        result = None
+        try:
+            data = self._read(BASE+pool+suffix)
+            observed = int(self.clock())
+            if kind == "chart":
+                rows = _parse_chart(data,mint,peer,observed,before)
+                coverage = {"scope": "PROVIDER_INTERVAL_PAGE", "before": before,
+                            "next_before": rows[0][0] if rows else None}
             else:
-                try:
-                    data=self._read(BASE+pool+suffix)
-                    observed=int(self.clock())
-                    if kind=="chart":
-                        rows=_parse_chart(data,mint,peer,observed,before)
-                        coverage={"scope":"PROVIDER_INTERVAL_PAGE","before":before,
-                                  "next_before":rows[0][0] if rows else None}
-                    else:
-                        rows,coverage=_parse_trades(data,mint,peer,pool,observed)
-                    result={"status":"OK","rows":rows,"coverage":coverage,"observed_at":observed}
-                    self.cache[key]=(self.monotonic(),result)
+                rows,coverage = _parse_trades(data,mint,peer,pool,observed)
+            result = {"status": "OK", "rows": rows, "coverage": coverage, "observed_at": observed}
+        except urllib.error.HTTPError as error:
+            if error.code == 429:
+                self.request_budget.rate_limited()
+            result = self._unavailable(cached, "HTTP_"+str(error.code), attempted=True)
+        except (ValueError,TypeError,TimeoutError,OSError,RecursionError):
+            result = self._unavailable(cached, "SOURCE_UNAVAILABLE_OR_MISMATCH", attempted=True)
+        finally:
+            with self.lock:
+                if result is None:
+                    result = self._unavailable(cached, "SOURCE_UNAVAILABLE_OR_MISMATCH", attempted=True)
+                if result["status"] == "OK":
+                    self.cache[key] = (self.monotonic(),result)
                     self.cache.move_to_end(key)
-                    if len(self.cache)>128:self.cache.popitem(last=False)
-                    return {**result,"source_attempted":True}
-                except urllib.error.HTTPError as error:
-                    reason="HTTP_"+str(error.code)
-                    if error.code==429:self.request_budget.rate_limited()
-                except (ValueError,TypeError,TimeoutError,OSError,RecursionError):
-                    reason="SOURCE_UNAVAILABLE_OR_MISMATCH"
-            if cached and now-cached[0]<1800:
-                return {**cached[1],"status":"STALE","reason":reason,"cache":"STALE","source_attempted":attempted}
-            return {"status":"UNAVAILABLE","rows":[],"reason":reason,"source_attempted":attempted}
+                    if len(self.cache)>128:
+                        self.cache.popitem(last=False)
+                flight.result = {**result, "source_attempted": True}
+                self._inflight.pop(key)
+                flight.ready.set()
+        return flight.result
 
     def read(self,mint,pool,peer,period,*,before=None,refresh=False):
         if (not all(valid_pubkey(value) for value in (mint,pool,peer)) or len({mint,pool,peer})!=3

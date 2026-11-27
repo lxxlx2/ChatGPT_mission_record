@@ -2663,7 +2663,12 @@ function clusterSeriesReadNotice(section) {
   const time=clusterKnownTime(section.observed_at);
   const observed=time?' · 本数据读取于 '+time:'';
   let message='';
-  if (section.status==='STALE') message=(section.source_attempted?'本次来源未返回可用数据':'本次未访问来源')+'，显示上次数据'+observed;
+  if (section.source_coalesced===true) {
+    if (section.status==='OK') message='共用同一来源读取'+observed;
+    else if (section.status==='STALE') message='共用的来源读取未返回可用数据，显示上次数据'+observed;
+    else message='共用的来源读取未取得数据';
+  }
+  else if (section.status==='STALE') message=(section.source_attempted?'本次来源未返回可用数据':'本次未访问来源')+'，显示上次数据'+observed;
   else if (section.cache==='FRESH') message='本次读取本机缓存'+observed;
   else if (section.source_attempted) message=section.status==='OK'?'本次访问来源'+observed:'本次访问来源，未取得数据';
   else if (section.reason==='RATE_LIMIT') message='来源限流，本次未访问来源';
