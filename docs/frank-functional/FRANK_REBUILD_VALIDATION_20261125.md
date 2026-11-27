@@ -208,3 +208,46 @@ FRANK_TEST_CHROMIUM='/Applications/Google Chrome.app/Contents/MacOS/Google Chrom
 最终候选通过定向 Python 149 项和 Node 266 项。全量 Python 用 `uv run --isolated --offline --no-project --with pytest==8.3.5 --with numpy python -B -` 启动上面的网络护栏，调用 `pytest.main(["-q", "-p", "no:cacheprovider", "--tb=short", "tests"])`，3,051 项通过，1 项 Chrome 可选用例随后以真实 Mac Chrome 单独执行并通过。全量首次运行发现一个旧调用缺少新增的 Engine 参数，最终 SHA 恢复兼容默认值并重新跑完。真实归档在最终 SHA 重跑，汇总文件 SHA-256 与上文一致。
 
 **结论。通知回归和两日签名覆盖通过，CA 行情验收为 PARTIAL，发布 NO_GO。** 实际收件、完整买入分类漏报率、完整独立持有人与池同槽证据，以及完整 CA 首屏和深查的实源耗时仍待证明。本地 8766 本轮没有切换。
+
+## 2026-11-28 买入分类对账与发布前检查
+
+候选源码固定为 `2b4ab7425bb359252b98eae76ac5b8e5a6fa4008`，直接基线 `066c5142dfb63beceb76267184ba2bb478933996`。候选增加了买入检测与入库的 P50／P95。当前候选的买入展示、通知及 CA 业务代码和上一次验收源码一致。
+
+### S08 两个完整 UTC 日的买入对账
+
+Mac Chrome 读取 Solscan 钱包 Activities，时间过滤为两个 UTC 整日，分页设为每页 100，两个窗口各在一页结束。11 月 19 日 13 笔兑换里有 8 笔符合范围的买入和 5 笔卖出。11 月 24 日 7 笔兑换里有 3 笔符合范围的买入、1 笔卖出、1 笔 SOL／USDC 换币和 2 笔由其他钱包发起的兑换。一笔第三方交易也在签名索引中，实际 Frank 钱包未签名。浏览器原始活动向量的 SHA-256 分别为 `8136d09120eafffd57aa83da49bb166d84478fa17d1b4da7b1de2056e6244e0c` 和 `3923861aac691756e94c97db01075f3a2178725bb65c0313e24679f36cd48f1f`。另用两个独立的交易日期签名集合绑定 437 份归档原件。 [Solscan 历史日期筛选](https://info.solscan.io/solscan-supports-full-historical-data-search/)
+
+- **买入历史通过。** 对所有 437 份原件，独立按实际签名人、成功状态、钱包原始余额和兑换日志判断方向。已证实 Meme 的 11 笔买入均能在候选页面使用的 `read_buys` 分页入口查到，完整 Mint、方向和目标币原始数量一致。10 笔通过严格买入准入，另外 1 笔路由买入可见，金额留空。两日内这批独立可核买入漏 0、额外 0。另有 1 笔公开卖出在候选分类中待核，余额变化确认目标资产减少、稳定币增加，没有混进买入。
+- **钱包扣款口径。** 11 笔买入的 Solscan 活动表输入金额均小于归档证实的钱包实际 USDC 扣款。逐笔解析内部代币转账，Solscan 输入金额对应其中一腿，其余同笔转账组成差额，全部有原始凭据。上述 1 笔路由买入能证明钱包总扣款，仍缺将总支出全部归属到目标 Mint 的证据，因此使用原有的留空规则。未将 USDC 当作成交时点的美元价格。
+- **这 11 笔的采集耗时。** 区块至首次检测 P50／P95 为 18.824／30.441 秒，至判定入库为 20.692／30.623 秒。均使用冻结 Scanner 时钟，按最近秩计算。这个买入分母和 437 笔签名分母分别报告，实际投递时延另行核对。
+- 同一冻结账本 SHA-256 固定为 `c5353d07d6640a4f31845a5592c4104462006def1da953c00f26ad67cb607f71`，资格证据 `39920968b6795f442b1d1f186f2d3558ec813b731cb8508eadfb9e69759a4e3d`。基于独立交易原件计算的两日摘要为 `c96f3fc1dab7ae66d756e654792c93f5d7b9c7a6e04723426ee00a8e8387eacf` 和 `66b55184a21ede5165f3b5404c9e8cea1611fb19af90c297031f81634e52d311`。复核浏览器活动、原件、展示以及时延的运行结果 SHA-256 为 `9346841fd8d7817ea7ffb3c097eea60ef90f188bbfca59d223dab741ed6df5e2`。原件及明细保留在 Mac 隔离证据目录。
+
+### C09 持有人与池逐槽反查
+
+在候选源码上重新验证 3 枚 Mint 的 21 份 DONE 报告及其检查点，18 份池快照能用两份绑定原始回执重算池和金库，1 份缺一侧原件，2 份没有发布池快照。16 份同时包含主来源完整持有人快照与池快照的报告，二者同槽计数为 0。独立来源 1,318 个同槽持有人批次中 13,180 次观测全部匹配。已验证的独立持有人槽位和归档池槽位交集为 0，最接近的一组仍差 10 个槽。三次独立全 Mint 枚举返回 HTTP 403。此证据支持批次核对，完整同槽快照仍为 `PARTIAL`。
+
+报告及回执组合清单 SHA-256 为 `6dddad599ff4d92eb7f3143f2b547bd6afea0bea054f81b047ecc5bb0e409d35`。三份不同 Mint 的既有深查从来源开始至报告落盘的历史用时分别为 958.843、2,786.984 和 21,050.918 秒。这些是归档深查时钟。最新候选的实源首屏与完整深查用时仍待取证。
+
+### 投递与运行前检查
+
+只读使用候选 `check_snapshot` 和冻结策略检查独立备份。SQLite 完整性、外键、策略指纹均通过。1 个钱包游标在槽 473771260，模型待处理为 0，备份 SHA-256 前后一致。23 条旧 outbox 记录的信号哈希与原交易关联全部匹配，17 条本地命令回执和 5 条 Gmail Sent 回读可与原信号或冻结邮件内容核对，另 1 条为演练记录。Gmail 的观测 Message-ID 在 5 条历史记录里均有改写，既有验证以内容、信号标记和回执绑定。当前候选的收件验证仍待完成。
+
+本机只读对照运行目录、已安装 Git blob 与 Scanner 源码指纹。8766 Dashboard 为 `fd06df4fbbc25721e0a87a3721571f0dc34cca75`，566 个文件匹配。唯一 Scanner 工作进程为 `1f2c6afc28b9988eaacdc896562ff9a71b78f801`，318 个文件和实际加载源码指纹匹配。已查明本机旧版本基线，候选的受控同机切换和回退仍待真实验收。
+
+### 实际运行命令
+
+以下命令均在固定源码的 `crypto-300-profit-mission/local-agent` 目录运行。两个只读取证脚本使用独立备份、浏览器收集的公开活动和既有归档回执。
+
+```zsh
+PYTHONPATH=. python3 -B "$private/two-day-buy-recount-066c5142/solscan-check.py"
+PYTHONPATH=. PYTHONDONTWRITEBYTECODE=1 python3 -B "$private/joint-slot-2b4ab742/check.py"
+uv run --isolated --offline --no-project --with pytest==8.3.5 python -B -m pytest -q -p no:cacheprovider \
+  tests/test_frank_buy_latency_percentiles.py tests/test_frank_scanner_reconciliation.py \
+  tests/test_frank_rebuild_buys.py tests/test_frank_rebuild_delivery.py tests/test_frank_gmail_delivery.py
+uv run --isolated --offline --no-project --with pytest==8.3.5 python -B -m pytest -q -p no:cacheprovider \
+  tests/test_frank_independent_sample_identity.py tests/test_meme_independent_check_lifecycle.py \
+  tests/test_meme_independent_error_evidence.py tests/test_meme_independent_full_accounts.py \
+  tests/test_meme_pool_holder_roles.py tests/test_meme_pool_vaults.py
+```
+
+两组 Python 分别 100 和 126 项通过。第一组的 1 项可选 Chrome 用例以真实 Mac Chrome 单独启动并通过。两日买入历史验收通过，完整同槽与当前实源深查、候选实际收件仍未通过门禁。整体 `PARTIAL`，本地切换和生产发布为 `NO_GO`。
