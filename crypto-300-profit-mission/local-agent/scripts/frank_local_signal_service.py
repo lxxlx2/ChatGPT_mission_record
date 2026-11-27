@@ -89,6 +89,7 @@ def main():
     p.add_argument('--authority-lock',type=Path,required=True)
     p.add_argument('--rpc-config',type=Path,help='Private RPC config file. Defaults to the existing macOS FrankMeme file.')
     p.add_argument('--buy-qualifications',type=Path,help='Existing local Meme qualification file; overrides FRANK_BUY_QUALIFICATIONS_PATH.')
+    p.add_argument('--buy-category-evidence',type=Path,help='Explicit, local opt-in category receipt file; no source fetch.')
     p.add_argument('--check',action='store_true',help='Check a standalone SQLite backup without opening a writer.')
     a=p.parse_args()
     try:
@@ -108,7 +109,7 @@ def main():
     # Claim both exclusions before initializing or migrating the ledger.
     authority=a.authority_lock.open('a');fcntl.flock(authority,fcntl.LOCK_EX|fcntl.LOCK_NB)
     own=(a.root/'service.lock').open('a');fcntl.flock(own,fcntl.LOCK_EX|fcntl.LOCK_NB)
-    delivery_gate=BuyDeliveryGate(a.buy_qualifications)
+    delivery_gate=BuyDeliveryGate(a.buy_qualifications, category_evidence_path=a.buy_category_evidence)
     ledger=Ledger(a.root/'forward.sqlite');engine=Engine(ledger,policy,dry_run=False,delivery_gate=delivery_gate)
     if any(ledger.cursor(w) is None for w in wallets):raise ValueError('CHECKPOINT_REQUIRED_NO_INITIAL_CURSOR_RESET')
     if ledger.db.execute('PRAGMA integrity_check').fetchone()[0]!='ok':raise ValueError('SQLITE_INTEGRITY_FAILURE')

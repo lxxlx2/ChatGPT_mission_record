@@ -1,4 +1,5 @@
 from email import message_from_bytes, policy
+import hashlib
 import json
 from types import SimpleNamespace
 
@@ -7,6 +8,8 @@ import pytest
 from mission_agent.frank.rpc import WALLET
 from mission_agent.meme.holder_ranks import _b58
 from mission_agent.signals.buy_admission import BACKPACK_MINT, BuyDeliveryGate, admit_buy, qualification
+from mission_agent.mission_control.frank_buys import read_buys
+from mission_agent.signals.category_evidence import COINGECKO_SOLANA
 from mission_agent.signals.delivery import LocalNotifier, drain
 from mission_agent.signals.engine import Engine
 from mission_agent.signals.gmail import GmailOutbox
@@ -271,3 +274,71 @@ def test_enqueue_bound_qualification_may_follow_chain_time_without_being_a_repla
     provider = Provider()
     assert GmailOutbox(ledger, delivery_gate=gate).drain(provider)["sent_verified"] == 1
     assert len(provider.sent) == 1
+
+def _write_category_fixture(path, mints, *, at=AS_OF, categories=None):
+    records = []
+    for mint in mints:
+        body = json.dumps({
+            "name": "自动分类样例 Meme", "preview_listing": False, "platforms": {"solana": mint},
+            "detail_platforms": {"solana": {"contract_address": mint}},
+            "categories": (categories or {}).get(mint, ["Meme"]),
+        })
+        records.append({"mint": mint, "observed_at": at, "url": COINGECKO_SOLANA + mint,
+                        "body": body, "sha256": hashlib.sha256(body.encode()).hexdigest()})
+    path.write_text(json.dumps({"version": 1, "records": records}))
+
+
+def test_category_only_is_explicit_and_uses_shared_new_buy_delivery_contract(tmp_path, monkeypatch):
+    raw, db, sidecar = (tmp_path / name for name in ("raw", "db", "receipts"))
+    cfg = tmp_path / "no-manual-registry"
+    _write_category_fixture(sidecar, [MINT, BACKPACK_MINT, UNKNOWN],
+                            categories={UNKNOWN: ["Technology", "Solana Ecosystem"]})
+    gate = BuyDeliveryGate(cfg, clock=lambda: AS_OF, category_evidence_path=sidecar)
+    ledger = Ledger(db)
+    try:
+        indexed_buys(ledger, raw, [MINT, BACKPACK_MINT, UNKNOWN])
+        engine = Engine(ledger, load_policy(POLICY), dry_run=False, delivery_gate=gate)
+        assert engine.drain() == 9
+        recent = read_buys(db, cfg, as_of=AS_OF, category_evidence_path=sidecar)
+        assert [row["mint"] for row in recent["rows"]] == [MINT] * 3
+        found = {r[0]: json.loads(r[1]) for r in ledger.db.execute("SELECT mint,body FROM signals")}
+        assert found[BACKPACK_MINT]["delivery_scope_reason"] == "EXCLUDED_NON_MEME_MINT"
+        assert found[UNKNOWN]["delivery_scope_reason"] == "MEME_QUALIFICATION_UNPROVEN"
+        admitted = found[MINT]
+        assert gate.block_reason(ledger.db, admitted) is None
+        assert BuyDeliveryGate(cfg, clock=lambda: AS_OF).block_reason(ledger.db, admitted) == "MEME_QUALIFICATION_UNAVAILABLE"
+        outbox = GmailOutbox(ledger, delivery_gate=gate)
+        provider = Provider()
+        assert outbox.drain(provider)["sent_verified"] == 1
+        assert outbox.drain(provider)["sent_verified"] == 1 and len(provider.sent) == 1
+        assert "自动分类样例 Meme" in message_from_bytes(provider.sent[0], policy=policy.default)["Subject"]
+        monkeypatch.setattr("mission_agent.signals.gmail.kick", lambda *a, **k: None)
+        local = []
+        drain(ledger, lambda s: local.append(s) or {"mock": True}, delivery_gate=gate)
+        assert local and all(row["mint"] == MINT for row in local)
+        assert len(local) == len({row["signal_id"] for row in local})
+    finally:
+        ledger.db.close()
+
+
+def test_late_category_capture_cannot_send_legacy_pending_and_manual_pending_wins(tmp_path):
+    ledger, cfg, _, _ = prepare(tmp_path, [MINT], gate_at_enqueue=False, registry=False)
+    try:
+        sidecar = tmp_path / "receipts"
+        _write_category_fixture(sidecar, [MINT])
+        gate = BuyDeliveryGate(cfg, clock=lambda: AS_OF, category_evidence_path=sidecar)
+        signal = json.loads(ledger.db.execute(
+            "SELECT body FROM signals WHERE signal_type='FRANK_MULTIPLE_SIGNAL'").fetchone()[0])
+        assert gate.block_reason(ledger.db, signal) == "LEGACY_QUALIFICATION_OBSERVED_LATE"
+        assert len(read_buys(tmp_path/"db", cfg, as_of=AS_OF, category_evidence_path=sidecar)["rows"]) == 3
+        # Deliberate local PENDING supersedes a CoinGecko positive.
+        config(cfg)
+        manual = json.loads(cfg.read_text())
+        manual["records"][0]["status"] = "PENDING"
+        cfg.write_text(json.dumps(manual))
+        assert gate.block_reason(ledger.db, signal) == "MEME_QUALIFICATION_UNPROVEN"
+        assert read_buys(tmp_path/"db", cfg, as_of=AS_OF, category_evidence_path=sidecar)["rows"] == []
+        cfg.write_text("{}")
+        assert gate.block_reason(ledger.db, signal) == "MEME_QUALIFICATION_UNAVAILABLE"
+    finally:
+        ledger.db.close()

@@ -1,8 +1,9 @@
-"""Interpret trusted local exact-address category receipts for buy history only.
+"""Interpret trusted local exact-address category receipts without network.
 
 Capture and source authentication belong to the local evidence collector. An
 archive digest binds bytes, not the publisher of those bytes. Never fetch from
-the read path, follow links from a receipt, or use this for alert admission.
+the read path or follow links from a receipt. Alert admission requires an
+explicitly enabled local receipt path and its separate trigger proof.
 """
 import hashlib
 import os

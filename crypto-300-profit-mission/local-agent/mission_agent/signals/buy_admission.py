@@ -89,11 +89,28 @@ def qualification_path(path=None, *, default=None):
     return Path(configured) if configured else None
 
 
+def effective_qualification(manual_path, category_path, as_of):
+    """Apply explicit local manual choices over validated staged category receipts."""
+    from .category_evidence import read_category_evidence
+
+    receipts = read_category_evidence(category_path, as_of)
+    try:
+        if manual_path is None:
+            raise FileNotFoundError("MANUAL_QUALIFICATION_UNAVAILABLE")
+        receipts.update(qualification(manual_path, as_of))
+    except FileNotFoundError:
+        if not receipts:
+            raise
+    return receipts
+
+
 class BuyDeliveryGate:
     """Local evidence required for a new Frank notification."""
 
-    def __init__(self, path=None, *, clock=time.time):
+    def __init__(self, path=None, *, clock=time.time, category_evidence_path=None):
         self.path = qualification_path(path)
+        # Existing deployments must opt in explicitly; no source is fetched here.
+        self.category_evidence_path = Path(category_evidence_path) if category_evidence_path is not None else None
         self.clock = clock
 
     def block_reason(self, db, signal):
@@ -116,10 +133,8 @@ class BuyDeliveryGate:
                 or signature != signal.get("latest_trade_signature")
                 or signature != signal.get("latest_buy_signature")):
             return None, "TRIGGER_IS_NOT_PROVEN_BUY"
-        if self.path is None:
-            return None, "MEME_QUALIFICATION_UNAVAILABLE"
         try:
-            assets = qualification(self.path, int(self.clock()))
+            assets = effective_qualification(self.path, self.category_evidence_path, int(self.clock()))
         except (OSError, ValueError, RecursionError):
             return None, "MEME_QUALIFICATION_UNAVAILABLE"
         asset = assets.get(mint)

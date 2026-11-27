@@ -12,8 +12,7 @@ from .archived_wallet_facts import read_archived_classification
 from .wallet_activity import connect
 from .wallet_activity_paging import _source
 from ..meme.market_parity import number
-from ..signals.buy_admission import EXCLUDED_MINTS, admit_buy, exact_mint, qualification
-from ..signals.category_evidence import read_category_evidence
+from ..signals.buy_admission import EXCLUDED_MINTS, admit_buy, effective_qualification, exact_mint
 from ..signals.classifier import USDT
 from ..signals.person_scope import PersonWalletScope
 from ..signals.policy import USDC
@@ -133,13 +132,10 @@ def read_buys(database, qualifications, *, as_of, days="7", mint=None, cursor=No
         raise ValueError("INVALID_PERSON_WALLET_SCOPE")
     if days not in ("1", "7", "30", "all") or (mint is not None and not exact_mint(mint)):
         raise ValueError("INVALID_BUY_QUERY")
-    assets = read_category_evidence(category_evidence_path, as_of)
     try:
-        # Deliberate manual choices, including PENDING, take precedence.
-        assets.update(qualification(qualifications, as_of))
+        assets = effective_qualification(qualifications, category_evidence_path, as_of)
     except FileNotFoundError:
-        if not assets:
-            return {"status": "QUALIFICATION_UNAVAILABLE", "rows": [], "next_cursor": None}
+        return {"status": "QUALIFICATION_UNAVAILABLE", "rows": [], "next_cursor": None}
     observations, evidence_sha = _read_usd_evidence(usd_evidence_path)
     source = _source(database)
     inputs = (source, days, mint, sorted(assets.items()), archive_root, legacy_archive_root, evidence_sha)

@@ -19,10 +19,11 @@ def main():
     p=argparse.ArgumentParser()
     p.add_argument('--db',type=Path,required=True)
     p.add_argument('--buy-qualifications',type=Path,help='Existing local Meme qualification file; overrides FRANK_BUY_QUALIFICATIONS_PATH.')
+    p.add_argument('--buy-category-evidence',type=Path,help='Explicit, local opt-in category receipt file; no source fetch.')
     p.add_argument('--check',action='store_true')
     a=p.parse_args()
     with a.db.with_suffix('.gmail-delivery.lock').open('a') as lock:
-        fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB);ledger=Ledger(a.db);delivery_flags(ledger);outbox=GmailOutbox(ledger,delivery_gate=BuyDeliveryGate(a.buy_qualifications));provider=existing_provider(a.db.parent/'gmail-existing-source.json');outbox.sync()
+        fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB);ledger=Ledger(a.db);delivery_flags(ledger);outbox=GmailOutbox(ledger,delivery_gate=BuyDeliveryGate(a.buy_qualifications, category_evidence_path=a.buy_category_evidence));provider=existing_provider(a.db.parent/'gmail-existing-source.json');outbox.sync()
         if a.check:
             ready=False
             if provider:
