@@ -14,6 +14,7 @@ from .wallet_activity_paging import _source
 from ..meme.market_parity import number
 from ..signals.buy_admission import EXCLUDED_MINTS, admit_buy, effective_qualification, exact_mint
 from ..signals.classifier import USDT
+from ..signals.historical_usd_tick import observe_usd_tick
 from ..signals.person_scope import PersonWalletScope
 from ..signals.policy import USDC
 from ..signals.reconciliation import _unique_pairs
@@ -24,10 +25,26 @@ _QUOTE_ASSET = {"SOL": "SOL", "USDC": USDC, "USDT": USDT}
 _MAX_USD_EVIDENCE_BYTES = 4 * 1024 * 1024
 
 
+def _second_conversion(capture, asset, second):
+    fields = ("source_url", "source_sha256", "raw_base64")
+    if any(not isinstance(capture.get(field), str) for field in fields):
+        return None
+    try:
+        raw = base64.b64decode(capture["raw_base64"], validate=True)
+        if hashlib.sha256(raw).hexdigest() != capture["source_sha256"]:
+            return None
+        result = observe_usd_tick(asset, second, url=capture["source_url"], raw=raw)
+    except (ValueError, RecursionError):
+        return None
+    if result["status"] == "OBSERVED_SECOND_CONVERSION":
+        return Decimal(result["usd_per_quote_unit"])
+    return None
+
+
 def _read_usd_evidence(path):
     """Index explicitly supplied USD observation records once per request."""
     if path is None:
-        return {}, None
+        return {}, {}, None
     def open_regular(local_path, flags):
         fd = os.open(local_path, flags | os.O_NONBLOCK)
         if not stat.S_ISREG(os.fstat(fd).st_mode):
@@ -39,13 +56,14 @@ def _read_usd_evidence(path):
         with open(path, "rb", opener=open_regular) as source:
             raw = source.read(_MAX_USD_EVIDENCE_BYTES + 1)
         if len(raw) > _MAX_USD_EVIDENCE_BYTES:
-            return {}, None
+            return {}, {}, None
         document = json.loads(raw, parse_float=Decimal, object_pairs_hook=_unique_pairs)
     except (OSError, ValueError, InvalidOperation, RecursionError):
-        return {}, None
+        return {}, {}, None
     if (not isinstance(document, dict) or type(document.get("version")) is not int
-            or document["version"] != 1 or not isinstance(document.get("records"), list)):
-        return {}, None
+            or document["version"] not in (1, 2) or not isinstance(document.get("records"), list)
+            or (document["version"] == 2 and not isinstance(document.get("captures"), list))):
+        return {}, {}, None
 
     observations = {}
     for row in document["records"]:
@@ -71,22 +89,42 @@ def _read_usd_evidence(path):
         # Conflicting references cannot silently choose the last input row.
         value = (field, Decimal(amount))
         observations[key] = value if key not in observations else None
-    return observations, hashlib.sha256(raw).hexdigest()
+    captures = {}
+    if document["version"] == 2:
+        for row in document["captures"]:
+            if not isinstance(row, dict):
+                continue
+            asset, second = row.get("asset"), row.get("block_time")
+            if not isinstance(asset, str) or asset not in _QUOTE_ASSET or type(second) is not int:
+                continue
+            key = (asset, second)
+            # Duplicate (even if malformed or identical) is ambiguous.
+            captures[key] = None if key in captures else _second_conversion(row, asset, second)
+    return observations, captures, hashlib.sha256(raw).hexdigest()
 
 
-def _buy_usd(item, identity, observations):
+def _buy_usd(item, identity, observations, captures):
     key = tuple(identity[field] for field in _TRADE_IDENTITY) + (_QUOTE_ASSET.get(item["currency"]),)
+    empty = {"spent_usd": None, "entry_price_usd": None}
+    if item["paid"] is None:
+        return empty
     observation = observations.get(key)
-    if observation is None or item["paid"] is None:
-        return {"spent_usd": None, "entry_price_usd": None}
-    field, value = observation
+    if observation is None:
+        rate = captures.get((item["currency"], identity["block_time"]))
+        if key in observations or rate is None:
+            return empty
+        field, value = "usd_per_quote_unit", rate
+    else:
+        field, value = observation
     paid, quantity = Decimal(item["paid"]), Decimal(item["quantity"])
     with localcontext() as context:
         context.prec = max(50, len(value.as_tuple().digits) + len(paid.as_tuple().digits))
         spent = value if field == "spent_usd" else paid * value
-        return {"spent_usd": format(spent.normalize(), "f"),
-                "entry_price_usd": format((spent / quantity).normalize(), "f")}
-
+        prices = (format(spent.normalize(), "f"), format((spent / quantity).normalize(), "f"))
+    if observation is None:
+        return {**empty, "estimated_spent_usd": prices[0], "estimated_entry_price_usd": prices[1],
+                "usd_estimate_basis": "PAYMENT_ASSET_MARKET_TRADE_SAME_SECOND"}
+    return {"spent_usd": prices[0], "entry_price_usd": prices[1]}
 
 def _encode(row):
     return base64.urlsafe_b64encode(json.dumps(row, separators=(",", ":")).encode()).decode().rstrip("=")
@@ -136,7 +174,7 @@ def read_buys(database, qualifications, *, as_of, days="7", mint=None, cursor=No
         assets = effective_qualification(qualifications, category_evidence_path, as_of)
     except FileNotFoundError:
         return {"status": "QUALIFICATION_UNAVAILABLE", "rows": [], "next_cursor": None}
-    observations, evidence_sha = _read_usd_evidence(usd_evidence_path)
+    observations, captures, evidence_sha = _read_usd_evidence(usd_evidence_path)
     source = _source(database)
     inputs = (source, days, mint, sorted(assets.items()), archive_root, legacy_archive_root, evidence_sha)
     if person_scope is not None:
@@ -200,6 +238,6 @@ def read_buys(database, qualifications, *, as_of, days="7", mint=None, cursor=No
             if len(rows) == 30:
                 next_cursor = _encode([1, binding, cutoff, rowmax, last["block_time"], last["trade_id"]])
                 break
-            rows.append({**item, **_buy_usd(item, identity, observations)})
+            rows.append({**item, **_buy_usd(item, identity, observations, captures)})
             last = row
         return {"status": "LOCAL_EVIDENCE_ONLY", "as_of": cutoff, "rows": rows, "next_cursor": next_cursor}

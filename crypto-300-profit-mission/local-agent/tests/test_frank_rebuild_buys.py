@@ -1,3 +1,5 @@
+import base64
+from datetime import datetime, timezone
 import gzip
 import hashlib
 from http.server import HTTPServer
@@ -18,6 +20,7 @@ from mission_agent.mission_control.server import DashboardState, Handler
 from mission_agent.signals.buy_admission import BACKPACK_MINT, qualification
 from mission_agent.signals.classifier import classify
 from mission_agent.signals.engine import Engine
+from mission_agent.signals.historical_usd_tick import capture_url
 from mission_agent.signals.policy import USDC, load_policy
 from mission_agent.signals.store import Ledger
 from test_frank_fm import tx
@@ -169,6 +172,84 @@ def test_dashboard_reads_bound_usd_evidence_without_writing_ledger(tmp_path):
     ]
     assert [(r["currency"], r["quantity"]) for r in rows] == [("USDC", "1"), ("SOL", "2.5"), ("USDC", "1")]
     assert hashlib.sha256(db.read_bytes()).hexdigest() == before
+
+
+def second_capture(asset, at, *prices, returned_at=None):
+    stamp = datetime.fromtimestamp(at if returned_at is None else returned_at, timezone.utc)
+    rows = [{"symbol": f"{asset}/USD", "base_asset": asset, "quote_asset": "USD",
+             "price": price, "trade_id": f"FIXTURE{i}", "trade_ts": stamp.strftime("%Y-%m-%dT%H:%M:%S.1Z")}
+            for i, price in enumerate(prices)]
+    raw = json.dumps({"error": [], "result": {"count": len(rows), "trades": rows}}).encode()
+    return {"asset": asset, "block_time": at, "source_url": capture_url(asset, at),
+            "source_sha256": hashlib.sha256(raw).hexdigest(), "raw_base64": base64.b64encode(raw).decode()}
+
+
+def test_same_second_usd_estimates_do_not_become_exact_fills_or_change_ledger(tmp_path):
+    db, cfg, evidence = (tmp_path/name for name in ("ledger", "qualification.json", "prices.json"))
+    ledger = Ledger(db)
+    config(cfg)
+    at = AS_OF-1
+    usdc = put(ledger, 1, at=at)
+    sol = put(ledger, 2, at=at, quote=WSOL, token_raw="2500000")
+    reused = put(ledger, 3, at=at, token_raw="2000000")
+    next_second = put(ledger, 4, at=at+1)
+    routed = put(ledger, 5, at=at)
+    event = json.loads(ledger.db.execute("SELECT body FROM signatures WHERE signature=?", (routed,)).fetchone()[0])
+    event["trade"].update(route_intermediate_evidence_status="UNVERIFIED",
+                          route_amount_semantics="GROSS_QUOTE_OUT_NOT_EXACT_FINAL_TARGET_COST",
+                          route_intermediate_assets=[{"mint": UNKNOWN}])
+    with ledger.db:
+        ledger.db.execute("UPDATE signatures SET body=? WHERE signature=?", (json.dumps(event), routed))
+    exact = put(ledger, 6, at=at)
+    disputed = put(ledger, 7, at=at)
+    overrides = [
+        usd_observation(ledger, exact, USDC, spent_usd="0.41"),
+        usd_observation(ledger, disputed, USDC, spent_usd="0.43"),
+        usd_observation(ledger, disputed, USDC, spent_usd="0.42"),
+    ]
+    evidence.write_text(json.dumps({"version": 2, "records": overrides, "captures": [
+        second_capture("SOL", at, "112.25"),
+        second_capture("USDC", at, "0.987", "0.9870"),
+    ]}))
+    before = hashlib.sha256(db.read_bytes()).hexdigest()
+    rows = {r["signature"]: r for r in read_buys(db, cfg, as_of=AS_OF, usd_evidence_path=evidence)["rows"]}
+    for key, spent, each in [(usdc, "0.4935", "0.4935"), (sol, "56.125", "22.45"), (reused, "0.4935", "0.24675")]:
+        row = rows[key]
+        assert row["spent_usd"] is row["entry_price_usd"] is None
+        assert row["estimated_spent_usd"] == spent and row["estimated_entry_price_usd"] == each
+        assert row["usd_estimate_basis"] == "PAYMENT_ASSET_MARKET_TRADE_SAME_SECOND"
+        assert not {"source_url", "source_sha256", "raw_base64"} & row.keys()
+    for key in [next_second, routed, disputed]:
+        assert rows[key]["spent_usd"] is rows[key]["entry_price_usd"] is None
+        assert "estimated_spent_usd" not in rows[key]
+    assert rows[routed]["paid"] is None
+    assert rows[exact]["spent_usd"] == "0.41" and "estimated_spent_usd" not in rows[exact]
+    assert hashlib.sha256(db.read_bytes()).hexdigest() == before
+    assert not ledger.db.execute("SELECT 1 FROM outbox").fetchone()
+
+
+def test_ambiguous_wrong_or_untrusted_raw_receipt_leaves_usd_empty(tmp_path):
+    db, cfg, evidence = (tmp_path/name for name in ("ledger", "qualification.json", "prices.json"))
+    ledger = Ledger(db)
+    config(cfg)
+    at = AS_OF-1
+    put(ledger, 1, at=at)
+    valid = second_capture("USDC", at, "0.98")
+    for captures in [
+        [],
+        [second_capture("SOL", at, "99")],
+        [second_capture("USDC", at, "0.98", returned_at=at-1)],
+        [second_capture("USDC", at, "0.98", "1.02")],
+        [{**valid, "source_sha256": "0"*64}],
+        [{**valid, "source_url": capture_url("USDC", at-1)}],
+        [{**valid, "raw_base64": "err!"}],
+        [valid, valid],
+        [valid, {"asset": "USDC", "block_time": at}],
+    ]:
+        evidence.write_text(json.dumps({"version": 2, "records": [], "captures": captures}))
+        row, = read_buys(db, cfg, as_of=AS_OF, usd_evidence_path=evidence)["rows"]
+        assert row["spent_usd"] is row["entry_price_usd"] is None
+        assert "estimated_spent_usd" not in row
 
 
 @pytest.mark.parametrize("modifications", [

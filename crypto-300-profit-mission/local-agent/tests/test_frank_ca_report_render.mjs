@@ -1800,6 +1800,18 @@ test('Frank default buys render as facts without loading market or old signal fe
   assert.deepEqual(paths,['/api/frank-buys?days=7','/api/frank-buys?days=7&mint='+mint]);
 });
 
+test('Frank USD same-second market conversions are visibly approximate and not exact fills',()=>{
+  const h=harness(), row={mint,signature:mint,at:1792683606,spent_usd:null,entry_price_usd:null,
+    estimated_spent_usd:'0.4935',estimated_entry_price_usd:'0.24675',
+    usd_estimate_basis:'PAYMENT_ASSET_MARKET_TRADE_SAME_SECOND'};
+  const rendered=h.context.frankBuyRow(row);
+  assert.equal((rendered.match(/并非美元实付/g)||[]).length,2);
+  assert.ok(rendered.includes('≈$0.49') && rendered.includes('≈$0.25'));
+  assert.ok(h.context.frankBuyRow({...row,spent_usd:'0.30'}).includes('>$0.30</td>'));
+  assert.doesNotMatch(h.context.frankBuyRow({...row,usd_estimate_basis:'UNKNOWN'}),/≈/);
+  assert.doesNotMatch(h.context.frankBuyRow({...row,estimated_spent_usd:'<script>'}),/<script>/);
+});
+
 test('Chinese CA summary deduplicates chain name and withholds a mismatched market',()=>{
   const h=harness(), report=storyReport();
   report.launch_identity={metadata:{status:'VERIFIED_CHAIN_STATE',mint,name:'Agency',symbol:'AGENCY'}};

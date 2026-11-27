@@ -1426,6 +1426,14 @@ function buyUsd(value, unitPrice=false) {
   return buyUsdFormat.format(value);
 }
 
+function buyUsdCell(item, unitPrice=false) {
+  const exact = buyUsd(unitPrice ? item.entry_price_usd : item.spent_usd, unitPrice);
+  if (exact !== '—' || item.usd_estimate_basis !== 'PAYMENT_ASSET_MARKET_TRADE_SAME_SECOND') return esc(exact);
+  const estimate = buyUsd(unitPrice ? item.estimated_entry_price_usd : item.estimated_spent_usd, unitPrice);
+  return estimate === '—' ? estimate :
+    `<span class="buy-usd-estimate" title="按成交同秒的支付币美元市价估算，并非美元实付">≈${esc(estimate)}</span>`;
+}
+
 function frankBuyRow(item) {
   const mint = String(item.mint || '');
   const label = item.name || (mint.length>13 ? mint.slice(0,6)+'…'+mint.slice(-5) : mint);
@@ -1433,8 +1441,8 @@ function frankBuyRow(item) {
   return `<tr role="row">
     <th scope="row" role="rowheader" class="buy-token"><strong>${esc(label)}</strong></th>
     <td role="cell" class="buy-time"><time datetime="${time.toISOString()}">${esc(time.toLocaleString('zh-CN'))}</time></td>
-    <td role="cell" class="buy-value"><span class="buy-mobile-label" aria-hidden="true">花费</span>${esc(buyUsd(item.spent_usd))}</td>
-    <td role="cell" class="buy-value"><span class="buy-mobile-label" aria-hidden="true">买入价</span>${esc(buyUsd(item.entry_price_usd,true))}</td>
+    <td role="cell" class="buy-value"><span class="buy-mobile-label" aria-hidden="true">花费</span>${buyUsdCell(item)}</td>
+    <td role="cell" class="buy-value"><span class="buy-mobile-label" aria-hidden="true">买入价</span>${buyUsdCell(item,true)}</td>
     <td role="cell" class="buy-actions"><div>
       <button class="link-btn" type="button" data-cluster-ca="${esc(mint)}">查 CA</button>
       ${copyButton(mint,'复制 CA')}
