@@ -1,0 +1,782 @@
+#!/usr/bin/env python3
+"""FLOP local scheduled testnet Agent (2026-11).
+
+Safe by default: only probes network and sends authorized email. Direct sessions
+require a private config, a real Testnet release and matching finalized genesis.
+An uncertain CLI result is NOT a passed paid session and is NEVER retried.
+"""
+from __future__ import annotations
+import argparse
+from contextlib import contextmanager
+from datetime import datetime, timezone, timedelta
+from decimal import Decimal, InvalidOperation
+import fcntl
+import hashlib
+import json
+import os
+from pathlib import Path
+import re
+import shutil
+import sqlite3
+import subprocess
+import sys
+import time
+from urllib.request import Request, urlopen
+from urllib.parse import urlparse
+import zoneinfo
+
+from agent import DATA, db, utc
+from mail import enqueue, pump, mail_status
+
+BKK = zoneinfo.ZoneInfo('Asia/Bangkok')
+LAUNCH_UTC = datetime(2026, 11, 24, 7, 0, tzinfo=timezone.utc)
+STATUS_URL = 'https://docs.flop.network/docs/network-testnet'
+CONF = DATA / 'private-testnet.json'
+MONITOR = DATA / 'monitor.sqlite3'
+LAST_ALARM_INTERVAL = 3600
+HTTP_TIMEOUT = 15
+CLI_TIMEOUT = 750
+
+def now():
+    return datetime.now(timezone.utc)
+
+def now_bkk():
+    return now().astimezone(BKK)
+
+def ensure_state(conn):
+    conn.executescript("""
+    CREATE TABLE IF NOT EXISTS kv (key TEXT PRIMARY KEY, value TEXT NOT NULL);
+    CREATE TABLE IF NOT EXISTS session_attempts (
+      attempt_id TEXT PRIMARY KEY,
+      phase TEXT NOT NULL,
+      started_utc TEXT NOT NULL, ended_utc TEXT,
+      wallet TEXT NOT NULL, expected_genesis TEXT NOT NULL,
+      miner TEXT NOT NULL, max_flop TEXT NOT NULL,
+      cli_result TEXT, chain_verified INTEGER NOT NULL DEFAULT 0,
+      final_spent_flop TEXT, chain_tx TEXT, last_error TEXT);
+    CREATE TABLE IF NOT EXISTS runtime_events (
+      event_id TEXT PRIMARY KEY, at_utc TEXT NOT NULL,
+      severity TEXT NOT NULL, code TEXT NOT NULL,
+      details TEXT NOT NULL);
+    """)
+    conn.commit()
+
+def get(conn, key, fallback=None):
+    row=conn.execute('SELECT value FROM kv WHERE key=?',(key,)).fetchone()
+    return row[0] if row else fallback
+
+def put(conn, key, value):
+    conn.execute('INSERT OR REPLACE INTO kv VALUES (?,?)',(key,str(value)))
+    conn.commit()
+
+def log(conn, severity, code, details='', *, event_id=None):
+    stamp=utc()
+    ident=event_id or hashlib.sha256((stamp+code).encode()).hexdigest()[:28]
+    conn.execute('INSERT OR IGNORE INTO runtime_events VALUES (?,?,?,?,?)',
+                 (ident,stamp,severity,code,str(details)[:300]))
+    conn.commit()
+
+def notify_error(conn, code, detail, *, urgent=True):
+    """Errors: notify on transition and repeat no faster than 1h while ongoing."""
+    stamp=now()
+    bucket=int(stamp.timestamp()) // LAST_ALARM_INTERVAL
+    # Stable per-code/hour identity. A transition and subsequent recurrence
+    # in the same hour must not generate two mail identities.
+    key=f'error-{code}-{bucket}'
+    put(conn,'current_error',code)
+    if conn.execute("SELECT 1 FROM sqlite_master WHERE name='flop_mail'").fetchone():
+        if conn.execute('SELECT 1 FROM flop_mail WHERE mail_key=?',(key,)).fetchone():
+            return
+    log(conn,'ERROR',code,detail,event_id=key)
+    safe_detail=str(detail)[:350].replace('\x00','')
+    enqueue(conn,key,'[FLOP] 异常告警｜'+code,
+            f'曼谷时间：{stamp.astimezone(BKK).isoformat(timespec="seconds")}\n'
+            f'异常代码：{code}\n详情：{safe_detail}\n'
+            '当前动作：停止涉及未知结算或异常配置的自动推理；只进行只读核验。\n'
+            '真实余额与空投权益：未确认。')
+
+def clear_error(conn):
+    if get(conn,'current_error'):
+        put(conn,'current_error','')
+        log(conn,'INFO','ERROR_CLEARED','')
+
+def _json_response(url):
+    req=Request(url,headers={'User-Agent':'flop-local-gate/0.1',
+                             'Accept':'text/html,application/json'})
+    with urlopen(req,timeout=HTTP_TIMEOUT) as response:
+        if response.status != 200:
+            raise RuntimeError('STATUS_HTTP_NOT_200')
+        return response.read(700000).decode('utf-8',errors='replace')
+
+def official_testnet_state(fetch=_json_response):
+    """Parse official operator status, not marketing text or script metadata."""
+    from html.parser import HTMLParser
+    class Visible(HTMLParser):
+        def __init__(self):
+            super().__init__()
+            self.parts=[]
+            self.hidden=0
+        def handle_starttag(self,tag,attrs):
+            if tag in ('script','style'): self.hidden+=1
+        def handle_endtag(self,tag):
+            if tag in ('script','style') and self.hidden: self.hidden-=1
+        def handle_data(self,data):
+            if not self.hidden: self.parts.append(data)
+    p=Visible()
+    p.feed(fetch(STATUS_URL))
+    lower=' '.join(' '.join(p.parts).lower().split())
+    if re.search(r'network:\s*testnet\s*\(planned\)|status:\s*planned|release:\s*next\s*\(unreleased\)',lower):
+        return {'ready':False,'status':'PLANNED','source':STATUS_URL}
+    if not (re.search(r'network:\s*testnet\s*\((live|active|launched)\)',lower) or 'flop testnet went live on' in lower):
+        return {'ready':False,'status':'UNVERIFIED_DOC_FORMAT','source':STATUS_URL}
+    match=re.search(r'(?:expected genesis|genesis block hash|genesis hash)\s*:?\s*(0x[0-9a-f]{64})(?![0-9a-f])',lower)
+    if not match:
+        return {'ready':False,'status':'OFFICIAL_GENESIS_NOT_PUBLISHED','source':STATUS_URL}
+    return {'ready':True,'status':'PUBLISHED_TESTNET',
+            'genesis':match.group(1),'source':STATUS_URL,
+            'scoring_status':'UNSCORED' if 'opening is unscored' in lower else 'UNVERIFIED'}
+
+
+def private_config(path=CONF):
+    if not path.is_file():
+        return None
+    if (path.stat().st_mode & 0o077):
+        raise ValueError('PRIVATE_CONFIG_PERMISSIONS_MUST_BE_0600')
+    obj=json.loads(path.read_text(encoding='utf-8'))
+    if obj.get('network')!='testnet':
+        raise ValueError('WRONG_NETWORK')
+    g=obj.get('expected_genesis')
+    if not isinstance(g,str) or not re.fullmatch(r'0x[0-9a-fA-F]{64}',g):
+        raise ValueError('EXPECTED_GENESIS_NOT_PINNED')
+    if not isinstance(obj.get('wallet'),str) or not obj['wallet'].strip():
+        raise ValueError('OWN_WALLET_NOT_CONFIGURED')
+    keystore=Path(obj.get('keystore','')).expanduser()
+    if not keystore.is_file():
+        raise ValueError('WALLET_KEYSTORE_NOT_FOUND')
+    if (keystore.stat().st_mode & 0o077):
+        raise ValueError('KEYSTORE_PERMISSIONS_MUST_BE_0600')
+    miner=obj.get('miner')
+    if not isinstance(miner,str) or not re.fullmatch(r'[a-zA-Z0-9]{42,55}',miner):
+        raise ValueError('MINER_SS58_NOT_VERIFIED')
+    endpoint=obj.get('endpoint','')
+    parts=urlparse(endpoint)
+    if parts.scheme!='https' or not parts.hostname or parts.username or parts.password or parts.fragment or parts.query:
+        raise ValueError('REACHABLE_INDEPENDENT_MINER_HTTPS_REQUIRED')
+    model=obj.get('model')
+    if not isinstance(model,str) or not re.fullmatch(r'[a-zA-Z0-9._/-]{5,125}',model):
+        raise ValueError('MODEL_NOT_PINNED')
+    try:
+        ceiling=Decimal(str(obj.get('max_flop','')))
+        daily=Decimal(str(obj.get('total_test_flop_budget','')))
+    except InvalidOperation:
+        raise ValueError('INVALID_WALLET_SPEND_LIMIT') from None
+    if not (ceiling.is_finite() and daily.is_finite() and 0 < ceiling <= daily):
+        raise ValueError('INVALID_SPEND_LIMIT')
+    if not os.environ.get('FLOP_KEY_PASSWORD'):
+        security='/usr/bin/security'
+        if os.path.isfile(security):
+            try:
+                secret=subprocess.run([security,'find-generic-password','-s',
+                                       'flop-agent-wallet-password','-w'],
+                                      capture_output=True,text=True,timeout=10,check=False)
+                if secret.returncode==0 and secret.stdout.strip():
+                    os.environ['FLOP_KEY_PASSWORD']=secret.stdout.strip()
+            except (OSError,subprocess.TimeoutExpired):
+                pass
+    if not os.environ.get('FLOP_KEY_PASSWORD'):
+        password_file=DATA/'agent-password'
+        if password_file.is_file() and not (password_file.stat().st_mode & 0o077):
+            os.environ['FLOP_KEY_PASSWORD']=password_file.read_text().strip()
+    if not os.environ.get('FLOP_KEY_PASSWORD'):
+        raise ValueError('WALLET_PASSWORD_NOT_AVAILABLE')
+    obj['keystore']=str(keystore)
+    obj['max_flop']=str(ceiling)
+    obj['total_test_flop_budget']=str(daily)
+    return obj
+
+def https_finality_observation(expected_genesis, *, opener=urlopen):
+    """Official HTTPS JSON-RPC fallback, never treat a mismatch as readiness."""
+    def rpc(method,params):
+        req=Request('https://testnet.flop.network/',data=json.dumps({
+            'jsonrpc':'2.0','id':1,'method':method,'params':params}).encode(),
+            headers={'Content-Type':'application/json','Accept':'application/json'})
+        with opener(req,timeout=8) as response:
+            item=json.loads(response.read(65536))
+        if not isinstance(item,dict) or item.get('error') or 'result' not in item:
+            raise ValueError('RPC_BAD_RESPONSE')
+        return item['result']
+    try:
+        if rpc('chain_getBlockHash',[0])!=expected_genesis:
+            return None
+        head=rpc('chain_getFinalizedHead',[])
+        if not isinstance(head,str) or not re.fullmatch(r'0x[0-9a-fA-F]{64}',head):
+            return None
+        header=rpc('chain_getHeader',[head])
+        number=header.get('number')
+        if not isinstance(number,str) or not re.fullmatch(r'0x[0-9a-fA-F]+',number):
+            return None
+        return {'hash':head.lower(),'height':int(number,16)}
+    except (OSError,ValueError,TypeError,AttributeError,KeyError):
+        return None
+
+
+def rpc_finality_observation(expected_genesis):
+    """Read-only Substrate JSON-RPC using Node's built-in WebSocket.
+    This proves a finalized head on the observed chain, not settlement or
+    an independently published genesis pin. No account or signer is loaded.
+    """
+    if not re.fullmatch(r'0x[0-9a-f]{64}',expected_genesis or ''):
+        return None
+    node=shutil.which('node')
+    if not node:
+        return https_finality_observation(expected_genesis)
+    script=r"""
+const w=new WebSocket('wss://testnet.flop.network');
+const pending=new Map(); let id=0;
+const timer=setTimeout(()=>process.exit(2),12000);
+function rpc(method,params=[]){
+  return new Promise((resolve,reject)=>{
+    const i=++id; pending.set(i,{resolve,reject});
+    w.send(JSON.stringify({jsonrpc:'2.0',id:i,method,params}));
+  });
+}
+w.addEventListener('message',e=>{
+  try { const m=JSON.parse(e.data); const p=pending.get(m.id);
+    if(p){ pending.delete(m.id); m.error?p.reject(Error('rpc')):p.resolve(m.result); }
+  } catch { process.exit(2); }
+});
+w.addEventListener('error',()=>process.exit(2));
+w.addEventListener('open',async()=>{
+  try {
+    const genesis=await rpc('chain_getBlockHash',[0]);
+    const finalized=await rpc('chain_getFinalizedHead');
+    const header=await rpc('chain_getHeader',[finalized]);
+    console.log(JSON.stringify({genesis,finalized,number:header.number}));
+    clearTimeout(timer); w.close(); process.exit(0);
+  } catch { process.exit(2); }
+});
+"""
+    try:
+        cp=subprocess.run([node,'-e',script],capture_output=True,text=True,timeout=16,check=False)
+        if cp.returncode: return https_finality_observation(expected_genesis)
+        item=json.loads(cp.stdout)
+        if not isinstance(item,dict) or item.get('genesis')!=expected_genesis:
+            return None
+        head=item.get('finalized')
+        number=item.get('number')
+        if not isinstance(head,str) or not re.fullmatch(r'0x[0-9a-fA-F]{64}',head):
+            return None
+        if not isinstance(number,str) or not re.fullmatch(r'0x[0-9a-fA-F]+',number):
+            return None
+        return {'hash':head.lower(),'height':int(number,16)}
+    except (OSError,ValueError,TypeError,subprocess.SubprocessError):
+        return https_finality_observation(expected_genesis)
+
+
+def cli_network_status(*, finality_probe=rpc_finality_observation):
+    """Preserve observation even when official profile or faucet is not ready."""
+    binpath=shutil.which('flop')
+    if not binpath:
+        return {'ready':False,'reason':'FLOP_CLI_NOT_IN_LAUNCHD_PATH'}
+    cp=subprocess.run([binpath,'--network','testnet','network','status','--json'],
+                      capture_output=True,text=True,timeout=35,check=False)
+    if cp.returncode or not cp.stdout.strip():
+        return {'ready':False,'reason':'CLI_NETWORK_STATUS_UNAVAILABLE'}
+    try:
+        obj=json.loads(cp.stdout)
+    except (ValueError,TypeError):
+        return {'ready':False,'reason':'CLI_STATUS_NOT_JSON'}
+    if not isinstance(obj,dict) or obj.get('network')!='testnet':
+        return {'ready':False,'reason':'WRONG_NETWORK_RETURNED'}
+    profile=obj.get('profile_status','UNVERIFIED')
+    rpc=obj.get('rpc') or {}
+    faucet=obj.get('faucet') or {}
+    if not isinstance(rpc,dict) or not isinstance(faucet,dict):
+        return {'ready':False,'reason':'CLI_STATUS_SCHEMA_INVALID'}
+    genesis=(rpc.get('genesis_hash') or rpc.get('genesisHash') or rpc.get('genesis'))
+    if not isinstance(genesis,str) or not re.fullmatch(r'0x[0-9a-fA-F]{64}',genesis):
+        genesis=None
+    else:
+        genesis=genesis.lower()
+    obs={'profile_status':profile,'rpc_reachable':rpc.get('reachable') is True,
+         'rpc_genesis_matches_expected':rpc.get('matches_expected'),
+         'observed_genesis':genesis,'rpc_chain':rpc.get('chain'),
+         'rpc_spec_version':rpc.get('spec_version'),
+         'faucet_reachable':faucet.get('reachable') is True,
+         'faucet_ready':faucet.get('ready'),'faucet_matches_rpc':faucet.get('matches_rpc'),
+         'finalized_head':None,'finalized_height':None,'settlement_ready':False}
+    # Do not query any user-overridden endpoint or assume identity from DNS.
+    if obs['rpc_reachable'] and genesis and rpc.get('url') in ('wss://testnet.flop.network','wss://testnet.flop.network/') and rpc.get('overridden') is False:
+        final=finality_probe(genesis)
+        if final:
+            obs.update(finalized_head=final['hash'],finalized_height=final['height'],
+                       settlement_ready=final['height']>0)
+    def blocked(reason):
+        return {**obs,'ready':False,'reason':reason}
+    if profile=='planned':
+        return blocked('OFFICIAL_PROFILE_PLANNED')
+    if profile not in ('live','active','launched'):
+        return blocked('UNKNOWN_TESTNET_PROFILE')
+    if not obs['rpc_reachable'] or rpc.get('matches_expected') is not True:
+        return blocked('RPC_NOT_REACHABLE_AND_PINNED')
+    if not obs['faucet_reachable'] or faucet.get('ready') is not True or faucet.get('matches_rpc') is not True:
+        return blocked('FAUCET_NOT_READY_OR_GENESIS_MISMATCH')
+    if not genesis:
+        return blocked('GENESIS_NOT_VERIFIED')
+    if not obs['settlement_ready']:
+        return blocked('CHAIN_FINALITY_NOT_VERIFIED')
+    return {**obs,'ready':True,'genesis':genesis}
+
+
+def ready_to_send(conn, config=None, *, fetch=_json_response, cli_status=cli_network_status):
+    if now()<LAUNCH_UTC:
+        return {'ready':False,'reason':'BEFORE_OFFICIAL_LAUNCH_TARGET'}
+    # Always check RPC even if the operator document is still planned.
+    try:
+        doc=official_testnet_state(fetch)
+    except (OSError,TimeoutError,ValueError):
+        doc={'ready':False,'status':'OFFICIAL_DOC_UNAVAILABLE'}
+    try:
+        cli=cli_status()
+    except (OSError,ValueError,subprocess.SubprocessError):
+        cli={'ready':False,'reason':'CLI_NETWORK_STATUS_UNAVAILABLE'}
+    # Public machine-readable chain identity is authoritative for funding only.
+    # A page-rendering failure must not hide a pinned live faucet; explicit
+    # planned status or chain mismatch still fails closed.
+    if doc['status'] in ('UNVERIFIED_DOC_FORMAT','OFFICIAL_DOC_UNAVAILABLE','OFFICIAL_GENESIS_NOT_PUBLISHED') and cli.get('ready'):
+        try:
+            from faucet import GENESIS
+            chain=json.loads(fetch('https://faucet.flop.network/chain'))
+            limits=json.loads(fetch('https://faucet.flop.network/limits'))
+            if (chain.get('network')=='testnet' and chain.get('genesisHash')==GENESIS
+                    and cli.get('genesis')==GENESIS and limits.get('network')=='testnet'
+                    and limits.get('stale') is False and limits['faucet']['status']=='open'
+                    and limits['faucet']['agent']['claimPath']=='/v1/testnet/agent-claims'):
+                doc={'ready':True,'status':'CANONICAL_FAUCET_CHAIN_VERIFIED',
+                     'genesis':GENESIS,'scoring_status':'UNVERIFIED'}
+        except (OSError,ValueError,TypeError,KeyError,AttributeError):
+            pass
+    put(conn,'official_document_status',doc['status'])
+    put(conn,'scoring_status',doc.get('scoring_status','UNVERIFIED'))
+    for field in ('profile_status','rpc_reachable','rpc_genesis_matches_expected',
+                  'observed_genesis','rpc_chain','rpc_spec_version','faucet_reachable',
+                  'faucet_ready','faucet_matches_rpc','finalized_head','finalized_height'):
+        value=cli.get(field)
+        put(conn,field,json.dumps(value,ensure_ascii=False) if value is None or isinstance(value,bool) else value)
+    put(conn,'network_observed_at_utc',utc())
+    if not doc['ready']:
+        status='RPC_REACHABLE_AWAITING_OFFICIAL_PIN' if cli.get('rpc_reachable') else doc['status']
+        put(conn,'network_status',status)
+        put(conn,'network_blocker',doc['status']+' / '+str(cli.get('reason','CLI_READY')))
+        return {'ready':False,'reason':doc['status']}
+    if not cli['ready']:
+        put(conn,'network_status','AWAITING_TESTNET_READINESS')
+        put(conn,'network_blocker',cli.get('reason','CLI_NOT_READY'))
+        # Only notify once for an actionable mismatch after the published pin
+        # actually agrees with the live observed RPC. Do not auto-install an
+        # unreviewed future CLI release or send recurring planned-state mail.
+        if (cli.get('reason')=='OFFICIAL_PROFILE_PLANNED'
+                and cli.get('observed_genesis')==doc['genesis']
+                and cli.get('rpc_reachable') is True):
+            enqueue(conn,'cli-profile-update-'+doc['genesis'][2:26],
+                    '[FLOP] 官方已公布链身份，CLI 配置仍待更新',
+                    '官方 Genesis 已与 RPC 观察值一致，但当前 CLI 仍标记 planned。'
+                    '请核对官方新发行版本及其网络配置；未升级通过前禁止签名与领取。')
+        return {'ready':False,'reason':cli.get('reason','CLI_NOT_READY')}
+    if cli['genesis']!=doc['genesis'].lower():
+        put(conn,'network_status','GENESIS_MISMATCH')
+        put(conn,'network_blocker','DOC_RPC_GENESIS_MISMATCH')
+        return {'ready':False,'reason':'DOC_RPC_GENESIS_MISMATCH'}
+    put(conn,'network_status','TESTNET_VERIFIED')
+    put(conn,'network_blocker','NONE')
+    if config is None:
+        return {'ready':False,'reason':'PRIVATE_CONFIG_NOT_CONFIGURED',
+                'genesis':cli['genesis']}
+    if not cli.get('settlement_ready'):
+        return {'ready':False,'reason':'CHAIN_FINALITY_NOT_VERIFIED'}
+    if cli['genesis']!=config['expected_genesis'].lower():
+        return {'ready':False,'reason':'CONFIG_RPC_GENESIS_MISMATCH'}
+    # Network readiness is not scoring or miner readiness. The independent
+    # scoring and settlement adapters are not implemented; never auto-spend.
+    return {'ready':False,'reason':'WAITING_FOR_VERIFIED_SCORING',
+            'genesis':cli['genesis']}
+
+
+def do_direct_first(conn, config, *, run=subprocess.run):
+    """Exactly one first capped test, UNKNOWN even for CLI rc0 until chain audit.
+
+    Reserve attempt in SQLite *before* CLI may open escrow, preventing a crash
+    from creating a second direct session. No auto-retry or recurring spends
+    while chain finality and attribution remain unverified.
+    """
+    old=conn.execute('SELECT attempt_id FROM session_attempts LIMIT 1').fetchone()
+    if old:
+        return {'state':'BLOCKED_PRIOR_ATTEMPT_RECONCILE','attempt_id':old[0]}
+    cli=shutil.which('flop')
+    if not cli:
+        return {'state':'BLOCKED_CLI_NOT_INSTALLED'}
+    budget=Decimal(config['total_test_flop_budget'])
+    if Decimal(config['max_flop'])>budget:
+        raise ValueError('EXCEEDS_GLOBAL_BUDGET')
+    eventid='first-live-direct'
+    conn.execute("""INSERT INTO session_attempts
+      (attempt_id,phase,started_utc,wallet,expected_genesis,miner,max_flop)
+      VALUES (?,?,?,?,?,?,?)""",
+      (eventid,'RESERVED_UNKNOWN_MAY_SUBMIT',utc(),config['wallet'],
+       config['expected_genesis'],config['miner'],config['max_flop']))
+    conn.commit()
+    put(conn,'execution_mode','FIRST_TEST_IN_FLIGHT')
+    cmd=[cli,'--network','testnet','--keystore',config['keystore'],'--password-env',
+         'FLOP_KEY_PASSWORD','session','run','--miner',config['miner'],
+         '--model',config['model'],'--prompt',
+         'Analyze FLOP Testnet official launch readiness and return one concise answer.',
+         '--max-flop',config['max_flop'],'--via','offer','--endpoint',config['endpoint'],'--json']
+    try:
+        cp=run(cmd,capture_output=True,text=True,timeout=CLI_TIMEOUT,check=False)
+        # Include no raw response or secret-bearing CLI outputs in mail / Git.
+        # Store a bounded scrubbed summary, never treat rc==0 as settlement.
+        parsed=None
+        try:
+            parsed=json.loads(cp.stdout.strip()) if cp.stdout.strip() else None
+        except ValueError:
+            pass
+        result={'return_code':cp.returncode,
+                'json_received':isinstance(parsed,dict),
+                'output_sha256':hashlib.sha256(cp.stdout.encode()).hexdigest(),
+                'stderr_sha256':hashlib.sha256(cp.stderr.encode()).hexdigest(),
+                'has_channel':bool(isinstance(parsed,dict) and
+                                   (parsed.get('channel') or parsed.get('channelId') or parsed.get('channel_id')))}
+        phase='CLI_RESULT_NEEDS_CHAIN_FINALITY' if cp.returncode==0 and result['has_channel'] else 'UNKNOWN_MAY_HAVE_SUBMITTED'
+        conn.execute("""UPDATE session_attempts SET phase=?,ended_utc=?,cli_result=?,last_error=? WHERE attempt_id=?""",
+                     (phase,utc(),json.dumps(result,sort_keys=True),
+                      None if phase.startswith('CLI_RESULT') else 'CLI_NO_VERIFIABLE_CHANNEL',eventid))
+        conn.commit()
+        put(conn,'execution_mode','RECONCILIATION_REQUIRED_NO_AUTO_RETRY')
+        if phase!='CLI_RESULT_NEEDS_CHAIN_FINALITY':
+            notify_error(conn,'DIRECT_SESSION_UNCERTAIN','CLI outcome cannot establish a finalized paid inference')
+        else:
+            enqueue(conn,'first-session-cli-pending','[FLOP] 首次测试已提交｜等待链上核验',
+                    'CLI 返回了候选会话信息，但付款人、有效推理和最终结算尚未独立核实。\n'
+                    '自动执行已暂停；不会将 CLI 返回码视为成功，也不会盲目再次付款。')
+        return {'state':phase,'details':result}
+    except (OSError,subprocess.TimeoutExpired) as exc:
+        conn.execute('UPDATE session_attempts SET phase=?,ended_utc=?,last_error=? WHERE attempt_id=?',
+                     ('UNKNOWN_MAY_HAVE_SUBMITTED',utc(),type(exc).__name__,eventid))
+        conn.commit()
+        put(conn,'execution_mode','RECONCILIATION_REQUIRED_NO_AUTO_RETRY')
+        notify_error(conn,'DIRECT_SESSION_TIMEOUT_OR_OS_ERROR',type(exc).__name__)
+        return {'state':'UNKNOWN_MAY_HAVE_SUBMITTED','reason':type(exc).__name__}
+
+def mark_first_success_from_independent_verifier(conn, evidence):
+    """Only called by a future, independently audited onchain verifier.
+
+    This function is deliberately not reachable via CLI or imported JSON.
+    No user-provided receipt, CLI stdout or test fixture can promote a session.
+    """
+    if evidence.get('verification_authority')!='DIRECT_CHAIN_VERIFIER_V1':
+        raise ValueError('INDEPENDENT_VERIFIER_REQUIRED')
+    row=conn.execute('SELECT * FROM session_attempts WHERE attempt_id=?',('first-live-direct',)).fetchone()
+    if not row or row['chain_verified']:
+        return False
+    if evidence.get('network')!='testnet' or evidence.get('genesis')!=row['expected_genesis']:
+        raise ValueError('NETWORK_GENESIS_MISMATCH')
+    if evidence.get('payer')!=row['wallet'] or evidence.get('miner')!=row['miner']:
+        raise ValueError('PARTY_MISMATCH')
+    if evidence.get('verified_turns',0)<1 or evidence.get('finalized') is not True:
+        raise ValueError('FINALIZED_TURN_MISSING')
+    if not re.fullmatch(r'0x[0-9a-fA-F]{64}',str(evidence.get('settlement_tx',''))):
+        raise ValueError('FINALIZED_SETTLEMENT_TX_MISSING')
+    spent=Decimal(str(evidence.get('spent_flop','')))
+    if not spent.is_finite() or not (Decimal('0')<spent<=Decimal(row['max_flop'])):
+        raise ValueError('SPEND_OUT_OF_BOUNDS')
+    conn.execute("""UPDATE session_attempts SET chain_verified=1,phase='DIRECT_CHAIN_VERIFIED',
+        final_spent_flop=?,chain_tx=?,last_error=NULL WHERE attempt_id=?""",
+        (str(spent),evidence['settlement_tx'],'first-live-direct'))
+    conn.commit()
+    put(conn,'last_verified_session_utc',utc())
+    put(conn,'execution_mode','FIRST_TEST_VERIFIED_FURTHER_ADAPTER_REQUIRED')
+    clear_error(conn)
+    enqueue(conn,'first-real-test-success','[FLOP] 首次真实推理测试成功｜链上已核验',
+            '测试网首次真实测试已经完成独立链上核验。\n'
+            '钱包：'+row['wallet']+'\n'
+            'Miner：'+row['miner']+'\n'
+            '已结算有效消费：'+str(spent)+' Test FLOP\n'
+            '链上结算交易：'+evidence['settlement_tx']+'\n'
+            '当前状态：首测通过。长期自动消费仍需完成动态额度及归属验收。')
+    return True
+
+def digest_slot(now_local=None):
+    d=now_local or now_bkk()
+    # At 08:00 and 20:00 Bangkok. Missed mails catch up at next tick once.
+    hour=8 if 8<=d.hour<20 else 20 if d.hour>=20 else -1
+    effective_date=d.date() if hour!=-1 else d.date()-timedelta(days=1)
+    if hour==-1: hour=20
+    return effective_date.isoformat(),hour
+
+def queue_summary(conn):
+    local_now=now_bkk()
+    today,hour=digest_slot(local_now)
+    slot=f'{today}-{hour:02d}'
+    slot_at=datetime.fromisoformat(today+'T'+f'{hour:02d}:00:00').replace(tzinfo=BKK)
+    setup=conn.execute("SELECT created_at FROM flop_mail WHERE mail_key='first-mail-setup-test'").fetchone()
+    # After an actual install, catch up a missed 08/20 slot as soon as Mac
+    # resumes; never send a stale slot predating the initial mail test.
+    if setup:
+        when=datetime.fromisoformat(setup[0])
+        if when.tzinfo is None or slot_at<=when.astimezone(BKK):
+            return False
+    elif local_now.hour not in (8,20):
+        # Offline unit harness without actual verified mail setup.
+        return False
+    key='summary-'+slot
+    if conn.execute('SELECT 1 FROM flop_mail WHERE mail_key=?',(key,)).fetchone():
+        return False
+    rows=conn.execute('SELECT phase,COUNT(*) FROM session_attempts GROUP BY phase').fetchall()
+    states=dict(rows)
+    amounts=conn.execute("""SELECT final_spent_flop FROM session_attempts
+             WHERE chain_verified=1 AND final_spent_flop IS NOT NULL""").fetchall()
+    spent=sum((Decimal(row[0]) for row in amounts),Decimal(0))
+    latest=get(conn,'last_verified_session_utc','无')
+    mode=get(conn,'execution_mode','WAIT_FOR_TESTNET')
+    net=get(conn,'network_status','UNVERIFIED')
+    block=get(conn,'current_error') or '无'
+    body=('\n'.join([
+        '采样时区：Asia/Bangkok',
+        '网络：'+net,
+        '执行状态：'+mode,
+        '官方文档 / CLI：'+get(conn,'official_document_status','未核实')+' / '+get(conn,'profile_status','未核实'),
+        'RPC 连通 / 最终高度：'+get(conn,'rpc_reachable','未核实')+' / '+get(conn,'finalized_height','未核实'),
+        'Faucet 连通 / 就绪：'+get(conn,'faucet_reachable','未核实')+' / '+get(conn,'faucet_ready','未核实'),
+        '网络阻塞：'+get(conn,'network_blocker','未核实'),
+        '已独立核验的 Testnet 推理消费：'+str(spent)+' FLOP',
+        '已核验有效结算次数：'+str(sum(int(x['chain_verified']) for x in conn.execute('SELECT chain_verified FROM session_attempts'))),
+        '尚未核验/可能已支付的会话：'+str(sum(v for k,v in states.items() if k not in ('DIRECT_CHAIN_VERIFIED',))),
+        '最后一次成功：'+latest,
+        '钱包地址：'+get(conn,'wallet_address','未核实'),
+        '钱包可用余额（Test FLOP）：'+get(conn,'wallet_free_flop','未核实'),
+        '钱包资金状态：'+get(conn,'wallet_funding_state','未核实'),
+        '正式计分状态：'+get(conn,'cycle_scoring',get(conn,'scoring_status','未核实')),
+        '自动循环：'+get(conn,'cycle_status','未核实'),
+        '矿工/报价发现：'+get(conn,'discovery_status','未核实')+' / '+get(conn,'offer_count','未核实')+' / 合格 '+get(conn,'eligible_offer_count','未核实'),
+        '链上核验阻塞：'+get(conn,'cycle_verify_reason','未记录'),
+        '下一次领取最早时间（UTC Unix秒）：'+get(conn,'next_claim_eligible_after_utc_epoch','未确认'),
+        '钱包锁定余额（Test FLOP）：'+get(conn,'wallet_reserved_flop','未核实'),
+        '钱包余额采样时间：'+get(conn,'wallet_balance_at','未核实'),
+        '首次领取状态：'+get(conn,'faucet_claim_status','未记录'),
+        '领取请求时间：'+get(conn,'faucet_claim_at','未记录'),
+        '领取交易哈希：'+get(conn,'faucet_claim_tx','未确认'),
+        '领取错误/原因：'+get(conn,'faucet_claim_reason','未记录'),
+        '下次同 nonce 查询最早时间（Unix UTC 秒）：'+get(conn,'faucet_claim_retry_at','未记录'),
+        'Faucet 当前余额 / 每日剩额度：'+get(conn,'faucet_pool_flop','未核实')+' / '+get(conn,'faucet_daily_remaining_flop','未核实')+' Test FLOP',
+        '官方待处理申请 / 单次额度：'+get(conn,'faucet_pending_grants','未核实')+' / '+get(conn,'faucet_grant_flop','未核实'),
+        '官方额度采样时间：'+get(conn,'faucet_limits_asof','未核实'),
+        '领取到账需独立核验 finalized 交易；余额及 CLI 回执不等于空投积分。',
+        '当前异常：'+block,
+        'FLOP 空投分配与 USD 收益：未确认',
+        'Gmail SENT 必须独立回读才能视为送达。'
+    ]))
+    enqueue(conn,key,'[FLOP] 每12小时运行与有效消费报告｜'+slot,body)
+    return True
+
+def check_dashboard_health_from_tick(conn, *, opener=urlopen):
+    """Independent tick detects a failed dashboard even when its own watchdog died."""
+    binding=DATA/'dashboard-bind.json'
+    if not binding.is_file():
+        return 'NO_VERIFIED_DASHBOARD_BINDING_YET'
+    try:
+        obj=json.loads(binding.read_text(encoding='utf-8'))
+        port=obj.get('port')
+        if type(port) is not int or not 1024 <= port <= 65535:
+            raise ValueError('BAD_DASHBOARD_BIND_PORT')
+        url=f'http://127.0.0.1:{port}/api/health'
+        with opener(Request(url,headers={'Accept':'application/json'}),timeout=3) as response:
+            if response.status!=200:
+                raise ValueError('HEALTH_HTTP_NOT_200')
+            health=json.loads(response.read(16000))
+        valid=(health.get('service')=='flop-dashboard'
+               and health.get('build')=='flop-dashboard-dynamic-port-v3'
+               and health.get('host')=='127.0.0.1'
+               and health.get('port')==port
+               and health.get('source_path')==str(Path(__file__).resolve().parent)
+               and isinstance(health.get('pid'),int)
+               and health['pid']>0)
+        if not valid:
+            raise ValueError('DASHBOARD_IDENTITY_MISMATCH')
+        put(conn,'dashboard_health','HTTP_200_IDENTITY_VERIFIED')
+        if get(conn,'current_error')=='DASHBOARD_UNHEALTHY':
+            clear_error(conn)
+        return 'HTTP_200_IDENTITY_VERIFIED'
+    except (OSError,TimeoutError,ValueError,TypeError,KeyError) as exc:
+        put(conn,'dashboard_health','FAILED_'+type(exc).__name__)
+        notify_error(conn,'DASHBOARD_UNHEALTHY',
+                     'Local FLOP dashboard is unavailable or the wrong service: '+type(exc).__name__)
+        return 'DASHBOARD_UNHEALTHY'
+
+
+def tick(*, fetch=_json_response, cli_status=cli_network_status, execution=do_direct_first):
+    DATA.mkdir(parents=True,exist_ok=True,mode=0o700)
+    conn=sqlite3.connect(MONITOR,timeout=10)
+    conn.row_factory=sqlite3.Row
+    ensure_state(conn)
+    try:
+        state={'ready':False,'reason':'NOT_CHECKED'}
+        network_check_completed=False
+        # Mail test is deliberately separate and mandatory before live auto-start.
+        mail_preflight=conn.execute("SELECT status FROM flop_mail WHERE mail_key='first-mail-setup-test'").fetchone() if has_mail_table(conn) else None
+        if now()<LAUNCH_UTC:
+            put(conn,'network_status','WAITING_FOR_2026-11-24T07:00Z')
+            put(conn,'execution_mode','PRELAUNCH_WAIT')
+            state={'ready':False,'reason':'PRELAUNCH_WAIT'}
+        else:
+            try:
+                try:
+                    config=private_config()
+                except (OSError,ValueError,KeyError) as exc:
+                    config=None
+                    notify_error(conn,'PRIVATE_CONFIG_NOT_READY',type(exc).__name__+': '+str(exc))
+                state=ready_to_send(conn,config,fetch=fetch,cli_status=cli_status)
+                network_check_completed=True
+                # Legacy single-session branch is retired. The cycle runs after
+                # funding observations; it has independent funding and spend gates.
+                put(conn,'execution_mode','CHECKING_TESTNET_CYCLE')
+            except (OSError,TimeoutError,ValueError,subprocess.SubprocessError) as exc:
+                notify_error(conn,'NETWORK_CHECK_FAILED',type(exc).__name__)
+        from faucet import funding_observation
+        funding_observation(conn,fetch=fetch,cli_status={
+            'observed_genesis':get(conn,'observed_genesis'),
+            'rpc_genesis_matches_expected':network_check_completed and get(conn,'rpc_genesis_matches_expected')=='true'
+                and get(conn,'rpc_reachable')=='true'
+                and get(conn,'profile_status')=='live'})
+        if network_check_completed and now()>=LAUNCH_UTC and mail_preflight and mail_preflight[0]=='SENT_VERIFIED':
+            from cycle import run_tick
+            try:
+                run_tick(conn,fetch)
+            except (OSError,TimeoutError,ValueError,TypeError,KeyError,subprocess.SubprocessError) as exc:
+                put(conn,'cycle_status','CYCLE_CHECK_FAILED')
+                notify_error(conn,'CYCLE_CHECK_FAILED',type(exc).__name__)
+        elif now()>=LAUNCH_UTC and not network_check_completed:
+            put(conn,'cycle_status','CURRENT_NETWORK_OBSERVATION_FAILED')
+        dashboard_state=check_dashboard_health_from_tick(conn)
+        queue_summary(conn)
+        delivery=pump(conn)
+        put(conn,'last_scheduler_tick_utc',utc())
+        return {'ready':state,'delivery':delivery,'at':utc(),
+                'mode':get(conn,'execution_mode','UNVERIFIED'),
+                'dashboard':dashboard_state}
+    finally:
+        conn.close()
+
+
+def live_session_in_progress(conn, *, at=None, lock_path=None):
+    # A healthy long-lived direct call can exceed the old 15-minute tick limit.
+    # Do not mask a crashed scheduler: require both a fresh journal and held lock.
+    if get(conn,'execution_mode')!='TESTNET_SESSION_SUBMITTING':return False
+    row=conn.execute("SELECT started_utc FROM session_attempts WHERE phase='RESERVED_UNKNOWN_MAY_SUBMIT' ORDER BY started_utc DESC LIMIT 1").fetchone()
+    if not row:return False
+    try:
+        started=datetime.fromisoformat(row[0].replace('Z','+00:00'))
+        if started.tzinfo is None:return False
+        age=((at or now())-started).total_seconds()
+        if not 0<=age<=2160:return False
+        with (lock_path or DATA/'runtime.lock').open('a+') as handle:
+            try:fcntl.flock(handle.fileno(),fcntl.LOCK_EX|fcntl.LOCK_NB)
+            except BlockingIOError:return True
+            else:fcntl.flock(handle.fileno(),fcntl.LOCK_UN)
+    except (OSError,ValueError,TypeError):return False
+    return False
+
+def watchdog_tick():
+    """Called by EXISTING independent dashboard job; no new launchd task."""
+    DATA.mkdir(parents=True,exist_ok=True,mode=0o700)
+    conn=sqlite3.connect(MONITOR,timeout=15)
+    conn.row_factory=sqlite3.Row
+    ensure_state(conn)
+    try:
+        last=get(conn,'last_scheduler_tick_utc')
+        if last:
+            try:
+                at=datetime.fromisoformat(last.replace('Z','+00:00'))
+                if at.tzinfo is None:raise ValueError('NAIVE_HEALTH_TIMESTAMP')
+            except ValueError:
+                at=None
+        else:
+            started=get(conn,'watchdog_started_utc')
+            if not started:
+                put(conn,'watchdog_started_utc',utc())
+                return {'status':'WAIT_FOR_INITIAL_TICK'}
+            try:
+                at=datetime.fromisoformat(started)
+            except ValueError:
+                at=None
+        if at is None:
+            notify_error(conn,'SCHEDULER_HEALTH_TIMESTAMP_INVALID','Unable to read last scheduled tick')
+        else:
+            lag=(now()-at.astimezone(timezone.utc)).total_seconds()
+            if lag > 900 and not live_session_in_progress(conn):
+                notify_error(conn,'SCHEDULER_STALE','No successful scheduler tick for over 15 minutes')
+            elif get(conn,'current_error')=='SCHEDULER_STALE':
+                clear_error(conn)
+        delivery=pump(conn)
+        return {'status':'WATCHDOG_CHECKED','delivery':delivery}
+    finally:conn.close()
+
+def has_mail_table(conn):
+    return bool(conn.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='flop_mail'").fetchone())
+
+@contextmanager
+def exclusive():
+    DATA.mkdir(parents=True,exist_ok=True,mode=0o700)
+    with (DATA/'runtime.lock').open('a+') as f:
+        try:
+            fcntl.flock(f.fileno(),fcntl.LOCK_EX|fcntl.LOCK_NB)
+        except BlockingIOError:
+            raise SystemExit('RUNTIME_ALREADY_ACTIVE')
+        yield
+
+def mail_test():
+    conn=sqlite3.connect(MONITOR)
+    conn.row_factory=sqlite3.Row
+    ensure_state(conn)
+    try:
+        enqueue(conn,'first-mail-setup-test','[FLOP] 邮件通道首次验收',
+                '这是 FLOP 本地 Agent 的一次真实邮件发送与 Gmail Sent 回读测试。\n'
+                '不代表 Testnet 推理或空投资格已经通过。\n'
+                '此测试邮件应当只出现一次。')
+        result=pump(conn)
+        row=conn.execute("SELECT status FROM flop_mail WHERE mail_key='first-mail-setup-test'").fetchone()
+        return {'status':row['status'],'delivery':result,'actual_send_confirmed':row['status']=='SENT_VERIFIED'}
+    finally:
+        conn.close()
+
+def snapshot():
+    conn=sqlite3.connect(MONITOR)
+    conn.row_factory=sqlite3.Row
+    ensure_state(conn)
+    try:
+        results=dict(conn.execute('SELECT key,value FROM kv').fetchall())
+        results['mail']=mail_status(conn)
+        entry=conn.execute("SELECT status FROM flop_mail WHERE mail_key='first-mail-setup-test'").fetchone()
+        results['mail_setup_test']=entry[0] if entry else 'NOT_EXECUTED'
+        results['sessions']=[dict(x) for x in conn.execute(
+            'SELECT attempt_id,phase,started_utc,ended_utc,wallet,max_flop,chain_verified,final_spent_flop,chain_tx,last_error FROM session_attempts')]
+        results['errors']=[dict(x) for x in conn.execute(
+            "SELECT at_utc,severity,code,details FROM runtime_events WHERE severity='ERROR' ORDER BY at_utc DESC LIMIT 10")]
+        return results
+    finally:
+        conn.close()
+
+def main():
+    parser=argparse.ArgumentParser()
+    parser.add_argument('action',choices=['tick','mail-test','status','first-test'])
+    args=parser.parse_args()
+    with exclusive():
+        if args.action=='mail-test': result=mail_test()
+        elif args.action=='tick': result=tick()
+        elif args.action=='first-test':
+            from agent import offline_first_test
+            result=offline_first_test()
+        else: result=snapshot()
+    print(json.dumps(result,indent=2,ensure_ascii=False))
+if __name__=='__main__':
+    main()
+

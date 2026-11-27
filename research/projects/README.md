@@ -33,3 +33,5 @@ Current mapped material:
 - Predict.fun pre-TGE investment and PP/Polymarket/Aspecta FDV due diligence: `research/projects/predict-fun/predict-fun-pre-tge-pm-fdv-due-diligence.md` (Thai geo restriction, no tokenomics or claim confirmed, research only).
 
 Operational monitoring thresholds remain in the Mission/TGE task roots.
+
+- FLOP Network / Agent 实际收益与技术证据：`research/projects/flop-network/flop-network-agent-earnings-due-diligence-20261123.md`。本地只读 Agent、SQLite、收益与证据看板、首测位于 `research/projects/flop-network/agent/`；与历史 FLOP Close Call 竞赛分开。当前仅 Draft PR、无真实 Testnet 支付/自动化部署。
