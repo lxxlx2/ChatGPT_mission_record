@@ -41,6 +41,22 @@ class RuntimeTests(unittest.TestCase):
     def tearDown(self):
         self.conn.close()
         self.temp.cleanup()
+    def test_long_session_watchdog_requires_live_lock_and_fresh_journal(self):
+        stamp=datetime(2026,11,28,0,0,tzinfo=timezone.utc)
+        runtime.put(self.conn,'execution_mode','TESTNET_SESSION_SUBMITTING')
+        self.conn.execute("""INSERT INTO session_attempts
+          (attempt_id,phase,started_utc,wallet,expected_genesis,miner,max_flop)
+          VALUES (?,?,?,?,?,?,?)""",('test-long','RESERVED_UNKNOWN_MAY_SUBMIT',stamp.isoformat(),'wallet','genesis','miner','0.005'))
+        self.conn.commit()
+        path=Path(self.temp.name)/'runtime.lock'
+        from datetime import timedelta
+        self.assertFalse(runtime.live_session_in_progress(self.conn,at=stamp+timedelta(seconds=1200),lock_path=path))
+        import fcntl
+        with path.open('a+') as lock:
+            fcntl.flock(lock.fileno(),fcntl.LOCK_EX|fcntl.LOCK_NB)
+            self.assertTrue(runtime.live_session_in_progress(self.conn,at=stamp+timedelta(seconds=1200),lock_path=path))
+            self.assertFalse(runtime.live_session_in_progress(self.conn,at=stamp+timedelta(seconds=2161),lock_path=path))
+
     def test_mail_test_sent_readback_and_idempotent(self):
         mail.enqueue(self.conn,'first-mail-setup-test','[FLOP] 邮件通道首次验收','Offline fake mail content')
         provider=FakeProvider()

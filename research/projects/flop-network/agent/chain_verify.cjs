@@ -130,8 +130,10 @@ async function main(){
     const state=channel.state;
     if(!(state==='closed'||(state&&Object.prototype.hasOwnProperty.call(state,'closed'))))throw Error('CHANNEL_NOT_CLOSED');
     if(escrow<minerPaid||escrow>BigInt(q.max_raw))throw Error('SETTLEMENT_OUTSIDE_BUDGET');
-    if(!HASH.test(channel.modelHash)||!HASH.test(channel.enclaveKey)||Number(channel.openedAt)<=q.grant_height||Number(channel.openedAt)<q.start_height)throw Error('CHANNEL_IDENTITY_OR_OPEN_HEIGHT');
+    const opened=Number(channel.openedAt);
+    if(!Number.isSafeInteger(opened)||!HASH.test(channel.modelHash)||!HASH.test(channel.enclaveKey)||opened<=q.grant_height||opened<q.start_height)throw Error('CHANNEL_IDENTITY_OR_OPEN_HEIGHT');
     return {...common,channel:q.channel,wallet:q.wallet,miner:q.miner,miner_paid_raw:minerPaid.toString(),spent_raw:escrow.toString(),cooperative:true,model_hash:channel.modelHash,enclave_key:channel.enclaveKey,miner_account_hex:acct(q.miner)};
   }finally{await api.disconnect();}
 }
 main().then(x=>{clearTimeout(deadline);console.log(JSON.stringify(x));process.exit(0)}).catch(e=>{clearTimeout(deadline);console.log(JSON.stringify({ok:false,code:String(e.message).match(/^[A-Z0-9_]{1,80}$/)?e.message:'CHAIN_ADAPTER_UNAVAILABLE'}));process.exit(1)});
+

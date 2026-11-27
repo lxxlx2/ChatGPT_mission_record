@@ -1,5 +1,15 @@
 # FLOP / Mac 本地 Agent 收益研究、看板与首次验证
 
+## 2026-11-28：首次真实直连回执与重复领取接续
+
+- 用户终端实测 CLI 0.10.3：一次外部矿工 force-open / Qwen3-1.7B / 0.005 Test FLOP escrow / 1200s / 32 output tokens，cooperative=true、verified_turns=1、exit=0，实际链上 channel list 返回 closed，余额由 10 变为 9.986563858475。此为用户实测回执；自动核账仍须独立确认 exact finalized extrinsic 与 Settled 事件，不能把该日志直接计入已验证收益。
+- manual_import.py 一次性把已有本地 CLI JSON 回执关联当前已核验 grant，落库为待核验，重跑同一交易幂等；不签名、不开新通道、不创建钱包。不覆盖不同的已有 session。
+- 旧代码遗漏 settle_tx 字段且假定 validator/audit fee 同在 Settled 事件。依据官方 https://docs.flop.network/docs/send-to-specific-miner 的 D-0403 cooperative close 全额消耗 escrow，核验 exact tx、成功事件、同一 channel、minerPaid>0、cooperative=true、closed storage、付款及矿工地址、openedAt、escrow 和预算。先定位 closed 状态变化的 finalized block，失败再按原有 bounded scan cursor 回退。未知数据不计分或重付。
+- CLI 0.10.3 已纳入明确版本表；新版 session 使用 1200s lifetime、32 tokens。公开 offer discovery 不可用时，仅使用本钱包已经核验成功过的 operator-opted-in 路由；每次读取新 info-proof 并对比 chain account/genesis/model/enclave fields。该 preflight 不独立做密码学签名验证，CLI/SDK 会在会话中校验 finalized channel key 和收据；只允许单次 0.005 测试 FLOP escrow 加手续费，不盲重试或扩大付款。已知路由不可用时等待。
+- 24h 与已核验消费满足且 Faucet 当前允许时，原 tick 才推进下一轮 nonce；官方拒绝则按原错误状态处理。Testnet 计分仍未确认，无历史补计。不得将测试消费视为收益。
+- 2100s direct-session subprocess 限时；看门狗仅在存在近期提交 journal 且原 runtime 锁实际被占用时接受较长 tick，超时或锁消失仍报警。既有 launchd 与 08/20 Asia/Bangkok 邮件不变。
+- 基线 9697832044f1a99cd302d6870a09bfac4a4931a5 已有用户 55/55 离线 PASS。新增代码尚未在 Mac 运行，不声称新测试或第二次领取通过；不要重新 bootstrap（历史文档的旧 CLI pin 过时）。先验收代码、导入现有回执，再恢复原服务。无需手动再支付一次。
+
 
 ## 2026-11-24 当前线上修复：端口冲突与 launchd 退出码 1
 
@@ -171,3 +181,4 @@ User local CLI reported 10 free Test FLOP; initial nonce receipt still unresolve
 Existing scheduler now calls cycle.py after funding observations. Original initial nonce is retained. Independently verify a finalized faucet transfer and actual settlement extrinsic using chain_verify.cjs (official HTTP RPC and installed CLI's @polkadot/api dependency). Discover signed offers on the Testnet explorer only, require venueVerified, exact registry identity, explicit quote units and public HTTPS endpoint; offer-only sessions, 0.1 Test FLOP cap and 0.2 reserve (pilot engineering defaults, not protocol requirements). Preserve all session attempts and halt on unknown payment. A second nonce is allocated only after verified qualifying spend and a rolling 24h cooldown; the server remains final arbiter of eligibility. No new service, wallet or real funds. Official current guide states no Testnet inference and no scoring block; live offer/schema and settlement adapter are not verified. Missing schemas/dependencies fail closed. New tests not run by author; user local 44 PASS refers to ad164086 only. No claim of unattended live success until real finalized cycle and rollover are observed.
 
 Sources: https://flop.network/llms.txt ; https://docs.flop.network/docs/send-to-specific-miner ; https://github.com/flop-labs/network/issues/229 .
+

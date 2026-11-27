@@ -667,6 +667,24 @@ def tick(*, fetch=_json_response, cli_status=cli_network_status, execution=do_di
         conn.close()
 
 
+def live_session_in_progress(conn, *, at=None, lock_path=None):
+    # A healthy long-lived direct call can exceed the old 15-minute tick limit.
+    # Do not mask a crashed scheduler: require both a fresh journal and held lock.
+    if get(conn,'execution_mode')!='TESTNET_SESSION_SUBMITTING':return False
+    row=conn.execute("SELECT started_utc FROM session_attempts WHERE phase='RESERVED_UNKNOWN_MAY_SUBMIT' ORDER BY started_utc DESC LIMIT 1").fetchone()
+    if not row:return False
+    try:
+        started=datetime.fromisoformat(row[0].replace('Z','+00:00'))
+        if started.tzinfo is None:return False
+        age=((at or now())-started).total_seconds()
+        if not 0<=age<=2160:return False
+        with (lock_path or DATA/'runtime.lock').open('a+') as handle:
+            try:fcntl.flock(handle.fileno(),fcntl.LOCK_EX|fcntl.LOCK_NB)
+            except BlockingIOError:return True
+            else:fcntl.flock(handle.fileno(),fcntl.LOCK_UN)
+    except (OSError,ValueError,TypeError):return False
+    return False
+
 def watchdog_tick():
     """Called by EXISTING independent dashboard job; no new launchd task."""
     DATA.mkdir(parents=True,exist_ok=True,mode=0o700)
@@ -694,7 +712,7 @@ def watchdog_tick():
             notify_error(conn,'SCHEDULER_HEALTH_TIMESTAMP_INVALID','Unable to read last scheduled tick')
         else:
             lag=(now()-at.astimezone(timezone.utc)).total_seconds()
-            if lag > 900:
+            if lag > 900 and not live_session_in_progress(conn):
                 notify_error(conn,'SCHEDULER_STALE','No successful scheduler tick for over 15 minutes')
             elif get(conn,'current_error')=='SCHEDULER_STALE':
                 clear_error(conn)
@@ -761,3 +779,4 @@ def main():
     print(json.dumps(result,indent=2,ensure_ascii=False))
 if __name__=='__main__':
     main()
+
