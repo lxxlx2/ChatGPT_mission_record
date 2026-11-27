@@ -22,6 +22,7 @@ from .db import open_production_ro
 from .wallet_refresh import capture_owner
 from .source_evidence import safe_source_error
 from ..meme.cluster import RPCError
+from ..meme.market import LOCAL_MARKET_PACING
 
 
 def canonical(value):
@@ -237,8 +238,10 @@ class ResearchData:
                     with self._write() as db:
                         db.executemany("INSERT OR REPLACE INTO frank_market_stage VALUES(?,?,?)",[(job_id,row["mint"],canonical(row)) for row in group_rows])
                     self._save(job)
-                    if any(row.get("reason") in {"HTTP_401","HTTP_403","HTTP_429"} for row in group_rows):
-                        raise RPCError(next(row["reason"] for row in group_rows if row.get("reason") in {"HTTP_401","HTTP_403","HTTP_429"}))
+                    stops = {"HTTP_401", "HTTP_403", "HTTP_429", LOCAL_MARKET_PACING}
+                    stop = next((row["reason"] for row in group_rows if row.get("reason") in stops), None)
+                    if stop is not None:
+                        raise RPCError(stop)
                 result = {"snapshot_id": result_id, "rows": observations, "observed_at": self.clock(),
                           "scope": request["scope"], "complete": True}
                 state = "DONE" if all(r.get("status") == "OK" for r in observations) else "PARTIAL"

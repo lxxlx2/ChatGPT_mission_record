@@ -34,7 +34,7 @@ FIXTURE_GATES = {
     "S12_EXACT_SECOND_USD_INPUT": ("test_frank_historical_usd_tick",),
     "S12_LOCAL_USD_BUILD_AND_READ": ("test_frank_build_usd_evidence",),
     "S08_INDEPENDENT_HOLDER_INPUT": ("test_frank_historical_holder_compare",),
-    "C13_SCOPE_AND_PACING": ("test_frank_parallel_ca_scopes", "test_frank_shared_provider_pacing"),
+    "C13_SCOPE_AND_PACING": ("test_frank_parallel_ca_scopes", "test_frank_shared_provider_pacing", "test_frank_dex_market_pacing"),
     "PERSON_SCOPE_AND_DRY_RUN": ("test_frank_staged_person_scope",),
 }
 UNMEASURED = {

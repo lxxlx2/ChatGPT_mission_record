@@ -5,7 +5,10 @@ and wallet-cluster conclusions never depend on this client.
 """
 from __future__ import annotations
 
+from collections import deque
+from email.utils import parsedate_to_datetime
 import json
+import re
 import threading
 import time
 import urllib.error
@@ -15,6 +18,57 @@ from decimal import Decimal, InvalidOperation
 import uuid
 
 BASE="https://api.dexscreener.com"
+LOCAL_MARKET_PACING = "DEXSCREENER_LOCAL_RATE_LIMIT"
+
+
+class DexScreenerRequestBudget:
+    """One conservative rolling quota for the single and batch market routes."""
+
+    def __init__(self, *, max_per_minute=300, monotonic=time.monotonic, wall_clock=time.time):
+        # Both routes have a documented ceiling of 300/minute. A combined
+        # ceiling does not presume the provider guarantees independent buckets.
+        if type(max_per_minute) is not int or not 1 <= max_per_minute <= 300:
+            raise ValueError("INVALID_DEXSCREENER_REQUEST_LIMIT")
+        self._limit = max_per_minute
+        self._monotonic = monotonic
+        self._wall_clock = wall_clock
+        self._lock = threading.Lock()
+        self._starts = deque()
+        self._cooldown = 0.0
+
+    def admit(self):
+        with self._lock:
+            now = self._monotonic()
+            while self._starts and self._starts[0] <= now - 60:
+                self._starts.popleft()
+            if now < self._cooldown or len(self._starts) >= self._limit:
+                return False
+            self._starts.append(now)
+            return True
+
+    def rate_limited(self, retry_after):
+        # Keep the longest outstanding provider cooldown. An HTTP date is
+        # converted once to a monotonic deadline so wall-clock changes do not
+        # subsequently shorten it.
+        wait = 60
+        if isinstance(retry_after, str):
+            value = retry_after.strip()
+            if re.fullmatch(r"[0-9]{1,12}", value):
+                wait = max(1, int(value))
+            else:
+                try:
+                    when = parsedate_to_datetime(value)
+                    if when.tzinfo is not None:
+                        wait = max(1, when.timestamp() - self._wall_clock())
+                except (TypeError, ValueError, OverflowError, OSError):
+                    pass
+        with self._lock:
+            self._cooldown = max(self._cooldown, self._monotonic() + wait)
+
+
+def _blocked_snapshot(mint):
+    return {"status": "UNAVAILABLE", "source": "DEXSCREENER_API", "chain": "solana",
+            "mint": mint, "source_ref": None, "observed_at": None, "reason": LOCAL_MARKET_PACING}
 
 
 def _num(value):
@@ -28,9 +82,10 @@ def _num(value):
 
 
 class DexScreenerMarketClient:
-    def __init__(self, *, open_url=urllib.request.urlopen,clock=time.time):
+    def __init__(self, *, open_url=urllib.request.urlopen,clock=time.time,request_budget=None):
         self.open_url=open_url
         self.clock=clock
+        self.request_budget = request_budget if request_budget is not None else DexScreenerRequestBudget()
         # The shared client is called by multiple independent jobs. The
         # follow-up evidence read belongs to the calling worker, not the
         # most recent HTTP response from any worker.
@@ -57,6 +112,8 @@ class DexScreenerMarketClient:
 
     def token_snapshot(self,mint:str)->dict:
         self.last_response_evidence=None
+        if not self.request_budget.admit():
+            return _blocked_snapshot(mint)
         url=BASE+"/token-pairs/v1/solana/"+urllib.parse.quote(mint,safe="")
         request=urllib.request.Request(url,headers={
             "Accept":"application/json",
@@ -70,6 +127,8 @@ class DexScreenerMarketClient:
             source_ref=self._evidence(mint,raw,observed_at)
             payload=json.loads(raw)
         except urllib.error.HTTPError as exc:
+            if exc.code == 429:
+                self.request_budget.rate_limited(exc.headers.get("Retry-After") if exc.headers is not None else None)
             observed_at=self.clock()
             try:source_ref=self._evidence(mint,exc.read(),observed_at)
             except (OSError,TypeError,ValueError):source_ref=None
@@ -174,6 +233,8 @@ class DexScreenerMarketClient:
         if not all(valid_pubkey(m) for m in mints):
             raise ValueError("INVALID_MARKET_BATCH_MINT")
         self.last_response_evidence=None
+        if not self.request_budget.admit():
+            return [_blocked_snapshot(mint) for mint in mints]
         route="/tokens/v1/solana/"+",".join(mints)
         req=urllib.request.Request(BASE+route,headers={"Accept":"application/json","User-Agent":"mission-meme-research/2"})
         observed_at=self.clock(); source_ref=None
@@ -182,6 +243,8 @@ class DexScreenerMarketClient:
             observed_at=self.clock();source_ref=self._evidence(mints,raw,observed_at,route)
             payload=json.loads(raw)
         except urllib.error.HTTPError as exc:
+            if exc.code == 429:
+                self.request_budget.rate_limited(exc.headers.get("Retry-After") if exc.headers is not None else None)
             observed_at=self.clock()
             try:source_ref=self._evidence(mints,exc.read(),observed_at,route)
             except (OSError,TypeError,ValueError):pass

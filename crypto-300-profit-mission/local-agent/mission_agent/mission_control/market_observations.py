@@ -21,6 +21,7 @@ import time
 import uuid
 
 from ..meme.holder_ranks import valid_pubkey
+from ..meme.market import LOCAL_MARKET_PACING
 
 
 SOURCE = "DEXSCREENER_API"
@@ -102,6 +103,10 @@ def normalize_market(mint, snapshot, *, received_at):
     observed = _time(snapshot.get("observed_at"))
     record["observed_at"] = observed
     if observed is None:
+        if (snapshot.get("status") == "UNAVAILABLE" and snapshot.get("reason") == LOCAL_MARKET_PACING
+                and snapshot.get("mint") == mint and snapshot.get("source_ref") is None
+                and snapshot.get("observed_at") is None):
+            return unavailable(LOCAL_MARKET_PACING)
         return unavailable("OBSERVATION_TIME_INVALID")
     if observed > received_at:
         return unavailable("FUTURE_OBSERVATION")
