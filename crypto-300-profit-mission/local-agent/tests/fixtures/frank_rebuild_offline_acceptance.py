@@ -32,12 +32,13 @@ from mission_agent.meme.job_checkpoint import source_fingerprint
 FIXTURE_GATES = {
     "S11_CATEGORY_CAPTURE": ("test_frank_category_capture",),
     "S12_EXACT_SECOND_USD_INPUT": ("test_frank_historical_usd_tick",),
+    "S12_LOCAL_USD_BUILD_AND_READ": ("test_frank_build_usd_evidence",),
     "S08_INDEPENDENT_HOLDER_INPUT": ("test_frank_historical_holder_compare",),
     "C13_SCOPE_AND_PACING": ("test_frank_parallel_ca_scopes", "test_frank_shared_provider_pacing"),
     "PERSON_SCOPE_AND_DRY_RUN": ("test_frank_staged_person_scope",),
 }
 UNMEASURED = {
-    "CHROME_ON_MAC": "requires an attached browser host; use test_frank_parallel_ca_browser.cjs",
+    "CHROME_ON_MAC": "requires an attached browser host; run test_frank_rebuild_browser.cjs and test_frank_parallel_ca_browser.cjs",
     "ACTUAL_NEW_MINT_CATEGORY_AND_LATENCY": "requires a verified contemporaneous market-category source",
     "ACTUAL_TRADE_TIME_USD": "requires genuine archived observations bound to exact payment asset and trade time",
     "ACTUAL_PROVIDER_CONCURRENCY_AND_LATENCY": "requires real source-approved cold/warm/throttle/pool comparison",
@@ -59,9 +60,9 @@ def code_identity(expected, snapshot):
         raise ValueError("exact Git checkout required (or explicitly use --source-snapshot)")
     if result.stdout.strip() != expected:
         raise ValueError("current Git HEAD differs from --commit")
-    clean = git("status", "--porcelain=v1", "--untracked-files=all", "--", "mission_agent", "tests", "config")
+    clean = git("status", "--porcelain=v1", "--untracked-files=all", "--", "mission_agent", "scripts", "tests", "config")
     if clean.returncode or clean.stdout:
-        raise ValueError("product or test worktree differs from pinned HEAD")
+        raise ValueError("product, script or test worktree differs from pinned HEAD")
     return "GIT_HEAD_AND_CLEAN_PRODUCT_TEST_PATHS"
 
 
@@ -133,6 +134,7 @@ def main():
         "schema_version": 1, "measured_at_utc": datetime.now(timezone.utc).isoformat(),
         "commit_supplied_by_runner": args.commit, "code_identity": identity,
         "product_source_sha256": source_fingerprint(),
+        "usd_evidence_builder_sha256": hashlib.sha256((ROOT / "scripts/frank_build_usd_evidence.py").read_bytes()).hexdigest(),
         "acceptance_runner_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
         "ca_registry_sha256": hashlib.sha256((ROOT / "config/meme_special_addresses.json").read_bytes()).hexdigest(),
         "fixture_gates": results,

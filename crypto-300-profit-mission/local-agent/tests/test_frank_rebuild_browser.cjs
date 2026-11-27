@@ -32,6 +32,10 @@ const buy = {mint:a,name:'已核实样例',signature:'1'.repeat(64),at:t,
   quantity:'1234567.12345',paid:'0.00000001',currency:'USDC',spent_usd:'120.125',entry_price_usd:'0.0000001234'};
 const unpriced = {mint:b,name:'无美元价格样例',signature:'2'.repeat(64),at:t-10,quantity:'700',paid:'2',currency:'SOL'};
 
+const estimated = {mint:a,name:'同秒换算样例',signature:'3'.repeat(64),at:t-15,
+  spent_usd:null,entry_price_usd:null,estimated_spent_usd:'0.4935',estimated_entry_price_usd:'0.24675',
+  usd_estimate_basis:'PAYMENT_ASSET_MARKET_TRADE_SAME_SECOND'};
+
 (async () => {
   const chrome = await chromium.launch({executablePath: process.env.FRANK_CHROME ||
     '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
@@ -51,7 +55,7 @@ const unpriced = {mint:b,name:'无美元价格样例',signature:'2'.repeat(64),a
       const json=data=>route.fulfill({json:data});
       if (path.startsWith('/api/')) apiRequests.push(path);
       if (path==='/api/frank-buys') {
-        return json({status:'LOCAL_EVIDENCE_ONLY',next_cursor:null,rows:u.searchParams.has('mint')?[]:[buy,unpriced]});
+        return json({status:'LOCAL_EVIDENCE_ONLY',next_cursor:null,rows:u.searchParams.has('mint')?[]:[buy,unpriced,estimated]});
       }
       if (path==='/api/cluster-latest') {
         const mint=u.searchParams.get('mint');
@@ -80,6 +84,9 @@ const unpriced = {mint:b,name:'无美元价格样例',signature:'2'.repeat(64),a
     assert.match(buyText,/已核实样例/);
     assert.doesNotMatch(buyText,/仅展示|证据齐全|枚数|USDC|SOL\b|滑点|路由|来源信号/);
     assert.equal(await page.getByRole('row',{name:/无美元价格样例/}).locator('.buy-value').filter({hasText:/—/}).count(),2);
+    const estimates=page.getByRole('row',{name:/同秒换算样例/}).locator('.buy-usd-estimate');
+    assert.deepEqual(await estimates.allTextContents(),['≈$0.49','≈$0.25']);
+    assert.match(await estimates.first().getAttribute('title'),/并非美元实付/);
     assert.deepEqual(apiRequests,['/api/frank-buys']);
     assert.deepEqual(await page.locator('.view-tab').allTextContents(),['买入记录','CA 查询']);
     await page.keyboard.press('Tab');
@@ -130,6 +137,6 @@ const unpriced = {mint:b,name:'无美元价格样例',signature:'2'.repeat(64),a
     assert.deepEqual(forbidden,[]);
     assert.deepEqual(errors,[]);
     console.log(JSON.stringify({chrome:chrome.version(),evidence:'synthetic browser requests intercepted, no TCP listener',
-      unique_ca:2,frank_default:'PASS',chart_next_previous_exhaustion:'PASS',A_B_A:'PASS',market_GET:marketRequests.length,mobile_320_390:'PASS',keyboard_focus:'PASS',external_or_POST:0,page_errors:0}));
+      unique_ca:2,frank_default:'PASS',usd_estimate_label:'PASS',chart_next_previous_exhaustion:'PASS',A_B_A:'PASS',market_GET:marketRequests.length,mobile_320_390:'PASS',keyboard_focus:'PASS',external_or_POST:0,page_errors:0}));
   } finally { await chrome.close(); }
 })().catch(error=>{console.error(error);process.exitCode=1;});
