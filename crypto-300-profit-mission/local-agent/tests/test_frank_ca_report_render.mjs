@@ -1979,7 +1979,7 @@ test('per-batch equal slots keep their own match totals and never imply one hold
   const html=h.context.renderIndependentCheck(report);
   assert.match(html,/双方报告同槽的批次：2 批，15 项/);
   assert.match(html,/一致 13，差异 2，缺失 0/);
-  assert.match(html,/各批可在不同槽位，不证明持有人全集或池与持有人同槽/);
+  assert.match(html,/各批次按自己的槽位统计，仅覆盖所列账户/);
   assert.match(html,/比对 25 项/);
 });
 test('partial independent reads keep only the successful pairs and malformed slots are not promoted',()=>{
@@ -2004,4 +2004,50 @@ test('legacy reports and no equal batch slot do not produce a same-slot subset l
   assert.doesNotMatch(h.context.renderIndependentCheck(report),/双方报告同槽的批次/);
   delete sample.batches;
   assert.doesNotMatch(h.context.renderIndependentCheck(report),/双方报告同槽的批次/);
+});
+
+function jointPoolSampleFixture(changes={}) {
+  const pool='33333333333333333333333333333333';
+  const sample={version:1,status:'SAME_SLOT_ALL_MATCH',mint,pool_address:pool,
+    holder_account_count:3,primary_slot:425,secondary_slot:425,matches:3,differences:0,missing:0,pool_match:true,
+    ...changes};
+  return {mint,pool_vaults:{status:'VAULT_BALANCE_SNAPSHOT',mint,pool_address:pool,snapshot_slot:400},
+    independent_balance_check:{...pairedBatchesFixture(),pool_holder_same_slot:sample}};
+}
+
+test('joint pool and holder sample renders separately from the ranking and old pool snapshot',()=>{
+  const h=harness();
+  const report=jointPoolSampleFixture();
+  const requests=h.requests.length;
+  let html=h.context.renderIndependentCheck(report);
+  assert.match(html,/池与持有人同槽抽样：槽位 425，3 个持有人账户及所选池两侧金库，两来源一致/);
+  assert.match(html,/独立枚举结果尚未取得/);
+  report.independent_balance_check.status='PARTIAL';
+  html=h.context.renderIndependentCheck(report);
+  assert.match(html,/本轮未完成/);
+  assert.match(html,/池与持有人同槽抽样：槽位 425，3 个持有人账户及所选池两侧金库，两来源一致/);
+  assert.equal(h.requests.length,requests);
+});
+
+test('joint sample preserves a same-slot conflict and labels cross-slot coverage accurately',()=>{
+  const h=harness();
+  const conflict=jointPoolSampleFixture({status:'SAME_SLOT_DIFFERENCE',matches:1,differences:1,missing:1,pool_match:false});
+  assert.match(h.context.renderIndependentCheck(conflict),/槽位 425，持有人账户一致 1，差异 1，缺失 1；所选池证据有差异/);
+  const cross=jointPoolSampleFixture({status:'DIFFERENT_SLOTS',secondary_slot:426});
+  const html=h.context.renderIndependentCheck(cross);
+  assert.match(html,/主来源槽位 425，第二来源槽位 426（未同槽）/);
+  assert.doesNotMatch(html,/池与持有人同槽抽样/);
+});
+
+test('joint sample omits unavailable, contradictory, or unrelated embedded claims',()=>{
+  const h=harness();
+  for (const invalid of [
+    {status:'UNAVAILABLE'}, {status:'SAME_SLOT_DIFFERENCE'}, {status:'DIFFERENT_SLOTS'},
+    {version:2}, {secondary_slot:426}, {primary_slot:'425'}, {primary_slot:399,secondary_slot:399}, {matches:4}, {pool_match:false},
+    {holder_account_count:0,matches:0}, {holder_account_count:6,matches:6},
+    {mint:'44444444444444444444444444444444'}, {pool_address:'44444444444444444444444444444444'},
+  ]) assert.doesNotMatch(h.context.renderIndependentCheck(jointPoolSampleFixture(invalid)),/池与持有人(?:同槽)?抽样/);
+  const report=jointPoolSampleFixture();
+  report.pool_vaults.status='UNAVAILABLE';
+  assert.doesNotMatch(h.context.renderIndependentCheck(report),/池与持有人(?:同槽)?抽样/);
 });

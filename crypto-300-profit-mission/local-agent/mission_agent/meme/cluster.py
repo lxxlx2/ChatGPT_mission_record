@@ -1930,15 +1930,23 @@ class WalletClusterAnalyzer:
         self._apply_protocol_history_exclusions(special_address_roles,pool_vaults,pool_holder_roles)
         independent_balance_check={"version":1,"status":"NOT_REQUESTED"}
         if self.query_scope=="full" and self.independent_rpc is not None:
-            from .independent_check import collect_independent_balance_check
+            from functools import cache
+            from .independent_check import collect_independent_balance_check, collect_pool_holder_same_slot
+            secondary = self.independent_rpc
+            if callable(secondary) and not callable(getattr(secondary, "call", None)):
+                secondary = cache(secondary)
             enumerated=holder_rankings.get("accounts")
             addresses=([r["token_account"] for r in sorted(enumerated,key=lambda r:-int(r["raw"]))]
                        if isinstance(enumerated,list) else [h.token_account for h in holders])
-            try:independent_balance_check=collect_independent_balance_check(self.mint,addresses,self.rpc,self.independent_rpc,full_accounts=self.exhaust_history,
+            try:independent_balance_check=collect_independent_balance_check(self.mint,addresses,self.rpc,secondary,full_accounts=self.exhaust_history,
                 enumeration=holder_rankings,
                 progress=lambda completed,total:self._progress('INDEPENDENT_BALANCE_BATCH',completed=completed,total=total))
             except RPCJobBudgetExceeded:raise
             except Exception as exc:independent_balance_check={"version":1,"status":"UNAVAILABLE","reason":type(exc).__name__}
+            if ("secondary_slot" in independent_balance_check
+                    and pool_vaults.get("status") == "VAULT_BALANCE_SNAPSHOT"):
+                independent_balance_check["pool_holder_same_slot"] = collect_pool_holder_same_slot(
+                    self.mint, pool_vaults, addresses, self.rpc, secondary)
         if self.query_scope!="overview":
             self._prepare_owner_account_history(holders,holder_rankings)
         preview_top10_pct=getattr(self,"_raw_top10_snapshot_pct",None)

@@ -154,6 +154,56 @@ def _slot(result):
     return value
 
 
+def _read_vault_pair(decoded, values, flags):
+    pair = []
+    for side in ("base", "quote"):
+        mint, vault = decoded[f"{side}_mint"], decoded[f"{side}_vault"]
+        pair.append(_token(values[vault], values[mint], mint, decoded["authority"], vault, flags))
+    if decoded.get("token_programs") is not None and decoded["token_programs"] != [row["token_program"] for row in pair]:
+        raise PoolSourceError("POOL_TOKEN_PROGRAM_MISMATCH")
+    if decoded.get("mint_decimals") is not None and decoded["mint_decimals"] != [row["decimals"] for row in pair]:
+        raise PoolSourceError("POOL_MINT_DECIMALS_MISMATCH")
+    return pair
+
+
+def read_pool_holder_batch(rpc, pool, addresses, min_slot):
+    """Revalidate the selected pool and sampled token accounts in one finalized bank."""
+    from .pool_programs import decode_pool
+
+    response = rpc.call("getMultipleAccounts", [addresses, {
+        "encoding": "base64", "commitment": "finalized", "minContextSlot": min_slot,
+    }])
+    slot = _slot(response)
+    values = response.get("value")
+    if slot < min_slot or not isinstance(values, list) or len(values) != len(addresses):
+        raise PoolSourceError("JOINT_BANK_INVALID")
+    pool_address, target_vault, quote_vault, mint, quote_mint, *holders = addresses
+    decoded = decode_pool(values[0], pool_address)
+    expected_vaults = {mint: target_vault, quote_mint: quote_vault}
+    if ({decoded["base_mint"]: decoded["base_vault"], decoded["quote_mint"]: decoded["quote_vault"]} != expected_vaults
+            or decoded["program"] != pool["pool_program"] or decoded["authority"] != pool["vault_authority"]):
+        raise PoolSourceError("JOINT_POOL_IDENTITY_INVALID")
+    accounts = dict(zip(addresses, values, strict=True))
+    pair = {row["mint"]: row for row in _read_vault_pair(decoded, accounts, set())}
+    target, quote = pair[mint], pair[quote_mint]
+    if target["token_program"] != pool["target"]["token_program"] or quote["token_program"] != pool["quote"]["token_program"]:
+        raise PoolSourceError("JOINT_POOL_TOKEN_PROGRAM_CHANGED")
+    observed = {}
+    for address in holders:
+        account = accounts[address]
+        if account is None:
+            observed[address] = None
+            continue
+        program = target["token_program"]
+        data = _data(account, program)
+        if len(data) < 165:
+            raise PoolSourceError("JOINT_HOLDER_LAYOUT_INVALID")
+        observed[address] = _token(account, accounts[mint], mint, _key(data[32:64]), address, set())
+    pool_bytes = tuple(_data(account) for account in values[:5])
+    wire_hash = hashlib.sha256(json.dumps(response, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+    return slot, pool_bytes, observed, wire_hash
+
+
 def collect_pool_vault_snapshot(mint,market,rpc):
     out={'version':1,'status':'NOT_REQUESTED','source':'SOLANA_FINALIZED_RAW_ACCOUNTS','price_usd':'UNVERIFIED','liquidity_usd':'UNVERIFIED','executable_quote':'NOT_COMPUTED','indexer_snapshot_parity':'UNVERIFIED','flags':[]}
     pair=market.get('main_pair') if isinstance(market,dict) else None
@@ -179,10 +229,7 @@ def collect_pool_vault_snapshot(mint,market,rpc):
         batch_ids={k:decoded[k] for k in ids};params=decoded['parameters']
         if batch_ids!=ids or any(decoded[k]!=discovery[k] for k in ('authority','program','protocol')):raise PoolSourceError('POOL_CHANGED_SINCE_DISCOVERY')
         flags=set()
-        base=_token(values[1],values[3],ids['base_mint'],decoded['authority'],ids['base_vault'],flags)
-        quote=_token(values[2],values[4],ids['quote_mint'],decoded['authority'],ids['quote_vault'],flags)
-        if decoded.get('token_programs') is not None and decoded['token_programs']!=[base['token_program'],quote['token_program']]:raise PoolSourceError('POOL_TOKEN_PROGRAM_MISMATCH')
-        if decoded.get('mint_decimals') is not None and decoded['mint_decimals']!=[base['decimals'],quote['decimals']]:raise PoolSourceError('POOL_MINT_DECIMALS_MISMATCH')
+        base,quote=_read_vault_pair(decoded,dict(zip(addresses,values,strict=True)),flags)
         target,other=(base,quote) if base['mint']==mint else (quote,base)
         if any(v is None for v in params.values()):flags.add('POOL_OPTIONAL_FIELDS_UNAVAILABLE')
         if params.get('virtual_quote_reserves') not in (None,'0'):flags.add('VIRTUAL_QUOTE_RESERVES_PRESENT')

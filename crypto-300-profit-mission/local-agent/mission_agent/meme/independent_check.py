@@ -96,6 +96,57 @@ def _compare(addresses,primary,secondary):
     return rows,matches,differs,missing
 
 
+def collect_pool_holder_same_slot(mint, pool, addresses, primary, secondary):
+    """A sampled comparison. Independent enumeration remains a separate read."""
+    from .pool_vaults import read_pool_holder_batch
+
+    out = {"version": 1, "mint": mint, "status": "UNAVAILABLE"}
+    if not isinstance(pool, dict):
+        return {**out, "reason": "JOINT_POOL_BINDING_UNVERIFIED"}
+    target, quote = pool.get("target"), pool.get("quote")
+    if not isinstance(target, dict) or not isinstance(quote, dict):
+        return {**out, "reason": "JOINT_POOL_BINDING_UNVERIFIED"}
+    pool_address, lower_slot = pool.get("pool_address"), pool.get("snapshot_slot")
+    fixed = [pool_address, target.get("vault"), quote.get("vault"), mint, quote.get("mint")]
+    if (pool.get("status") != "VAULT_BALANCE_SNAPSHOT" or pool.get("commitment") != "finalized"
+            or pool.get("mint") != mint or target.get("mint") != mint
+            or type(lower_slot) is not int or lower_slot <= 0
+            or not all(valid_pubkey(address) for address in fixed) or len(set(fixed)) != len(fixed)):
+        return {**out, "reason": "JOINT_POOL_BINDING_UNVERIFIED"}
+    holders = list(dict.fromkeys(address for address in addresses if valid_pubkey(address) and address not in fixed))
+    holders = holders[:RPC_BATCH_SIZE - len(fixed)]
+    out.update(pool_address=pool_address, holder_account_count=len(holders))
+    if not holders or secondary is None:
+        return {**out, "reason": "JOINT_HOLDER_OR_SOURCE_UNAVAILABLE"}
+
+    requested = fixed + holders
+    try:
+        p_slot, p_pool, p_holders, p_hash = read_pool_holder_batch(primary, pool, requested, lower_slot)
+        out.update(primary_slot=p_slot, primary_response_sha256=p_hash)
+    except RPCJobBudgetExceeded:
+        raise
+    except Exception as exc:
+        return {**out, "reason": _safe_reason(exc), "failure_phase": "PRIMARY",
+                "last_source_error": _last_source_error(primary)}
+    try:
+        if not callable(getattr(secondary, "call", None)):
+            secondary = secondary()
+        s_slot, s_pool, s_holders, s_hash = read_pool_holder_batch(secondary, pool, requested, p_slot)
+    except CheckpointError:
+        raise
+    except Exception as exc:
+        return {**out, "reason": _safe_reason(exc), "failure_phase": "SECONDARY",
+                "last_source_error": _last_source_error(secondary)}
+
+    _, matches, differences, missing = _compare(holders, p_holders, s_holders)
+    pool_match = p_pool == s_pool
+    status = "DIFFERENT_SLOTS"
+    if p_slot == s_slot:
+        status = "SAME_SLOT_ALL_MATCH" if pool_match and not differences and not missing else "SAME_SLOT_DIFFERENCE"
+    return {**out, "status": status, "secondary_slot": s_slot, "secondary_response_sha256": s_hash,
+            "pool_match": pool_match, "matches": matches, "differences": differences, "missing": missing}
+
+
 def _primary_account_set(mint,ranking):
     if not isinstance(ranking,dict) or ranking.get('mint')!=mint:return None
     rows=ranking.get('accounts')

@@ -1882,17 +1882,46 @@ function renderPairedHolderBatches(c) {
   }
   if (!sameBatches || covered!==c.accounts_compared || c.batches.length!==c.batches_completed
       || matches!==c.matches || differences!==c.differences || missing!==c.missing) return '';
-  return '<p>双方报告同槽的批次：'+sameBatches+' 批，'+sameItems+' 项（含该批次内适用的 Mint 供给）；一致 '+sameMatches+'，差异 '+sameDifferences+'，缺失 '+sameMissing+'。各批可在不同槽位，不证明持有人全集或池与持有人同槽。</p>';
+  return '<p>双方报告同槽的批次：'+sameBatches+' 批，'+sameItems+' 项（含该批次内适用的 Mint 供给）；一致 '+sameMatches+'，差异 '+sameDifferences+'，缺失 '+sameMissing+'。各批次按自己的槽位统计，仅覆盖所列账户。</p>';
+}
+
+function renderPoolHolderSameSlot(report,sample) {
+  const pool=report.pool_vaults;
+  const integer=(value,min=0)=>Number.isSafeInteger(value) && value>=min;
+  const address=value=>typeof value==='string' && /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(value);
+  if (!sample || sample.version!==1 || pool?.status!=='VAULT_BALANCE_SNAPSHOT' ||
+      !address(sample.mint) || sample.mint!==report.mint || sample.mint!==pool.mint ||
+      !address(sample.pool_address) || sample.pool_address!==pool.pool_address ||
+      !integer(sample.holder_account_count,1) || sample.holder_account_count>5 ||
+      !integer(pool.snapshot_slot,1) || !integer(sample.primary_slot,pool.snapshot_slot) ||
+      !integer(sample.secondary_slot,sample.primary_slot) ||
+      !integer(sample.matches) || !integer(sample.differences) || !integer(sample.missing) ||
+      sample.matches+sample.differences+sample.missing!==sample.holder_account_count ||
+      typeof sample.pool_match!=='boolean') return '';
+  if (sample.primary_slot!==sample.secondary_slot) {
+    return sample.status==='DIFFERENT_SLOTS'
+      ? '<p>池与持有人抽样：主来源槽位 '+sample.primary_slot+'，第二来源槽位 '+sample.secondary_slot+'（未同槽）。</p>' : '';
+  }
+  const heading='<p>池与持有人同槽抽样：槽位 '+sample.primary_slot+'，';
+  const consistent=sample.matches===sample.holder_account_count && sample.pool_match;
+  if (sample.status==='SAME_SLOT_ALL_MATCH' && consistent) {
+    return heading+sample.holder_account_count+' 个持有人账户及所选池两侧金库，两来源一致。</p>';
+  }
+  if (sample.status==='SAME_SLOT_DIFFERENCE' && !consistent) {
+    return heading+'持有人账户一致 '+sample.matches+'，差异 '+sample.differences+'，缺失 '+sample.missing+'；所选池证据'+(sample.pool_match?'一致':'有差异')+'。</p>';
+  }
+  return '';
 }
 function renderIndependentCheck(report) {
   const c=report.independent_balance_check;
   if (!c || c.version!==1 || c.status==='NOT_REQUESTED') return '';
   const paired=renderPairedHolderBatches(c);
+  const poolSample=renderPoolHolderSameSlot(report,c.pool_holder_same_slot);
   const safeCode=v=>typeof v==='string' && /^(?:HTTP_[0-9]{3}|RPC_-?[0-9]+|RPC_JOB_(?:TIME|WIRE)_BUDGET_EXHAUSTED|RPC_RATE_LIMITED|RPC_ENVELOPE_INVALID|RPC_POOL_RESPONSE_LIMIT|RPC_HOLDER_RANK_RESPONSE_LIMIT|RPC_ERROR|TimeoutError|URLError|OSError|ValueError|JSONDecodeError|RPCError)$/.test(v);
   if (c.status==='UNAVAILABLE' || c.status==='PARTIAL') {
     const last=safeCode(c.last_source_error)?'最后来源错误：'+c.last_source_error+'。':'';
     return '<div class="trust-box"><strong>第二提供方余额复核</strong><p>本轮未完成（'+esc(safeCode(c.reason)?c.reason:'来源不可用')+'）。'+esc(last)+'</p>'+
-      (Number.isSafeInteger(c.accounts_compared) && c.accounts_compared>0 ? '<p>已完成 '+esc(c.accounts_compared)+' 项；后续读取失败，成功批次保留在报告中，未核对账户不视为一致。</p>' : '')+paired+'</div>';
+      (Number.isSafeInteger(c.accounts_compared) && c.accounts_compared>0 ? '<p>已完成 '+esc(c.accounts_compared)+' 项；后续读取失败，成功批次保留在报告中，未核对账户不视为一致。</p>' : '')+paired+poolSample+'</div>';
   }
   const label={SAME_SLOT_ALL_MATCH:'同一 slot 全部一致',NEAR_TIME_ALL_MATCH:'相邻时间读取全部一致',SAME_SLOT_MISMATCH:'同一 slot 出现不一致',NEAR_TIME_DIFFERENCES:'相邻时间读取存在差异（可能是期间成交）'}[c.status]||c.status;
   const diffs=(c.rows||[]).filter(r=>r.status!=='MATCH').slice(0,8).map(r=>'<li><code>'+esc(short(r.address,6,5))+'</code> 主 '+esc(r.primary_raw??'缺')+' / 第二 '+esc(r.secondary_raw??'缺')+'</li>').join('');
@@ -1904,7 +1933,7 @@ function renderIndependentCheck(report) {
   const enumeration=e && Object.hasOwn(enumerationStatus,e.status)
     ? '第二来源独立枚举：'+enumerationStatus[e.status]+(Number.isSafeInteger(e.secondary_slot)?'。主 / 第二 slot '+e.primary_slot+' / '+e.secondary_slot+'，仅主源 '+(e.only_primary||[]).length+'，仅第二源 '+(e.only_secondary||[]).length+'，余额或 Owner 有差异 '+(e.changed_owner_or_raw||[]).length:'')+(safeCode(e.last_source_error)?'（'+e.last_source_error+'）':'')+'。'
     : '当前结果来自逐地址复核，独立枚举结果尚未取得。';
-  return '<div class="trust-box"><strong>第二提供方余额复核（'+esc(c.secondary_provider)+'）</strong><p>'+esc(label)+'：比对 '+esc(c.accounts_compared)+' 项（'+scope+'），一致 '+esc(c.matches)+'，差异 '+esc(c.differences)+'，缺失 '+esc(c.missing)+'；'+slots+'</p>'+paired+'<p>'+esc(enumeration)+' 相邻时间一致不能证明原子同快照一致。</p>'+(diffs?'<ul>'+diffs+'</ul>':'')+'</div>';
+  return '<div class="trust-box"><strong>第二提供方余额复核（'+esc(c.secondary_provider)+'）</strong><p>'+esc(label)+'：比对 '+esc(c.accounts_compared)+' 项（'+scope+'），一致 '+esc(c.matches)+'，差异 '+esc(c.differences)+'，缺失 '+esc(c.missing)+'；'+slots+'</p>'+paired+poolSample+'<p>'+esc(enumeration)+' 相邻时间一致不能证明原子同快照一致。</p>'+(diffs?'<ul>'+diffs+'</ul>':'')+'</div>';
 }
 
 function clusterPublicEvidenceUrl(value) {

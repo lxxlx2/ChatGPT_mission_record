@@ -5,6 +5,7 @@ import json
 import pytest
 from mission_agent.meme.pool_vaults import collect_pool_vault_snapshot,PROGRAM,POOL_DISCRIMINATOR,MAX_RPC_BYTES
 from mission_agent.meme.cluster import WalletClusterAnalyzer,RPCJobBudgetExceeded
+from mission_agent.meme.independent_check import collect_pool_holder_same_slot
 from test_meme_holder_ranks import key,P,P22
 
 MINT=key(1000);QUOTE=key(2000);POOL=key(3000);BASE_VAULT=key(4000);QUOTE_VAULT=key(5000)
@@ -245,3 +246,170 @@ def test_analyze_persists_the_opted_in_raw_pool_snapshot():
     assert report['pool_vaults']['target']['raw']=='100'
     from mission_agent.meme.cluster import report_completeness
     assert report_completeness(report)['status']=='INCOMPLETE_EVIDENCE'
+
+
+def holder(quote_side=False, *, program=P, owner=8000, raw=37):
+    data = vault(2000 if quote_side else 1000, raw, program)
+    data[32:64] = k(owner)
+    return account(program, data)
+
+
+def joint_sources(*, reverse=False, program=P, size=1):
+    primary = RPC()
+    target_vault_index, target_mint_index = (2, 4) if reverse else (1, 3)
+    primary.values[target_vault_index] = account(program, vault(2000 if reverse else 1000, 200, program))
+    primary.values[target_mint_index] = account(program, mint(program=program))
+    pool_snapshot = collect(primary, reverse)
+    assert pool_snapshot["status"] == "VAULT_BALANCE_SNAPSHOT"
+    primary.requests.clear()
+    if reverse:
+        primary.values = [primary.values[i] for i in (0, 2, 1, 4, 3)]
+    primary.values.extend(holder(reverse, program=program, owner=8000 + i) for i in range(size))
+    return pool_snapshot, primary, copy.deepcopy(primary)
+
+
+@pytest.mark.parametrize("reverse,program", [(False, P), (True, P22)])
+def test_joint_bank_uses_one_batch_per_provider_with_pool_and_five_holders(reverse, program):
+    pool_snapshot, first, second = joint_sources(reverse=reverse, program=program, size=5)
+    target, quote = (QUOTE, MINT) if reverse else (MINT, QUOTE)
+    tv, qv = (QUOTE_VAULT, BASE_VAULT) if reverse else (BASE_VAULT, QUOTE_VAULT)
+    holders = [key(i) for i in range(6000, 6007)]
+    result = collect_pool_holder_same_slot(target, pool_snapshot, [tv, target, holders[0], *holders], first, second)
+    assert result["status"] == "SAME_SLOT_ALL_MATCH" and result["pool_match"] is True
+    assert result["matches"] == result["holder_account_count"] == 5
+    expected = ("getMultipleAccounts", [[POOL, tv, qv, target, quote, *holders[:5]],
+                {"encoding": "base64", "commitment": "finalized", "minContextSlot": 101}])
+    assert first.requests == second.requests == [expected]
+    assert result["primary_response_sha256"] == result["secondary_response_sha256"]
+    assert "provided_account_set_compared" not in result
+
+
+@pytest.mark.parametrize("case,status,match_counts,pool_match", [
+    ("different_slot", "DIFFERENT_SLOTS", (1, 0, 0), True),
+    ("different_holder", "SAME_SLOT_DIFFERENCE", (0, 1, 0), True),
+    ("different_vault", "SAME_SLOT_DIFFERENCE", (1, 0, 0), False),
+    ("missing_both", "SAME_SLOT_DIFFERENCE", (0, 0, 1), True),
+])
+def test_joint_bank_keeps_slot_identity_and_reports_observed_differences(case, status, match_counts, pool_match):
+    snapshot, first, second = joint_sources()
+    if case == "different_slot":
+        first.slot, second.slot = 105, 106
+    elif case == "different_holder":
+        second.values[-1] = holder(raw=999)
+    elif case == "different_vault":
+        second.values[2] = account(P, vault(2000, 1000))
+    else:
+        first.values[-1] = second.values[-1] = None
+    result = collect_pool_holder_same_slot(MINT, snapshot, [key(6000)], first, second)
+    assert result["status"] == status and result["pool_match"] is pool_match
+    assert tuple(result[k] for k in ("matches", "differences", "missing")) == match_counts
+    assert second.requests[0][1][1]["minContextSlot"] == result["primary_slot"]
+    assert result["secondary_slot"] == second.slot
+
+
+@pytest.mark.parametrize("malformed", ["pool_vault", "holder_mint", "short", "before_floor"])
+def test_joint_bank_does_not_claim_parity_from_malformed_secondary(malformed):
+    snapshot, first, second = joint_sources()
+    if malformed == "pool_vault":
+        change_data(second.values[0], lambda b: b.__setitem__(slice(139, 171), k(99)))
+    elif malformed == "holder_mint":
+        second.values[-1] = holder(quote_side=True)
+    elif malformed == "short":
+        second.values.pop()
+    else:
+        first.slot = 105
+    result = collect_pool_holder_same_slot(MINT, snapshot, [key(6000)], first, second)
+    assert result["status"] == "UNAVAILABLE" and result["failure_phase"] == "SECONDARY"
+    assert "pool_match" not in result and "secondary_slot" not in result
+
+
+def test_joint_checks_do_not_read_invalid_bindings_or_vault_only_batches():
+    snapshot, first, second = joint_sources()
+    invalid = {**snapshot, "mint": QUOTE}
+    assert collect_pool_holder_same_slot(MINT, invalid, [key(6000)], first, second)["status"] == "UNAVAILABLE"
+    assert collect_pool_holder_same_slot(MINT, snapshot, [MINT, POOL, BASE_VAULT], first, second)["status"] == "UNAVAILABLE"
+    assert first.requests == second.requests == []
+
+
+def test_joint_bank_checkpoint_replays_identical_response_without_wire(tmp_path):
+    from test_ca_secondary_checkpoint import Response, rpc
+    from test_ca_unlimited_free_jobs import JOB, UNLIMITED, create
+    from mission_agent.meme.job_checkpoint import CheckpointRPC, CheckpointSecondaryRPC, JobCheckpoint
+
+    snapshot, first, second = joint_sources()
+    create(tmp_path)
+    checkpoint = JobCheckpoint(tmp_path, JOB, clock=lambda: 100.)
+    checkpoint.begin("binding", UNLIMITED)
+
+    def transport(source):
+        def open_url(req, timeout):
+            request = json.loads(req.data)
+            return Response(source.call(request["method"], request["params"]))
+        return open_url
+
+    got = collect_pool_holder_same_slot(MINT, snapshot, [key(6000)],
+        CheckpointRPC(checkpoint, rpc(transport(first))), CheckpointSecondaryRPC(checkpoint, rpc(transport(second))))
+    assert got["status"] == "SAME_SLOT_ALL_MATCH"
+    assert [entry["request"]["channel"] for entry in checkpoint.entries] == ["rpc", "secondary_rpc"]
+    checkpoint.finish("ERROR")
+    checkpoint.close()
+    checkpoint = JobCheckpoint(tmp_path, JOB, clock=lambda: 100.)
+    try:
+        checkpoint.begin("binding", UNLIMITED)
+        denied = lambda *_a, **_k: pytest.fail("checkpoint must not hit the wire")
+        again = collect_pool_holder_same_slot(MINT, snapshot, [key(6000)],
+            CheckpointRPC(checkpoint, rpc(denied)), CheckpointSecondaryRPC(checkpoint, rpc(denied)))
+        assert again == got
+        checkpoint.assert_can_publish()
+        assert checkpoint.replayed == 2
+    finally:
+        checkpoint.close()
+
+
+def test_full_analyzer_attaches_joint_sample_without_reopening_secondary():
+    from mission_agent.meme.cluster import Holder
+    from test_meme_wallet_cluster import analyzer
+
+    observed = key(6000)
+    owner = key(8000)
+
+    class Sources(RPC):
+        def call(self, method, params, ttl=0):
+            if method == "getMultipleAccounts" and params[1]["encoding"] == "jsonParsed":
+                self.requests.append((method, params))
+                assert params[0] == [MINT, observed]
+                values = [
+                    {"type": "mint", "info": {"supply": "1000000", "decimals": 0, "isInitialized": True}},
+                    {"type": "account", "info": {"mint": MINT, "owner": owner, "state": "initialized",
+                                                 "tokenAmount": {"amount": "37", "decimals": 0}}},
+                ]
+                return {"context": {"slot": 101}, "value": [
+                    {"owner": P, "executable": False, "data": {"parsed": value}} for value in values]}
+            result = super().call(method, params, ttl)
+            if method == "getMultipleAccounts" and len(params[0]) == 6:
+                assert params[0][-1] == observed
+                return {**result, "value": [*result["value"], holder()]}
+            return result
+
+    primary, secondary = Sources(), Sources()
+    initialized = []
+
+    def independent():
+        initialized.append(True)
+        return secondary
+
+    runner = analyzer()
+    runner.mint = MINT
+    runner.rpc = primary
+    runner.read_pool_vaults = True
+    runner.independent_rpc = independent
+    runner.market_snapshot = market
+    runner.holders = lambda: (1000000, 0, [Holder(observed, owner, 37, 0, "ORDINARY", "fixture")])
+    runner._scan_holder = lambda *_a, **_k: None
+    report = runner.analyze()
+    proof = report["independent_balance_check"]
+    assert proof["accounts_compared"] == 2
+    assert proof["pool_holder_same_slot"]["status"] == "SAME_SLOT_ALL_MATCH"
+    assert proof["pool_holder_same_slot"]["holder_account_count"] == 1
+    assert initialized == [True]
+    assert [len(params[0]) for _, params in secondary.requests] == [2, 6]
