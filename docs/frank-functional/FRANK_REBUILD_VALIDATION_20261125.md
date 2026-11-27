@@ -161,3 +161,50 @@ Chrome 入口使用本机已安装的 Node Playwright，可通过 `FRANK_PLAYWRI
 ### 仍待生产验收的范围
 
 买入估算和指定 UTC 日的签名入库覆盖已有实证。新 CA 行情样本选取时，已有 DexScreener 的公开 profiles 入口实际返回一次 HTTP 403，未重试该入口。本轮没有实源完整 CA 查询的首屏或深查耗时。完整独立持有人全集、池和持有人同槽、覆盖更多日期的严格买入分类、真实通知送达仍待证据。整体 `PARTIAL`，本地 8766 未切换，生产 `NO_GO`。
+
+## 2026-11-27 通知重放、独立钱包对账与新 CA 行情
+
+通知修复源码为 `e0b754f557a74fcaa06b47c81693ed85e2e11e48`，直接基线为 `4cde54fe0ec6cb489235ea9cbb347c0170f31035`。故障在 `c5ec30c85f8e12168644731a89aeb8cc0dd4c3b4` 的隔离副本复现。从该故障基线到直接基线，运行代码的变更仅涉及持有人证据界面。
+
+### 通知入队、发送前校验与恢复
+
+- 用冻结账本和归档原件重新运行真实 Scanner、Engine、本地与 Gmail 队列，逐笔核对 Scanner 使用的规范化原件 SHA-256。共处理 10,895 笔，槽位 452750502–473771260。游标追到归档末端，第二次扫描及模型消费均为 0。归档账本 SHA-256 为 `c5353d07d6640a4f31845a5592c4104462006def1da953c00f26ad67cb607f71`。分类器识别 125 笔主动买入，26 笔（6 个 Mint）通过严格事实准入，8 笔（3 个 Mint）只有可列入历史的买入证据、缺少可归属买价，6 笔 BP 被硬排除，其余 85 笔未获准入。严格准入数字指买入事实，通知还受原策略与投递时效约束。
+- 同一归档以实际验收时钟重放。故障版本把 3 个 PRECONFIRM、2 个 MULTIPLE 过期阶段写入通知队列，模拟投递实际接收 5 次本地调用、2 次 Gmail 调用。两个 MULTIPLE 阶段来自 UTC 11 月 11 日和 19 日。候选版本五个阶段均记录 `BUY_NOTIFICATION_EXPIRED`，队列为空，模拟调用均为 0。历史买入及原件继续可读。归档中的 5 条 Gmail 已验证回执与 17 条系统命令接收回执属于旧运行；本次真实归档重放使用替身发送器，拒绝外网及通知命令。
+- 入队与首次投递都以绑定原始买入的链上时间计算上限。PRECONFIRM 使用 V1 的 60 分钟窗口，MULTIPLE 使用 V1 的 3 小时边界。恰好到边界可送，超过即停止。等待 Gmail 回执时过期的队列记录仍保留。已经接受但尚未落库的 Gmail 或本地通知继续走旧回执核对路径。
+- 之前因过期或资格待核从未建队列的阶段，若同一轮有一笔更新的已核实主动买入且再满足原策略，旧拦截记录原样存入评估审计，新买入沿用原阶段身份生成一次通知。仅补资格或重跑旧事件不触发该路径。此前已有队列、邮件内容或 Gmail 记录的阶段不走这条准入路径。
+- Mac 执行命令为 `PYTHONPATH=. PYTHONDONTWRITEBYTECODE=1 python3 /tmp/frank_offline_archive_FLeKN4oZ/replay.py`。离线运行器 SHA-256 `d5ea95a69616595ed54c791790e83abbca18593be558449fb4c80619177e6bc9`，基线汇总 `d60cc799ec8b66d660e04edd692de463f8cc243f68b0dd0439d7aaf821871a36`，候选汇总 `cd74d284530a6d976a7abd8082b5c2204cf1b61b2391553fcb522924cf6be2b0`。运行器和汇总副本存入 Mac 私有验收目录 `notification-replay-e0b754f5`，Git 仅记录汇总和原件散列。
+
+### 11 月 19 日 UTC 整日独立对账
+
+在 Mac Chrome 打开 Solscan 公开交易列表，关闭隐藏失败与代币账户扩展，取同一钱包 UTC 00:00:00–23:59:59 的九页，最后一页 22 笔且下一页禁用。342 个唯一签名、0 重复。本地冻结 Scanner 数据库独立 SQL 筛选得到相同的有序签名集合，逐集合 SHA-256 为 `5fae9605f04a66ff947ef3648c848922139c1c9fb3fc1994f629d89ace130387`。两个边界交易在详情均为 finalized，分别是 00:18:15 的槽 471132155 和 23:52:43 的槽 471526431。加上此前独立核对的 95 签名，两个整日窗口的直接钱包交易合计 437／437 入库。11 月 19 日的 342 笔均有同槽、同区块时间的本机检测记录，区块到首次检测 P50／P95 为 19.540／30.549 秒，区块到判定入库为 19.832／31.097 秒（最近秩）。这里的分母是直接钱包交易签名。完整买入分类、资格认定和实际送达各需自己的独立分母。
+
+### 三枚未用于此前验收的新 CA
+
+| 市场样本 | GeckoTerminal 公共 GET 实读 | 隔离 Mac Chrome 回放 |
+| --- | --- | --- |
+| Pump.fun | 5 分钟 K 线 2 根、近期成交 299 笔，两项冷读共 1.821 秒；热读 0 次外部请求 | 从 CA 查询表单到选池、K 线和成交通过 |
+| PumpSwap | 5 分钟 K 线 1 根、近期成交 171 笔，两项冷读共 1.386 秒；热读 0 次外部请求 | 从 CA 查询表单到选池、K 线和成交通过 |
+| Meteora DAMM v2 | K 线读取 0.143 秒返回 HTTP 429，共享限流短路后续成交 | 显示“来源限流，本次未访问来源”，无空结果误报 |
+
+先从已有 GeckoTerminal 新池入口挑选三个不同协议的新 CA。实际访问共 5 次 HTTP 200 与 1 次 HTTP 429（含新池发现）。实源读取运行于 `abdc304ac23a17bc9bb1447f31f30d81fb6e8d57`；到候选源码，市场适配器和服务接口无变化。官方公开行情端点提供的是近期数据，计时只覆盖市场 K 线和成交读取。原件清单 SHA-256 为 `04a7729c77afe09c3012338474604ed471fcadc17bbf1f1dfdd4cfa50d27db82`。Mac Chrome 158.0.8127.38 用实际 CA 表单、任务管理与行情 HTTP 服务重放三个场景，使用存档原件和隔离链上分析响应，共 3 次 K 线与 2 次成交夹具响应，外部请求与页面异常均为 0。 [GeckoTerminal 公共 API](https://api.geckoterminal.com/docs/index.html)
+
+### 候选版本实测命令
+
+在 `crypto-300-profit-mission/local-agent` 执行。完整 Python 执行在进程内拦截外部 DNS 和套接字连接，允许隔离 HTTP 夹具使用回环地址。Chrome 个案单独启用实际 Mac Chrome。
+
+```zsh
+uv run --isolated --offline --no-project --with pytest==8.3.5 python -B -m pytest -q -p no:cacheprovider \
+  tests/test_frank_rebuild_delivery.py tests/test_frank_gmail_delivery.py tests/test_frank_v1.py \
+  tests/test_frank_staged_person_scope.py tests/test_frank_independent_sample_identity.py \
+  tests/test_meme_independent_check_lifecycle.py tests/test_meme_independent_error_evidence.py \
+  tests/test_meme_launch_origin.py tests/test_frank_ca_market_series.py \
+  tests/test_frank_ca_series_single_flight.py tests/test_frank_shared_provider_pacing.py
+node --test tests/*_ui.mjs tests/test_frank_ca_get_resume.mjs tests/test_frank_ca_report_render.mjs
+FRANK_TEST_CHROMIUM='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' \
+  uv run --isolated --offline --no-project --with pytest==8.3.5 --with playwright python -B -m pytest \
+  -q -p no:cacheprovider tests/test_frank_rebuild_buys.py::test_browser_default_entry_filters_and_prefills_ca
+```
+
+最终候选通过定向 Python 149 项和 Node 266 项。全量 Python 用 `uv run --isolated --offline --no-project --with pytest==8.3.5 --with numpy python -B -` 启动上面的网络护栏，调用 `pytest.main(["-q", "-p", "no:cacheprovider", "--tb=short", "tests"])`，3,051 项通过，1 项 Chrome 可选用例随后以真实 Mac Chrome 单独执行并通过。全量首次运行发现一个旧调用缺少新增的 Engine 参数，最终 SHA 恢复兼容默认值并重新跑完。真实归档在最终 SHA 重跑，汇总文件 SHA-256 与上文一致。
+
+**结论。通知回归和两日签名覆盖通过，CA 行情验收为 PARTIAL，发布 NO_GO。** 实际收件、完整买入分类漏报率、完整独立持有人与池同槽证据，以及完整 CA 首屏和深查的实源耗时仍待证明。本地 8766 本轮没有切换。
