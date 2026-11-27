@@ -22,9 +22,17 @@ def _latency(observed, at):
 
 
 def _timing(values):
-    known = [value for value in values if value is not None]
-    return {"sample_count": len(known), "unknown_count": len(values) - len(known),
-            "minimum_seconds": min(known, default=None), "maximum_seconds": max(known, default=None)}
+    known = sorted(value for value in values if value is not None)
+    size = len(known)
+    # Match the acceptance reports' nearest-rank definition, including for an
+    # even-sized or small sample. Missing clocks never enter the denominator.
+    def percentile(percent):
+        return known[(percent * size + 99) // 100 - 1] if size else None
+    return {"sample_count": size, "unknown_count": len(values) - size,
+            "minimum_seconds": known[0] if size else None,
+            "maximum_seconds": known[-1] if size else None,
+            "percentile_method": "NEAREST_RANK",
+            "p50_seconds": percentile(50), "p95_seconds": percentile(95)}
 
 
 def _recognized_exclusion(event, assets):
