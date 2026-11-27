@@ -1,0 +1,513 @@
+{
+  "report_date": "2026-11-27",
+  "items": [
+    {
+      "section": 1,
+      "item_number": 1,
+      "event_key": "asiasession"
+    },
+    {
+      "section": 1,
+      "item_number": 2,
+      "event_key": "us_thanksgiving_futures"
+    },
+    {
+      "section": 2,
+      "item_number": 1,
+      "event_key": "altria_imperial_possible_bid"
+    },
+    {
+      "section": 3,
+      "item_number": 1,
+      "event_key": "asia_semiconductor_performance"
+    },
+    {
+      "section": 3,
+      "item_number": 2,
+      "event_key": "brent_wti_market_snapshot"
+    },
+    {
+      "section": 4,
+      "item_number": 1,
+      "event_key": "boe_fsr_hyperscaler_financing"
+    },
+    {
+      "section": 5,
+      "item_number": 1,
+      "event_key": "hk_external_trade_ai_equipment"
+    },
+    {
+      "section": 5,
+      "item_number": 2,
+      "event_key": "china_model_release_delays"
+    },
+    {
+      "section": 5,
+      "item_number": 3,
+      "event_key": "anthropic_founder_voting_rights"
+    },
+    {
+      "section": 6,
+      "item_number": 1,
+      "event_key": "bnz_g10_carry_november"
+    },
+    {
+      "section": 7,
+      "item_number": 1,
+      "event_key": "bok_policy_rate"
+    },
+    {
+      "section": 7,
+      "item_number": 2,
+      "event_key": "jp_tokyo_cpi"
+    },
+    {
+      "section": 7,
+      "item_number": 3,
+      "event_key": "dxy_fx_holiday"
+    },
+    {
+      "section": 8,
+      "item_number": 1,
+      "event_key": "nvda_sp_creditwatch"
+    },
+    {
+      "section": 9,
+      "item_number": 1,
+      "event_key": "us_advance_economic_indicators_oct"
+    },
+    {
+      "section": 9,
+      "item_number": 2,
+      "event_key": "bundestag_budget_2027_finalvote"
+    },
+    {
+      "section": 9,
+      "item_number": 3,
+      "event_key": "nyse_sifma_black_friday_hours"
+    },
+    {
+      "section": 12,
+      "item_number": 1,
+      "event_key": "black_friday_consumer_signal"
+    }
+  ],
+  "events": [
+    {
+      "event_key": "asiasession",
+      "family_key": "asiasession",
+      "material_version": "11-26-final-11-27-open",
+      "primary_section": 1,
+      "kind": "ROUTINE_MARKET",
+      "source_url": "https://apnews.com/article/stocks-markets-ai-oil-bonds-320cd8c9c286a7773797bf2f478ef314",
+      "published_at": "2026-11-26",
+      "observed_at": "2026-11-27T02:20:51.593Z",
+      "status": "ROUTINE_DATED_FACT",
+      "observation_date": "2026-11-26"
+    },
+    {
+      "event_key": "us_thanksgiving_futures",
+      "family_key": "us_thanksgiving_futures",
+      "material_version": "11-26-holiday-AP-snapshot",
+      "primary_section": 1,
+      "kind": "ROUTINE_QUOTE",
+      "source_url": "https://apnews.com/article/stocks-markets-ai-oil-bonds-320cd8c9c286a7773797bf2f478ef314",
+      "published_at": "2026-11-26",
+      "observed_at": "2026-11-27T02:20:51.593Z",
+      "status": "ROUTINE_DATED_FACT",
+      "observation_date": "2026-11-26"
+    },
+    {
+      "event_key": "altria_imperial_possible_bid",
+      "family_key": "altria_imperial_possible_bid",
+      "material_version": "2026-11-26-rule-2-4-no-approach",
+      "primary_section": 2,
+      "kind": "ISSUER_ACTION",
+      "source_url": "https://investor.altria.com/press-releases/news-details/2026/Altria-Response-to-Media-Speculation-on-Possible-Offer-for-Imperial-Brands-plc/default.aspx",
+      "published_at": "2026-11-26",
+      "observed_at": "2026-11-27T02:20:51.593Z",
+      "status": "NEW"
+    },
+    {
+      "event_key": "asia_semiconductor_performance",
+      "family_key": "asia_semiconductor_performance",
+      "material_version": "2026-11-26-cash",
+      "primary_section": 3,
+      "kind": "ROUTINE_MARKET",
+      "source_url": "https://apnews.com/article/stocks-markets-ai-oil-bonds-320cd8c9c286a7773797bf2f478ef314",
+      "published_at": "2026-11-26",
+      "observed_at": "2026-11-27T02:20:51.593Z",
+      "status": "ROUTINE_DATED_FACT",
+      "observation_date": "2026-11-26"
+    },
+    {
+      "event_key": "brent_wti_market_snapshot",
+      "family_key": "brent_wti_market_snapshot",
+      "material_version": "2026-11-26-brent-settlement-wti-intraday",
+      "primary_section": 3,
+      "kind": "ROUTINE_QUOTE",
+      "source_url": "https://live.euronext.com/en/financial-news/brent-settles-higher-mine-strikes-refinery-attack-stoke-middle-east-supply-concerns",
+      "published_at": "2026-11-26",
+      "observed_at": "2026-11-27T02:20:51.593Z",
+      "status": "ROUTINE_DATED_FACT",
+      "observation_date": "2026-11-26"
+    },
+    {
+      "event_key": "boe_fsr_hyperscaler_financing",
+      "family_key": "boe_fsr_hyperscaler_financing",
+      "material_version": "2026-11-26-FSR-305bn-8pct",
+      "primary_section": 4,
+      "kind": "REGULATORY_ANALYSIS",
+      "source_url": "https://www.bankofengland.co.uk/financial-stability-report/2026/november-2026",
+      "published_at": "2026-11-26",
+      "observed_at": "2026-11-27T02:20:51.593Z",
+      "status": "NEW",
+      "novelty_comment": "Prior AI financing themes exist; first such Bank of England November FSR evidence with $305bn and 8% in seven-day corpus."
+    },
+    {
+      "event_key": "hk_external_trade_ai_equipment",
+      "family_key": "hk_external_trade_ai_equipment",
+      "material_version": "2026-10-exports-65.6-office-146.5",
+      "primary_section": 5,
+      "kind": "OFFICIAL_DATA",
+      "source_url": "https://www.info.gov.hk/gia/general/202611/26/P2026112600263p.htm",
+      "published_at": "2026-11-26",
+      "observed_at": "2026-11-27T02:20:51.593Z",
+      "status": "NEW"
+    },
+    {
+      "event_key": "china_model_release_delays",
+      "family_key": "china_model_release_delays",
+      "material_version": "2026-11-26-reuters-conditional-deployment-interval",
+      "primary_section": 5,
+      "kind": "ATTRIBUTED_REPORT",
+      "source_url": "https://www.dailymaverick.co.za/article/2026-11-26-us-chip-curbs-distillation-crackdown-threaten-chinese-ai-model-development-sources-say/",
+      "published_at": "2026-11-26",
+      "observed_at": "2026-11-27T02:20:51.593Z",
+      "status": "NEW"
+    },
+    {
+      "event_key": "anthropic_founder_voting_rights",
+      "family_key": "anthropic_founder_voting_rights",
+      "material_version": "2026-11-25-8k-class-f-50.1",
+      "primary_section": 5,
+      "kind": "IPO_ISSUER_STAGE",
+      "source_url": "https://www.sec.gov/Archives/edgar/data/2130357/000162828026075973/ant-20261119.htm",
+      "published_at": "2026-11-25",
+      "observed_at": "2026-11-27T02:20:51.593Z",
+      "status": "NEW",
+      "novelty_comment": "Existing listing and IPO completed; no repeat of pricing. New exact executed Class F right independently read in Nov25 8-K."
+    },
+    {
+      "event_key": "bnz_g10_carry_november",
+      "family_key": "bnz_g10_carry_november",
+      "material_version": "2026-11-27-BNZ-november-unwind",
+      "primary_section": 6,
+      "kind": "INSTITUTIONAL_VIEW",
+      "source_url": "https://www.bnz.co.nz/assets/markets/research/BNZ-Markets-Today-27-November-2026.pdf",
+      "published_at": "2026-11-27",
+      "observed_at": "2026-11-27T02:20:51.593Z",
+      "status": "NEW"
+    },
+    {
+      "event_key": "bok_policy_rate",
+      "family_key": "bok_policy_rate",
+      "material_version": "2026-11-26-3.25-2-dissent",
+      "primary_section": 7,
+      "kind": "CENTRAL_BANK",
+      "source_url": "https://www.bok.or.kr/eng/bbs/E0000634/view.do?menuNo=400423&nttId=11067086",
+      "published_at": "2026-11-26",
+      "observed_at": "2026-11-27T02:20:51.593Z",
+      "status": "NEW"
+    },
+    {
+      "event_key": "jp_tokyo_cpi",
+      "family_key": "jp_tokyo_cpi",
+      "material_version": "2026-11-preliminary-2.8-2.9-2.5",
+      "primary_section": 7,
+      "kind": "OFFICIAL_DATA",
+      "source_url": "https://www.e-stat.go.jp/stat-search/file-download?fileKind=2&statInfId=000040525998",
+      "published_at": "2026-11-27",
+      "observed_at": "2026-11-27T02:20:51.593Z",
+      "status": "NEW"
+    },
+    {
+      "event_key": "dxy_fx_holiday",
+      "family_key": "dxy_fx_holiday",
+      "material_version": "2026-11-26-reuters-103.70-159.20",
+      "primary_section": 7,
+      "kind": "ROUTINE_QUOTE",
+      "source_url": "https://finance.yahoo.com/markets/currencies/articles/dollar-steady-sliding-yields-temper-014830997.html",
+      "published_at": "2026-11-26",
+      "observed_at": "2026-11-27T02:20:51.593Z",
+      "status": "ROUTINE_DATED_FACT",
+      "observation_date": "2026-11-26"
+    },
+    {
+      "event_key": "nvda_sp_creditwatch",
+      "family_key": "nvda_sp_creditwatch",
+      "material_version": "2026-11-25-negative-governance",
+      "primary_section": 8,
+      "kind": "CREDIT_RATING",
+      "source_url": "https://www.channelnewsasia.com/business/sp-global-places-nvidia-rating-creditwatch-negative-rising-management-and-governance-risks-6582666",
+      "published_at": "2026-11-25",
+      "observed_at": "2026-11-27T02:20:51.593Z",
+      "status": "NEW"
+    },
+    {
+      "event_key": "us_advance_economic_indicators_oct",
+      "family_key": "us_advance_economic_indicators_oct",
+      "material_version": "2026-11-27-census-0830-est",
+      "primary_section": 9,
+      "kind": "CALENDAR",
+      "source_url": "https://www.census.gov/econ/indicators/release_schedule.html",
+      "published_at": "2026-10-28",
+      "observed_at": "2026-11-27T02:20:51.593Z",
+      "status": "NEW",
+      "calendar_date": "2026-11-27",
+      "date_basis": "Date of preceding Advance Economic Indicators release which stated this future release date"
+    },
+    {
+      "event_key": "bundestag_budget_2027_finalvote",
+      "family_key": "bundestag_budget_2027_finalvote",
+      "material_version": "2026-11-27-draft-final-nominal-vote",
+      "primary_section": 9,
+      "kind": "CALENDAR",
+      "source_url": "https://www.bundestag.de/resource/blob/189966/40749e8960372722d6c0bbf0807e262d/ablaufplan-data.pdf",
+      "published_at": "2026-11-24",
+      "observed_at": "2026-11-27T02:20:51.593Z",
+      "status": "NEW",
+      "calendar_date": "2026-11-27"
+    },
+    {
+      "event_key": "nyse_sifma_black_friday_hours",
+      "family_key": "nyse_sifma_black_friday_hours",
+      "material_version": "2026-11-27-sifma-fixed-income-14-est",
+      "primary_section": 9,
+      "kind": "CALENDAR",
+      "source_url": "https://www.sifma.org/news/press-releases/sifma-fixed-income-market-close-recommendations-in-the-u-s-the-u-k-and-japan-for-thanksgiving-day-2026",
+      "published_at": "2026-11-12",
+      "observed_at": "2026-11-27T02:20:51.593Z",
+      "status": "MATERIAL_DELTA",
+      "calendar_date": "2026-11-27",
+      "novelty_proof": {
+        "previous_material_version": "NYSE-equities-only-2026-11-27-13EST",
+        "changed_field": "fixed_income_trading_close",
+        "old_value": "只有股票收盘，曼谷28日01:00",
+        "new_value": "曼谷28日02:00",
+        "evidence_url": "https://www.sifma.org/news/press-releases/sifma-fixed-income-market-close-recommendations-in-the-u-s-the-u-k-and-japan-for-thanksgiving-day-2026",
+        "evidence_published_at": "2026-11-12"
+      }
+    },
+    {
+      "event_key": "black_friday_consumer_signal",
+      "family_key": "black_friday_consumer_signal",
+      "material_version": "2026-11-27-adobe-12.9-watch",
+      "primary_section": 12,
+      "kind": "WATCH",
+      "source_url": "https://news.adobe.com/news/2026/09/adobe-us-holiday-shopping-season-to-hit-record",
+      "published_at": "2026-09-28",
+      "observed_at": "2026-11-27T02:20:51.593Z",
+      "status": "WATCH_ONLY"
+    }
+  ],
+  "previous_events": [
+    {
+      "family_key": "asiasession",
+      "material_version": "2026-11-26-opening-reuters",
+      "observation_date": "2026-11-26-open",
+      "prior_date": "2026-11-26"
+    },
+    {
+      "family_key": "brent_wti_market_snapshot",
+      "material_version": "2026-11-25-reuters-early",
+      "observation_date": "2026-11-25",
+      "prior_date": "2026-11-26"
+    },
+    {
+      "family_key": "dxy_fx_holiday",
+      "material_version": "2026-11-25-103.62",
+      "observation_date": "2026-11-25",
+      "prior_date": "2026-11-26"
+    },
+    {
+      "family_key": "nyse_sifma_black_friday_hours",
+      "material_version": "NYSE-equities-only-2026-11-27-13EST",
+      "calendar_date": "2026-11-27",
+      "prior_date": "2026-11-26"
+    },
+    {
+      "family_key": "watch_opec_2027_output",
+      "material_version": "2026-11-29-agenda-only",
+      "prior_date": "2026-11-26",
+      "exclusion": "same date; background only"
+    },
+    {
+      "family_key": "us_cash_close",
+      "material_version": "2026-11-25",
+      "prior_date": "2026-11-26",
+      "exclusion": "dated background only"
+    },
+    {
+      "family_key": "deere_fy2026_q4",
+      "material_version": "2026-11-25-release",
+      "prior_date": "2026-11-26",
+      "exclusion": "same results; no new earnings/delta"
+    },
+    {
+      "family_key": "anthropic_ipo_closing",
+      "material_version": "2026-11-20-closing-1127m-83usd",
+      "prior_date": "2026-11-22",
+      "exclusion": "old pricing/closing omitted"
+    }
+  ],
+  "previous_days_checked": [
+    "2026-11-20",
+    "2026-11-21",
+    "2026-11-22",
+    "2026-11-23",
+    "2026-11-24",
+    "2026-11-25",
+    "2026-11-26"
+  ],
+  "previous_day_receipts": [
+    {
+      "date": "2026-11-20",
+      "source": "GMAIL_SENT",
+      "gmail_message_id": "1a1f6670b8b285b2",
+      "sent_readback": true,
+      "full_body_reviewed": true,
+      "git_blob_sha": "1fefafc0872d303017f402756d2b17f46b9daaf0",
+      "git_body_trimmed_equal": true
+    },
+    {
+      "date": "2026-11-21",
+      "source": "GMAIL_SENT",
+      "gmail_message_id": "1a1fb8c3bf320d3e",
+      "sent_readback": true,
+      "full_body_reviewed": true,
+      "git_blob_sha": "773d2db07bbb1d5b2996b6eb1782a0e66cc48fef",
+      "git_body_trimmed_equal": true
+    },
+    {
+      "date": "2026-11-22",
+      "source": "GMAIL_SENT",
+      "gmail_message_id": "1a200b257522bc49",
+      "sent_readback": true,
+      "full_body_reviewed": true,
+      "git_blob_sha": "0621d0b7920c0eca2658a734a66bd42030458dd5",
+      "git_body_trimmed_equal": true
+    },
+    {
+      "date": "2026-11-23",
+      "source": "GMAIL_SENT",
+      "gmail_message_id": "1a206fd2ccd55bfb",
+      "sent_readback": true,
+      "full_body_reviewed": true,
+      "git_blob_sha": "8d89d56b9a8ab3b8090ab344dd882dfc932e6052",
+      "git_body_trimmed_equal": true
+    },
+    {
+      "date": "2026-11-24",
+      "source": "GMAIL_SENT",
+      "gmail_message_id": "1a20bcc62de875a9",
+      "sent_readback": true,
+      "full_body_reviewed": true,
+      "git_blob_sha": "4a0c289ac614069e7729ff2ca7143702d3c780c6",
+      "git_body_trimmed_equal": true
+    },
+    {
+      "date": "2026-11-25",
+      "source": "GMAIL_SENT",
+      "gmail_message_id": "1a2107d2ecbc727c",
+      "sent_readback": true,
+      "full_body_reviewed": true,
+      "git_blob_sha": "c2e810d1fc270775323813b5360c6123f7998b5b",
+      "git_body_trimmed_equal": true
+    },
+    {
+      "date": "2026-11-26",
+      "source": "GMAIL_SENT",
+      "gmail_message_id": "1a21565316947c35",
+      "sent_readback": true,
+      "full_body_reviewed": true,
+      "git_blob_sha": "e28c45a3613cfa3c50ff8bf04f42e84b69d3ff13",
+      "git_body_trimmed_equal": true
+    }
+  ],
+  "ipo_status_receipts": [
+    {
+      "issuer_name": "Anthropic, PBC",
+      "official_url": "https://www.sec.gov/Archives/edgar/data/2130357/000162828026075973/ant-20261119.htm",
+      "checked_at": "2026-11-27T02:20:51.593Z",
+      "stage": "ALREADY_TRADING_CLASS_A_ANT",
+      "last_official_stage_changed_at": "2026-11-20",
+      "new_delta_or_none": "MATERIAL_DELTA",
+      "delta": "November 25 Form 8-K confirms executed founder voting share; no reopening."
+    }
+  ],
+  "x_source_receipt": {
+    "checked_at": "2026-11-27T02:20:51.593Z",
+    "browser_session": "UNAVAILABLE",
+    "status": "PUBLIC_ORIGINAL_LOOKUP",
+    "fallback_url": "https://www.sec.gov/Archives/edgar/data/2130357/000162828026075973/ant-20261119.htm",
+    "error": "Original X permalink not verified in public issuer search; used SEC and IR. No signed-in browser access utilized."
+  },
+  "empty_section_reasons": [
+    {
+      "section": 10,
+      "reason": "NYSE session not yet open; no clean new market entry signal or justified buy recommendation for this report."
+    },
+    {
+      "section": 11,
+      "reason": "The BoE FSR and accepted material disclosures are already covered in primary homes; no independently new model miss was substantiated."
+    }
+  ],
+  "section_source_receipts": [
+    {
+      "section": 10,
+      "source_url": "https://www.nyse.com/trade/hours-calendars",
+      "status": "checked",
+      "source_original_read": true,
+      "checked_at": "2026-11-27T02:20:51.593Z"
+    },
+    {
+      "section": 11,
+      "source_url": "https://www.bankofengland.co.uk/financial-stability-report/2026/november-2026",
+      "status": "checked",
+      "source_original_read": true,
+      "checked_at": "2026-11-27T02:20:51.593Z"
+    }
+  ],
+  "qa_execution": {
+    "status": "PASS",
+    "execution_scope": "local pinned repo validator plus independent manual source and semantic review",
+    "validator_git_blob_sha": "afbc4571a8f7aee48243cdf52a189df75183c728",
+    "canonical_body_sha256": "7938e01feda72345ca5258415af60d5680df333dc1138e895e42234b077cc9cc",
+    "sections": 12,
+    "numbered_items": 18
+  },
+  "source_gaps": [
+    "No independently verified actual for scheduled mainland China October industrial profits; excluded",
+    "No authenticated original X post; public issuer search and SEC/IR fallback checked",
+    "No verified new attributable institutional trade or open IPO/private-market user rights; no transactions or eligibility claimed"
+  ],
+  "sources_reviewed_but_excluded": [
+    {
+      "lane": "earnings",
+      "date": "2026-11-25",
+      "source": "https://s22.q4cdn.com/253594569/files/content_files/DE-4Q26-News-Release.pdf",
+      "reason": "Deere November 25 actual already covered in November 26 authoritative report; Thanksgiving November 26 had no US cash session, no material new after-hours issuer release substantiated from reviewed calendars and filings."
+    },
+    {
+      "lane": "calendar",
+      "source": "https://www.opec.org/pr-detail/605-7-june-2026.html",
+      "reason": "Same Nov 29 meeting date already in yesterday's body; unnumbered watch background only. No quota result before meeting."
+    },
+    {
+      "lane": "oil",
+      "source": "https://live.euronext.com/en/financial-news/brent-settles-higher-mine-strikes-refinery-attack-stoke-middle-east-supply-concerns",
+      "reason": "Reuters Brent reported dollar and percent changes that do not arithmetically reconcile; published settlement level only. WTI print is intraday, not settlement."
+    }
+  ]
+}
