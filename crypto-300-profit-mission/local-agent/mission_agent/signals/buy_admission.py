@@ -14,7 +14,7 @@ import time
 
 from ..meme.holder_ranks import valid_pubkey
 from .classifier import QUOTE_MINTS, USDT
-from .policy import USDC
+from .policy import BUY_DELIVERY_MAX_AGE_SECONDS, USDC
 from .reconciliation import _base58_size
 
 # Independently documented non-Meme asset identities. Match the complete mint,
@@ -133,8 +133,9 @@ class BuyDeliveryGate:
                 or signature != signal.get("latest_trade_signature")
                 or signature != signal.get("latest_buy_signature")):
             return None, "TRIGGER_IS_NOT_PROVEN_BUY"
+        as_of = int(self.clock())
         try:
-            assets = effective_qualification(self.path, self.category_evidence_path, int(self.clock()))
+            assets = effective_qualification(self.path, self.category_evidence_path, as_of)
         except (OSError, ValueError, RecursionError):
             return None, "MEME_QUALIFICATION_UNAVAILABLE"
         asset = assets.get(mint)
@@ -156,10 +157,10 @@ class BuyDeliveryGate:
                              slot=row["slot"], block_time=row["block_time"], raw_hash=row["raw_hash"], mint=mint)
             if fact:
                 frozen = signal.get("verified_buy")
+                trigger = signal.get("triggered_at")
                 if for_delivery and frozen is None:
                     # With no enqueue-time proof, a newly observed classification
                     # must not turn an old pending signal into a new notification.
-                    trigger = signal.get("triggered_at")
                     if type(trigger) is not int or trigger <= 0:
                         return None, "LEGACY_SIGNAL_TRIGGER_TIME_UNVERIFIED"
                     if asset.observed_at > trigger:
@@ -169,6 +170,14 @@ class BuyDeliveryGate:
                     or any(frozen.get(key) != value for key, value in fact.items() if key != "name")
                 ):
                     return None, "FROZEN_BUY_FACT_CONFLICT"
+                stage = signal.get("signal_type")
+                if not isinstance(stage, str) or type(trigger) is not int or not fact["at"] <= trigger <= as_of:
+                    return None, "BUY_NOTIFICATION_TIME_UNVERIFIED"
+                max_age = BUY_DELIVERY_MAX_AGE_SECONDS.get(stage)
+                if max_age is None:
+                    return None, "BUY_NOTIFICATION_TIME_UNVERIFIED"
+                if as_of - fact["at"] > max_age:
+                    return None, "BUY_NOTIFICATION_EXPIRED"
                 return fact, None
         return None, "TRIGGER_IS_NOT_PROVEN_BUY"
 

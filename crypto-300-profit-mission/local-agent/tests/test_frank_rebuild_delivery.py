@@ -13,7 +13,7 @@ from mission_agent.signals.category_evidence import COINGECKO_SOLANA
 from mission_agent.signals.delivery import LocalNotifier, drain
 from mission_agent.signals.engine import Engine
 from mission_agent.signals.gmail import GmailOutbox
-from mission_agent.signals.policy import USDC, load_policy
+from mission_agent.signals.policy import BUY_DELIVERY_MAX_AGE_SECONDS, USDC, load_policy
 from mission_agent.signals.scanner import Scanner
 from mission_agent.signals.store import Ledger
 from test_frank_fm import tx
@@ -22,13 +22,14 @@ from test_frank_rebuild_buys import AS_OF, MINT, UNKNOWN, config
 from test_frank_v1 import POLICY
 
 
-def indexed_buys(ledger, raw, mints):
+def indexed_buys(ledger, raw, mints, *,
+                 schedule=((2700, 13000), (1500, 13000), (0, 5000))):
     """Give the real Scanner signed synthetic direct USDC buys through a fake RPC."""
     transactions = {}
     rows = []
     checkpoint = _b58(bytes(64))
     ledger.checkpoint(WALLET, checkpoint, 1)
-    for step, (offset, quote) in enumerate(((2700, 13000), (1500, 13000), (0, 5000))):
+    for offset, quote in schedule:
         for mint in mints:
             slot = len(rows) + 2
             signature = _b58(slot.to_bytes(64, "big"))
@@ -57,14 +58,14 @@ def indexed_buys(ledger, raw, mints):
     assert len(list(raw.glob("*.json.gz"))) == len(rows)
 
 
-def prepare(tmp_path, mints, *, gate_at_enqueue=True, registry=True):
+def prepare(tmp_path, mints, *, gate_at_enqueue=True, registry=True, clock=lambda: AS_OF):
     cfg = tmp_path / "qualifications.json"
     if registry:
         config(cfg)
         parsed = json.loads(cfg.read_text())
         parsed["records"].append({**parsed["records"][0], "mint": BACKPACK_MINT})
         cfg.write_text(json.dumps(parsed))
-    gate = BuyDeliveryGate(cfg, clock=lambda: AS_OF)
+    gate = BuyDeliveryGate(cfg, clock=clock)
     ledger = Ledger(tmp_path / "db")
     indexed_buys(ledger, tmp_path / "raw", mints)
     engine = Engine(ledger, load_policy(POLICY), dry_run=False,
@@ -274,6 +275,132 @@ def test_enqueue_bound_qualification_may_follow_chain_time_without_being_a_repla
     provider = Provider()
     assert GmailOutbox(ledger, delivery_gate=gate).drain(provider)["sent_verified"] == 1
     assert len(provider.sent) == 1
+
+def test_restart_catches_up_expired_buys_without_enqueuing(tmp_path):
+    ledger, cfg, gate, engine = prepare(tmp_path, [MINT], clock=lambda: AS_OF + 10800)
+    rows = [json.loads(row[0]) for row in ledger.db.execute("SELECT body FROM signals")]
+    assert len(rows) == 2
+    assert {row["delivery_scope_reason"] for row in rows} == {"BUY_NOTIFICATION_EXPIRED"}
+    assert ledger.db.execute("SELECT count(*) FROM outbox").fetchone()[0] == 0
+    assert ledger.db.execute("SELECT count(*) FROM email_content").fetchone()[0] == 0
+    assert len(read_buys(tmp_path / "db", cfg, as_of=AS_OF + 10800)["rows"]) == 3
+    assert engine.drain() == 0
+    assert GmailOutbox(ledger, delivery_gate=gate).drain()["sent_verified"] == 0
+
+
+def test_notification_age_uses_original_buy_and_frozen_policy_window(tmp_path):
+    clock = AS_OF
+    ledger, _, gate, _ = prepare(tmp_path, [MINT], clock=lambda: clock)
+    frozen = load_policy(POLICY)["mapping"]
+    ages = {stage: frozen[stage][key] for stage, key in (
+        ("FRANK_ACCUMULATION_SIGNAL", "window_seconds"),
+        ("FRANK_MULTIPLE_SIGNAL", "stale_after_seconds"),
+    )}
+    assert BUY_DELIVERY_MAX_AGE_SECONDS == ages
+    for row in ledger.db.execute("SELECT body FROM signals"):
+        signal = json.loads(row[0])
+        buy_at = signal["verified_buy"]["at"]
+        clock = buy_at + ages[signal["signal_type"]]
+        assert gate.block_reason(ledger.db, signal) is None
+        clock += 1
+        assert gate.block_reason(ledger.db, {**signal, "triggered_at": clock}) == "BUY_NOTIFICATION_EXPIRED"
+        assert gate.block_reason(ledger.db, {**signal, "triggered_at": clock + 1}) == "BUY_NOTIFICATION_TIME_UNVERIFIED"
+        assert gate.block_reason(ledger.db, {**signal, "triggered_at": buy_at - 1}) == "BUY_NOTIFICATION_TIME_UNVERIFIED"
+
+
+def test_queued_buy_can_expire_during_gmail_readback_before_first_send(tmp_path, monkeypatch):
+    clock = AS_OF
+    ledger, _, gate, _ = prepare(tmp_path, [MINT], clock=lambda: clock)
+    outbox = GmailOutbox(ledger, delivery_gate=gate)
+
+    class DelayedProvider(Provider):
+        def find_sent(self, wire_id, sid):
+            nonlocal clock
+            clock = AS_OF + 10800
+            return super().find_sent(wire_id, sid)
+
+    provider = DelayedProvider()
+    outbox.drain(provider)
+    assert provider.actions == ["ready", "find"]
+    assert tuple(ledger.db.execute("SELECT status,last_error,attempt_count FROM gmail_delivery").fetchone()) == (
+        "MEME_SCOPE_BLOCKED", "BUY_NOTIFICATION_EXPIRED", 0)
+    monkeypatch.setattr("mission_agent.signals.gmail.kick", lambda *a, **k: None)
+    drain(ledger, lambda _: pytest.fail("expired notification reached the OS"), delivery_gate=gate)
+    assert {tuple(r) for r in ledger.db.execute("SELECT status,last_error,attempts FROM outbox")} == {
+        ("MEME_SCOPE_BLOCKED", "BUY_NOTIFICATION_EXPIRED", 0)}
+
+
+def test_expired_inflight_gmail_reads_receipt_without_resending(tmp_path):
+    clock = AS_OF
+    ledger, _, gate, _ = prepare(tmp_path, [MINT], clock=lambda: clock)
+    provider = Provider()
+    provider.crash = True
+    with pytest.raises(SystemExit, match="post-acceptance crash"):
+        GmailOutbox(ledger, delivery_gate=gate).drain(provider)
+    ledger.db.close()
+
+    clock = AS_OF + 10800
+    provider.crash = False
+    provider.actions.clear()
+    reopened = Ledger(tmp_path / "db")
+    assert GmailOutbox(reopened, delivery_gate=gate).drain(provider)["sent_verified"] == 1
+    assert provider.actions == ["ready", "find", "get"] and len(provider.sent) == 1
+
+
+@pytest.mark.parametrize("reason,offset", [
+    ("MEME_QUALIFICATION_UNPROVEN", 120),
+    ("BUY_NOTIFICATION_EXPIRED", 10801),
+])
+def test_later_buy_can_qualify_once_after_a_stage_that_never_queued(tmp_path, reason, offset):
+    cfg = tmp_path / "qualifications.json"
+    config(cfg)
+    if reason == "MEME_QUALIFICATION_UNPROVEN":
+        cfg.write_text('{"version": 1, "records": []}')
+    clock = AS_OF + (10800 if reason == "BUY_NOTIFICATION_EXPIRED" else 0)
+    gate = BuyDeliveryGate(cfg, clock=lambda: clock)
+    ledger = Ledger(tmp_path / "db")
+    indexed_buys(ledger, tmp_path / "raw", [MINT],
+                 schedule=((2700, 13000), (1500, 13000), (0, 5000),
+                           (-offset - 1, 13000), (-offset - 121, 13000)))
+    policy = load_policy(POLICY)
+    engine = Engine(ledger, policy, dry_run=False, delivery_gate=gate)
+    events = ledger.db.execute("SELECT * FROM signatures ORDER BY block_time").fetchall()
+    for event in events[:3]:
+        engine.process(event)
+    original = {r["signal_id"]: dict(r) for r in ledger.db.execute("SELECT * FROM signals")}
+    assert len(original) == 2
+    assert {json.loads(r["body"])["delivery_scope_reason"] for r in ledger.db.execute(
+        "SELECT body FROM signals")} == {reason}
+    assert ledger.db.execute("SELECT count(*) FROM outbox").fetchone()[0] == 0
+
+    config(cfg)
+    engine.tick(clock)
+    assert ledger.db.execute("SELECT count(*) FROM outbox").fetchone()[0] == 0
+    for event in events[3:]:
+        clock = event["block_time"]
+        engine.process(event)
+    delivered_stages = ledger.db.execute(
+        "SELECT s.signal_type,s.body FROM signals s JOIN outbox o USING(signal_id) WHERE o.channel='gmail'"
+    ).fetchall()
+    assert len(delivered_stages) == 1
+    stage, body = delivered_stages[0]
+    signal = json.loads(body)
+    assert stage == "FRANK_MULTIPLE_SIGNAL"
+    assert signal["verified_buy"]["signature"] == events[3]["signature"]
+    assert signal["signal_id"] in original
+    archived = [json.loads(r[0])["signal"] for r in ledger.db.execute(
+        "SELECT body FROM v1_evaluations WHERE json_extract(body, '$.kind')='BUY_DELIVERY_BLOCKED'")]
+    assert original[signal["signal_id"]] in archived
+    assert len(archived) == len({r["signal_id"] for r in archived}) == 2
+    assert ledger.db.execute("SELECT count(*) FROM signals").fetchone()[0] == 2
+    provider = Provider()
+    assert GmailOutbox(ledger, delivery_gate=gate).drain(provider)["sent_verified"] == 1
+    ledger.db.close()
+    reopened = Ledger(tmp_path / "db")
+    assert Engine(reopened, policy, dry_run=False, delivery_gate=gate).drain() == 0
+    GmailOutbox(reopened, delivery_gate=gate).drain(provider)
+    assert len(provider.sent) == 1
+
 
 def _write_category_fixture(path, mints, *, at=AS_OF, categories=None):
     records = []

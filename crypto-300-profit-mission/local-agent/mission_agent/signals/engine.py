@@ -45,7 +45,7 @@ class Engine:
             event,self.rebuild_assets,wallet=row["wallet"],signature=row["signature"],
             slot=row["slot"],block_time=row["block_time"],raw_hash=row["raw_hash"],mint=mint)
 
-    def _emit(self,s,at,stage):
+    def _emit(self,s,at,stage,active_signature=None):
         if self.rebuild_assets is not None:
             trigger=s['events'][-1]
             if trigger['direction']!='BUY' or not trigger.get('rebuild_wallet'):
@@ -55,8 +55,10 @@ class Engine:
             if not row or not self._rebuild_admits(row,json.loads(row['body']),s['mint']):
                 return None
         sid=digest({'policy_id':self.policy['policy_id'],'policy_hash':POLICY_SHA256,'person_id':s['person_id'],'mint':s['mint'],'episode_id':s['episode_id'],'signal_type':stage['signal_type'],'stage':stage['stage']})
-        if self.db.execute('SELECT 1 FROM signals WHERE signal_id=?',(sid,)).fetchone():
-            self.db.execute("UPDATE v1_meta SET value=CAST(value AS INTEGER)+1 WHERE key='duplicates_suppressed'");return None
+        prior = self.db.execute("SELECT * FROM signals WHERE signal_id=?", (sid,)).fetchone()
+        if prior and not self._can_admit_after_block(prior, s["events"], active_signature):
+            self.db.execute("UPDATE v1_meta SET value=CAST(value AS INTEGER)+1 WHERE key='duplicates_suppressed'")
+            return None
         buys=[e for e in s['events'] if e['direction']=='BUY'];latest=buys[-1]
         known_spent={};known_received={};observed_spent={};observed_received={};unknown_cost=[]
         def add(total,asset,value):
@@ -111,9 +113,27 @@ class Engine:
         if fact:
             body["verified_buy"] = fact
         if blocked:
+            if prior:
+                return None
             body.update(delivery_forbidden=True, delivery_scope_reason=blocked)
-        encoded=json.dumps(body,sort_keys=True);content_hash=digest(body)
-        self.db.execute('INSERT INTO signals VALUES(?,?,?,?,?,?,?,?,?)',(sid,s['person_id'],s['mint'],s['episode_id'],stage['signal_type'],stage['stage'],str(at),content_hash,encoded))
+        if prior:
+            # Preserve the exact blocked record before reusing the undelivered stage identity.
+            archived = {"kind": "BUY_DELIVERY_BLOCKED", "signal": dict(prior)}
+            archive_id = digest(archived)
+            self.db.execute(
+                "INSERT INTO v1_evaluations VALUES(?,?,?,?,?,?,?)",
+                (archive_id, prior["person_id"], prior["mint"], prior["episode_id"],
+                 int(prior["created_at"]), json.loads(prior["body"])["triggering_signature"],
+                 json.dumps(archived, sort_keys=True)),
+            )
+            body["previous_blocked_signal_evaluation_id"] = archive_id
+            self.db.execute(
+                "UPDATE signals SET created_at=?,content_hash=?,body=? WHERE signal_id=?",
+                (str(at), digest(body), json.dumps(body, sort_keys=True), sid),
+            )
+        else:
+            encoded=json.dumps(body,sort_keys=True);content_hash=digest(body)
+            self.db.execute('INSERT INTO signals VALUES(?,?,?,?,?,?,?,?,?)',(sid,s['person_id'],s['mint'],s['episode_id'],stage['signal_type'],stage['stage'],str(at),content_hash,encoded))
         if stage['signal_type']=='FRANK_ACCUMULATION_SIGNAL':s['accumulation_emitted']=True
         else:s['multiple_emitted']=True
         if blocked:
@@ -128,10 +148,33 @@ class Engine:
             mail=content(body)
             self.db.execute('INSERT INTO email_content VALUES(?,?,?,?)',(sid,mail['subject'],mail['body'],mail['content_hash']))
         return sid
+    def _can_admit_after_block(self, row, events, active_signature):
+        """Only a newer active buy can reuse a stage that never entered delivery."""
+        latest = events[-1]
+        if self.dry_run or self.delivery_gate is None or active_signature != latest["signature"] or latest["direction"] != "BUY":
+            return False
+        prior = json.loads(row["body"])
+        if prior.get("delivery_forbidden") is not True or prior.get("delivery_scope_reason") not in (
+            "BUY_NOTIFICATION_EXPIRED", "MEME_QUALIFICATION_UNAVAILABLE", "MEME_QUALIFICATION_UNPROVEN",
+        ):
+            return False
+        original = next((e for e in events if e["signature"] == prior.get("triggering_signature")), None)
+        order = ("at", "slot", "signature")
+        if original is None or tuple(latest[k] for k in order) <= tuple(original[k] for k in order):
+            return False
+        sid = row["signal_id"]
+        if self.db.execute(
+            "SELECT signal_id FROM outbox WHERE signal_id=? UNION ALL "
+            "SELECT signal_id FROM email_content WHERE signal_id=? LIMIT 1", (sid, sid),
+        ).fetchone():
+            return False
+        has_gmail = self.db.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='gmail_delivery'").fetchone()
+        return not (has_gmail and self.db.execute("SELECT 1 FROM gmail_delivery WHERE signal_id=?", (sid,)).fetchone())
+
     def _evaluate(self,s,at,signature,kind):
         result=evaluate(s,at,self.policy);ids=[]
         for stage in result['stages']:
-            sid=self._emit(s,at,stage)
+            sid=self._emit(s,at,stage,signature if kind == "ACTIVE_TRADE" else None)
             if sid:ids.append(sid)
         result.update(signal_ids=ids,kind=kind)
         eid=digest({'episode':s['episode_id'],'at':at,'signature':signature,'kind':kind})
