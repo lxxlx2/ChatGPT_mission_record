@@ -4,9 +4,12 @@ import json
 from pathlib import Path
 from tempfile import TemporaryDirectory
 import unittest
+from unittest.mock import patch
 
 from mission_agent.meme.holder_ranks import _b58
 from mission_agent.mission_control.frank_buys import read_buys
+from mission_agent.signals.buy_admission import BuyDeliveryGate
+from mission_agent.signals.delivery import drain
 from mission_agent.signals.person_scope import load_staged_person_scopes
 from mission_agent.signals.policy import USDC
 from mission_agent.signals.registry import load as load_production_registry
@@ -33,7 +36,7 @@ def qualification(path):
     ]}))
 
 
-def tx(ledger, person, wallet, n, raw_quantity, *, advance=False):
+def tx(ledger, person, wallet, n, raw_quantity, *, advance=False, stages=(), expected_insert=True):
     sig = _b58(n.to_bytes(64, "big"))
     raw_hash = hashlib.sha256(("fixture signed bytes " + str(n)).encode()).hexdigest()
     identity = {"wallet": wallet, "signature": sig, "slot": 100 + n, "block_time": NOW - 500 + n}
@@ -50,7 +53,8 @@ def tx(ledger, person, wallet, n, raw_quantity, *, advance=False):
                   "route_intermediate_evidence_status": "NO_INTERMEDIATE_TRANSFER_OBSERVED",
                   "route_amount_semantics": "DIRECT_OR_SINGLE_TARGET_QUOTE"},
     }
-    assert ledger.put(person, e, raw_hash, "synthetic-no-path", advance=advance)
+    assert ledger.put(person, e, raw_hash, "synthetic-no-path", advance=advance, dry_run=True,
+                      stages=stages) == expected_insert
     return sig
 
 
@@ -104,6 +108,51 @@ class ReadOnlyPersonScopeTests(unittest.TestCase):
                 self.assertEqual(hashlib.sha256(db.read_bytes()).digest(), before)
             finally:
                 ledger.db.close()
+
+    def test_outbox_identity_distinguishes_people_but_never_sends_staged_rows(self):
+        with TemporaryDirectory() as tmp:
+            filename = Path(tmp) / "forward.sqlite"
+            stage = ({"signal_type": "FRANK_MULTIPLE_SIGNAL", "stage": "SUSPECTED_CONVICTION",
+                      "reason_codes": ["FIXTURE_ONLY"]},)
+            ledger = Ledger(filename)
+            try:
+                sig = tx(ledger, "frank", A1, 1, 1, stages=stage)
+                self.assertEqual(tx(ledger, "candidate", B1, 1, 100, stages=stage), sig)
+                self.assertEqual(tx(ledger, "frank", A2, 1, 1, stages=stage), sig)
+                self.assertEqual(tx(ledger, "candidate", B2, 1, 100, stages=stage), sig)
+            finally:
+                ledger.db.close()
+            restarted = Ledger(filename)
+            try:
+                tx(restarted, "frank", A1, 1, 1, stages=stage, expected_insert=False)
+                tx(restarted, "candidate", B1, 1, 100, stages=stage, expected_insert=False)
+                signals = restarted.db.execute(
+                    "SELECT person_id,mint,signal_id,episode_id,body FROM signals ORDER BY person_id"
+                ).fetchall()
+                self.assertEqual([(s["person_id"], s["mint"]) for s in signals],
+                                 [("candidate", MINT), ("frank", MINT)])
+                self.assertNotEqual(signals[0]["signal_id"], signals[1]["signal_id"])
+                self.assertNotEqual(signals[0]["episode_id"], signals[1]["episode_id"])
+                self.assertTrue(all(json.loads(s["body"])["latest_trade_signature"] == sig for s in signals))
+                for row in signals:
+                    outbox = restarted.db.execute(
+                        "SELECT channel,status,attempts FROM outbox WHERE signal_id=? ORDER BY channel",
+                        (row["signal_id"],),
+                    ).fetchall()
+                    self.assertEqual([tuple(o) for o in outbox],
+                                     [("gmail", "DRY_RUN_AUDIT", 0), ("local", "DRY_RUN_AUDIT", 0)])
+                gate = BuyDeliveryGate()
+                fake_live = {**json.loads(signals[0]["body"]), "delivery_mode": "LIVE"}
+                self.assertEqual(gate.block_reason(restarted.db, fake_live), "NOT_FRANK_BUY")
+                with patch("mission_agent.signals.gmail.kick") as kick, patch(
+                    "mission_agent.signals.delivery.LocalNotifier"
+                ) as notify:
+                    drain(restarted, delivery_gate=gate)
+                    notify.return_value.assert_not_called()
+                    kick.assert_called_once_with(restarted, delivery_gate=gate)
+                self.assertEqual(restarted.db.execute("SELECT sum(attempts) FROM outbox").fetchone()[0], 0)
+            finally:
+                restarted.db.close()
 
     def test_production_gate_stays_frank_only_and_ambiguous_staging_is_rejected(self):
         with TemporaryDirectory() as tmp:
