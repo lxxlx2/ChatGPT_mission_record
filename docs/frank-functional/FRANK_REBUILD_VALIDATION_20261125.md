@@ -105,3 +105,55 @@ FRANK_TEST_CHROMIUM="/Applications/Google Chrome.app/Contents/MacOS/Google Chrom
   tests/test_frank_ca_market_series.py tests/test_frank_ca_scoped_analyzer.py \
   tests/test_frank_ca_launch_flow.py
 ```
+
+## 2026-11-27 独立流水与真实美元报价
+
+买入页和报价接入在集成分支固定源码 `ba44d31b96d8253056490a94e78ef77436095670` 上验证。对照的冻结账本 SHA-256 为 `c5353d07d6640a4f31845a5592c4104462006def1da953c00f26ad67cb607f71`。本节补充已有历史窗口的实证。新证据仅写入隔离暂存目录。
+
+### S08 钱包签名覆盖
+
+Mac Chrome 使用 Solscan 的 Transactions 页，筛选 UTC 2026-11-24 00:00:00 至 23:59:59。保留垃圾及失败交易，关闭额外 Token Account 展开。公开页面以 40 条每页返回 40、40、15 条，最后一页禁用下一页。首尾交易分别核实为 finalized，槽位 `473138616` 至 `473522449`，对应 UTC 00:10:48 至 23:06:10。 [Solscan 原始交易时间过滤](https://info.solscan.io/solscan-supports-full-historical-data-search/)
+
+对两边完整签名按 ASCII 排序并用换行连接，无末尾换行，摘要均为 `4320c00a988d3fc6a3e0e7300b28f23dd18c0ee28841b9e840e1bf3362eb135d`。Solscan 95 个唯一签名与冻结账本 95 条索引完全相同。本机检测证据用账本内的 `signature_detections` 按钱包和签名连接，95 笔的槽位及区块时间也与索引相符，时钟数据齐全。
+
+| 实证范围 | 样本数 | P50 | P95 |
+| --- | ---: | ---: | ---: |
+| 区块时间到本机首次检测 | 95 | 16.120 秒 | 31.420 秒 |
+| 区块时间到本机入库 | 95 | 16.303 秒 | 31.610 秒 |
+
+结论为该日公开源可见的 95 笔中漏入库 0，额外索引 0。本机时钟统计覆盖全部 95 笔。买入分类仍使用逐笔独立证据，上一轮 GMGN 的 3 笔买入交叉核对范围不变。此窗口没有完整独立买入标签、模型与通知策略判定、或收件端证据。
+
+### S07 成交秒 USD
+
+以冻结账本内有原币支付证据的 26 笔为分母，使用已有 Kraken 公开 Spot PostTrade 获取 26 个不同的 USDC/USD 精确秒响应。26 次 GET 均为 HTTP 200，3 个成交秒有价格一致的成交观察，23 个该秒无成交。请求只传支付币种和对应 UTC 秒。原始响应和抓取清单在私有暂存区，清单 SHA-256 为 `6f16aa289358af0f53b6313dc012c052bc778427bbe5f07465b94a12663c5b07`。 [Kraken PostTrade 公开接口](https://docs.kraken.com/api/docs/rest-api/get-post-trade)
+
+用新版本既有离线命令 `python -B -m scripts.frank_build_usd_evidence` 打包 3 份已核验原件。版本 2 的暂存文件权限为 `0600`，SHA-256 为 `2f11470b6bba568bcf422da6d64266426688d2329cb3e93e6f8db6aa2b6f8973`。用原币实付乘该秒汇率并除以代币数量，对三个结果分别复算。隔离 Mac Chrome 158 通过实际本机 HTTP 读取两页共 34 笔，看到 2 个 Mint 的 3 笔各显示两项 `≈$` 估算。31 笔缺估算，精确美元实付仍为 0 笔。页面无异常，隔离 Dashboard 无外部请求，冻结备份哈希一致。 [现有打包规范](../../crypto-300-profit-mission/local-agent/docs/FRANK_BUY_USD_EVIDENCE.md)
+
+### C09 归档持有人与池
+
+在 `dfa32dcb666abb8b3efff49af659c1643417d8e4` 上，从 3 枚不同 Mint 的 5 份已完成报告逐条反查已保存的主源和第二来源原始响应。用 DONE 标记核对报告哈希。检查点仅使用 finalized `getMultipleAccounts` 的成功 `jsonParsed` 响应，第二来源匹配最近未配对、顺序相同的主源地址批次。重算原始响应 SHA-256、目标 Mint、账户身份、所有者和原始余额。112,980 次地址观测中 112,977 次匹配，3 次缺失均发生在两边槽位不同的批次。实际同槽部分为 1,318 批的 13,180 次观测，覆盖 12,653 个唯一 Mint 与代币账户组合，全部匹配。各批次的槽位不同，3 次独立全 Mint 枚举仍收到 HTTP 403。
+
+3 枚 Mint 的 PumpSwap 池原件都能重算绑定的池、两侧金库和余额。池观察分别比各自首批持有人快照晚 276、96、182 个槽位，完整同槽池与持有人证明仍待取证。六份池读取散列组合的 SHA-256 为 `db51d3f96a5fe8274873e2e3aa5e4dbec21d12e29a838dc12bbf1773f660c0f4`。
+
+### 最新源码的回归
+
+在 `crypto-300-profit-mission/local-agent` 执行以下测试，第一组 66 项通过、1 项 Chrome 个案筛除，另以真实数据运行隔离浏览器。第二组 48 项通过，涵盖执行器和来源预算。Node 定向回归 210 项通过。实际 Mac Chrome 并行夹具也通过，完整任务执行时另一 CA 的摘要和钱包明细完成，显式刷新遇到限流后保留旧观察，读取报告绑定正确。
+
+```zsh
+uv run --isolated --offline --no-project --with pytest==8.3.5 python -B -m pytest -q -p no:cacheprovider \
+  tests/test_frank_historical_usd_tick.py tests/test_frank_build_usd_evidence.py tests/test_frank_rebuild_buys.py \
+  tests/test_frank_rebuild_delivery.py tests/test_frank_historical_holder_compare.py tests/test_frank_staged_person_scope.py \
+  tests/test_frank_ca_series_single_flight.py tests/test_frank_shared_provider_pacing.py tests/test_frank_dex_market_pacing.py \
+  -k 'not browser_default_entry'
+uv run --isolated --offline --no-project --with pytest==8.3.5 python -B -m pytest -q -p no:cacheprovider \
+  tests/test_frank_parallel_ca_scopes.py tests/test_frank_ca_market_series.py tests/test_frank_ca_job_rpc_budget.py \
+  tests/test_frank_ca_scoped_analyzer.py
+node --test --test-reporter=tap tests/test_frank_ca_report_render.mjs tests/test_frank_ca_get_resume.mjs
+node tests/test_frank_parallel_ca_browser.cjs
+```
+
+Chrome 入口使用本机已安装的 Node Playwright，可通过 `FRANK_PLAYWRIGHT_MODULE` 指定。它使用随机回环测试端口，数据来自隔离夹具。USD 实证的浏览器另用上述冻结账本和真实报价暂存文件。
+
+### 仍待生产验收的范围
+
+买入估算和指定 UTC 日的签名入库覆盖已有实证。新 CA 行情样本选取时，已有 DexScreener 的公开 profiles 入口实际返回一次 HTTP 403，未重试该入口。本轮没有实源完整 CA 查询的首屏或深查耗时。完整独立持有人全集、池和持有人同槽、覆盖更多日期的严格买入分类、真实通知送达仍待证据。整体 `PARTIAL`，本地 8766 未切换，生产 `NO_GO`。
