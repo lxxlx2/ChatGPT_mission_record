@@ -199,7 +199,8 @@ class ClusterJobManager:
         self.market_client=DexScreenerMarketClient()
         # Constructor-only staging opt-in. The production Dashboard still uses
         # the existing serial scheduler until measured acceptance.
-        gecko_budget = GeckoTerminalRequestBudget() if parallel_ca_scopes else None
+        # Browser series GETs overlap the report worker even in serial mode.
+        gecko_budget = GeckoTerminalRequestBudget()
         self.ca_market_series=CAMarketSeries(request_budget=gecko_budget)
         self.independent_market_client=GeckoTerminalMarketClient(request_budget=gecko_budget)
         self._shared_rpc_pacing = SharedProviderPacing() if parallel_ca_scopes else None

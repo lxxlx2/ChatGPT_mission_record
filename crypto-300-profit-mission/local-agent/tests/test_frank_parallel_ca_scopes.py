@@ -2,6 +2,8 @@
 from concurrent.futures import Future, ThreadPoolExecutor
 from contextlib import contextmanager
 import http.client
+from datetime import datetime, timezone
+from email.utils import format_datetime
 import io
 import json
 from pathlib import Path
@@ -174,6 +176,47 @@ class IndependentScopesTests(unittest.TestCase):
                 self.assertEqual(series()["chart"]["reason"], "RATE_LIMIT")
                 self.assertEqual(len(calls), 1)
                 now[0] = 60
+                self.assertTrue(snap()["attempted"])
+                self.assertEqual(len(calls), 2)
+
+    def test_serial_report_worker_and_browser_series_also_share_one_budget(self):
+        with tempfile.TemporaryDirectory() as root:
+            manager = server.ClusterJobManager(Path(root))
+            try:
+                self.assertIs(manager.ca_market_series.request_budget,
+                              manager.independent_market_client.request_budget)
+                self.assertEqual(manager._scope_executors, {})
+            finally:
+                manager.shutdown()
+
+    def test_gecko_honors_longer_retry_after_both_directions_without_new_observation(self):
+        for from_series in (False, True):
+            with self.subTest(from_series=from_series):
+                now, wall, calls = [0.0], [1795737600.0], []
+                later = format_datetime(datetime.fromtimestamp(wall[0]+125, timezone.utc), usegmt=True)
+                retry = later if from_series else "125"
+
+                def source(request, timeout):
+                    calls.append(request.full_url)
+                    if len(calls) == 1:
+                        raise HTTPError(request.full_url, 429, "fixture throttle", {"Retry-After": retry}, None)
+                    return io.BytesIO(b'{"data":[]}')
+
+                budget = GeckoTerminalRequestBudget(lambda: now[0], wall_clock=lambda: wall[0])
+                report = GeckoTerminalMarketClient(open_url=source, request_budget=budget)
+                chart = CAMarketSeries(open_url=source, monotonic=lambda: now[0], request_budget=budget)
+                snap = lambda: report.pool_snapshot(MINT_A, POOL, PEER)
+                series = lambda: chart.read(MINT_A, POOL, PEER, "5m")
+                first = series()["chart"] if from_series else snap()
+                self.assertEqual(first["reason"], "HTTP_429")
+                wall[0] += 600  # Clock movement after the 429 cannot shorten cooldown.
+                now[0] = 124.9
+                denied = snap()
+                self.assertEqual((denied["reason"], denied["attempted"], denied["observed_at"]),
+                                 ("RATE_LIMIT", False, None))
+                self.assertEqual(series()["trades"]["reason"], "RATE_LIMIT")
+                self.assertEqual(len(calls), 1)
+                now[0] = 125
                 self.assertTrue(snap()["attempted"])
                 self.assertEqual(len(calls), 2)
 

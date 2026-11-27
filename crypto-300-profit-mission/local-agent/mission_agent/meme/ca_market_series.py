@@ -203,7 +203,7 @@ class CAMarketSeries:
             result = {"status": "OK", "rows": rows, "coverage": coverage, "observed_at": observed}
         except urllib.error.HTTPError as error:
             if error.code == 429:
-                self.request_budget.rate_limited()
+                self.request_budget.rate_limited(error.headers.get('Retry-After') if error.headers is not None else None)
             result = self._unavailable(cached, "HTTP_"+str(error.code), attempted=True)
         except (ValueError,TypeError,TimeoutError,OSError,RecursionError):
             result = self._unavailable(cached, "SOURCE_UNAVAILABLE_OR_MISMATCH", attempted=True)

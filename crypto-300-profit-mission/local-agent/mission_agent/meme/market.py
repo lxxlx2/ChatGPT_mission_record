@@ -6,9 +6,7 @@ and wallet-cluster conclusions never depend on this client.
 from __future__ import annotations
 
 from collections import deque
-from email.utils import parsedate_to_datetime
 import json
-import re
 import threading
 import time
 import urllib.error
@@ -16,6 +14,8 @@ import urllib.parse
 import urllib.request
 from decimal import Decimal, InvalidOperation
 import uuid
+
+from .provider_pacing import http_retry_after
 
 BASE="https://api.dexscreener.com"
 LOCAL_MARKET_PACING = "DEXSCREENER_LOCAL_RATE_LIMIT"
@@ -50,18 +50,7 @@ class DexScreenerRequestBudget:
         # Keep the longest outstanding provider cooldown. An HTTP date is
         # converted once to a monotonic deadline so wall-clock changes do not
         # subsequently shorten it.
-        wait = 60
-        if isinstance(retry_after, str):
-            value = retry_after.strip()
-            if re.fullmatch(r"[0-9]{1,12}", value):
-                wait = max(1, int(value))
-            else:
-                try:
-                    when = parsedate_to_datetime(value)
-                    if when.tzinfo is not None:
-                        wait = max(1, when.timestamp() - self._wall_clock())
-                except (TypeError, ValueError, OverflowError, OSError):
-                    pass
+        wait = http_retry_after(retry_after, wall_clock=self._wall_clock)
         with self._lock:
             self._cooldown = max(self._cooldown, self._monotonic() + wait)
 

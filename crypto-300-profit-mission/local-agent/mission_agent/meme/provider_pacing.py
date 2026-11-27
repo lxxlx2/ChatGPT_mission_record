@@ -1,7 +1,24 @@
 """In-process, per-host dispatch pacing for isolated CA scope workers."""
+from email.utils import parsedate_to_datetime
+import re
 from threading import Lock
 import time
 from urllib.parse import urlsplit
+
+
+def http_retry_after(value, *, wall_clock=time.time, default=60, minimum=1):
+    """Parse delay-seconds or HTTP-date once, before setting a monotonic deadline."""
+    if isinstance(value, str):
+        value = value.strip()
+        if re.fullmatch(r"[0-9]{1,12}", value):
+            return max(minimum, int(value))
+        try:
+            when = parsedate_to_datetime(value)
+            if when.tzinfo is not None:
+                return max(minimum, when.timestamp() - wall_clock())
+        except (TypeError, ValueError, OverflowError, OSError):
+            pass
+    return max(minimum, default)
 
 
 class SharedProviderPacing:

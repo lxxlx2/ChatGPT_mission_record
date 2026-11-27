@@ -14,6 +14,7 @@ import urllib.error
 import urllib.request
 from decimal import Decimal,InvalidOperation,localcontext
 from .holder_ranks import valid_pubkey
+from .provider_pacing import http_retry_after
 
 MAX_RESPONSE_BYTES=1024*1024
 BASE='https://api.geckoterminal.com/api/v2/networks/solana/pools/'
@@ -41,8 +42,9 @@ def number(value):
 
 class GeckoTerminalRequestBudget:
     """Share the existing eight-requests/minute ceiling across a dashboard."""
-    def __init__(self, monotonic=time.monotonic):
+    def __init__(self, monotonic=time.monotonic, *, wall_clock=time.time):
         self._clock = monotonic
+        self._wall_clock = wall_clock
         self._lock = threading.Lock()
         self._requests = deque()
         self._backoff_until = 0
@@ -57,9 +59,10 @@ class GeckoTerminalRequestBudget:
             self._requests.append(now)
             return True
 
-    def rate_limited(self):
+    def rate_limited(self, retry_after=None):
+        wait = http_retry_after(retry_after, wall_clock=self._wall_clock, minimum=60)
         with self._lock:
-            self._backoff_until = max(self._backoff_until, self._clock() + 60)
+            self._backoff_until = max(self._backoff_until, self._clock() + wait)
 
 
 class GeckoTerminalMarketClient:
@@ -67,12 +70,13 @@ class GeckoTerminalMarketClient:
         self.request_budget=request_budget
         self.open_url=open_url;self.clock=clock;self.monotonic=monotonic
     def pool_snapshot(self,mint,pool,quote):
-        out={'source':'GECKOTERMINAL_PUBLIC_API','status':'UNAVAILABLE','attempted':False,'observed_at':self.clock()}
+        out={'source':'GECKOTERMINAL_PUBLIC_API','status':'UNAVAILABLE','attempted':False,'observed_at':None}
         if not all(valid_pubkey(v) for v in (mint,pool,quote)) or mint==quote:
             return {**out,'reason':'IDENTITY_INVALID'}
         if self.request_budget is not None and not self.request_budget.admit():
             return {**out,'reason':'RATE_LIMIT'}
         out['attempted']=True
+        out['observed_at']=self.clock()
         request=urllib.request.Request(BASE+pool,headers={'Accept':'application/json','User-Agent':'mission-meme-research/3'},method='GET')
         try:
             with self.open_url(request,timeout=8) as response:
@@ -91,7 +95,7 @@ class GeckoTerminalMarketClient:
             payload=json.loads(raw,parse_float=Decimal)
         except urllib.error.HTTPError as exc:
             if exc.code == 429 and self.request_budget is not None:
-                self.request_budget.rate_limited()
+                self.request_budget.rate_limited(exc.headers.get('Retry-After') if exc.headers is not None else None)
             return {**out,'reason':'HTTP_'+str(exc.code)}
         except (urllib.error.URLError,OSError,TimeoutError,ValueError,TypeError,RecursionError):return {**out,'reason':'NETWORK_OR_RESPONSE_INVALID'}
         data=payload.get('data') if isinstance(payload,dict) else None
