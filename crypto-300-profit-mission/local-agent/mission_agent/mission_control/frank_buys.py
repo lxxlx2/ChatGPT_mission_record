@@ -15,6 +15,7 @@ from ..meme.market_parity import number
 from ..signals.buy_admission import EXCLUDED_MINTS, admit_buy, exact_mint, qualification
 from ..signals.category_evidence import read_category_evidence
 from ..signals.classifier import USDT
+from ..signals.person_scope import PersonWalletScope
 from ..signals.policy import USDC
 from ..signals.reconciliation import _unique_pairs
 
@@ -125,7 +126,11 @@ def _needs_archive_replay(event, identity):
 
 def read_buys(database, qualifications, *, as_of, days="7", mint=None, cursor=None,
               archive_root=None, legacy_archive_root=None, usd_evidence_path=None,
-              category_evidence_path=None):
+              category_evidence_path=None, person_scope=None):
+    # The normal Dashboard does not pass a person scope. This internal seam
+    # accepts a trusted local partition, not a recipient or arbitrary HTTP input.
+    if person_scope is not None and not isinstance(person_scope, PersonWalletScope):
+        raise ValueError("INVALID_PERSON_WALLET_SCOPE")
     if days not in ("1", "7", "30", "all") or (mint is not None and not exact_mint(mint)):
         raise ValueError("INVALID_BUY_QUERY")
     assets = read_category_evidence(category_evidence_path, as_of)
@@ -137,23 +142,34 @@ def read_buys(database, qualifications, *, as_of, days="7", mint=None, cursor=No
             return {"status": "QUALIFICATION_UNAVAILABLE", "rows": [], "next_cursor": None}
     observations, evidence_sha = _read_usd_evidence(usd_evidence_path)
     source = _source(database)
-    binding = hashlib.sha256(repr((source, days, mint, sorted(assets.items()),
-                                   archive_root, legacy_archive_root, evidence_sha)).encode()).hexdigest()
+    inputs = (source, days, mint, sorted(assets.items()), archive_root, legacy_archive_root, evidence_sha)
+    if person_scope is not None:
+        inputs += (("staged-person", person_scope.person_id, person_scope.wallets),)
+    binding = hashlib.sha256(repr(inputs).encode()).hexdigest()
     with closing(connect(database)) as db:
         db.execute("BEGIN")
         if _source(database) != source:
             raise ValueError("INVALID_OR_STALE_CURSOR")
-        where = ["s.person_id='frank'", "t.side IN ('BUY','ADD','REENTRY')"]
+        joined = " FROM trades t JOIN signatures s ON s.wallet=t.wallet AND s.signature=t.signature WHERE "
+        if person_scope is None:
+            where, params = ["s.person_id='frank'"], []
+        else:
+            where = ["s.person_id=?", "s.wallet IN (SELECT value FROM json_each(?))"]
+            params = [person_scope.person_id, json.dumps(person_scope.wallets)]
+        where.append("t.side IN ('BUY','ADD','REENTRY')")
         if cursor is not None:
             cutoff, rowmax, at, rowid = _decode(cursor, binding)
             if cutoff > as_of:
                 raise ValueError("INVALID_OR_STALE_CURSOR")
             where.append("(s.block_time,t.rowid)<(?,?)")
-            params = [at, rowid]
+            params.extend([at, rowid])
         else:
             cutoff = as_of
-            rowmax = db.execute("SELECT coalesce(max(rowid),0) FROM trades").fetchone()[0]
-            params = []
+            if person_scope is None:
+                rowmax = db.execute("SELECT coalesce(max(rowid),0) FROM trades").fetchone()[0]
+            else:
+                rowmax = db.execute("SELECT coalesce(max(t.rowid),0)" + joined + " AND ".join(where),
+                                    params).fetchone()[0]
         where.extend(["s.block_time BETWEEN ? AND ?", "t.rowid<=?"])
         params.extend([1 if days == "all" else cutoff - int(days)*86400, cutoff, rowmax])
         if mint is not None:
@@ -163,17 +179,20 @@ def read_buys(database, qualifications, *, as_of, days="7", mint=None, cursor=No
         params.append(json.dumps([m for m, a in assets.items() if a.status == "VERIFIED_MEME"]))
         records = db.execute(
             "SELECT t.rowid AS trade_id,t.mint,s.wallet,s.signature,s.slot,s.block_time,s.raw_hash,s.body "
-            "FROM trades t JOIN signatures s ON s.wallet=t.wallet AND s.signature=t.signature WHERE "
-            + " AND ".join(where) + " ORDER BY s.block_time DESC,t.rowid DESC", params)
+            + joined + " AND ".join(where) + " ORDER BY s.block_time DESC,t.rowid DESC", params)
         rows, next_cursor = [], None
         for row in records:
             try:
                 event = json.loads(row["body"])
             except (ValueError, TypeError):
                 continue
+            if person_scope is not None and (not isinstance(event, dict) or event.get("person_id") != person_scope.person_id):
+                continue
             identity = {key: row[key] for key in _TRADE_IDENTITY}
             item = admit_buy(event, assets, **identity, allow_unpriced=True)
-            if item is None and archive_root is not None and _needs_archive_replay(event, identity):
+            if (item is None and archive_root is not None
+                    and (person_scope is None or person_scope.person_id == "frank")
+                    and _needs_archive_replay(event, identity)):
                 replay = read_archived_classification(
                     archive_root, {"sig": row["signature"], "wallet": row["wallet"], "slot": row["slot"],
                                    "at": row["block_time"], "raw_sha256": row["raw_hash"]},
