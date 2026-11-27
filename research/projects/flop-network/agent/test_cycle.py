@@ -72,6 +72,23 @@ class CycleTests(unittest.TestCase):
         self.assertEqual(grant['previous_reason'],'FAUCET_REFUSED')
         c.close()
 
+    def test_manual_import_is_pending_idempotent_and_no_duplicate(self):
+        c=sqlite3.connect(':memory:');c.row_factory=sqlite3.Row
+        runtime.ensure_state(c);mail.init(c)
+        key=faucet.base_claim_key(W)
+        cycle.put(c,key,json.dumps({'status':'CHAIN_FINALIZED','address':W,'genesis':G,'block_number':10,'timestamp_ms':1000000}))
+        rec={'miner':M,'channel':'0x'+'b'*64,'settle_tx':H,'cooperative':True,'verified_turns':1}
+        args=(c,W,rec,12,'https://worker.example','test/model','0.005')
+        self.assertEqual(cycle.stage_manual(*args),'WAITING_FOR_FINALIZED_SETTLEMENT')
+        self.assertEqual(cycle.stage_manual(*args),'ALREADY_STAGED')
+        row=c.execute('SELECT * FROM session_attempts').fetchone()
+        self.assertEqual(row['chain_verified'],0)
+        self.assertEqual(json.loads(row['cli_result'])['tx_hash'],H)
+        self.assertEqual(cycle.known_direct(c,W,Decimal('10')),[])
+        with self.assertRaises(ValueError):
+            cycle.stage_manual(c,W,{**rec,'settle_tx':'0x'+'c'*64},12,'https://worker.example','test/model','0.005')
+        c.close()
+
     def test_unverified_sources_never_become_empty(self):
         with self.assertRaises(ValueError):cycle.rows({'unknown':[]})
         self.assertEqual(cycle.rows({'data':[]}),[])

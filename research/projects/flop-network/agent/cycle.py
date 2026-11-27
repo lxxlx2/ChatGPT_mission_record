@@ -13,6 +13,8 @@ from pathlib import Path
 import re
 import shutil
 import socket
+import secrets
+from urllib.request import Request, urlopen
 import subprocess
 import time
 from urllib.parse import urlparse
@@ -196,6 +198,58 @@ def discovery(c,fetch,height,wallet,free,*,runner=subprocess.run):
         put(c,'discovery_status','DISCOVERY_INTERFACE_UNVERIFIED')
         return []
 
+def stage_manual(c,wallet,receipt,opened_height,endpoint,model,escrow):
+    """Stage a single existing receipt for independent verification; never signs."""
+    key=faucet.active_claim_key(c,wallet)
+    grant=json.loads(get(c,key,'null'))
+    if not grant or grant.get('status')!='CHAIN_FINALIZED' or grant.get('address')!=wallet or grant.get('genesis')!=GENESIS:
+        raise ValueError('NO_VERIFIED_ACTIVE_GRANT')
+    if integer(opened_height) is None or int(opened_height)<=int(grant['block_number']):
+        raise ValueError('SESSION_BEFORE_GRANT')
+    miner=receipt.get('miner');channel=receipt.get('channel');tx=receipt.get('settle_tx')
+    amount=decimal(escrow)
+    if not isinstance(miner,str) or not ADDRESS.fullmatch(miner) or miner==wallet or not valid_hash(channel) or not valid_hash(tx) or receipt.get('cooperative') is not True or not integer(receipt.get('verified_turns')) or amount<=0 or amount>SESSION_CAP or amount*UNIT!=(amount*UNIT).to_integral_value():
+        raise ValueError('BAD_MANUAL_RECEIPT')
+    if not isinstance(model,str) or not re.fullmatch(r'[A-Za-z0-9._/-]{5,125}',model) or not isinstance(endpoint,str) or not endpoint.startswith('https://'):
+        raise ValueError('BAD_DIRECT_ROUTE')
+    aid='cycle-'+hashlib.sha256(key.encode()).hexdigest()[:24]
+    for row in c.execute('SELECT attempt_id,cli_result,chain_tx FROM session_attempts'):
+        old=json.loads(row['cli_result'] or '{}')
+        if row['attempt_id']==aid:
+            if old.get('tx_hash')==tx and old.get('channel')==channel:return 'ALREADY_STAGED'
+            raise ValueError('ACTIVE_GRANT_SESSION_ALREADY_EXISTS')
+        if row['chain_tx']==tx or old.get('tx_hash')==tx:raise ValueError('RECEIPT_ALREADY_ATTRIBUTED')
+    rec={'grant_key':key,'start_height':int(opened_height),'channel':channel,'tx_hash':tx,'manual_import':True,'route':{'endpoint':endpoint,'model':model},'return_code':0}
+    c.execute("""INSERT INTO session_attempts
+      (attempt_id,phase,started_utc,ended_utc,wallet,expected_genesis,miner,max_flop,cli_result)
+      VALUES (?,?,?,?,?,?,?,?,?)""",(aid,'CLI_RESULT_NEEDS_CHAIN_FINALITY',utc(),utc(),wallet,GENESIS,miner,format(amount,'f'),json.dumps(rec)))
+    c.commit()
+    return status(c,'WAITING_FOR_FINALIZED_SETTLEMENT')
+
+def known_direct(c,wallet,free,*,opener=urlopen,endpoint_ok=public_https):
+    """Only reuse an operator-opted-in endpoint with our own verified settlement.
+    Public proof fields are compared against on-chain identity; the official CLI
+    verifies receipts and the finalized channel key. No bearer or new wallet.
+    """
+    if free<Decimal('0.005')+FEE_RESERVE:return []
+    for row in c.execute("SELECT miner,cli_result FROM session_attempts WHERE chain_verified=1 AND wallet=? ORDER BY ended_utc DESC",(wallet,)):
+        try:
+            rec=json.loads(row['cli_result'] or '{}')
+            if rec.get('manual_import') is not True:continue
+            ev=rec['chain_evidence'];route=rec['route'];endpoint=route['endpoint'];model=route['model']
+            if ev.get('finalized') is not True or ev.get('genesis')!=GENESIS or ev.get('wallet')!=wallet or ev.get('miner')!=row['miner'] or row['miner']==wallet or not endpoint_ok(endpoint):continue
+            url=endpoint.rstrip('/')+'/session/info-proof'
+            req=Request(url,data=json.dumps({'challenge':secrets.token_hex(32)}).encode(),headers={'Content-Type':'application/json'},method='POST')
+            with opener(req,timeout=12) as response:
+                if response.geturl()!=url:continue
+                proof=json.loads(response.read(65537))
+            m=proof['model_identity']
+            clean=lambda v:str(v).lower().removeprefix('0x')
+            if proof.get('ready') is not True or clean(proof.get('genesis_hash'))!=clean(GENESIS) or clean(proof.get('account_id'))!=clean(ev['miner_account_hex']) or clean(proof.get('enclave_key'))!=clean(ev['enclave_key']) or clean(m.get('model_hash'))!=clean(ev['model_hash']) or m.get('requested_slug')!=model or not re.fullmatch(r'(?:0x)?[0-9a-fA-F]{128}',str(proof.get('signature',''))):continue
+            return [{'miner':row['miner'],'model':model,'endpoint':endpoint,'max_flop':'0.005','via':'force'}]
+        except (OSError,ValueError,TypeError,KeyError,AttributeError):continue
+    return []
+
 def submit(c,key,grant,candidate,height,*,runner=subprocess.run):
     cli=shutil.which('flop')
     if not cli:return status(c,'CLI_UNAVAILABLE')
@@ -208,11 +262,11 @@ def submit(c,key,grant,candidate,height,*,runner=subprocess.run):
         password=pwfile.read_text().strip()
         if not password:raise ValueError()
         version=runner([cli,'--version'],capture_output=True,text=True,timeout=20,check=False)
-        if version.returncode or version.stdout.strip() not in faucet.REVIEWED_CLI_VERSIONS:return status(c,'CLI_VERSION_REVIEW_REQUIRED')
+        if version.returncode or version.stdout.strip()!='0.10.3':return status(c,'CLI_VERSION_REVIEW_REQUIRED')
     except (OSError,ValueError,KeyError,TypeError,subprocess.SubprocessError):
         return status(c,'IDENTITY_OR_CLI_UNVERIFIED')
     aid='cycle-'+hashlib.sha256(key.encode()).hexdigest()[:24]
-    rec={'grant_key':key,'start_height':height}
+    rec={'grant_key':key,'start_height':height,'route':{'endpoint':candidate['endpoint'],'model':candidate['model']}}
     c.execute("""INSERT INTO session_attempts
       (attempt_id,phase,started_utc,wallet,expected_genesis,miner,max_flop,cli_result)
       VALUES (?,?,?,?,?,?,?,?)""",(aid,'RESERVED_UNKNOWN_MAY_SUBMIT',utc(),wallet,GENESIS,candidate['miner'],candidate['max_flop'],json.dumps(rec)))
@@ -223,8 +277,8 @@ def submit(c,key,grant,candidate,height,*,runner=subprocess.run):
         cp=runner([cli,'--network','testnet','--keystore',str(keyfile),'--password-env','FLOP_KEY_PASSWORD',
           'session','run','--miner',candidate['miner'],'--model',candidate['model'],'--prompt',
           'Give one short explanation of why finalized inference settlement matters.',
-          '--max-flop',candidate['max_flop'],'--via','offer','--endpoint',candidate['endpoint'],'--json'],
-          env=env,capture_output=True,text=True,timeout=750,check=False)
+          '--max-flop',candidate['max_flop'],'--via',candidate.get('via','offer'),'--max-duration','1200','--max-tokens','32','--endpoint',candidate['endpoint'],'--json'],
+          env=env,capture_output=True,text=True,timeout=2100,check=False)
         rec['return_code']=cp.returncode
         rec['stdout_sha256']=hashlib.sha256(cp.stdout.encode()).hexdigest()
         rec['stderr_sha256']=hashlib.sha256(cp.stderr.encode()).hexdigest()
@@ -239,7 +293,7 @@ def submit(c,key,grant,candidate,height,*,runner=subprocess.run):
         settle=obj.get('settlement') if isinstance(obj.get('settlement'),dict) else {}
         channel=obj.get('channelId') or obj.get('channel_id') or obj.get('channel')
         if isinstance(channel,dict):channel=channel.get('id') or channel.get('channelId')
-        tx=obj.get('settlementTx') or obj.get('settlement_tx') or obj.get('settlementTxHash') or settle.get('txHash') or settle.get('tx_hash')
+        tx=obj.get('settle_tx') or obj.get('settlementTx') or obj.get('settlement_tx') or obj.get('settlementTxHash') or settle.get('txHash') or settle.get('tx_hash')
         if isinstance(tx,dict):tx=tx.get('hash') or tx.get('txHash')
         if valid_hash(channel):rec['channel']=channel
         if valid_hash(tx):rec['tx_hash']=tx
@@ -345,6 +399,22 @@ def run_tick(c,fetch,*,clock=time.time,verifier=chain_check,runner=subprocess.ru
         rec=json.loads(row['cli_result'] or '{}')
         if not row['chain_verified']:
             loc=locate(fetch,rec.get('tx_hash'),rec)
+            if not loc and valid_hash(rec.get('channel')) and valid_hash(rec.get('tx_hash')):
+                found=verifier('locate_settlement',{'tx_hash':rec['tx_hash'],'channel':rec['channel'],'start_height':rec['start_height']})
+                if found.get('ok') and found.get('genesis')==GENESIS and found.get('found') is True and integer(found.get('block_number')) is not None and valid_hash(found.get('block_hash')):
+                    loc={'block_number':int(found['block_number']),'block_hash':found['block_hash']}
+                else:
+                    search={'tx_hash':rec['tx_hash'],'request_ms':0,'cursor':int(rec.get('search_next_height',rec['start_height']))}
+                    found=verifier('locate_grant',search)
+                    if found.get('ok') and found.get('genesis')==GENESIS:
+                        if found.get('found') is True and integer(found.get('block_number')) is not None and valid_hash(found.get('block_hash')):
+                            loc={'block_number':int(found['block_number']),'block_hash':found['block_hash']}
+                        elif found.get('found') is False and integer(found.get('next_height')) is not None:
+                            rec['search_next_height']=int(found['next_height'])
+                            c.execute('UPDATE session_attempts SET cli_result=? WHERE attempt_id=?',(json.dumps(rec),aid));c.commit()
+                    if not loc:put(c,'cycle_verify_reason','LOCATING_FINALIZED_SETTLEMENT')
+                if loc:
+                    rec.update(loc);c.execute('UPDATE session_attempts SET cli_result=? WHERE attempt_id=?',(json.dumps(rec),aid));c.commit()
             if not loc or not valid_hash(rec.get('channel')):return status(c,'SESSION_OUTCOME_UNKNOWN_NO_NEW_PAYMENT')
             ev=verifier('settlement',{'tx_hash':rec['tx_hash'],'channel':rec['channel'],'wallet':wallet,
                 'miner':row['miner'],'grant_height':grant['block_number'],'start_height':rec['start_height'],
@@ -380,6 +450,9 @@ def run_tick(c,fetch,*,clock=time.time,verifier=chain_check,runner=subprocess.ru
     try:free=decimal(get(c,'wallet_free_flop','UNVERIFIED'))
     except ValueError:return status(c,'WAITING_WALLET_BALANCE')
     offers=discovery(c,fetch,height,wallet,free,runner=runner)
+    if not offers:
+        offers=known_direct(c,wallet,free)
+        if offers:put(c,'discovery_status','PREVIOUSLY_SETTLED_DIRECT_ROUTE_READY_REPORTED')
     if not offers:return status(c,'WAITING_VERIFIED_TESTNET_MINER_MODEL')
     if 'RUNTIME_INCOMPATIBLE' in get(c,'wallet_balance_error',''):
         return status(c,'CLI_RUNTIME_UPGRADE_REQUIRED_NO_PAYMENT')

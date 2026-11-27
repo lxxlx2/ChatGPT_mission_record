@@ -57,6 +57,13 @@ class FaucetTests(unittest.TestCase):
         self.t+=901
         self.assertEqual(self.req()['status'],'CLI_FINALIZED_REPORTED')
         self.assertEqual(self.calls[0][-1],self.calls[1][-1])
+    def test_reviewed_cli_0103_preserves_nonce(self):
+        self.cli_version='0.10.3'
+        self.assertEqual(self.req()['status'],'SAME_NONCE_RECONCILIATION_PENDING')
+        self.t+=901
+        self.assertEqual(self.req()['status'],'CLI_FINALIZED_REPORTED')
+        self.assertEqual(self.calls[0][-1],self.calls[1][-1])
+
     def test_unknown_cli_version_refuses_before_signing(self):
         self.cli_version='0.9.2'
         self.assertEqual(self.req()['status'],'BLOCKED_CLI_VERSION_REVIEW_REQUIRED')

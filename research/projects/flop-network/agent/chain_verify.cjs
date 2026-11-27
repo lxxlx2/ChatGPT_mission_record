@@ -56,10 +56,31 @@ async function main(){
       }
       return {ok:true,genesis:PIN,found:false,next_height:stop+1};
     }
+    if(q.kind==='locate_settlement'){
+      if(!HASH.test(q.channel)||!HASH.test(q.tx_hash)||!Number.isSafeInteger(q.start_height)||q.start_height<1||q.start_height>height)throw Error('SETTLEMENT_SEARCH_INPUT');
+      async function closedAt(n){
+        const hash=await api.rpc.chain.getBlockHash(n);
+        const a=await api.at(hash);
+        const e=await a.query.computeChannel.channels(q.channel);
+        if(!e.isSome)return false;
+        const state=e.unwrap().toJSON().state;
+        return state==='closed'||(state&&Object.prototype.hasOwnProperty.call(state,'closed'));
+      }
+      if(!await closedAt(height))return {ok:true,genesis:PIN,found:false};
+      let lo=q.start_height,hi=height;
+      while(lo<hi){
+        const mid=Math.floor((lo+hi)/2);
+        if(await closedAt(mid))hi=mid;else lo=mid+1;
+      }
+      const h=await api.rpc.chain.getBlockHash(lo);
+      const b=await api.rpc.chain.getBlock(h);
+      if(!b.block.extrinsics.some(e=>e.hash.toHex()===q.tx_hash.toLowerCase()))return {ok:true,genesis:PIN,found:false};
+      return {ok:true,genesis:PIN,found:true,block_number:lo,block_hash:h.toHex()};
+    }
     if(q.kind==='probe'){
       const event=api.events.computeChannel?.Settled;
       const names=event?.meta?.fields?.map(f=>norm(f.name.isSome?f.name.unwrap().toString():''));
-      const ready=!!api.query.computeChannel?.channels&&!!names&&['channelid','minerpaid','validatorpaid','auditpaid'].every(n=>names.includes(n));
+      const ready=!!api.query.computeChannel?.channels&&!!names&&['channelid','minerpaid','cooperative'].every(n=>names.includes(n));
       return {ok:true,height,genesis:PIN,settlement_schema_ready:ready};
     }
     if(!Number.isSafeInteger(q.block_number)&&HASH.test(q.block_hash||''))q.block_number=(await api.rpc.chain.getHeader(q.block_hash)).number.toNumber();
@@ -91,8 +112,8 @@ async function main(){
     });
     if(matches.length!==1)throw Error('SETTLED_EVENT_MISSING');
     const d=fields(matches[0].event);
-    const minerPaid=raw(d.minerpaid), validatorPaid=raw(d.validatorpaid), auditPaid=raw(d.auditpaid);
-    if(minerPaid<=0n||minerPaid+validatorPaid+auditPaid>BigInt(q.max_raw))throw Error('SETTLEMENT_OUTSIDE_BUDGET');
+    const minerPaid=raw(d.minerpaid);
+    if(minerPaid<=0n||String(d.cooperative)!=='true')throw Error('COOPERATIVE_PAYMENT_NOT_PROVEN');
     // Verify the parties against actual chain storage. A closed channel may
     // remain in storage, or be available at the immediately preceding block.
     let channel=null;
@@ -101,7 +122,16 @@ async function main(){
       if(entry.isSome){channel=entry.unwrap().toJSON();break;}
     }
     if(!channel||!channel.agent||!channel.miner||acct(channel.agent)!==acct(q.wallet)||acct(channel.miner)!==acct(q.miner))throw Error('CHANNEL_PARTY_MISMATCH');
-    return {...common,channel:q.channel,wallet:q.wallet,miner:q.miner,miner_paid_raw:minerPaid.toString(),spent_raw:(minerPaid+validatorPaid+auditPaid).toString()};
+    // Official D-0403: a successful cooperative close consumes the whole
+    // channel escrow. Fee accruals may be separate events, not Settled fields.
+    const escrowText=String(channel.escrow);
+    if(!/^(0x[0-9a-f]+|[0-9]+)$/i.test(escrowText))throw Error('CHANNEL_ESCROW_UNVERIFIED');
+    const escrow=BigInt(escrowText);
+    const state=channel.state;
+    if(!(state==='closed'||(state&&Object.prototype.hasOwnProperty.call(state,'closed'))))throw Error('CHANNEL_NOT_CLOSED');
+    if(escrow<minerPaid||escrow>BigInt(q.max_raw))throw Error('SETTLEMENT_OUTSIDE_BUDGET');
+    if(!HASH.test(channel.modelHash)||!HASH.test(channel.enclaveKey)||Number(channel.openedAt)<=q.grant_height||Number(channel.openedAt)<q.start_height)throw Error('CHANNEL_IDENTITY_OR_OPEN_HEIGHT');
+    return {...common,channel:q.channel,wallet:q.wallet,miner:q.miner,miner_paid_raw:minerPaid.toString(),spent_raw:escrow.toString(),cooperative:true,model_hash:channel.modelHash,enclave_key:channel.enclaveKey,miner_account_hex:acct(q.miner)};
   }finally{await api.disconnect();}
 }
 main().then(x=>{clearTimeout(deadline);console.log(JSON.stringify(x));process.exit(0)}).catch(e=>{clearTimeout(deadline);console.log(JSON.stringify({ok:false,code:String(e.message).match(/^[A-Z0-9_]{1,80}$/)?e.message:'CHAIN_ADAPTER_UNAVAILABLE'}));process.exit(1)});

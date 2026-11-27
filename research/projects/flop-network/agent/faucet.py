@@ -18,7 +18,7 @@ GENESIS='0x918abd58fb16306b30ef3886514cfaebffecb4de43e82b6f8ec4795c43cfd800'
 RECHECK_SECONDS=900
 # Official 0.9.1 release uses SDK 0.12.1 and admits runtime 1014039.
 # https://github.com/flop-labs/network/commit/942db04ae9cf3fed442190d824f4f8da6508a751
-REVIEWED_CLI_VERSIONS=frozenset(('0.9.0','0.9.1'))
+REVIEWED_CLI_VERSIONS=frozenset(('0.9.0','0.9.1','0.10.3'))
 
 
 def funding_observation(conn, *, fetch, cli_status, runner=subprocess.run, chain_reader=None):
