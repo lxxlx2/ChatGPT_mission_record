@@ -1962,3 +1962,46 @@ test('market refresh explicitly attempts the source and labels cache and throttl
   assert.match(h.element('cluster-series-trades').innerHTML,/本次未访问来源，显示上次数据/);
   assert.ok(h.requests.every(r=>r.method==='GET'));
 });
+
+function pairedBatchesFixture(status='NEAR_TIME_DIFFERENCES'){
+  return {version:1,status,secondary_provider:'PUBLICNODE',
+    scope:'ALL_PROVIDED_TOKEN_ACCOUNTS_AND_MINT_SUPPLY; NOT_INDEPENDENT_ENUMERATION',
+    accounts_compared:25,matches:21,differences:3,missing:1,batches_completed:3,rows:[],
+    batches:[
+      {index:0,address_offset:0,address_count:10,primary_slot:400,secondary_slot:400,matches:9,differences:1,missing:0},
+      {index:1,address_offset:10,address_count:10,primary_slot:402,secondary_slot:403,matches:8,differences:1,missing:1},
+      {index:2,address_offset:20,address_count:5,primary_slot:410,secondary_slot:410,matches:4,differences:1,missing:0},
+    ]};
+}
+test('per-batch equal slots keep their own match totals and never imply one holder-and-pool snapshot',()=>{
+  const h=harness();
+  const report={independent_balance_check:pairedBatchesFixture()};
+  const html=h.context.renderIndependentCheck(report);
+  assert.match(html,/双方报告同槽的批次：2 批，15 项/);
+  assert.match(html,/一致 13，差异 2，缺失 0/);
+  assert.match(html,/各批可在不同槽位，不证明持有人全集或池与持有人同槽/);
+  assert.match(html,/比对 25 项/);
+});
+test('partial independent reads keep only the successful pairs and malformed slots are not promoted',()=>{
+  const h=harness();
+  const sample=pairedBatchesFixture('PARTIAL');
+  sample.batches=sample.batches.slice(0,1);sample.batches_completed=1;sample.accounts_compared=10;
+  sample.matches=9;sample.differences=1;sample.missing=0;
+  const report={independent_balance_check:sample};
+  assert.match(h.context.renderIndependentCheck(report),/双方报告同槽的批次：1 批，10 项/);
+  sample.batches[0].address_offset=5;
+  assert.doesNotMatch(h.context.renderIndependentCheck(report),/双方报告同槽的批次/);
+  sample.batches[0].address_offset=0;sample.batches[0].secondary_slot='400';
+  assert.doesNotMatch(h.context.renderIndependentCheck(report),/双方报告同槽的批次/);
+  sample.batches[0].secondary_slot=400;sample.matches=10;
+  assert.doesNotMatch(h.context.renderIndependentCheck(report),/双方报告同槽的批次/);
+});
+test('legacy reports and no equal batch slot do not produce a same-slot subset line',()=>{
+  const h=harness();
+  const sample=pairedBatchesFixture();
+  sample.batches.forEach((b)=>b.secondary_slot=b.primary_slot+1);
+  const report={independent_balance_check:sample};
+  assert.doesNotMatch(h.context.renderIndependentCheck(report),/双方报告同槽的批次/);
+  delete sample.batches;
+  assert.doesNotMatch(h.context.renderIndependentCheck(report),/双方报告同槽的批次/);
+});

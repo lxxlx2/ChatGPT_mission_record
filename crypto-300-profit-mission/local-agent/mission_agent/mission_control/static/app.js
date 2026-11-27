@@ -1858,14 +1858,41 @@ function renderLaunchIdentity(report) {
   return '<div class="trust-box"><strong>发射与创建者（链上状态）</strong>'+pump+meta+'</div>';
 }
 
+function renderPairedHolderBatches(c) {
+  if (c.scope!=='ALL_PROVIDED_TOKEN_ACCOUNTS_AND_MINT_SUPPLY; NOT_INDEPENDENT_ENUMERATION'
+      || !Array.isArray(c.batches) || !c.batches.length) return '';
+  const valid=(n,min=0)=>Number.isSafeInteger(n)&&n>=min;
+  let covered=0, matches=0, differences=0, missing=0;
+  let sameBatches=0, sameItems=0, sameMatches=0, sameDifferences=0, sameMissing=0;
+  for (const [index,b] of c.batches.entries()) {
+    // These are disjoint address batches; missing or malformed audit data
+    // cannot be used to construct a more precise coverage claim.
+    if (!b || b.index!==index || b.address_offset!==covered || !valid(b.address_count,1)
+        || !valid(b.primary_slot,1) || !valid(b.secondary_slot,1)
+        || !valid(b.matches) || !valid(b.differences) || !valid(b.missing)
+        || b.matches+b.differences+b.missing!==b.address_count
+        || !valid(covered+b.address_count,1)) return '';
+    covered+=b.address_count;matches+=b.matches;differences+=b.differences;missing+=b.missing;
+    if (b.primary_slot!==b.secondary_slot) continue;
+    sameBatches++;
+    sameItems+=b.address_count;
+    sameMatches+=b.matches;
+    sameDifferences+=b.differences;
+    sameMissing+=b.missing;
+  }
+  if (!sameBatches || covered!==c.accounts_compared || c.batches.length!==c.batches_completed
+      || matches!==c.matches || differences!==c.differences || missing!==c.missing) return '';
+  return '<p>双方报告同槽的批次：'+sameBatches+' 批，'+sameItems+' 项（含该批次内适用的 Mint 供给）；一致 '+sameMatches+'，差异 '+sameDifferences+'，缺失 '+sameMissing+'。各批可在不同槽位，不证明持有人全集或池与持有人同槽。</p>';
+}
 function renderIndependentCheck(report) {
   const c=report.independent_balance_check;
   if (!c || c.version!==1 || c.status==='NOT_REQUESTED') return '';
+  const paired=renderPairedHolderBatches(c);
   const safeCode=v=>typeof v==='string' && /^(?:HTTP_[0-9]{3}|RPC_-?[0-9]+|RPC_JOB_(?:TIME|WIRE)_BUDGET_EXHAUSTED|RPC_RATE_LIMITED|RPC_ENVELOPE_INVALID|RPC_POOL_RESPONSE_LIMIT|RPC_HOLDER_RANK_RESPONSE_LIMIT|RPC_ERROR|TimeoutError|URLError|OSError|ValueError|JSONDecodeError|RPCError)$/.test(v);
   if (c.status==='UNAVAILABLE' || c.status==='PARTIAL') {
     const last=safeCode(c.last_source_error)?'最后来源错误：'+c.last_source_error+'。':'';
     return '<div class="trust-box"><strong>第二提供方余额复核</strong><p>本轮未完成（'+esc(safeCode(c.reason)?c.reason:'来源不可用')+'）。'+esc(last)+'</p>'+
-      (Number.isSafeInteger(c.accounts_compared) && c.accounts_compared>0 ? '<p>已完成 '+esc(c.accounts_compared)+' 项；后续读取失败，成功批次保留在报告中，未核对账户不视为一致。</p>' : '')+'</div>';
+      (Number.isSafeInteger(c.accounts_compared) && c.accounts_compared>0 ? '<p>已完成 '+esc(c.accounts_compared)+' 项；后续读取失败，成功批次保留在报告中，未核对账户不视为一致。</p>' : '')+paired+'</div>';
   }
   const label={SAME_SLOT_ALL_MATCH:'同一 slot 全部一致',NEAR_TIME_ALL_MATCH:'相邻时间读取全部一致',SAME_SLOT_MISMATCH:'同一 slot 出现不一致',NEAR_TIME_DIFFERENCES:'相邻时间读取存在差异（可能是期间成交）'}[c.status]||c.status;
   const diffs=(c.rows||[]).filter(r=>r.status!=='MATCH').slice(0,8).map(r=>'<li><code>'+esc(short(r.address,6,5))+'</code> 主 '+esc(r.primary_raw??'缺')+' / 第二 '+esc(r.secondary_raw??'缺')+'</li>').join('');
@@ -1877,7 +1904,7 @@ function renderIndependentCheck(report) {
   const enumeration=e && Object.hasOwn(enumerationStatus,e.status)
     ? '第二来源独立枚举：'+enumerationStatus[e.status]+(Number.isSafeInteger(e.secondary_slot)?'。主 / 第二 slot '+e.primary_slot+' / '+e.secondary_slot+'，仅主源 '+(e.only_primary||[]).length+'，仅第二源 '+(e.only_secondary||[]).length+'，余额或 Owner 有差异 '+(e.changed_owner_or_raw||[]).length:'')+(safeCode(e.last_source_error)?'（'+e.last_source_error+'）':'')+'。'
     : '当前结果来自逐地址复核，独立枚举结果尚未取得。';
-  return '<div class="trust-box"><strong>第二提供方余额复核（'+esc(c.secondary_provider)+'）</strong><p>'+esc(label)+'：比对 '+esc(c.accounts_compared)+' 项（'+scope+'），一致 '+esc(c.matches)+'，差异 '+esc(c.differences)+'，缺失 '+esc(c.missing)+'；'+slots+'</p><p>'+esc(enumeration)+' 相邻时间一致不能证明原子同快照一致。</p>'+(diffs?'<ul>'+diffs+'</ul>':'')+'</div>';
+  return '<div class="trust-box"><strong>第二提供方余额复核（'+esc(c.secondary_provider)+'）</strong><p>'+esc(label)+'：比对 '+esc(c.accounts_compared)+' 项（'+scope+'），一致 '+esc(c.matches)+'，差异 '+esc(c.differences)+'，缺失 '+esc(c.missing)+'；'+slots+'</p>'+paired+'<p>'+esc(enumeration)+' 相邻时间一致不能证明原子同快照一致。</p>'+(diffs?'<ul>'+diffs+'</ul>':'')+'</div>';
 }
 
 function clusterPublicEvidenceUrl(value) {
