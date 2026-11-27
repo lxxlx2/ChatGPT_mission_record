@@ -1885,7 +1885,7 @@ function renderPairedHolderBatches(c) {
   return '<p>双方报告同槽的批次：'+sameBatches+' 批，'+sameItems+' 项（含该批次内适用的 Mint 供给）；一致 '+sameMatches+'，差异 '+sameDifferences+'，缺失 '+sameMissing+'。各批次按自己的槽位统计，仅覆盖所列账户。</p>';
 }
 
-function renderPoolHolderSameSlot(report,sample) {
+function renderPoolHolderSameSlot(report,sample,safeCode) {
   const pool=report.pool_vaults;
   const integer=(value,min=0)=>Number.isSafeInteger(value) && value>=min;
   const address=value=>typeof value==='string' && /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(value);
@@ -1893,7 +1893,26 @@ function renderPoolHolderSameSlot(report,sample) {
       !address(sample.mint) || sample.mint!==report.mint || sample.mint!==pool.mint ||
       !address(sample.pool_address) || sample.pool_address!==pool.pool_address ||
       !integer(sample.holder_account_count,1) || sample.holder_account_count>5 ||
-      !integer(pool.snapshot_slot,1) || !integer(sample.primary_slot,pool.snapshot_slot) ||
+      !integer(pool.snapshot_slot,1)) return '';
+  // Surface only a completed attempt's validated failure phase. An old
+  // unbound or contradictory unavailable object is not an attempt receipt.
+  if (sample.status==='UNAVAILABLE') {
+    const isPrimary=sample.failure_phase==='PRIMARY';
+    const isSecondary=sample.failure_phase==='SECONDARY';
+    if (!(isPrimary||isSecondary) || ['secondary_slot','matches','differences','missing','pool_match']
+        .some(key=>Object.hasOwn(sample,key)) ||
+        (isPrimary&&Object.hasOwn(sample,'primary_slot')) ||
+        (isSecondary&&(!integer(sample.primary_slot,pool.snapshot_slot) ||
+          typeof sample.primary_response_sha256!=='string' ||
+          !/^[a-f0-9]{64}$/.test(sample.primary_response_sha256)))) return '';
+    const approved=new Set(['JOINT_BANK_INVALID','JOINT_POOL_IDENTITY_INVALID',
+      'JOINT_POOL_TOKEN_PROGRAM_CHANGED','JOINT_HOLDER_LAYOUT_INVALID']);
+    const reason=(safeCode(sample.reason)||approved.has(sample.reason))
+      ? sample.reason : '来源未返回可核验数据';
+    const code=safeCode(sample.last_source_error)?sample.last_source_error:reason;
+    return '<p>池与持有人联合读取未完成：'+(isPrimary?'主来源':'第二来源')+'（'+esc(code)+'）。本次不能给出同槽结论。</p>';
+  }
+  if (!integer(sample.primary_slot,pool.snapshot_slot) ||
       !integer(sample.secondary_slot,sample.primary_slot) ||
       !integer(sample.matches) || !integer(sample.differences) || !integer(sample.missing) ||
       sample.matches+sample.differences+sample.missing!==sample.holder_account_count ||
@@ -1916,8 +1935,8 @@ function renderIndependentCheck(report) {
   const c=report.independent_balance_check;
   if (!c || c.version!==1 || c.status==='NOT_REQUESTED') return '';
   const paired=renderPairedHolderBatches(c);
-  const poolSample=renderPoolHolderSameSlot(report,c.pool_holder_same_slot);
   const safeCode=v=>typeof v==='string' && /^(?:HTTP_[0-9]{3}|RPC_-?[0-9]+|RPC_JOB_(?:TIME|WIRE)_BUDGET_EXHAUSTED|RPC_RATE_LIMITED|RPC_ENVELOPE_INVALID|RPC_POOL_RESPONSE_LIMIT|RPC_HOLDER_RANK_RESPONSE_LIMIT|RPC_ERROR|TimeoutError|URLError|OSError|ValueError|JSONDecodeError|RPCError)$/.test(v);
+  const poolSample=renderPoolHolderSameSlot(report,c.pool_holder_same_slot,safeCode);
   if (c.status==='UNAVAILABLE' || c.status==='PARTIAL') {
     const last=safeCode(c.last_source_error)?'最后来源错误：'+c.last_source_error+'。':'';
     return '<div class="trust-box"><strong>第二提供方余额复核</strong><p>本轮未完成（'+esc(safeCode(c.reason)?c.reason:'来源不可用')+'）。'+esc(last)+'</p>'+

@@ -2051,3 +2051,29 @@ test('joint sample omits unavailable, contradictory, or unrelated embedded claim
   report.pool_vaults.status='UNAVAILABLE';
   assert.doesNotMatch(h.context.renderIndependentCheck(report),/池与持有人(?:同槽)?抽样/);
 });
+
+function abortedJointFixture(phase,patch={}){
+  const report=jointPoolSampleFixture();
+  const c=report.independent_balance_check;
+  c.pool_holder_same_slot={version:1,mint:report.mint,pool_address:report.pool_vaults.pool_address,
+    holder_account_count:2,status:'UNAVAILABLE',failure_phase:phase,
+    ...(phase==='SECONDARY'?{primary_slot:425,primary_response_sha256:'a'.repeat(64)}:{}),...patch};
+  return report;
+}
+test('a bound attempted joint read shows the source phase and a safe error, not a same-slot success',()=>{
+  const h=harness();
+  const first=h.context.renderIndependentCheck(abortedJointFixture('PRIMARY',{reason:'JOINT_POOL_IDENTITY_INVALID'}));
+  assert.match(first,/联合读取未完成：主来源（JOINT_POOL_IDENTITY_INVALID）/);
+  const other=h.context.renderIndependentCheck(abortedJointFixture('SECONDARY',{reason:'RPCError',last_source_error:'HTTP_429'}));
+  assert.match(other,/联合读取未完成：第二来源（HTTP_429）/);
+  assert.doesNotMatch(other,/池与持有人同槽抽样/);
+});
+test('joint unavailable reason never exposes transport secrets or contradicts accepted counters',()=>{
+  const h=harness();
+  const ugly='https://private.invalid/PRIVATE_KEY';
+  const fallback=h.context.renderIndependentCheck(abortedJointFixture('SECONDARY',{reason:ugly,last_source_error:ugly}));
+  assert.match(fallback,/第二来源（来源未返回可核验数据）/);
+  assert.doesNotMatch(fallback,/PRIVATE_KEY|private\.invalid/);
+  for(const patch of [{primary_response_sha256:'missing'}, {primary_response_sha256:['a'.repeat(64)]}, {pool_match:true}, {secondary_slot:425}, {primary_slot:399}])
+    assert.doesNotMatch(h.context.renderIndependentCheck(abortedJointFixture('SECONDARY',patch)),/联合读取未完成/);
+});
