@@ -330,3 +330,62 @@ F06 本地隔离补验：一钱包时钟失败时仍请求同轮其他钱包，�
 一期只认同一成功签名中多个独立的 Raydium CPMM 直接 swap 调用，且使用经典 SPL Token。逐条核对顶层指令 discriminator 和参数、签名付款人、对应的输入/输出金库、两条直接内部转账、各账户前后余额，以及精确目标 Mint。两笔可共用钱包报价账户，但每笔扣款必须能绑定到各自调用，账户合计必须守恒。不支持共用路由、Token-2022、关户/临时账户、缺原始角色或余额。只增加按签名和指令序号定位的离线研究凭据；不改原交易表、买入列表、持仓或通知。 [Raydium 原始指令源码](https://github.com/raydium-io/raydium-cp-swap/tree/3d69122790e97cd6aff24e8ba95940793773f58c/programs/cp-swap/src/instructions)
 
 隔离夹具确认同签名第二笔也有自身支付与数量、原账本持久化仍只有一条签名和零笔交易/通知；通过路由、重复 CPI、错误金库、错签名、金额或余额不对、额外转账等反例。冻结原件 10,895 条逐条核对哈希后回放，本归档没有包含两个顶层 CPMM 调用的样本，真实正例覆盖为 0，不据此估计总体漏报率。定向 Python 152 项通过，1 项专用浏览器测试未运行。是否有足够真实正例，以及独立买入的投影、入库和页面，从本轮开始分别跟踪。
+
+## 2026-11-28 优先缺口修复与统一验收
+
+源码固定为 `b2e602ef201b21d7b1b77486df17fe5454d1f57f`。在当前集成分支并发更新 `a8a4b6d3cbc17502a517ae5daf656fd43464fe84` 上整合 #257 的验收入口与此前的 CPMM 研究证据，保留原来的历史提交。以下结论以该候选的测试和观测为准。
+
+| 反查项 | 本次交付与证据 | 剩余 |
+| --- | --- | --- |
+| S04 同签名多笔买入 | 能核实的独立兑换按指令位置保存，每笔支付和到账绑定到同一个指令。重复扫描保持交易和信号幂等。同签名同 Mint 的各笔进入买入事实，V1 仍只计一个事件。覆盖两个 Mint、同 Mint 两笔、混合报价币、临时 WSOL、错误归属、旧账本迁移。无日志的直接 CPMM 窄证据仍留在研究记录。 | 无法从内层转账归属的原生 SOL、共享或不透明路由继续待核。缺少真实独立多买入正例以及更新钱包窗口的完整分类对账。 |
+| S05、F01 未追平与流水 | 根据 Scanner 心跳、游标、待处理记录和钱包失败区分未追平、状态待确认、已追平空态。签名流水使用服务端游标和时间、类型、CA 或签名筛选。Chrome 读到 100、200、204 条，精确签名检索返回唯一结果。恢复失败保留当前行。全套回归发现旧归档流水调用共享筛选时缺签名参数而返回 503，已修，旧归档和流水相关 65 项通过。 | 事实范围取决于钱包是否完成采集。 |
+| S11–S12 新币资格与通知 | Scanner 可配置已有 CoinGecko Demo 自动补证。待核 Mint 保存在账本，限流后按 Retry-After 续跑。测试覆盖九个不同 Mint、重启、精确 Mint 与散列、非 Meme/BP 排除及假发送器。人工排除优先。归档对账可以在指定观察截止时点读取通过校验的自动收据。 | 还未在本机运行服务启用自动补证，日常成交秒美元覆盖和候选真实收件待核。 |
+| C02、C04、C09、C11–C13 | 海外原件可在具备已安装模型的 Chrome 中生成中文翻译，保留原始链接，CA 认领与叙事分列。模型缺失与切 CA 晚返回有回归。新 CA 公开行情证据见下。 | 隔离 Chrome 实测语言检测不可用、英译中模型为可下载，未运行真实本机模型翻译。仍缺多个新 CA 完整链上冷／热计时、全量持有人与池独立同槽、闭户历史及 LP 归因。 |
+| F05 迁移 | 在 Mac 暂存目录模拟旧路径撤下，恢复账本和原件，核对 2 个游标、3 份归档、2 条信号、3 条 outbox，以及 Gmail 去重标识。无 RPC 凭据也能执行只读备份检查。从冻结的真实旧数据库迁移副本，再核对 10,895 笔签名、242 个交易条目、23 条 outbox 及 1 个游标的行内容、行号与 SQLite 完整性，原件散列不变。 | 没有目标服务器实例和切换、续跑、单实例、回退实测。 |
+| F06 多候选人 | 两人各两地址使用同 Mint 和同签名的隔离测试通过。一个钱包超时或游标失联时，正常钱包仍归档入库；有缺口的轮次暂停共享模型和投递。 | 当前运行范围仍是 Frank。没有开启多候选人的真实采集或独立投递。 |
+| F07–F09 统一验收 | #257 的完整 SHA、前后干净工作区、三段 Chrome、历史钱包可选输入和发布状态已接入同一入口。默认退出 2 表示隔离检查通过但真实发布条件未齐。 | 本轮结论 PARTIAL，发布 NO_GO。 |
+
+### 三枚新 CA 的真实公开行情和 Chrome 回放
+
+2026-11-28 20:44（Asia/Bangkok），使用既有免费 DexScreener 和 GeckoTerminal GET，候选代码解析供应商原始响应。三个 CA 在本轮均首次用于行情验收。市场原件清单 SHA-256 为 `1273d6a7c26873417a5e49092ee6354cf8863f554aabb4ee93eb06902e21b16f`，共 7 个 HTTP 200、1 个 HTTP 429。
+
+| Mint | 实际观察 |
+| --- | --- |
+| `63jDWWFwp25ChLvsofbVRMprRbhiXuWoWVxrwFfypump` | 两个来源都绑定同一 PumpSwap 池。该池 5 分钟 K 线收到 120 根，近期成交收到 300 笔，Chrome 渲染全部 300 行。成交接口是提供方最近 24 小时窗口。 |
+| `HppE7fZseCMD38cXgexi4ig2vHKLGMfp7Ze1yCUvBAp2` | 两个来源都绑定同一选中池。K 线请求实际返回 429，成交读取受现有来源退避约束，页面未出现上一币的记录。 |
+| `CcCHDsGR2RjnUaA72DJnT1AM3uyVvjpCuV5XtdHWpump` | 主来源绑定 Pump.fun 池。GeckoTerminal 当时仍处于退避，保留主来源并显示对应 CA 与池。 |
+
+Chrome `158.0.8127.38` 使用候选实际静态文件，读取上述实源行情快照和测试报告外层，按 A→B→C→A 回放。CA、池和相应成交行没有串样本，页面错误和 Chrome 外连或 POST 都为 0。回放摘要 SHA-256 为 `e2c8cf7c35d7450e5b7ff3ef6264f511329fc4e8c6bf3613797cccb4f86b830a`。实源行情抓取、隔离 UI 回放和链上查询的证据范围独立。未启动真实 CA 任务，未计量真实全流程耗时。
+
+### 本次命令与结果
+
+在 `crypto-300-profit-mission/local-agent` 的干净检出执行，`FRANK_PLAYWRIGHT_MODULE` 指向本机已安装的 Playwright：
+
+```sh
+uv run --isolated --offline --no-project --with pytest==8.3.5 --with playwright --with numpy \
+  python -B -m scripts.accept_frank_rebuild \
+  --source-sha b2e602ef201b21d7b1b77486df17fe5454d1f57f --chrome
+
+uv run --isolated --offline --no-project --with pytest==8.3.5 \
+  python -B -m pytest -q -p no:cacheprovider tests/test_frank_evidence_manifests.py \
+  tests/test_frank_archived_wallet_facts.py tests/test_frank_activity_paging.py
+```
+
+统一入口 Python **577 通过**，Node **224 通过**，Mac Chrome 三段全部通过。Chrome 专用 Python 用例在独立阶段通过，常规 Python 阶段排除一次。原始验收 JSON SHA-256 为 `0be8d0dc84e3e30e23fd4f04ddcdbd7cda42183e7ba3f2224b791fbbb59aa274`。退出 2，`status=PARTIAL`，`release.status=NO_GO`。本次未在统一入口传入一个新的完整独立窗口。
+
+禁外连全量回归使用相同候选，在同一目录执行：
+
+```sh
+uv run --isolated --offline --no-project --with pytest==8.3.5 --with numpy python -B - <<'PYTEST'
+import sys
+from scripts.accept_frank_rebuild import OFFLINE_PYTEST
+sys.argv = ['pytest', '-q', '-p', 'no:cacheprovider', '--tb=short', 'tests']
+exec(OFFLINE_PYTEST)
+PYTEST
+```
+
+全量 Python **3,125 通过，1 跳过**。跳过项是前述已单独通过的 Chrome 专用用例。另有 14 条 Python 3.13 旧测试 `fork()` 弃用提示。
+
+另在候选上执行已有的 `solscan-check.py`，禁外连回放同一冻结的独立两日来源和 437 份原件。11 笔已核买入仍均能在实际买入页读取入口找回，摘要 SHA-256 与既有证据相同，为 `9346841fd8d7817ea7ffb3c097eea60ef90f188bbfca59d223dab741ed6df5e2`。这两个旧窗口没有扩大本轮真实漏报分母。冻结旧 SQLite 恢复副本的汇总 SHA-256 为 `8a4ca5b7399facdb3deae177f6854a9fe2e45d60b08b935dc7c02f998116c578`。
+
+只读请求现有 8766 的 `/static/app.js` 并与 Git 对照，SHA-256 `89eecdfc40e78741d106f319fdc6bc647798be4d002c3d7277f6482e5810bf94` 匹配旧源码 `fd06df4fbbc25721e0a87a3721571f0dc34cca75`。本轮没有切换 8766，没有启动运行服务或发送通知。
