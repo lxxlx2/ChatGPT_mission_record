@@ -191,13 +191,18 @@
         <button type="button" class="link-btn" id="signed-activity-reload">重新读取</button>
       </div>
       <div class="frank-watch-summary" id="signed-activity-summary">正在读取钱包签名索引…</div>
+      <div id="signed-activity-pager" role="group" aria-label="本地签名分页" hidden>
+        <button type="button" class="link-btn" id="signed-activity-prev" disabled>上一页</button>
+        <span id="signed-activity-page-label" aria-live="polite"></span>
+        <button type="button" class="link-btn" id="signed-activity-next" disabled>下一页</button>
+      </div>
       <div class="frank-watch-table-wrap">
         <table class="frank-watch-table" id="signed-activity-table">
           <thead><tr><th>时间（本地）</th><th>签名</th><th>来源分类</th><th>已识别经济腿</th><th>核验状态</th></tr></thead>
           <tbody id="signed-activity-rows"><tr><td colspan="5">正在读取…</td></tr></tbody>
         </table>
       </div>
-      <p class="frank-watch-footnote">读取所选范围的全部已索引签名；为了页面性能，每次显示前 200 条筛选结果。全部数据均为本地历史证据，不是实时完整链史、当前持仓、收益或跟单指令。</p>
+      <p class="frank-watch-footnote">读取所选范围的全部已索引签名；筛选覆盖该范围，每页最多显示 200 条，可翻页查看。全部数据均为本地历史证据，不是实时完整链史、当前持仓、收益或跟单指令。</p>
     </section>
     <section class="panel" id="frank-d2-panel">
       <details id="frank-source-panel" open>

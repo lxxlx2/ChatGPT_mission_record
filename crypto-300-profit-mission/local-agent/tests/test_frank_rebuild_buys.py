@@ -131,6 +131,55 @@ def test_dashboard_replays_only_bound_legacy_buy_evidence(tmp_path, case):
     assert ledger.db.execute("SELECT body FROM signatures").fetchone()[0] == indexed_body
     assert ledger.db.execute("SELECT count(*) FROM outbox").fetchone()[0] == 0
 
+    # Exercise the same adapter through scanner reconciliation and the runner.
+    import sqlite3
+    from types import SimpleNamespace
+    from scripts.accept_frank_rebuild import _wallet
+    from mission_agent.signals.reconciliation import reconcile_snapshot
+    snapshot = tmp_path / "snapshot.sqlite"
+    with sqlite3.connect(snapshot) as copy:
+        ledger.db.backup(copy)
+        copy.execute("PRAGMA journal_mode=DELETE")
+    ref = tmp_path / "independent.json"
+    ref.write_text(json.dumps({
+        "schema_version": 1, "chain": "solana", "commitment": "finalized",
+        "complete": True, "start_slot": 12, "end_slot": 12, "finalized_through_slot": 12,
+        "source_id": "independent_fixture", "capture_sha256": "a"*64,
+        "person_id": "frank", "wallet": WALLET,
+        "transactions": [{"signature": signature, "slot": 12, "expected_frank_buy": MINT,
+                          "expectation_sha256": "b"*64}],
+    }))
+    sha = lambda path: hashlib.sha256(path.read_bytes()).hexdigest()
+    expected_hash = sha(snapshot)
+    opts = (snapshot, expected_hash, ref, sha(ref))
+    qualifications = (cfg, sha(cfg), now)
+    ledger_result = reconcile_snapshot(*opts, scanner_source_id="scanner_test",
+                                       buy_qualifications=qualifications)
+    if case != "modern_failed":
+        assert ledger_result["rows"][0]["buy_admission"]["reason"] == "LEGACY_BUY_ARCHIVE_UNAVAILABLE"
+    result = reconcile_snapshot(*opts, scanner_source_id="scanner_test",
+                                buy_qualifications=qualifications, buy_archive_root=control,
+                                buy_legacy_archive_root=archive)
+    buys = result["buy_admission"]
+    kind = {"bound_legacy": "MATCHED_IN", "corrupt_archive": "UNRESOLVED",
+            "wrong_signature": "UNRESOLVED", "modern_failed": "MISSED"}[case]
+    assert buys["counts"][kind] == 1
+    assert buys["chain_to_detection"]["percentile_method"] == "NEAREST_RANK"
+    assert buys["chain_to_index"]["sample_count"] == (1 if case == "bound_legacy" else 0)
+    assert buys["delivery_timing"] == "NOT_VERIFIED"
+    args = SimpleNamespace(snapshot=snapshot, snapshot_sha256=expected_hash, reference=ref,
+                           reference_sha256=sha(ref), scanner_source_id="scanner_test",
+                           qualifications=cfg, qualifications_sha256=sha(cfg), qualification_as_of=now,
+                           buy_archive_root=control, buy_legacy_archive_root=archive)
+    summary = _wallet(args)
+    assert summary["buy_admission"] == buys and "rows" not in summary
+    assert sha(snapshot) == expected_hash
+    bad = {"buy_archive_root": Path("relative"), "buy_legacy_archive_root": archive}
+    for name, value in bad.items():
+        with pytest.raises(ValueError, match="BUY_ARCHIVE_PATHS"):
+            reconcile_snapshot(*opts, scanner_source_id="scanner_test", buy_qualifications=qualifications,
+                               **{name: value})
+
 
 def usd_observation(ledger, signature, asset, **values):
     wallet, slot, at, raw_hash = ledger.db.execute(

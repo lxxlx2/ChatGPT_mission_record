@@ -245,3 +245,19 @@ def admit_buy(event, assets, *, wallet, signature, slot, block_time, raw_hash, m
         paid, currency = None, None
     return {"mint": mint, "name": asset.name, "signature": signature, "slot": slot, "at": block_time,
             "quantity": tokens, "paid": paid, "currency": {USDC: "USDC", USDT: "USDT"}.get(currency, currency)}
+
+
+def needs_archive_replay(event, identity):
+    if not isinstance(event, dict) or event.get("classification") != "ACTIVE_TRADE":
+        return False
+    trade, evidence = event.get("trade"), event.get("evidence")
+    return (
+        isinstance(trade, dict) and isinstance(evidence, dict)
+        and identity["mint"] not in EXCLUDED_MINTS
+        and trade.get("mint") == identity["mint"] and trade.get("direction") == "BUY"
+        and event.get("frank_is_signer") is True and evidence.get("wallet_is_signer") is True
+        and evidence.get("raw_transaction_sha256") == identity["raw_hash"]
+        and all(source.get(key) == identity[key] for source in (event, evidence)
+                for key in ("wallet", "signature", "slot", "block_time"))
+        and not {"quote_legs", "route_amount_semantics", "route_intermediate_evidence_status"} & trade.keys()
+    )

@@ -366,8 +366,12 @@ def _audit(db, reference):
 
 
 def reconcile_snapshot(snapshot, snapshot_sha256, reference, reference_sha256, *, scanner_source_id,
-                       buy_qualifications=None):
+                       buy_qualifications=None, buy_archive_root=None, buy_legacy_archive_root=None):
     """Audit a standalone SQLite backup and independently prepared reference file."""
+    if ((buy_archive_root is not None and (buy_qualifications is None or not Path(buy_archive_root).is_absolute()))
+            or (buy_legacy_archive_root is not None
+                and (buy_archive_root is None or not Path(buy_legacy_archive_root).is_absolute()))):
+        raise ReconciliationError("BUY_ARCHIVE_PATHS_REQUIRE_PINNED_QUALIFICATIONS_AND_PRIMARY")
     snapshot, reference = Path(snapshot), Path(reference)
     try:
         raw = reference.read_bytes()
@@ -386,7 +390,10 @@ def reconcile_snapshot(snapshot, snapshot_sha256, reference, reference_sha256, *
             result = _audit(db, manifest)
             if buy_qualifications is not None:
                 from .buy_reconciliation import audit_buys
-                result["buy_admission"] = audit_buys(db, manifest, result, *buy_qualifications)
+                result["buy_admission"] = audit_buys(
+                    db, manifest, result, *buy_qualifications,
+                    archive_root=buy_archive_root, legacy_archive_root=buy_legacy_archive_root,
+                )
                 if result["buy_admission"]["status"] == "GAPS":
                     result["status"] = "GAPS"
                 elif result["buy_admission"]["status"] != "MATCHED_WITHIN_SUPPLIED_WINDOW" and result["status"] == "MATCHED_WITHIN_SUPPLIED_WINDOW":

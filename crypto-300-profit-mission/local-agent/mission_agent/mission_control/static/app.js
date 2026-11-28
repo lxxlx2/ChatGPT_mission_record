@@ -489,11 +489,17 @@ function renderFrankWatchlist(payload) {
 let signedActivity = {status:'LOADING', rows:[]};
 let signedActivityLastFetch = 0;
 let signedActivityRequest = 0;
+let signedActivityPage = 0;
+const SIGNED_ACTIVITY_PAGE_SIZE = 200;
 
 function renderSignedActivity() {
   const payload = signedActivity;
   const rows = Array.isArray(payload.rows) ? payload.rows : [];
   const sourceOK = payload.status === 'INDEXED_LOCAL_ONLY';
+  const pager = $('signed-activity-pager');
+  const previous = $('signed-activity-prev'), next = $('signed-activity-next');
+  pager.hidden = true;
+  previous.disabled = next.disabled = true;
   if (!sourceOK) {
     $('signed-activity-summary').textContent =
       '签名索引不可读取：' + String(payload.reason || 'SOURCE_UNAVAILABLE') +
@@ -508,7 +514,14 @@ function renderSignedActivity() {
     return !query || [x.sig, x.class, x.status,
       ...legs.flatMap(t => [t.mint, t.side])].join(' ').toLowerCase().includes(query);
   });
-  const display = matched.slice(0,200);
+  const pages = Math.max(1, Math.ceil(matched.length / SIGNED_ACTIVITY_PAGE_SIZE));
+  signedActivityPage = Math.max(0, Math.min(signedActivityPage, pages-1));
+  const start = signedActivityPage * SIGNED_ACTIVITY_PAGE_SIZE;
+  const display = matched.slice(start, start+SIGNED_ACTIVITY_PAGE_SIZE);
+  pager.hidden = pages===1;
+  previous.disabled = signedActivityPage===0;
+  next.disabled = signedActivityPage===pages-1;
+  $('signed-activity-page-label').textContent = '第 ' + (signedActivityPage+1) + ' / ' + pages + ' 页';
   const categories = payload.categories || {};
   $('signed-activity-summary').textContent =
     '已索引 ' + String(payload.signatures) + ' 条签名 / ' +
@@ -517,7 +530,7 @@ function renderSignedActivity() {
     String(categories.PASSIVE_TRANSFER || 0) + ' · 未知 ' +
     String(categories.UNKNOWN_NEEDS_REVIEW || 0) + ' · 筛选匹配 ' +
     String(matched.length) +
-    (matched.length > display.length ? '（仅显示前 ' + String(display.length) + ' 条）' : '') +
+    (display.length ? '（显示 ' + (start+1) + '–' + (start+display.length) + ' 条）' : '') +
     ' · 非完整链史';
   $('signed-activity-rows').innerHTML = display.map(x => {
     const sig = typeof x.sig === 'string' ? x.sig : '';
@@ -564,9 +577,25 @@ async function refreshSignedActivity(force=false) {
   renderSignedActivity();
 }
 
-$('signed-activity-days').addEventListener('change', () => refreshSignedActivity(true));
-$('signed-activity-search').addEventListener('input', renderSignedActivity);
+$('signed-activity-days').addEventListener('change', () => {
+  signedActivityPage = 0;
+  void refreshSignedActivity(true);
+});
+$('signed-activity-search').addEventListener('input', () => {
+  signedActivityPage = 0;
+  renderSignedActivity();
+});
 $('signed-activity-reload').addEventListener('click', () => refreshSignedActivity(true));
+$('signed-activity-prev').addEventListener('click', () => {
+  if ($('signed-activity-prev').disabled) return;
+  signedActivityPage--;
+  renderSignedActivity();
+});
+$('signed-activity-next').addEventListener('click', () => {
+  if ($('signed-activity-next').disabled) return;
+  signedActivityPage++;
+  renderSignedActivity();
+});
 
 function renderCoverage(coverage) {
   const node = $('coverage');
@@ -1502,7 +1531,7 @@ async function loadFrankBuys(more=false) {
     frankBuyCursor=result.next_cursor;
     button.hidden=!frankBuyCursor;
     if (table) table.hidden=!rows.childElementCount;
-    status.textContent=rows.childElementCount ? '' : '这段时间没有买入记录。';
+    status.textContent=rows.childElementCount ? '' : '本地索引暂无符合筛选的已核实买入。链上覆盖可能不完整，不代表这段时间没有买入。';
   } catch (_) {
     if (generation!==frankBuyGeneration) return;
     button.hidden=!more;

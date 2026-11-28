@@ -1796,7 +1796,9 @@ test('Frank default buys render as facts without loading market or old signal fe
   h.element('frank-buy-mint').value=mint;
   await h.context.loadFrankBuys();
   assert.equal(h.element('frank-buy-rows').innerHTML,'');
-  assert.match(h.element('frank-buy-status').textContent,/这段时间没有买入记录/);
+  assert.match(h.element('frank-buy-status').textContent,/本地索引暂无符合筛选的已核实买入/);
+  assert.match(h.element('frank-buy-status').textContent,/链上覆盖可能不完整/);
+  assert.doesNotMatch(h.element('frank-buy-status').textContent,/^这段时间没有买入记录/);
   assert.deepEqual(paths,['/api/frank-buys?days=7','/api/frank-buys?days=7&mint='+mint]);
 });
 
@@ -2076,4 +2078,42 @@ test('joint unavailable reason never exposes transport secrets or contradicts ac
   assert.doesNotMatch(fallback,/PRIVATE_KEY|private\.invalid/);
   for(const patch of [{primary_response_sha256:'missing'}, {primary_response_sha256:['a'.repeat(64)]}, {pool_match:true}, {secondary_slot:425}, {primary_slot:399}])
     assert.doesNotMatch(h.context.renderIndependentCheck(abortedJointFixture('SECONDARY',patch)),/联合读取未完成/);
+});
+
+test('legacy signed activity reaches rows above 200 using the same local snapshot',async()=>{
+  const h=harness();
+  const rows=Array.from({length:405},(_,i)=>({sig:'SIGNATURE'+String(i+1).padStart(4,'0'),class:'ACTIVE_TRADE',status:'OK',at:1792683606,trades:[]}));
+  let payload={status:'INDEXED_LOCAL_ONLY',signatures:rows.length,categories:{ACTIVE_TRADE:rows.length},rows};
+  const paths=[];
+  h.setResponse(async(url)=>{
+    paths.push(url);
+    return {ok:true,status:200,json:async()=>payload};
+  });
+  h.element('signed-activity-days').value='1';
+  await h.context.refreshSignedActivity(true);
+  const el=h.element;
+  const click=id=>el(id).listeners.get('click')();
+  assert.match(el('signed-activity-summary').textContent,/显示 1–200 条/);
+  assert.equal(el('signed-activity-pager').hidden,false);
+  assert.equal(el('signed-activity-prev').disabled,true);
+  click('signed-activity-next');
+  assert.match(el('signed-activity-summary').textContent,/显示 201–400 条/);
+  assert.match(el('signed-activity-rows').innerHTML,/SIGNATURE0201/);
+  assert.doesNotMatch(el('signed-activity-rows').innerHTML,/SIGNATURE0200/);
+  click('signed-activity-next');
+  assert.match(el('signed-activity-summary').textContent,/显示 401–405 条/);
+  assert.match(el('signed-activity-rows').innerHTML,/SIGNATURE0405/);
+  assert.equal(el('signed-activity-next').disabled,true);
+  click('signed-activity-prev');
+  assert.match(el('signed-activity-page-label').textContent,/2 \/ 3/);
+  el('signed-activity-search').value='SIGNATURE0405';
+  el('signed-activity-search').listeners.get('input')();
+  assert.equal(el('signed-activity-pager').hidden,true);
+  assert.match(el('signed-activity-rows').innerHTML,/SIGNATURE0405/);
+  assert.doesNotMatch(el('signed-activity-rows').innerHTML,/SIGNATURE0201/);
+  assert.deepEqual(paths,['/api/frank-signed-activity?days=1']);
+  payload={status:'UNAVAILABLE',rows:[]};
+  await h.context.refreshSignedActivity(true);
+  assert.equal(el('signed-activity-pager').hidden,true);
+  assert.doesNotMatch(el('signed-activity-rows').innerHTML,/SIGNATURE0405/);
 });
