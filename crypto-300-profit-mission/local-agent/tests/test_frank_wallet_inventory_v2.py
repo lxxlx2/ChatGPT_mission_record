@@ -130,7 +130,7 @@ def test_duplicate_record_does_not_count_twice(real_snapshot):
         reconcile_watchlist(make_watch(real_snapshot), cloned)
 
 
-def test_dashboard_dated_source_must_be_explicit_optin_and_safe(tmp_path, real_snapshot):
+def test_dashboard_dated_source_fallback_and_explicit_precedence_are_safe(tmp_path, real_snapshot):
     db = tmp_path / "forward.sqlite"
     with sqlite3.connect(db) as conn:
         conn.executescript("""
@@ -142,11 +142,16 @@ def test_dashboard_dated_source_must_be_explicit_optin_and_safe(tmp_path, real_s
             conn.execute("INSERT INTO v1_states VALUES(?,?,?)", ("frank",mint,'{"state":"OPEN"}'))
     state = DashboardState(tmp_path, tmp_path)
     without = state.frank_observed_watchlist()
-    assert without["snapshot_status"] == "SNAPSHOT_NOT_PRESENT"
+    assert without["snapshot_status"] == "DATED_POINT_IN_TIME_NOT_LIVE"
+    assert without["snapshot_origin"] == "REPO_DATED_2026_10_11_NOT_LIVE"
     assert without["summary"]["model_open"] == 5
+    assert without["snapshot_reconciliation"]["matched_mints"] == 5
+    assert without["wallet_total_nav_usd"] is None
+    assert all(r["current_chain_balance_verified"] is False for r in without["rows"])
     (tmp_path / "frank-inventory-snapshot.json").write_text(json.dumps(real_snapshot))
     with_proof = state.frank_observed_watchlist()
     assert with_proof["snapshot_reconciliation"]["matched_mints"] == 5
+    assert with_proof["snapshot_origin"] == "CONTROL_ROOT_EXPLICIT_IMPORT"
     assert with_proof["snapshot_reconciliation"]["nonzero_at_snapshot"] == 5
     assert with_proof["snapshot_status"] == "DATED_POINT_IN_TIME_NOT_LIVE"
     assert with_proof["wallet_total_nav_usd"] is None
