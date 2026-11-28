@@ -1,4 +1,26 @@
 # Current monitor execution pointer
+latest_review_date: 2026-11-28 Asia/Bangkok
+run_context_time: 2026-11-28T14:57:53+07:00
+scheduled_for_inferred: 2026-11-28T15:00:00+07:00
+executed_shard: 3
+run_path: airdrop-tge-monitor/runs/2026-11-28/145753-final.md
+run_status: PARTIAL_ONLY
+active_registry: 28 (8/6/7/7)
+fixed_urgent: 0
+dynamic_urgent: 0 confirmed
+projects_attempted: 7/7
+issuer_original_sources_read: 7/7
+dated_source_receipts: 5/7
+full_issuer_plus_user_rights_verified: 0/7
+action_count: 0 confirmed
+notification_sent: false
+verified_complete: false
+code_gate: CODE_NOT_EXECUTED
+last_verified_complete_at: 2026-10-10T07:52:16+07:00
+last_meaningful_attempt_shard3: 2026-11-28T14:57:53+07:00 (partial)
+
+## Previous cache (historical, not revalidated)
+# Current monitor execution pointer
 latest_review_date: 2026-11-26 Asia/Bangkok
 review_mode: SCHEDULED
 scheduled_for: 2026-11-26T13:00:00+07:00
