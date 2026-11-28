@@ -2229,3 +2229,96 @@ test('missing model stays offline and late translation cannot cross from an old 
   assert.equal(block.textContent,'');
   assert.equal(h.requests.length,0);
 });
+
+test('first-use local translation does not require a detector, model or network before a click', async()=>{
+  const h=harness(),c=h.context, report={mint};
+  const button=h.element('cluster-story-translate'), language=h.element('cluster-story-language');
+  const block=h.element('cluster-story-translation'), status=h.element('cluster-story-translate-status');
+  block.setAttribute=()=>{};
+  let inClick=false,creates=0,progress,resolve;
+  c.Translator={availability:async()=>assert.fail('explicit activation must not wait for availability'),
+    create:opts=>{
+      assert.equal(inClick,true);
+      creates++;
+      if (creates===1) return Promise.reject(new Error('unsupported pair'));
+      assert.equal(opts.sourceLanguage,'ja');
+      assert.equal(opts.targetLanguage,'zh');
+      opts.monitor({addEventListener(event,callback){assert.equal(event,'downloadprogress');progress=callback;}});
+      return new Promise(r=>{resolve=r;});
+    }};
+  c.localTranslationReport=report;
+  vm.runInContext('clusterVisibleReport=localTranslationReport',c);
+  c.bindClusterStoryTranslation(report,'地域の有志が作った公共プロジェクトです。');
+  const click=()=>{
+    inClick=true;
+    const pending=button.listeners.get('click')();
+    inClick=false;
+    return pending;
+  };
+  assert.equal(h.element('cluster-story-translate-controls').hidden,false);
+  assert.equal(creates,0);
+  await click();
+  assert.match(status.textContent,/选择原文语言/);
+  assert.equal(creates,0);
+  language.value='__proto__';
+  await click();
+  assert.equal(creates,0);
+  language.value='ja';
+  await click();
+  assert.match(status.textContent,/未能完成/);
+  assert.equal(button.disabled,false);
+  assert.equal(block.hidden,true);
+  const waiting=click();
+  progress({loaded:0.42});
+  assert.match(status.textContent,/42%/);
+  await click();
+  assert.equal(creates,2);
+  let disposed=false;
+  resolve({translate:async()=> '这是由当地志愿者创建的公共项目。', destroy:()=>{disposed=true;}});
+  await waiting;
+  assert.equal(disposed,true);
+  assert.equal(block.textContent,'这是由当地志愿者创建的公共项目。');
+  assert.equal(h.element('cluster-story-translation-label').hidden,false);
+  assert.match(status.textContent,/已在本机翻译/);
+  assert.equal(h.requests.length,0);
+});
+
+test('Japanese text containing four Han characters still offers translation and links the original',()=>{
+  const h=harness(),c=h.context;
+  c.Translator={create:()=>assert.fail('render must not download')};
+  let original;
+  const source='地域の有志が作った公共プロジェクトです。';
+  const html=c.clusterNarrativeHeadline({mint,narrative:{evidence:[{
+    classification:'THIRD_PARTY_CLAIM',source_url:'https://example.test/jp',response_sha256:'b'.repeat(64),excerpt:source,
+  }]}},text=>{original=text;});
+  assert.equal(original,source);
+  assert.match(html,/在本机翻译/);
+  assert.match(html,/https:\/\/example.test\/jp/);
+  assert.doesNotMatch(html,/公共プロジェクト/);
+});
+
+test('a pending first-use translation cannot update a different CA or write stale progress', async()=>{
+  const h=harness(),c=h.context, old={mint}, next={mint:'33333333333333333333333333333333'};
+  const button=h.element('cluster-story-translate'), status=h.element('cluster-story-translate-status');
+  let progress, finish, released=false;
+  c.Translator={create:opts=>{
+    opts.monitor({addEventListener(_event,handler){progress=handler;}});
+    return new Promise(resolve=>{finish=resolve;});
+  }};
+  c.localTranslationReport=old;
+  vm.runInContext('clusterVisibleReport=localTranslationReport',c);
+  c.bindClusterStoryTranslation(old,'Public sample only.');
+  h.element('cluster-story-language').value='en';
+  const waiting=button.listeners.get('click')();
+  assert.equal(button.disabled,true);
+  c.localTranslationReport=next;
+  vm.runInContext('clusterVisibleReport=localTranslationReport',c);
+  status.textContent='新报告';
+  progress({loaded:1});
+  finish({translate:()=>assert.fail('stale report must not consume translator'),
+    destroy:()=>{released=true;}});
+  await waiting;
+  assert.equal(released,true);
+  assert.equal(status.textContent,'新报告');
+  assert.equal(h.element('cluster-story-translation').hidden,true);
+});

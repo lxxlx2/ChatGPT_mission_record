@@ -2065,7 +2065,8 @@ function clusterNarrativeHeadline(report, offerLocalTranslation) {
     'LINKED_BY_CREATOR_METADATA','LINKED_BY_MARKET_SOCIAL','LINKED_BY_READ_PAGE',
   ].includes(post.relation));
   const primaryPost=postSources.find(post=>post.relation==='LINKED_BY_CREATOR_METADATA');
-  const hasChinese=value=>typeof value==='string' && (value.match(/\p{Script=Han}/gu)||[]).length>=4;
+  const hasChinese=value=>typeof value==='string' && (value.match(/\p{Script=Han}/gu)||[]).length>=4 &&
+    !/[\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]/u.test(value);
   const sources=[
     {text:metadata,url:clusterPublicEvidenceUrl(creator?.uri),label:'项目资料'},
     ...[primaryPost,...postSources.filter(post=>post!==primaryPost)].filter(Boolean).map(post=>({
@@ -2114,38 +2115,123 @@ function clusterNarrativeHeadline(report, offerLocalTranslation) {
   if (translatable) offerLocalTranslation(source.text);
   const headline=translatable
     ? '<p id="cluster-story-translation"'+(brief ? '' : ' hidden')+'>'+esc(brief)+'</p>'
+      + '<p id="cluster-story-translation-label" class="cluster-story-source" hidden>浏览器本机翻译 · 原文见来源</p>'
     : brief ? '<p>'+esc(brief)+'</p>' : '';
   const story=headline+
     (source ? '<div class="cluster-story-source">'+clusterSourceLink(source.url,source.label)+
-      (published ? ' <span>'+esc(published)+'</span>' : '')+'</div>' : '')+interaction;
+      (published ? ' <span>'+esc(published)+'</span>' : '')+'</div>' : '')+
+    (translatable && globalThis.Translator?.create ? clusterStoryTranslationControls() : '')+interaction;
   return (story ? '<div>'+story+'</div>' : '')+
     '<p class="cluster-story-claim"><strong>CA 认领</strong> <span>'+(confirmed ? '已核实' : '未核实')+'</span>'+
     (confirmed ? ' '+clusterSourceLink(clusterPublicEvidenceUrl(claim.source_url),'认领原帖') : '')+'</p>';
 }
 
-async function translateClusterStory(report, text) {
+// Explicit source-language choice also works when Chrome's detector is missing.
+const CLUSTER_STORY_LANGUAGES={
+  en:'英语',ja:'日语',ko:'韩语',th:'泰语',es:'西班牙语',fr:'法语',de:'德语',ru:'俄语',
+  ar:'阿拉伯语',bg:'保加利亚语',bn:'孟加拉语',cs:'捷克语',da:'丹麦语',el:'希腊语',
+  fi:'芬兰语',he:'希伯来语',hi:'印地语',hr:'克罗地亚语',hu:'匈牙利语',id:'印度尼西亚语',
+  it:'意大利语',kn:'卡纳达语',lt:'立陶宛语',lv:'拉脱维亚语',mr:'马拉地语',ms:'马来语',
+  nl:'荷兰语',no:'挪威语',pl:'波兰语',pt:'葡萄牙语',ro:'罗马尼亚语',sk:'斯洛伐克语',
+  sl:'斯洛文尼亚语',sv:'瑞典语',ta:'泰米尔语',te:'泰卢固语',tr:'土耳其语',uk:'乌克兰语',
+  vi:'越南语',
+};
+
+function clusterStoryTranslationControls() {
+  const languages=Object.entries(CLUSTER_STORY_LANGUAGES).map(([code,label])=>
+    '<option value="'+code+'">'+label+'</option>').join('');
+  return '<div id="cluster-story-translate-controls" class="cluster-story-source" hidden>'+
+    '<label for="cluster-story-language">原文语言</label> '+
+    '<select id="cluster-story-language"><option value="">请选择</option>'+languages+'</select> '+
+    '<button id="cluster-story-translate" class="link-btn compact" type="button">在本机翻译</button>'+
+    '<p>首次使用可能下载 Chrome 语言包。原文不会发送给翻译服务。</p>'+
+    '<p id="cluster-story-translate-status" role="status"></p></div>';
+}
+
+function writeClusterStoryTranslation(headline, translated) {
+  if (!headline || typeof translated!=='string') return false;
+  const brief=translated.trim().replace(/\s+/g,' ');
+  if (!/\p{Script=Han}/u.test(brief)) return false;
+  headline.textContent=(brief.length>220 ? brief.slice(0,219).trimEnd()+'…' : brief);
+  headline.setAttribute('title','浏览器本地翻译，原文见来源');
+  headline.hidden=false;
+  const label=$('cluster-story-translation-label');
+  if (label) label.hidden=false;
+  return true;
+}
+
+function bindClusterStoryTranslation(report, text) {
+  const controls=$('cluster-story-translate-controls'), button=$('cluster-story-translate');
+  const language=$('cluster-story-language'), status=$('cluster-story-translate-status');
+  const headline=$('cluster-story-translation');
+  if (!globalThis.Translator?.create || !controls || !button || !language || !status || !headline) return;
+  // Compare the DOM node as well as the report: the same report may be rendered twice.
+  const active=()=>clusterVisibleReport===report && $('cluster-story-translate')===button;
+  let chosen=false;
+  language.addEventListener('change',()=>{chosen=true;});
+  button.addEventListener('click', async()=>{
+    if (!active() || button.disabled) return;
+    const sourceLanguage=language.value;
+    if (!Object.hasOwn(CLUSTER_STORY_LANGUAGES,sourceLanguage)) {
+      status.textContent='请先选择原文语言。';
+      return;
+    }
+    chosen=true;
+    button.disabled=language.disabled=true;
+    status.textContent='正在准备本机翻译…';
+    let translator;
+    try {
+      // Invoke create directly in the click event, before awaiting anything.
+      translator=await globalThis.Translator.create({sourceLanguage,targetLanguage:'zh',monitor(m){
+        m.addEventListener('downloadprogress',e=>{
+          if (!active() || !button.disabled || !Number.isFinite(e.loaded)) return;
+          const percent=Math.max(0,Math.min(100,Math.floor(e.loaded*100)));
+          status.textContent='Chrome 语言包下载 '+percent+'%';
+        });
+      }});
+      if (!active()) return;
+      status.textContent='正在本机翻译…';
+      const translated=await translator.translate(text);
+      if (!active()) return;
+      status.textContent=writeClusterStoryTranslation(headline,translated) ? '已在本机翻译。' : '未得到中文译文，可查看原文。';
+    } catch (_) {
+      if (active()) status.textContent='此浏览器未能完成本机翻译。可重试或查看原文。';
+    } finally {
+      try { translator?.destroy?.(); } catch (_) {}
+      if (active()) button.disabled=language.disabled=false;
+    }
+  });
+  controls.hidden=false;
+  void translateClusterStory(report,text,{
+    active:()=>active() && !chosen,
+    onLanguage:code=>{if (!language.value && Object.hasOwn(CLUSTER_STORY_LANGUAGES,code)) language.value=code;},
+    onTranslated:()=>{controls.hidden=true;},
+  });
+}
+
+async function translateClusterStory(report, text, context={}) {
   const detection=globalThis.LanguageDetector, translation=globalThis.Translator;
   if (!detection || !translation) return;
+  const active=context.active || (()=>clusterVisibleReport===report);
   let detector, translator;
   try {
-    // Only installed models. No website upload or background language-pack download.
-    if (await detection.availability()!=='available' || clusterVisibleReport!==report) return;
+    // Background translation is restricted to models already available.
+    if (await detection.availability()!=='available' || !active()) return;
     detector=await detection.create();
+    if (!active()) return;
     const [result]=await detector.detect(text);
     if (!result || !(result.confidence>=0.8) || typeof result.detectedLanguage!=='string' ||
         !/^[a-zA-Z]{2,3}(?:-[a-zA-Z]{2,8})?$/.test(result.detectedLanguage) ||
-        result.detectedLanguage==='zh' || clusterVisibleReport!==report) return;
+        /^zh(?:-|$)/i.test(result.detectedLanguage) || !active()) return;
+    context.onLanguage?.(result.detectedLanguage);
     const options={sourceLanguage:result.detectedLanguage,targetLanguage:'zh'};
-    if (await translation.availability(options)!=='available' || clusterVisibleReport!==report) return;
+    if (await translation.availability(options)!=='available' || !active()) return;
     translator=await translation.create(options);
+    if (!active()) return;
     const translated=await translator.translate(text);
-    if (clusterVisibleReport!==report || typeof translated!=='string') return;
-    const headline=$('cluster-story-translation');
-    const brief=translated.trim().replace(/\s+/g,' ');
-    if (!headline || !/\p{Script=Han}/u.test(brief)) return;
-    headline.textContent=(brief.length>220 ? brief.slice(0,219).trimEnd()+'…' : brief);
-    headline.setAttribute('title','浏览器本地翻译，原文见来源');
-    headline.hidden=false;
+    if (active() && writeClusterStoryTranslation($('cluster-story-translation'),translated)) {
+      context.onTranslated?.();
+    }
   } catch (_) {
     // Keep the original source link and any previously verified Chinese theme.
   } finally {
@@ -3036,7 +3122,7 @@ function renderClusterReport(report) {
   $('cluster-full-query-controls').hidden=report.query_scope!=='overview' || !/^[0-9a-f]{32}$/.test(report.ca_job_id || '');
   let untranslated;
   $('cluster-story').innerHTML=clusterNarrativeHeadline(report,text=>{untranslated=text;});
-  if (untranslated) void translateClusterStory(report,untranslated);
+  if (untranslated) bindClusterStoryTranslation(report,untranslated);
   prepareClusterSeries(report);
   renderClusterOpening(report);
   renderHolderRankings(report);

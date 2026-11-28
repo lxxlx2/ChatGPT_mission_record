@@ -13,6 +13,9 @@ const jobs = {[a]:'a'.repeat(32),[b]:'b'.repeat(32)};
 const t = 1792683600, older = t-300;
 const report = mint => ({mint, ca_job_id:jobs[mint], observed_at:t, query_scope:'overview',
   coverage:{}, metrics:{}, assessment:{}, holders:[], limitations:[], transaction_errors:[],
+  narrative:mint===a?{evidence:[{classification:'THIRD_PARTY_CLAIM',
+    source_url:'https://example.test/translation-fixture',response_sha256:'f'.repeat(64),
+    excerpt:'This public park opens at nine in the morning.'}]}:undefined,
   token_profile:{status:'OK',is_initialized:true},
   market:{status:'OK',chain:'solana',mint,name:mint===a?'合成样本甲':'合成样本乙',
     main_pair:{pair_address:pool,base_address:mint,quote_address:peer},
@@ -46,6 +49,19 @@ const estimated = {mint:a,name:'同秒换算样例',signature:'3'.repeat(64),at:
     page.on('pageerror', error=>errors.push(String(error)));
     await page.addInitScript(seed=>{
       localStorage.setItem('mission-meme-cluster-reports-v1',JSON.stringify(seed));
+      globalThis.translationActivations=[];
+      globalThis.LanguageDetector=undefined;
+      globalThis.Translator={
+        create:opts=>{
+          translationActivations.push({active:navigator.userActivation.isActive,trusted:globalThis.storyClickTrusted,source:opts.sourceLanguage,target:opts.targetLanguage});
+          opts.monitor({addEventListener:(event,callback)=>{
+            if (event==='downloadprogress') callback({loaded:0.42});
+          }});
+          return new Promise(resolve=>{globalThis.releaseTranslation=()=>resolve({
+            translate:async text=>text==='This public park opens at nine in the morning.'?'公园早上九点开门。':'',
+          });});
+        }
+      };
     },[a,b].map(mint=>({id:jobs[mint],mint,observed_at:t,scope:'overview'})));
     await page.route('**/*', async route => {
       const req=route.request(), u=new URL(req.url()), path=u.pathname;
@@ -105,6 +121,20 @@ const estimated = {mint:a,name:'同秒换算样例',signature:'3'.repeat(64),at:
     await choose(a);
     await waitText('#cluster-series-chart td','7',true);
     await waitText('#cluster-series-trades td','42',true);
+    const translate=page.getByRole('button',{name:'在本机翻译'});
+    const original=page.locator('#cluster-story a[href="https://example.test/translation-fixture"]');
+    assert.equal(await original.isVisible(),true);
+    assert.deepEqual(await page.evaluate(()=>translationActivations),[]);
+    await translate.evaluate(el=>el.addEventListener('click',event=>{globalThis.storyClickTrusted=event.isTrusted;},{capture:true}));
+    await page.getByLabel('原文语言').selectOption('en');
+    await translate.click();
+    await waitText('#cluster-story-translate-status','42%');
+    assert.equal(await translate.isDisabled(),true);
+    assert.deepEqual(await page.evaluate(()=>translationActivations),[{active:true,trusted:true,source:'en',target:'zh'}]);
+    await page.evaluate(()=>releaseTranslation());
+    await waitText('#cluster-story-translation','公园早上九点开门。',true);
+    assert.equal(await page.locator('#cluster-story-translation-label').isVisible(),true);
+    assert.equal(await original.isVisible(),true);
     await page.locator('#cluster-series-older').click();
     await waitText('#cluster-series-chart td','3',true);
     await waitText('#cluster-series-trades td','42',true);
@@ -137,6 +167,6 @@ const estimated = {mint:a,name:'同秒换算样例',signature:'3'.repeat(64),at:
     assert.deepEqual(forbidden,[]);
     assert.deepEqual(errors,[]);
     console.log(JSON.stringify({chrome:chrome.version(),evidence:'synthetic browser requests intercepted, no TCP listener',
-      unique_ca:2,frank_default:'PASS',usd_estimate_label:'PASS',chart_next_previous_exhaustion:'PASS',A_B_A:'PASS',market_GET:marketRequests.length,mobile_320_390:'PASS',keyboard_focus:'PASS',external_or_POST:0,page_errors:0}));
+      unique_ca:2,frank_default:'PASS',usd_estimate_label:'PASS',chart_next_previous_exhaustion:'PASS',A_B_A:'PASS',local_translation_mock_activation:'PASS',market_GET:marketRequests.length,mobile_320_390:'PASS',keyboard_focus:'PASS',external_or_POST:0,page_errors:0}));
   } finally { await chrome.close(); }
 })().catch(error=>{console.error(error);process.exitCode=1;});
