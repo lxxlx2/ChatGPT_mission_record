@@ -475,11 +475,13 @@ def test_dashboard_http_usd_sidecar_precision_and_size_limit(tmp_path):
 def test_browser_default_entry_filters_and_prefills_ca(tmp_path):
     """Optional isolated Chromium check: FRANK_TEST_CHROMIUM=/path/to/chromium."""
     import os
+    from datetime import datetime, timezone
     binary = os.environ.get("FRANK_TEST_CHROMIUM")
     if not binary:
         pytest.skip("FRANK_TEST_CHROMIUM is not set")
     from playwright.sync_api import sync_playwright, expect
     from mission_agent.mission_control.server import DashboardHTTPServer
+    from mission_agent.signals.scanner import Scanner
 
     prod, control = tmp_path/"prod", tmp_path/"control"
     prod.mkdir()
@@ -490,6 +492,18 @@ def test_browser_default_entry_filters_and_prefills_ca(tmp_path):
     buy = put(ledger,1,at=at-1,token_raw="2500000")
     put(ledger,2,mint=BP,at=at-2)
     put(ledger,3,kind="failed",at=at-3)
+    for number in range(4, 205):
+        put(ledger, number, kind="failed", at=at-40*86400)
+    Scanner(ledger, {WALLET: "frank"}, tmp_path / "raw", rpcs={WALLET: object()}, mode="LIVE")
+    health_path = prod/"health.json"
+    runtime = {"status":"RUNNING","pid":os.getpid(),"last_successful_poll":datetime.now(timezone.utc).isoformat(),
+               "poll_interval_seconds":30,"raw_pending":1}
+    health_path.write_text(json.dumps(runtime))
+    ledger.checkpoint(WALLET, buy, 12)
+    ledger.db.execute("INSERT INTO health VALUES (?,?)", (WALLET, json.dumps({
+        "status":"RUNNING","last_successful_poll":time.time(),"lag_seconds":0,
+        "last_chain_signature":buy,"last_local_signature":buy,
+    })))
     write_usd_evidence(
         control/"frank-buy-usd-evidence.json",
         usd_observation(ledger, buy, USDC, usd_per_quote_unit="0.983"),
@@ -505,7 +519,8 @@ def test_browser_default_entry_filters_and_prefills_ca(tmp_path):
             with sync_playwright() as api:
                 browser = api.chromium.launch(executable_path=binary,args=["--disable-background-networking", "--disable-sync"])
                 page = browser.new_page()
-                errors, requests = [], []
+                errors, requests, served_paths = [], [], []
+                allowed_apis = {"/api/frank-buys", "/api/cluster-latest", "/api/frank-signed-activity"}
                 page.on("pageerror", lambda exc: errors.append(str(exc)))
                 def route_local_read(route):
                     request = route.request
@@ -513,9 +528,10 @@ def test_browser_default_entry_filters_and_prefills_ca(tmp_path):
                         route.abort()
                         return
                     path = request.url.removeprefix(base).split("?", 1)[0]
-                    if path.startswith("/api/") and path not in ("/api/frank-buys", "/api/cluster-latest"):
+                    if path.startswith("/api/") and path not in allowed_apis:
                         route.abort()
                         return
+                    served_paths.append(path)
                     route.continue_()
 
                 page.route("**/*", route_local_read)
@@ -531,16 +547,41 @@ def test_browser_default_entry_filters_and_prefills_ca(tmp_path):
                 expect(page.locator("#follow-opportunities")).to_be_hidden()
                 page.locator("#frank-buy-mint").fill(BP)
                 page.get_by_role("button",name="筛选",exact=True).click()
-                expect(page.locator("#frank-buy-status")).to_contain_text("这段时间没有买入记录")
+                expect(page.locator("#frank-buy-status")).to_contain_text("采集尚未追平")
+                health_path.write_text(json.dumps({**runtime, "status": "RETRY_PENDING", "raw_pending": 0,
+                                                   "wallet_scan_failures": 1}))
+                page.get_by_role("button",name="筛选",exact=True).click()
+                expect(page.locator("#frank-buy-status")).to_contain_text("采集尚未追平")
+                health_path.write_text(json.dumps({**runtime, "raw_pending": 0, "wallet_scan_failures": 0}))
+                page.get_by_role("button",name="筛选",exact=True).click()
+                expect(page.locator("#frank-buy-status")).to_contain_text("这段时间没有已核实的买入记录")
                 page.locator("#frank-buy-mint").fill(MINT)
                 page.get_by_role("button",name="筛选",exact=True).click()
                 expect(rows).to_have_count(1)
                 page.locator("#frank-buy-rows").get_by_role("button",name="查 CA").click()
                 expect(page.locator("#cluster-mint")).to_have_value(MINT)
+                page.goto(base+"/#signals",wait_until="domcontentloaded")
+                page.locator("#signed-activity-days").select_option("all")
+                signed_rows = page.locator("#signed-activity-rows tr")
+                expect(signed_rows).to_have_count(100)
+                load_older = page.get_by_role("button",name="加载更早流水")
+                load_older.click()
+                expect(signed_rows).to_have_count(200)
+                load_older.click()
+                expect(signed_rows).to_have_count(204)
+                expect(load_older).to_be_hidden()
+                signature_filter = page.locator("#signed-activity-search")
+                signature_filter.fill(buy)
+                signature_filter.press("Enter")
+                expect(signed_rows).to_have_count(1)
+                expect(signed_rows.first).to_contain_text("主动交易")
+                expect(signed_rows.first).to_contain_text("买入")
+                expect(signed_rows.first.locator("td").nth(1).get_by_role("link")).to_have_attribute(
+                    "href", "https://solscan.io/tx/" + buy
+                )
                 assert not errors
                 assert all(method=="GET" and url.startswith(base+"/") for method,url in requests)
-                assert not any(url.startswith(base+"/api/") and not any(
-                    key in url for key in ("/api/frank-buys", "/api/cluster-latest")) for _,url in requests)
+                assert {path for path in served_paths if path.startswith("/api/")} == allowed_apis
                 assert hashlib.sha256((prod/"forward.sqlite").read_bytes()).hexdigest() == before
                 browser.close()
         finally:

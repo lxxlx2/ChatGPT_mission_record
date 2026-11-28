@@ -108,6 +108,11 @@ def _buy_usd(item, identity, observations, captures):
     empty = {"spent_usd": None, "entry_price_usd": None}
     if item["paid"] is None:
         return empty
+    # The old receipt identity has no source instruction ordinal. A same-second
+    # conversion rate is reusable for a proven leg, but whole-transaction totals
+    # cannot be copied into several purchases.
+    if "leg_index" in item:
+        observations = {}
     observation = observations.get(key)
     if observation is None:
         rate = captures.get((item["currency"], identity["block_time"]))
@@ -154,20 +159,20 @@ def read_buys(database, qualifications, *, as_of, days="7", mint=None, cursor=No
         raise ValueError("INVALID_PERSON_WALLET_SCOPE")
     if days not in ("1", "7", "30", "all") or (mint is not None and not exact_mint(mint)):
         raise ValueError("INVALID_BUY_QUERY")
-    try:
-        assets = effective_qualification(qualifications, category_evidence_path, as_of)
-    except FileNotFoundError:
-        return {"status": "QUALIFICATION_UNAVAILABLE", "rows": [], "next_cursor": None}
     observations, captures, evidence_sha = _read_usd_evidence(usd_evidence_path)
     source = _source(database)
-    inputs = (source, days, mint, sorted(assets.items()), archive_root, legacy_archive_root, evidence_sha)
-    if person_scope is not None:
-        inputs += (("staged-person", person_scope.person_id, person_scope.wallets),)
-    binding = hashlib.sha256(repr(inputs).encode()).hexdigest()
     with closing(connect(database)) as db:
         db.execute("BEGIN")
         if _source(database) != source:
             raise ValueError("INVALID_OR_STALE_CURSOR")
+        try:
+            assets = effective_qualification(qualifications, category_evidence_path, as_of, scanner_db=db)
+        except FileNotFoundError:
+            return {"status": "QUALIFICATION_UNAVAILABLE", "rows": [], "next_cursor": None}
+        inputs = (source, days, mint, sorted(assets.items()), archive_root, legacy_archive_root, evidence_sha)
+        if person_scope is not None:
+            inputs += (("staged-person", person_scope.person_id, person_scope.wallets),)
+        binding = hashlib.sha256(repr(inputs).encode()).hexdigest()
         joined = " FROM trades t JOIN signatures s ON s.wallet=t.wallet AND s.signature=t.signature WHERE "
         if person_scope is None:
             where, params = ["s.person_id='frank'"], []
@@ -196,7 +201,8 @@ def read_buys(database, qualifications, *, as_of, days="7", mint=None, cursor=No
         where.append("t.mint IN (SELECT value FROM json_each(?))")
         params.append(json.dumps([m for m, a in assets.items() if a.status == "VERIFIED_MEME"]))
         records = db.execute(
-            "SELECT t.rowid AS trade_id,t.mint,s.wallet,s.signature,s.slot,s.block_time,s.raw_hash,s.body "
+            "SELECT t.rowid AS trade_id,t.mint,s.wallet,s.signature,s.slot,s.block_time,s.raw_hash,s.body, "
+            "CASE WHEN json_valid(t.body) THEN json_extract(t.body,'$.leg_index') END AS leg_index "
             + joined + " AND ".join(where) + " ORDER BY s.block_time DESC,t.rowid DESC", params)
         rows, next_cursor = [], None
         for row in records:
@@ -207,7 +213,7 @@ def read_buys(database, qualifications, *, as_of, days="7", mint=None, cursor=No
             if person_scope is not None and (not isinstance(event, dict) or event.get("person_id") != person_scope.person_id):
                 continue
             identity = {key: row[key] for key in _TRADE_IDENTITY}
-            item = admit_buy(event, assets, **identity, allow_unpriced=True)
+            item = admit_buy(event, assets, **identity, allow_unpriced=True, leg_index=row['leg_index'])
             if (item is None and archive_root is not None
                     and (person_scope is None or person_scope.person_id == "frank")
                     and needs_archive_replay(event, identity)):

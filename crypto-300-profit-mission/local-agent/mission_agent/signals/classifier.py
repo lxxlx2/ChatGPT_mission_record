@@ -1,6 +1,8 @@
 """Conservative user-level classification over immutable jsonParsed chain evidence."""
 from collections import defaultdict
-from ..frank.parser import normalize, IncompleteTransaction, WSOL, INFRA_PROGRAMS
+import re
+from ..frank.parser import normalize, IncompleteTransaction, WSOL, INFRA_PROGRAMS, DEX_PROGRAMS, _program_id
+from ..meme.holder_ranks import valid_pubkey
 from .policy import USDC
 from .multi_buy_proof import prove_direct_buys
 
@@ -12,6 +14,177 @@ CHAIN_METADATA_REASONS = frozenset({
     'INSTRUCTION_METADATA_MISSING','TOKEN_IDENTITY_CHANGED','TOKEN_OWNER_CHANGED','TOKEN_OWNER_MISSING',
     'FEE_MISSING','PROGRAM_INDEX_INVALID',
 })
+
+_BUY_INSTRUCTION_PREFIXES = ("swap", "route", "sharedaccountsroute", "buy")
+_INVOKE = re.compile(r"Program ([1-9A-HJ-NP-Za-km-z]{32,44}) invoke \[([1-9][0-9]*)\]")
+_SUCCESS = re.compile(r"Program ([1-9A-HJ-NP-Za-km-z]{32,44}) success")
+
+
+def _outer_buy_indices(outer, names, logs):
+    programs = [_program_id(ix, names) for ix in outer]
+    explicit = {
+        index for index, ix in enumerate(outer)
+        if programs[index] in DEX_PROGRAMS and isinstance(ix.get("parsed"), dict)
+        and str(ix["parsed"].get("type", "")).lower().startswith(_BUY_INSTRUCTION_PREFIXES)
+    }
+    roots, stack, observed = [], [], set()
+    for log in logs:
+        if not isinstance(log, str):
+            return explicit
+        if match := _INVOKE.fullmatch(log):
+            program, depth = match.groups()
+            if int(depth) != len(stack) + 1:
+                return explicit
+            if not stack:
+                roots.append(program)
+            stack.append(program)
+        elif match := _SUCCESS.fullmatch(log):
+            if not stack or stack.pop() != match[1]:
+                return explicit
+        elif (len(stack) == 1 and stack[0] in DEX_PROGRAMS
+              and log.startswith("Program log: Instruction: ")
+              and log.removeprefix("Program log: Instruction: ").lower().startswith(_BUY_INSTRUCTION_PREFIXES)):
+            observed.add(len(roots) - 1)
+    # Logs from incomplete or unaligned invocations cannot identify an outer index.
+    return explicit | observed if not stack and roots == programs else explicit
+
+
+def event_trades(event):
+    """Return the independently attributed legs, including old single-trade events."""
+    multi = event.get("trade_legs")
+    if isinstance(multi, list):
+        return multi
+    trade = event.get("trade")
+    return [trade] if isinstance(trade, dict) else []
+
+
+def transaction_market_trades(event):
+    """One model event for a Mint and transaction, with each purchase kept in evidence."""
+    grouped = defaultdict(list)
+    for trade in event_trades(event):
+        grouped[trade["mint"]].append(trade)
+    output = []
+    for legs in grouped.values():
+        if len(legs) == 1:
+            output.append(legs[0])
+            continue
+        first = legs[0]
+        paid = {(leg["quote_asset"], leg["quote_decimals"]) for leg in legs}
+        same_quote = len(paid) == 1
+        combined = {
+            **first,
+            "leg_index": None,
+            "leg_indices": [leg["leg_index"] for leg in legs],
+            "token_amount_raw": str(sum(int(leg["token_amount_raw"]) for leg in legs)),
+        }
+        if same_quote:
+            raw = str(sum(int(leg["quote_amount_raw"]) for leg in legs))
+            combined["quote_amount_raw"] = raw
+            combined["quote_legs"] = [{"asset": first["quote_asset"], "raw_delta": "-" + raw,
+                                      "decimals": first["quote_decimals"]}]
+        else:
+            combined["amount_predicate"] = "UNDETERMINED"
+            combined["amount_predicate_reason"] = "MULTIPLE_SEGMENT_QUOTE_ASSETS"
+            combined["quote_legs"] = [part for leg in legs for part in leg["quote_legs"]]
+        output.append(combined)
+    return output
+
+
+def _independent_buy_legs(tx, evidence, outer, names, indices):
+    if len(indices) < 2 or len(set(names)) != len(names):
+        return None
+    instructions = {}
+    for group in tx["meta"]["innerInstructions"]:
+        index = group["index"]
+        if type(index) is not int or not 0 <= index < len(outer) or index in instructions:
+            return None
+        instructions[index] = group["instructions"]
+    deltas = evidence["token_balance_deltas"]
+    if any(type(row["account_index"]) is not int or not 0 <= row["account_index"] < len(names)
+           for row in deltas):
+        return None
+    owned = {names[row["account_index"]]: row for row in deltas if row["wallet_owned"]}
+    amounts = {address: int(row["pre_amount"]) for address, row in owned.items()}
+    returned_to_wallet = {
+        account["account"] for account in evidence["closed_token_accounts"]
+        if account["destination"] == evidence["wallet"]
+    }
+    temporary = {
+        account["account"]: account for account in evidence["decoded_transient_token_flows"]
+        if account["account"] in returned_to_wallet and account["mint"] == WSOL
+    }
+    temporary_debits = defaultdict(list)
+    wallet_flows = evidence.get("wallet_token_transfer_flows")
+    if not isinstance(wallet_flows, list):
+        return None
+    flows = defaultdict(list)
+    for flow in wallet_flows:
+        index = flow.get("outer_index") if isinstance(flow, dict) else None
+        if index not in indices or flow.get("scope") != "inner":
+            return None
+        flows[index].append(flow)
+
+    trades = []
+    for index in sorted(indices):
+        legs = flows[index]
+        direction = {flow["direction"]: flow for flow in legs}
+        if len(legs) != 2 or set(direction) != {"IN", "OUT"}:
+            return None
+        bought, spent = direction["IN"], direction["OUT"]
+        mint, quote = bought["mint"], spent["mint"]
+        if not valid_pubkey(mint) or mint in QUOTE_MINTS or quote not in QUOTE_MINTS:
+            return None
+        target, source = bought["destination"], spent["source"]
+        for flow, address, sign in ((bought, target, 1), (spent, source, -1)):
+            token = owned.get(address)
+            raw = int(flow["raw_amount"])
+            if raw <= 0 or any(name not in names for name in (flow["source"], flow["destination"])):
+                return None
+            if sign == -1 and token is None and address in temporary and flow["mint"] == WSOL:
+                if flow["decimals"] != 9:
+                    return None
+                temporary_debits[address].append({
+                    "scope": "inner", "instruction": flow["instruction"], "delta": "-" + flow["raw_amount"],
+                })
+            elif (not token or token["mint"] != flow["mint"] or token["decimals"] != flow["decimals"]
+                  or amounts[address] + sign * raw < 0):
+                return None
+        debit = instructions[index][spent["inner_index"]].get("parsed", {}).get("info", {})
+        if debit.get("authority", debit.get("owner")) != evidence["wallet"]:
+            return None
+        before = amounts[target]
+        amounts[target] += int(bought["raw_amount"])
+        if source in amounts:
+            amounts[source] -= int(spent["raw_amount"])
+        quote_label = "SOL" if quote == WSOL else quote
+        trades.append({
+            "leg_index": index, "mint": mint, "direction": "BUY",
+            "token_amount_raw": bought["raw_amount"], "token_decimals": bought["decimals"],
+            "quote_asset": quote_label, "quote_amount_raw": spent["raw_amount"],
+            "quote_decimals": spent["decimals"], "referenced_pre_raw": str(before),
+            "referenced_post_raw": str(amounts[target]),
+            "amount_predicate": "USDC_DIRECT_NUMERIC" if quote == USDC else "UNDETERMINED",
+            "amount_predicate_reason": None if quote == USDC else "NON_USDC_QUOTE",
+            "quote_legs": [{"asset": quote_label, "raw_delta": "-" + spent["raw_amount"],
+                            "decimals": spent["decimals"]}],
+            "route_intermediate_assets": [],
+            "route_intermediate_evidence_status": "NO_INTERMEDIATE_TRANSFER_OBSERVED",
+            "route_amount_semantics": "DIRECT_OR_SINGLE_TARGET_QUOTE",
+            "instruction_evidence": {
+                "program": _program_id(outer[index], names),
+                "target_transfer": bought["instruction"], "payment_transfer": spent["instruction"],
+            },
+        })
+    # Reconcile each wallet-owned account. Fees, internal transfers, or omitted
+    # instructions may not silently be attributed to one of the independent buys.
+    if any(amounts[address] != int(row["post_amount"]) for address, row in owned.items()):
+        return None
+    for row in evidence["decoded_transient_token_flows"]:
+        debits = temporary_debits.get(row["account"], [])
+        if debits != row["transfer_refs"] or sum(int(flow["delta"]) for flow in debits) != int(row["net_transfer_raw"]):
+            return None
+    return trades
+
 
 def classify(signature, tx, wallet):
     base = {'signature': signature, 'wallet': wallet, 'slot': tx.get('slot'),
@@ -49,7 +222,20 @@ def classify(signature, tx, wallet):
         g['delta'] += int(f['net_transfer_raw']); g['decimals'] = f['decimals']
     changed = {m:g for m,g in groups.items() if g['delta']}
     authority = e['wallet_is_signer']
-    # The protocol discriminator and CPI/account proof do not depend on logs.
+    if label == 'ACTIVE_SWAP_LIKE' and authority:
+        message = tx['transaction']['message']
+        outer = message['instructions']
+        names = [key['pubkey'] for key in message['accountKeys']]
+        indices = _outer_buy_indices(outer, names, tx['meta'].get('logMessages') or [])
+        if len(indices) > 1:
+            legs = _independent_buy_legs(tx, e, outer, names, indices)
+            if legs is not None:
+                base.update(classification='ACTIVE_TRADE',
+                            classification_reason='SIGNED_DEX_SEPARATELY_RECONCILED_BUY_INSTRUCTIONS',
+                            trade_legs=legs)
+                return base
+    # Direct CPMM discriminator and CPI/account proof can still inform
+    # research when the evidence for the ledger path is unavailable.
     buys = (prove_direct_buys(signature, tx, wallet, e)
             if authority and sum(m not in QUOTE_MINTS for m in changed)>1 else [])
     if (label == 'ACTIVE_SWAP_LIKE' or buys) and authority:
@@ -118,6 +304,15 @@ def classify(signature, tx, wallet):
             )
             return base
         effective_tokens=tokens
+        dex_indices = {index for index, instruction in enumerate(outer)
+                       if _program_id(instruction, names) in DEX_PROGRAMS}
+        observed_dex_indices = {flow.get('outer_index') for flow in e.get('wallet_token_transfer_flows') or []
+                                if isinstance(flow, dict) and type(flow.get('outer_index')) is int
+                                and flow['outer_index'] in dex_indices}
+        if len(observed_dex_indices) > 1:
+            base.update(classification_reason='AMBIGUOUS_USER_EXCHANGE_ASSETS',
+                        classification_details={**details, 'candidate_buy_instruction_indices':sorted(observed_dex_indices)})
+            return base
         if len(effective_tokens)==1 and quotes:
             mint,g=effective_tokens[0]
             opposing=[(m,q) for m,q in quotes if g['delta']*q['delta']<0]

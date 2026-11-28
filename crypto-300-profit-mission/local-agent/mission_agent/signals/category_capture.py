@@ -5,6 +5,9 @@ Demo key and accepts only Solana Mint addresses, never wallet or trade IDs.
 Use a fresh staging destination; this tool cannot replace a control file.
 """
 import argparse
+from datetime import timezone
+from email.utils import parsedate_to_datetime
+import math
 import hashlib
 import json
 import os
@@ -31,7 +34,24 @@ def _open(request, *, timeout):
     return urllib.request.build_opener(_RejectRedirect()).open(request, timeout=timeout)
 
 
-def capture(mints, *, api_key, open_url=_open, clock=time.time, monotonic=time.monotonic):
+def _retry_after(headers, clock):
+    value = headers.get("Retry-After") if headers else None
+    if not value:
+        return None
+    try:
+        seconds = float(value)
+    except ValueError:
+        try:
+            stamp = parsedate_to_datetime(value)
+            if stamp.tzinfo is None:
+                stamp = stamp.replace(tzinfo=timezone.utc)
+            seconds = stamp.timestamp() - clock()
+        except (ValueError, TypeError, OverflowError, OSError):
+            return None
+    return math.ceil(seconds) if math.isfinite(seconds) and 0 <= seconds < 2**31 else None
+
+
+def capture(mints, *, api_key, open_url=_open, clock=time.time, monotonic=time.monotonic, on_result=None):
     """Return versioned raw captures and sanitized per-item coverage counts."""
     if not isinstance(mints, (list, tuple)) or not 1 <= len(mints) <= _MAX_MINTS:
         raise ValueError("CATEGORY_CAPTURE_MINT_LIMIT")
@@ -43,8 +63,10 @@ def capture(mints, *, api_key, open_url=_open, clock=time.time, monotonic=time.m
         raise ValueError("CATEGORY_CAPTURE_DEMO_KEY_REQUIRED")
     records, counts = [], {}
 
-    def count(status):
+    def count(status, *, retry_after=None):
         counts[status] = counts.get(status, 0) + 1
+        if on_result is not None:
+            on_result(mint, status, retry_after)
 
     deadline = monotonic() + _MAX_ELAPSED
     for mint in dict.fromkeys(mints):
@@ -89,7 +111,8 @@ def capture(mints, *, api_key, open_url=_open, clock=time.time, monotonic=time.m
                 count("SOURCE_REDIRECT_REFUSED")
                 break
             if error.code in (401, 403, 429):
-                count({401: "SOURCE_AUTH_REQUIRED", 403: "SOURCE_FORBIDDEN", 429: "SOURCE_RATE_LIMIT"}[error.code])
+                count({401: "SOURCE_AUTH_REQUIRED", 403: "SOURCE_FORBIDDEN", 429: "SOURCE_RATE_LIMIT"}[error.code],
+                      retry_after=_retry_after(error.headers, clock) if error.code == 429 else None)
                 break
             count("SOURCE_NO_RECORD" if error.code == 404 else "SOURCE_HTTP_UNAVAILABLE")
         except (OSError, ValueError):

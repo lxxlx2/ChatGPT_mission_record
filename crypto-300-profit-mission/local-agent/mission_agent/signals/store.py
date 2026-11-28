@@ -6,6 +6,7 @@ from ..db.connection import connect, transaction
 from ..hashing import digest
 from .policy import USDC
 from .evaluator import known_usdc_event
+from .classifier import event_trades
 
 def now(): return datetime.now(timezone.utc).isoformat()
 
@@ -25,6 +26,25 @@ def _add_quote(total,asset,value):
     if not asset:return
     total[asset]=str(Decimal(total.get(asset,'0'))+Decimal(value))
 
+# The previous signature-only key allowed exactly one leg. Keep the original
+# public table columns and rowids so existing readers and paging fences remain
+# valid, but key new rows by the source instruction index carried in their body.
+_TRADE_COLUMNS = "wallet TEXT,signature TEXT,mint TEXT,episode_id TEXT,block_time INTEGER,side TEXT,body TEXT"
+
+
+def _ensure_trade_identity(db):
+    with transaction(db):
+        primary_key = tuple(row["name"] for row in db.execute("PRAGMA table_info(trades)") if row["pk"])
+        if primary_key == ("wallet", "signature"):
+            db.execute("CREATE TABLE trades_by_leg(" + _TRADE_COLUMNS + ")")
+            db.execute("INSERT INTO trades_by_leg(rowid,wallet,signature,mint,episode_id,block_time,side,body) "
+                       "SELECT rowid,wallet,signature,mint,episode_id,block_time,side,body FROM trades")
+            db.execute("DROP TABLE trades")
+            db.execute("ALTER TABLE trades_by_leg RENAME TO trades")
+        db.execute("CREATE UNIQUE INDEX IF NOT EXISTS trades_leg_identity ON trades(wallet,signature,"
+                   "CASE WHEN json_valid(body) THEN COALESCE(json_extract(body,'$.leg_index'),-1) ELSE -1 END)")
+
+
 class Ledger:
     def __init__(self,path):
         self.db=connect(path)
@@ -32,11 +52,12 @@ class Ledger:
         CREATE TABLE IF NOT EXISTS signatures(wallet TEXT,signature TEXT,person_id TEXT,slot INTEGER,block_time INTEGER,seen_at TEXT,classified_at TEXT,raw_hash TEXT,raw_reference TEXT,body TEXT,alert_state TEXT NOT NULL,alert_reason TEXT NOT NULL,PRIMARY KEY(wallet,signature));
         CREATE TABLE IF NOT EXISTS cursors(wallet TEXT PRIMARY KEY,signature TEXT,slot INTEGER,updated_at TEXT);
         CREATE TABLE IF NOT EXISTS positions(person_id TEXT,mint TEXT,body TEXT,PRIMARY KEY(person_id,mint));
-        CREATE TABLE IF NOT EXISTS trades(wallet TEXT,signature TEXT,mint TEXT,episode_id TEXT,block_time INTEGER,side TEXT,body TEXT,PRIMARY KEY(wallet,signature));
+        CREATE TABLE IF NOT EXISTS trades(wallet TEXT,signature TEXT,mint TEXT,episode_id TEXT,block_time INTEGER,side TEXT,body TEXT);
         CREATE TABLE IF NOT EXISTS signals(signal_id TEXT PRIMARY KEY,person_id TEXT,mint TEXT,episode_id TEXT,signal_type TEXT,stage TEXT,created_at TEXT,content_hash TEXT,body TEXT,UNIQUE(person_id,mint,episode_id,signal_type,stage));
         CREATE TABLE IF NOT EXISTS outbox(signal_id TEXT,channel TEXT,status TEXT,attempts INTEGER DEFAULT 0,last_error TEXT,receipt TEXT,PRIMARY KEY(signal_id,channel));
         CREATE TABLE IF NOT EXISTS health(wallet TEXT PRIMARY KEY,body TEXT);
         ''')
+        _ensure_trade_identity(self.db)
     def cursor(self,wallet):
         r=self.db.execute('SELECT * FROM cursors WHERE wallet=?',(wallet,)).fetchone()
         return dict(r) if r else None
@@ -55,8 +76,8 @@ class Ledger:
                     if current and e['slot']<current['slot']:raise ValueError('CURSOR_BACKWARD')
                     self.db.execute('INSERT OR REPLACE INTO cursors VALUES(?,?,?,?)',(wallet,sig,e['slot'],now()))
                 return False
-            t=e.get('trade');position=None;signals=[]
-            if t:
+            trades=event_trades(e);positions=[];signals=[]
+            for t in trades:
                 r=self.db.execute('SELECT body FROM positions WHERE person_id=? AND mint=?',(person,t['mint'])).fetchone()
                 p=json.loads(r[0]) if r else {'person_id':person,'mint':t['mint'],'state':'NONE','episode_id':None,'episode_number':0,'first_buy_at':None,'last_buy_at':None,'buy_count':0,'sell_count':0,'gross_token_bought':'0','gross_token_sold':'0','gross_quote_spent':{},'gross_quote_received':{},'gross_quote_out_observed':{},'gross_quote_in_observed':{},'quote_cost_unknown_contributions':[],'quote_proceeds_unknown_contributions':[],'current_token_position':'0','last_trade_signature':None,'history_complete':False}
                 before=int(p['current_token_position']) if p['current_token_position'] is not None else 0;amount=int(t['token_amount_raw'])
@@ -97,7 +118,7 @@ class Ledger:
                             'amount_predicate_reason':t.get('amount_predicate_reason'),
                             'route_amount_semantics':t.get('route_amount_semantics'),
                         })
-                    p['last_trade_signature']=sig;position=p
+                    p['last_trade_signature']=sig;positions.append(p)
                     trade={**t,'side':side,'position_before_raw':str(before),'position_after_raw':p['current_token_position'],'episode_id':p['episode_id']}
                     self.db.execute('INSERT INTO trades VALUES(?,?,?,?,?,?,?)',(wallet,sig,t['mint'],p['episode_id'],e['block_time'],side,json.dumps(trade,sort_keys=True)))
                     self.db.execute('INSERT OR REPLACE INTO positions VALUES(?,?,?)',(person,t['mint'],json.dumps(p,sort_keys=True)))
@@ -110,8 +131,9 @@ class Ledger:
                             signals.append(sid)
                             for channel in (['local','gmail'] if stype=='FRANK_MULTIPLE_SIGNAL' else ['local']):
                                 self.db.execute('INSERT INTO outbox(signal_id,channel,status) VALUES(?,?,?)',(sid,channel,'DRY_RUN_AUDIT' if dry_run else 'PENDING'))
-            body={**e,'person_id':person,'position_change':position,'signal_ids':signals}
-            reason=e['classification_reason'] if not t else 'MODEL_NOT_QUALIFIED_OR_SAME_STAGE'
+            body={**e,'person_id':person,'position_change':positions[0] if len(positions)==1 else None,'signal_ids':signals}
+            if len(trades)>1:body['position_changes']=positions
+            reason=e['classification_reason'] if not positions else 'MODEL_NOT_QUALIFIED_OR_SAME_STAGE'
             if signals:reason='DETERMINISTIC_STAGE_UPGRADE'
             self.db.execute('INSERT INTO signatures VALUES(?,?,?,?,?,?,?,?,?,?,?,?)',(wallet,sig,person,e['slot'],e['block_time'],now(),now(),raw_hash,raw_reference,json.dumps(body,sort_keys=True),'YES' if signals else 'NO',reason))
             if advance:

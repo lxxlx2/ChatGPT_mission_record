@@ -98,7 +98,7 @@ def export_history(path: Path, *, person_id: str = "frank") -> dict:
             "unpriced_or_ambiguous_legs": 0,
             "last_time": None, "has_multileg_conflict": False,
         })
-        by_tx: dict[tuple[str,str,str,int], set[tuple]] = defaultdict(set)
+        by_tx: dict[tuple[str, str, str, int, int | None], set[tuple]] = defaultdict(set)
         for row in rows:
             if len(records) >= MAX_RECORDS:
                 raise ValueError("LOCAL_TRADE_INDEX_OVER_SAFETY_LIMIT")
@@ -107,6 +107,11 @@ def export_history(path: Path, *, person_id: str = "frank") -> dict:
             q = _quote(body)
             native_qty = _read_decimal(body.get("token_amount_raw"), body.get("token_decimals"))
             raw_keep = {k: body[k] for k in _FIELDS if k in body and k != "original_quote"}
+            leg_index = body.get("leg_index")
+            if type(leg_index) is int and leg_index >= 0:
+                raw_keep["leg_index"] = leg_index
+            else:
+                leg_index = None
             if isinstance(body.get("original_quote"), dict):
                 raw_keep["original_quote"] = {
                     k: body["original_quote"].get(k)
@@ -134,7 +139,7 @@ def export_history(path: Path, *, person_id: str = "frank") -> dict:
                 duplicates += 1
                 continue
             dedupe.add(fingerprint)
-            txkey = (row["signature"], row["mint"], row["side"], int(row["block_time"]))
+            txkey = (row["signature"], row["mint"], row["side"], int(row["block_time"]), leg_index)
             by_tx[txkey].add((q["asset"], q["quantity"], native_qty))
             records.append(evidence)
             group = by_mint[row["mint"]]
@@ -154,7 +159,7 @@ def export_history(path: Path, *, person_id: str = "frank") -> dict:
         conflicts = {key for key, legs in by_tx.items() if len(legs) > 1}
         # Aggregates containing multi-leg ambiguity must not imply verified
         # usable trading cashflow or PnL, even if gross figures are calculable.
-        for sig_id, mint, side, _ in conflicts:
+        for _, mint, _, _, _ in conflicts:
             by_mint[mint]["has_multileg_conflict"] = True
         summary = {}
         for mint, v in sorted(by_mint.items()):

@@ -10,8 +10,13 @@ def inspect(db,signature):
     results=[]
     for r in db.execute('SELECT * FROM signatures WHERE signature=?',(signature,)):
         value=dict(r);value['body']=json.loads(value['body'])
-        trade=db.execute('SELECT body FROM trades WHERE wallet=? AND signature=?',(r['wallet'],r['signature'])).fetchone()
-        value['trade_record']=json.loads(trade[0]) if trade else None
+        trades = [json.loads(trade[0]) for trade in db.execute(
+            'SELECT body FROM trades WHERE wallet=? AND signature=? ORDER BY rowid',
+            (r['wallet'], r['signature']),
+        )]
+        value['trade_record'] = trades[0] if len(trades) == 1 else None
+        if len(trades) > 1:
+            value['trade_records'] = trades
         value['signals']=[json.loads(x[0]) for x in db.execute("SELECT body FROM signals WHERE json_extract(body,'$.latest_trade_signature')=?",(signature,))]
         value['delivery_state']=[dict(x) for x in db.execute("SELECT * FROM outbox WHERE signal_id IN (SELECT signal_id FROM signals WHERE json_extract(body,'$.latest_trade_signature')=?)",(signature,))]
         for delivery in value['delivery_state']:

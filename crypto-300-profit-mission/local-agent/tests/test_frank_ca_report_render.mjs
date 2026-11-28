@@ -1783,7 +1783,7 @@ test('Frank default buys render as facts without loading market or old signal fe
       {mint,signature:mint,at:1792683606,name:'<b>样例</b>',quantity:'1',paid:'0.5',currency:'USDC',spent_usd:'12.345',entry_price_usd:'0.00000001234'},
       {mint:pendingMint,signature:pendingMint,at:1792683605,name:'多跳样例',quantity:'42',paid:null,currency:null},
     ];
-    return {ok:true,json:async()=>({status:'LOCAL_EVIDENCE_ONLY',rows,next_cursor:null})};
+    return {ok:true,json:async()=>({status:'LOCAL_EVIDENCE_ONLY',rows,next_cursor:null,scanner_coverage:'CAUGHT_UP'})};
   }});
   await new Promise(resolve=>setImmediate(resolve));
   assert.match(h.element('frank-buy-rows').innerHTML,/\$12\.35/);
@@ -1796,10 +1796,72 @@ test('Frank default buys render as facts without loading market or old signal fe
   h.element('frank-buy-mint').value=mint;
   await h.context.loadFrankBuys();
   assert.equal(h.element('frank-buy-rows').innerHTML,'');
-  assert.match(h.element('frank-buy-status').textContent,/本地索引暂无符合筛选的已核实买入/);
-  assert.match(h.element('frank-buy-status').textContent,/链上覆盖可能不完整/);
-  assert.doesNotMatch(h.element('frank-buy-status').textContent,/^这段时间没有买入记录/);
+  assert.match(h.element('frank-buy-status').textContent,/这段时间没有已核实的买入记录/);
   assert.deepEqual(paths,['/api/frank-buys?days=7','/api/frank-buys?days=7&mint='+mint]);
+});
+
+test('buy history distinguishes a known lag, missing progress, and a caught-up empty result',async()=>{
+  const h=harness();
+  for (const [coverage,message] of [
+    ['CATCHING_UP','采集尚未追平，暂无已核实的买入记录。'],
+    [undefined,'暂无已核实的买入记录，采集进度待确认。'],
+    ['CAUGHT_UP','这段时间没有已核实的买入记录。'],
+  ]) {
+    h.setResponse(async()=>({ok:true,json:async()=>({
+      status:'LOCAL_EVIDENCE_ONLY',rows:[],next_cursor:null,scanner_coverage:coverage,
+    })}));
+    await h.context.loadFrankBuys();
+    assert.equal(h.element('frank-buy-status').textContent,message);
+    assert.equal(h.element('frank-buy-table').hidden,true);
+  }
+});
+
+test('signed activity follows its cursor and reaches past the old 200-row ceiling',async()=>{
+  const h=harness();
+  h.element('signed-activity-days').value='all';
+  const seen=[];
+  h.setResponse(async path=>{
+    const query = new URL(path,'http://test.invalid').searchParams;
+    const after = Number(query.get('cursor') || 0);
+    seen.push(query);
+    return {ok:true,json:async()=>({
+      status:'INDEXED_LOCAL_ONLY',as_of:1792683606,total_signatures:201,
+      next_cursor:after < 200 ? String(after + 100) : null,
+      rows:Array.from({length:Math.min(100,201-after)},(_,i)=>({sig:'fixture-'+(after+i),trades:[]})),
+    })};
+  });
+  await h.context.refreshSignedActivity(true);
+  await h.element('signed-activity-more').listeners.get('click')();
+  await h.element('signed-activity-more').listeners.get('click')();
+  assert.deepEqual(seen.map(q=>[q.get('days'),q.get('limit'),q.get('cursor')]),
+    [['all','100',null],['all','100','100'],['all','100','200']]);
+  assert.equal((h.element('signed-activity-rows').innerHTML.match(/<tr>/g)||[]).length,201);
+  assert.match(h.element('signed-activity-rows').innerHTML,/fixture-200/);
+  assert.match(h.element('signed-activity-summary').textContent,/已显示 201 条.*匹配 201 条/);
+  assert.equal(h.element('signed-activity-more').hidden,true);
+});
+
+test('signed activity binds subsequent pages to the submitted filters and resets on new filters',async()=>{
+  const h=harness();
+  h.element('signed-activity-days').value='30';
+  h.element('signed-activity-kind').value='BUY';
+  h.element('signed-activity-search').value=mint;
+  const paths=[];
+  h.setResponse(async path=>{
+    paths.push(path);
+    const hasCursor = path.includes('cursor=');
+    return {ok:true,json:async()=>({status:'INDEXED_LOCAL_ONLY',rows:[{sig:hasCursor?'older':'recent'}],
+      as_of:1792683606,total_signatures:2,next_cursor:hasCursor?null:'stable'})};
+  });
+  await h.context.refreshSignedActivity(true);
+  h.element('signed-activity-search').value='3'.repeat(88);
+  await h.element('signed-activity-more').listeners.get('click')();
+  assert.match(paths[1],new RegExp('mint='+mint+'&cursor=stable$'));
+  await h.element('signed-activity-reload').listeners.get('click')();
+  assert.deepEqual(paths,[ '/api/frank-signed-activity?days=30&limit=100&kind=BUY&mint='+mint,
+    '/api/frank-signed-activity?days=30&limit=100&kind=BUY&mint='+mint+'&cursor=stable',
+    '/api/frank-signed-activity?days=30&limit=100&kind=BUY&signature='+'3'.repeat(88)]);
+  assert.doesNotMatch(h.element('signed-activity-rows').innerHTML,/older/);
 });
 
 test('Frank USD same-second market conversions are visibly approximate and not exact fills',()=>{
@@ -2080,40 +2142,90 @@ test('joint unavailable reason never exposes transport secrets or contradicts ac
     assert.doesNotMatch(h.context.renderIndependentCheck(abortedJointFixture('SECONDARY',patch)),/联合读取未完成/);
 });
 
-test('legacy signed activity reaches rows above 200 using the same local snapshot',async()=>{
+test('signed activity retains loaded rows when paging fails and restarts after a ledger change',async()=>{
   const h=harness();
-  const rows=Array.from({length:405},(_,i)=>({sig:'SIGNATURE'+String(i+1).padStart(4,'0'),class:'ACTIVE_TRADE',status:'OK',at:1792683606,trades:[]}));
-  let payload={status:'INDEXED_LOCAL_ONLY',signatures:rows.length,categories:{ACTIVE_TRADE:rows.length},rows};
-  const paths=[];
-  h.setResponse(async(url)=>{
-    paths.push(url);
-    return {ok:true,status:200,json:async()=>payload};
+  let status=200;
+  const urls=[];
+  h.setResponse(async url=>{
+    urls.push(url);
+    return {ok:status===200,status,json:async()=>({
+      status:'INDEXED_LOCAL_ONLY',rows:[{sig:'first-activity'}],as_of:1792683606,next_cursor:'stable',
+    })};
   });
-  h.element('signed-activity-days').value='1';
   await h.context.refreshSignedActivity(true);
-  const el=h.element;
-  const click=id=>el(id).listeners.get('click')();
-  assert.match(el('signed-activity-summary').textContent,/显示 1–200 条/);
-  assert.equal(el('signed-activity-pager').hidden,false);
-  assert.equal(el('signed-activity-prev').disabled,true);
-  click('signed-activity-next');
-  assert.match(el('signed-activity-summary').textContent,/显示 201–400 条/);
-  assert.match(el('signed-activity-rows').innerHTML,/SIGNATURE0201/);
-  assert.doesNotMatch(el('signed-activity-rows').innerHTML,/SIGNATURE0200/);
-  click('signed-activity-next');
-  assert.match(el('signed-activity-summary').textContent,/显示 401–405 条/);
-  assert.match(el('signed-activity-rows').innerHTML,/SIGNATURE0405/);
-  assert.equal(el('signed-activity-next').disabled,true);
-  click('signed-activity-prev');
-  assert.match(el('signed-activity-page-label').textContent,/2 \/ 3/);
-  el('signed-activity-search').value='SIGNATURE0405';
-  el('signed-activity-search').listeners.get('input')();
-  assert.equal(el('signed-activity-pager').hidden,true);
-  assert.match(el('signed-activity-rows').innerHTML,/SIGNATURE0405/);
-  assert.doesNotMatch(el('signed-activity-rows').innerHTML,/SIGNATURE0201/);
-  assert.deepEqual(paths,['/api/frank-signed-activity?days=1']);
-  payload={status:'UNAVAILABLE',rows:[]};
-  await h.context.refreshSignedActivity(true);
-  assert.equal(el('signed-activity-pager').hidden,true);
-  assert.doesNotMatch(el('signed-activity-rows').innerHTML,/SIGNATURE0405/);
+  status=503;
+  const more=h.element('signed-activity-more');
+  const click=()=>more.listeners.get('click')();
+  await click();
+  assert.match(h.element('signed-activity-rows').innerHTML,/first-activity/);
+  assert.match(h.element('signed-activity-updated').textContent,/读取更早流水失败/);
+  assert.equal(more.hidden,false);
+  status=409;
+  await click();
+  assert.match(h.element('signed-activity-rows').innerHTML,/first-activity/);
+  assert.match(h.element('signed-activity-updated').textContent,/账本已更换/);
+  assert.equal(more.hidden,true);
+  status=200;
+  await h.element('signed-activity-reload').listeners.get('click')();
+  assert.deepEqual(urls.map(url=>new URL(url,'http://test.invalid').searchParams.get('cursor')),
+    [null,'stable','stable',null]);
+  assert.equal(more.hidden,false);
+});
+
+test('local CA translation uses installed browser models and keeps the evidence link', async()=>{
+  const h=harness(),c=h.context, block=h.element('cluster-story-translation');
+  block.setAttribute=(key,value)=>{block[key]=value;};
+  c.LanguageDetector={availability:async()=> 'available',create:async()=>({
+    detect:async()=>[{detectedLanguage:'en',confidence:0.95}],
+  })};
+  let options;
+  c.Translator={availability:async()=> 'available',create:async input=>{
+    options=input;
+    return {translate:async text=>{
+      assert.equal(text,'This token is a community mascot.');
+      return '这个代币是社区吉祥物。';
+    }};
+  }};
+  const row={name:'Token',classification:'THIRD_PARTY_CLAIM',excerpt:'This token is a community mascot.',
+    response_sha256:'a'.repeat(64),source_url:'https://example.test/mascot'};
+  const report={mint,narrative:{evidence:[row]}};
+  let original;
+  const rendered=c.clusterNarrativeHeadline(report,text=>{original=text;});
+  assert.match(rendered,/example.test\/mascot/);
+  assert.match(rendered,/cluster-story-translation/);
+  assert.doesNotMatch(rendered,/This token is a community mascot/);
+  c.localTranslationReport=report;
+  vm.runInContext('clusterVisibleReport=localTranslationReport',c);
+  await c.translateClusterStory(report,original);
+  assert.equal(options.sourceLanguage,'en');
+  assert.equal(options.targetLanguage,'zh');
+  assert.equal(block.textContent,'这个代币是社区吉祥物。');
+  assert.equal(block.hidden,false);
+  assert.equal(h.requests.length,0);
+});
+
+test('missing model stays offline and late translation cannot cross from an old CA', async()=>{
+  const h=harness(),c=h.context, block=h.element('cluster-story-translation');
+  block.setAttribute=()=>{};
+  c.LanguageDetector={availability:async()=> 'available',create:async()=>({
+    detect:async()=>[{detectedLanguage:'en',confidence:1}],
+  })};
+  const old={mint}, next={mint:'33333333333333333333333333333333'};
+  c.localTranslationReport=old;
+  vm.runInContext('clusterVisibleReport=localTranslationReport',c);
+  c.Translator={availability:async()=> 'downloadable',create:async()=>assert.fail('no model download')};
+  await c.translateClusterStory(old,'This mascot belongs to our community.');
+  let resolve, started;
+  const ready=new Promise(r=>{started=r;});
+  c.Translator={availability:async()=> 'available',create:async()=>({
+    translate:()=>new Promise(r=>{resolve=r;started();}),
+  })};
+  const waiting=c.translateClusterStory(old,'This mascot belongs to our community.');
+  await ready;
+  c.localTranslationReport=next;
+  vm.runInContext('clusterVisibleReport=localTranslationReport',c);
+  resolve('这条旧叙事不能串到新币。');
+  await waiting;
+  assert.equal(block.textContent,'');
+  assert.equal(h.requests.length,0);
 });

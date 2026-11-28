@@ -489,50 +489,45 @@ function renderFrankWatchlist(payload) {
 let signedActivity = {status:'LOADING', rows:[]};
 let signedActivityLastFetch = 0;
 let signedActivityRequest = 0;
-let signedActivityPage = 0;
-const SIGNED_ACTIVITY_PAGE_SIZE = 200;
+let signedActivityQuery = null;
+let signedActivityReadingMore = false;
+let signedActivityPaged = false;
+
+const signedActivityClassLabel = {
+  ACTIVE_TRADE:'主动交易',
+  PASSIVE_TRANSFER:'被动转入',
+  ATA_CREATE:'创建账户',
+  FAILED_TX:'失败',
+  UNKNOWN_NEEDS_REVIEW:'待核实',
+  OTHER_OR_UNKNOWN:'其他',
+};
+
+const signedActivityStatusLabel = {
+  MATCHED_OR_NOT_APPLICABLE:'已核对',
+  CLASS_TRADE_MISMATCH:'分类与交易不一致',
+  ACTIVE_WITHOUT_TRADE_LEG:'交易明细缺失',
+  UNRESOLVED:'待核实',
+};
 
 function renderSignedActivity() {
   const payload = signedActivity;
   const rows = Array.isArray(payload.rows) ? payload.rows : [];
-  const sourceOK = payload.status === 'INDEXED_LOCAL_ONLY';
-  const pager = $('signed-activity-pager');
-  const previous = $('signed-activity-prev'), next = $('signed-activity-next');
-  pager.hidden = true;
-  previous.disabled = next.disabled = true;
-  if (!sourceOK) {
-    $('signed-activity-summary').textContent =
-      '签名索引不可读取：' + String(payload.reason || 'SOURCE_UNAVAILABLE') +
-      '。这不是“没有交易”，也不影响现有信号。';
-    $('signed-activity-rows').innerHTML =
-      '<tr><td colspan="5">暂无可验证的本地签名数据，不能按零交易处理。</td></tr>';
+  const more = $('signed-activity-more');
+  if (more) {
+    more.hidden = !payload.next_cursor;
+    more.disabled = signedActivityReadingMore;
+  }
+  if (payload.status !== 'INDEXED_LOCAL_ONLY') {
+    const loading = payload.status === 'LOADING';
+    const message = loading ? '正在读取流水…' : payload.reason === 'INVALID_ACTIVITY_FILTER'
+      ? '请输入完整的 Solana CA 或交易签名。' : '流水暂不可用。';
+    $('signed-activity-summary').textContent = message;
+    $('signed-activity-rows').innerHTML = '';
     return;
   }
-  const query = ($('signed-activity-search').value || '').trim().toLowerCase();
-  const matched = rows.filter(x => {
-    const legs = Array.isArray(x.trades) ? x.trades : [];
-    return !query || [x.sig, x.class, x.status,
-      ...legs.flatMap(t => [t.mint, t.side])].join(' ').toLowerCase().includes(query);
-  });
-  const pages = Math.max(1, Math.ceil(matched.length / SIGNED_ACTIVITY_PAGE_SIZE));
-  signedActivityPage = Math.max(0, Math.min(signedActivityPage, pages-1));
-  const start = signedActivityPage * SIGNED_ACTIVITY_PAGE_SIZE;
-  const display = matched.slice(start, start+SIGNED_ACTIVITY_PAGE_SIZE);
-  pager.hidden = pages===1;
-  previous.disabled = signedActivityPage===0;
-  next.disabled = signedActivityPage===pages-1;
-  $('signed-activity-page-label').textContent = '第 ' + (signedActivityPage+1) + ' / ' + pages + ' 页';
-  const categories = payload.categories || {};
   $('signed-activity-summary').textContent =
-    '已索引 ' + String(payload.signatures) + ' 条签名 / ' +
-    String(payload.trade_legs ?? '未知') + ' 个交易记录 · 主动类 ' +
-    String(categories.ACTIVE_TRADE || 0) + ' · 被动 ' +
-    String(categories.PASSIVE_TRANSFER || 0) + ' · 未知 ' +
-    String(categories.UNKNOWN_NEEDS_REVIEW || 0) + ' · 筛选匹配 ' +
-    String(matched.length) +
-    (display.length ? '（显示 ' + (start+1) + '–' + (start+display.length) + ' 条）' : '') +
-    ' · 非完整链史';
-  $('signed-activity-rows').innerHTML = display.map(x => {
+    '已显示 ' + rows.length + ' 条 / 本地索引匹配 ' + (payload.total_signatures ?? rows.length) + ' 条';
+  $('signed-activity-rows').innerHTML = rows.map(x => {
     const sig = typeof x.sig === 'string' ? x.sig : '';
     const at = Number(x.at);
     const when = Number.isFinite(at) && at > 0
@@ -548,54 +543,90 @@ function renderSignedActivity() {
       const txLink = mint
         ? '<a href="https://solscan.io/token/' + encodeURIComponent(mint) +
           '" target="_blank" rel="noopener noreferrer">' + esc(short(mint,8,6)) + ' ↗</a>'
-        : 'Mint 未核实';
-      return '<div>' + esc(t.side || 'UNKNOWN') + ' · ' + txLink + '</div>';
-    }).join('') : '没有已识别主动经济腿';
-    const state = String(x.status || 'UNRESOLVED');
+        : '代币地址不详';
+      return '<div>' + esc(sideLabel[t.side] || '未知') + ' · ' + txLink + '</div>';
+    }).join('') : '—';
+    const classification = signedActivityClassLabel[x.class] || '其他';
+    const state = x.trade_match_status === 'NOT_APPLICABLE' ? '—'
+      : signedActivityStatusLabel[x.status] || '待核实';
     return '<tr><td>' + esc(when) + '</td><td>' + signature +
-      '</td><td>' + esc(x.class || 'OTHER_OR_UNKNOWN') + '</td><td>' +
+      '</td><td>' + esc(classification) + '</td><td>' +
       tradeText + '</td><td>' + esc(state) + '</td></tr>';
-  }).join('') || '<tr><td colspan="5">当前筛选没有本地签名记录；不代表链上无交易。</td></tr>';
+  }).join('') || '<tr><td colspan="5">当前筛选没有本地签名记录。</td></tr>';
 }
 
-async function refreshSignedActivity(force=false) {
+function signedActivityFilters() {
+  const query = new URLSearchParams({days:$('signed-activity-days').value || '1', limit:'100'});
+  const kind = $('signed-activity-kind')?.value || 'ALL';
+  if (kind !== 'ALL') query.set('kind', kind);
+  const term = $('signed-activity-search').value.trim();
+  if (/^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(term)) query.set('mint', term);
+  else if (/^[1-9A-HJ-NP-Za-km-z]{64,100}$/.test(term)) query.set('signature', term);
+  else if (term) return null;
+  return query;
+}
+
+async function refreshSignedActivity(force=false, more=false) {
+  if (more && (!signedActivity.next_cursor || signedActivityReadingMore)) return;
   const now = Date.now();
-  if (!force && now-signedActivityLastFetch < 55000) return;
-  signedActivityLastFetch = now;
+  if (!force && (signedActivityPaged || now-signedActivityLastFetch < 55000)) return;
   const request = ++signedActivityRequest;
-  const days = $('signed-activity-days').value;
-  try {
-    const response = await get('/api/frank-signed-activity?days=' + encodeURIComponent(days));
-    if (request !== signedActivityRequest || days !== $('signed-activity-days').value) return;
-    signedActivity = response;
-    $('signed-activity-updated').textContent = '读取于 ' + new Date().toLocaleTimeString('zh-CN');
-  } catch (e) {
-    if (request !== signedActivityRequest) return;
-    signedActivity = {status:'UNAVAILABLE',reason:'ACTIVITY_GET_FAILED',rows:[]};
-    $('signed-activity-updated').textContent = '来源不可用';
+  const updated = $('signed-activity-updated');
+  let query;
+  if (more) {
+    query = new URLSearchParams(signedActivityQuery);
+    query.set('cursor', signedActivity.next_cursor);
+    signedActivityReadingMore = true;
+    signedActivityPaged = true;
+    updated.textContent = '正在读取更早流水…';
+  } else {
+    signedActivityLastFetch = now;
+    signedActivityReadingMore = signedActivityPaged = false;
+    signedActivityQuery = force || !signedActivityQuery ? signedActivityFilters() : signedActivityQuery;
+    query = signedActivityQuery;
+    signedActivity = {status:query ? 'LOADING' : 'UNAVAILABLE',reason:'INVALID_ACTIVITY_FILTER',rows:[]};
+    updated.textContent = '';
   }
   renderSignedActivity();
+  if (!query) return;
+
+  const days = query.get('days');
+  query = new URLSearchParams(query);
+  query.delete('days');
+  try {
+    const response = await get('/api/frank-signed-activity?days=' + encodeURIComponent(days) + '&' + query);
+    if (request !== signedActivityRequest) return;
+    if (response.status !== 'INDEXED_LOCAL_ONLY' || !Array.isArray(response.rows) ||
+        (more && response.as_of !== signedActivity.as_of)) throw new Error('ACTIVITY_READ_UNAVAILABLE');
+    signedActivity = more ? {...response,rows:signedActivity.rows.concat(response.rows)} : response;
+    updated.textContent = Number.isFinite(response.as_of)
+      ? '索引读取截至 ' + new Date(response.as_of * 1000).toLocaleString('zh-CN') : '';
+  } catch (e) {
+    if (request !== signedActivityRequest) return;
+    if (more && e.message.includes(' 409 [HTTP]')) {
+      signedActivity = {...signedActivity,next_cursor:null};
+      updated.textContent = '账本已更换，请重新读取。';
+    } else if (more) {
+      updated.textContent = '读取更早流水失败，请重试。';
+    } else {
+      signedActivity = {status:'UNAVAILABLE',rows:[]};
+      updated.textContent = '';
+    }
+  }
+  signedActivityReadingMore = false;
+  renderSignedActivity();
 }
 
-$('signed-activity-days').addEventListener('change', () => {
-  signedActivityPage = 0;
-  void refreshSignedActivity(true);
-});
-$('signed-activity-search').addEventListener('input', () => {
-  signedActivityPage = 0;
-  renderSignedActivity();
-});
+$('signed-activity-days').addEventListener('change', () => refreshSignedActivity(true));
+$('signed-activity-kind')?.addEventListener('change', () => refreshSignedActivity(true));
 $('signed-activity-reload').addEventListener('click', () => refreshSignedActivity(true));
-$('signed-activity-prev').addEventListener('click', () => {
-  if ($('signed-activity-prev').disabled) return;
-  signedActivityPage--;
-  renderSignedActivity();
+$('signed-activity-search').addEventListener('keydown', event => {
+  if (event.key === 'Enter') {
+    event.preventDefault();
+    void refreshSignedActivity(true);
+  }
 });
-$('signed-activity-next').addEventListener('click', () => {
-  if ($('signed-activity-next').disabled) return;
-  signedActivityPage++;
-  renderSignedActivity();
-});
+$('signed-activity-more')?.addEventListener('click', () => refreshSignedActivity(true, true));
 
 function renderCoverage(coverage) {
   const node = $('coverage');
@@ -1531,7 +1562,11 @@ async function loadFrankBuys(more=false) {
     frankBuyCursor=result.next_cursor;
     button.hidden=!frankBuyCursor;
     if (table) table.hidden=!rows.childElementCount;
-    status.textContent=rows.childElementCount ? '' : '本地索引暂无符合筛选的已核实买入。链上覆盖可能不完整，不代表这段时间没有买入。';
+    status.textContent=rows.childElementCount ? '' : result.scanner_coverage === 'CAUGHT_UP'
+      ? '这段时间没有已核实的买入记录。'
+      : result.scanner_coverage === 'CATCHING_UP' || result.scanner_caught_up === false
+        ? '采集尚未追平，暂无已核实的买入记录。'
+        : '暂无已核实的买入记录，采集进度待确认。';
   } catch (_) {
     if (generation!==frankBuyGeneration) return;
     button.hidden=!more;
@@ -2018,7 +2053,7 @@ function clusterNarrativePages(narrative) {
     clusterNarrativeDigest(row.response_sha256) && clusterPublicEvidenceUrl(row.source_url));
 }
 
-function clusterNarrativeHeadline(report) {
+function clusterNarrativeHeadline(report, offerLocalTranslation) {
   const narrative=report.narrative;
   const origin=narrative?.origin?.version===1 ? narrative.origin : null;
   const posts=clusterNarrativePosts(origin);
@@ -2048,6 +2083,7 @@ function clusterNarrativeHeadline(report) {
     row.story.themes.some(theme=>themeNames.has(theme)));
   const source=chinese || (themed ? {
     label:new URL(themed.source_url).hostname,
+    text:themed.excerpt,
     url:clusterPublicEvidenceUrl(themed.source_url),
   } : sources[0]);
   const clipped=chinese?.text.trim().replace(/\s+/g,' ') || '';
@@ -2074,12 +2110,48 @@ function clusterNarrativeHeadline(report) {
     claimPost.author_id===claim.author_id && claimPost.response_sha256===claim.post_response_sha256 &&
     clusterNarrativeDigest(claim.metadata_response_sha256) && claim.metadata_response_sha256===creator?.response_sha256;
   const published=clusterKnownTime(source?.at);
-  const story=(brief ? '<p>'+esc(brief)+'</p>' : '')+
+  const translatable=!chinese && typeof offerLocalTranslation==='function' && source?.text;
+  if (translatable) offerLocalTranslation(source.text);
+  const headline=translatable
+    ? '<p id="cluster-story-translation"'+(brief ? '' : ' hidden')+'>'+esc(brief)+'</p>'
+    : brief ? '<p>'+esc(brief)+'</p>' : '';
+  const story=headline+
     (source ? '<div class="cluster-story-source">'+clusterSourceLink(source.url,source.label)+
       (published ? ' <span>'+esc(published)+'</span>' : '')+'</div>' : '')+interaction;
   return (story ? '<div>'+story+'</div>' : '')+
     '<p class="cluster-story-claim"><strong>CA 认领</strong> <span>'+(confirmed ? '已核实' : '未核实')+'</span>'+
     (confirmed ? ' '+clusterSourceLink(clusterPublicEvidenceUrl(claim.source_url),'认领原帖') : '')+'</p>';
+}
+
+async function translateClusterStory(report, text) {
+  const detection=globalThis.LanguageDetector, translation=globalThis.Translator;
+  if (!detection || !translation) return;
+  let detector, translator;
+  try {
+    // Only installed models. No website upload or background language-pack download.
+    if (await detection.availability()!=='available' || clusterVisibleReport!==report) return;
+    detector=await detection.create();
+    const [result]=await detector.detect(text);
+    if (!result || !(result.confidence>=0.8) || typeof result.detectedLanguage!=='string' ||
+        !/^[a-zA-Z]{2,3}(?:-[a-zA-Z]{2,8})?$/.test(result.detectedLanguage) ||
+        result.detectedLanguage==='zh' || clusterVisibleReport!==report) return;
+    const options={sourceLanguage:result.detectedLanguage,targetLanguage:'zh'};
+    if (await translation.availability(options)!=='available' || clusterVisibleReport!==report) return;
+    translator=await translation.create(options);
+    const translated=await translator.translate(text);
+    if (clusterVisibleReport!==report || typeof translated!=='string') return;
+    const headline=$('cluster-story-translation');
+    const brief=translated.trim().replace(/\s+/g,' ');
+    if (!headline || !/\p{Script=Han}/u.test(brief)) return;
+    headline.textContent=(brief.length>220 ? brief.slice(0,219).trimEnd()+'…' : brief);
+    headline.setAttribute('title','浏览器本地翻译，原文见来源');
+    headline.hidden=false;
+  } catch (_) {
+    // Keep the original source link and any previously verified Chinese theme.
+  } finally {
+    try { detector?.destroy?.(); } catch (_) {}
+    try { translator?.destroy?.(); } catch (_) {}
+  }
 }
 
 function renderNarrativeOrigin(report) {
@@ -2962,7 +3034,9 @@ function renderClusterReport(report) {
   $('cluster-preview').hidden = true;
   $('cluster-wallet-panel').hidden = true;
   $('cluster-full-query-controls').hidden=report.query_scope!=='overview' || !/^[0-9a-f]{32}$/.test(report.ca_job_id || '');
-  $('cluster-story').innerHTML=clusterNarrativeHeadline(report);
+  let untranslated;
+  $('cluster-story').innerHTML=clusterNarrativeHeadline(report,text=>{untranslated=text;});
+  if (untranslated) void translateClusterStory(report,untranslated);
   prepareClusterSeries(report);
   renderClusterOpening(report);
   renderHolderRankings(report);

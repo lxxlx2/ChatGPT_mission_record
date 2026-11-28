@@ -8,6 +8,7 @@ from mission_agent.signals.policy import load_policy,POLICY_SHA256
 from mission_agent.signals.store import Ledger
 from mission_agent.signals.engine import Engine
 from mission_agent.signals.buy_admission import BuyDeliveryGate, MEME_SCOPE_BLOCKED
+from mission_agent.signals.auto_buy_category import AutoBuyCategory
 from mission_agent.signals.scanner import Scanner,WalletRPC
 from mission_agent.signals.delivery import LocalNotifier,drain
 from mission_agent.signals.runtime_io import atomic_json,utc
@@ -51,11 +52,15 @@ def source_hash():
 
 def check_snapshot(path, wallets):
     """Check a standalone SQLite backup without running ledger migrations."""
-    if not path.is_file():
+    if path.is_symlink() or not path.is_file():
         raise ValueError('SCANNER_SNAPSHOT_REQUIRED')
     wal=path.with_name(path.name+'-wal')
-    if wal.exists() and wal.stat().st_size:
+    if wal.exists() or wal.is_symlink():
         raise ValueError('SCANNER_SNAPSHOT_WAL_NOT_INCLUDED')
+    for suffix in ('-shm', '-journal'):
+        sidecar=path.with_name(path.name+suffix)
+        if sidecar.exists() or sidecar.is_symlink():
+            raise ValueError('SCANNER_SNAPSHOT_SIDECAR_PRESENT')
     uri=path.resolve().as_uri()+'?mode=ro&immutable=1'
     with closing(sqlite3.connect(uri,uri=True)) as db:
         db.row_factory=sqlite3.Row
@@ -81,27 +86,21 @@ def check_snapshot(path, wallets):
     return {'status':'PREFLIGHT_PASS','policy_hash':POLICY_SHA256,'cursor':cursors,
             'pending_unprocessed_signatures':pending}
 
-def poll_wallet_round(scanner, wallets):
-    """Catch up independent wallets, but never approve a partial model round."""
-    clocks, failures, cycles = {}, [], []
+def scan_wallet_batch(scanner, wallets):
+    """Keep successful raw capture independent of another wallet's transport failure."""
+    clocks, cycles, failures = {}, {}, {}
     for wallet in wallets:
         try:
             clocks[wallet] = scanner.rpcs[wallet].finalized_clock()
-        except Exception as error:
-            failures.append(error)
-    # Preserve the original before-scan clock barrier. A wallet without a
-    # verified clock cannot be scanned for this round, but other scanners can
-    # still archive and index. That alone does not authorize any delivery.
-    for wallet in wallets:
-        if wallet not in clocks:
-            continue
+        except Exception as exc:
+            scanner.record_failure(wallet, exc)
+            failures[wallet] = type(exc).__name__
+    for wallet in clocks:
         try:
-            cycles.append(scanner.cycle(wallet))
-        except Exception as error:
-            failures.append(error)
-    if failures:
-        raise failures[0]
-    return min(clock['block_time'] for clock in clocks.values()), cycles
+            cycles[wallet] = scanner.cycle(wallet)
+        except Exception as exc:
+            failures[wallet] = type(exc).__name__
+    return clocks, cycles, failures
 
 
 def main():
@@ -113,12 +112,15 @@ def main():
     p.add_argument('--rpc-config',type=Path,help='Private RPC config file. Defaults to the existing macOS FrankMeme file.')
     p.add_argument('--buy-qualifications',type=Path,help='Existing local Meme qualification file; overrides FRANK_BUY_QUALIFICATIONS_PATH.')
     p.add_argument('--buy-category-evidence',type=Path,help='Explicit, local opt-in category receipt file; no source fetch.')
+    p.add_argument('--auto-buy-categories', action='store_true',
+                   help='Qualify indexed unknown Mints through the existing CoinGecko Demo key.')
     p.add_argument('--check',action='store_true',help='Check a standalone SQLite backup without opening a writer.')
     a=p.parse_args()
-    try:
-        endpoint=configured_scanner_rpc(a.rpc_config)
-    except RuntimeError as exc:
-        p.exit(2, f'{exc}\n')
+    if not a.check or a.rpc_config is not None:
+        try:
+            endpoint=configured_scanner_rpc(a.rpc_config)
+        except RuntimeError as exc:
+            p.exit(2, f'{exc}\n')
     policy=load_policy(a.policy);_,wallets=load(a.registry)
     if a.check:
         try:
@@ -137,6 +139,9 @@ def main():
     if any(ledger.cursor(w) is None for w in wallets):raise ValueError('CHECKPOINT_REQUIRED_NO_INITIAL_CURSOR_RESET')
     if ledger.db.execute('PRAGMA integrity_check').fetchone()[0]!='ok':raise ValueError('SQLITE_INTEGRITY_FAILURE')
     if ledger.db.execute('PRAGMA foreign_key_check').fetchone() is not None:raise ValueError('SQLITE_FOREIGN_KEY_FAILURE')
+    category_key = os.environ.get('COINGECKO_DEMO_API_KEY') if a.auto_buy_categories else None
+    categories = AutoBuyCategory(ledger.db, api_key=category_key, manual_path=delivery_gate.path,
+                                 receipt_path=a.buy_category_evidence) if category_key else None
     stopped=False
     def stop(*_):
         nonlocal stopped
@@ -147,14 +152,28 @@ def main():
     git_root=Path(__file__).resolve().parents[3];commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=git_root,text=True).strip();source=source_hash()
     health={'system':'FRANK_ONLY','policy':'FRANK_LOCAL_SIGNAL_V1','policy_hash':POLICY_SHA256,'identifier':IDENTIFIER,'pid':os.getpid(),'started_at':utc(),'first_started_at':old.get('first_started_at',utc()),'restart_count':old.get('restart_count',-1)+1,'code_commit':commit,'loaded_source_sha256':source,'poll_count':old.get('poll_count',0),'consecutive_errors':0,'poll_interval_seconds':30,'delivery_authority':'LOCAL_DETERMINISTIC_SIGNAL','gpt_in_critical_path':False,'production_trading':'NO_GO','other_persons':'DEFERRED','new_automation':False,'status':'STARTING'}
     health.update(health_from_summary(summary_from_db(ledger.db)))
+    health['buy_category_capture'] = {'status': (
+        'WAITING_FOR_SCAN' if categories else 'SOURCE_NOT_CONFIGURED' if a.auto_buy_categories else 'NOT_ENABLED'
+    )}
     atomic_json(path,health)
     while not stopped:
         started=time.monotonic();health['last_poll_at']=utc();health['poll_count']+=1
         try:
-            # A partial round may index unaffected wallets, but it must not
-            # advance shared model clocks or dispatch any delivery.
-            cutoff,cycles=poll_wallet_round(scanner,wallets)
-            engine.drain(until=cutoff)
+            clocks, wallet_cycles, wallet_failures = scan_wallet_batch(scanner, wallets)
+            cycles = list(wallet_cycles.values())
+            health['wallet_scan_failures'] = len(wallet_failures)
+            health['new_signatures'] = sum(c['new_signatures'] for c in cycles)
+            if categories and cycles:
+                try:
+                    health['buy_category_capture'] = categories.refresh()
+                except (OSError, ValueError, sqlite3.Error) as exc:
+                    health['buy_category_capture'] = {'status': 'CATEGORY_SYNC_UNAVAILABLE',
+                                                       'error_type': type(exc).__name__}
+            # V1 can aggregate wallets for Frank, so pending chain facts must
+            # stay ahead of any scheduled model stages or new deliveries.
+            if wallet_failures:
+                raise RuntimeError('WALLET_BATCH_INCOMPLETE')
+            engine.drain(until=min(c['block_time'] for c in clocks.values()))
             deliveries=drain(ledger,notifier,delivery_gate=delivery_gate)
             current={w:ledger.cursor(w) for w in wallets}
             health.update(status='RUNNING',last_successful_poll=utc(),last_model_successful_eval=utc(),last_chain_signature=cycles[0]['last_chain_signature'],last_processed_signature=current[next(iter(wallets))]['signature'],last_processed_slot=current[next(iter(wallets))]['slot'],lag_seconds=cycles[0]['lag_seconds'],consecutive_errors=0,new_signatures=sum(c['new_signatures'] for c in cycles),model=engine.summary(),local_pending=sum(r['channel']=='local' and r['status'] not in ('COMMAND_ACCEPTED','DRY_RUN_AUDIT',MEME_SCOPE_BLOCKED,'SENT_UNVERIFIED') for r in deliveries),raw_pending=ledger.db.execute("SELECT count(*) FROM signature_detections WHERE state='RAW_PENDING'").fetchone()[0],model_unprocessed=ledger.db.execute('SELECT count(*) FROM signatures s LEFT JOIN v1_seen v USING(wallet,signature) WHERE v.signature IS NULL').fetchone()[0])

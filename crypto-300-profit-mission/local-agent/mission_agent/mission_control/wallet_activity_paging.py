@@ -34,8 +34,8 @@ def _decode(cursor):
             raise ValueError
         token = json.loads(base64.b64decode(
             cursor + "=" * (-len(cursor) % 4), altchars=b"-_", validate=True))
-        if not isinstance(token, dict) or set(token) != {
-                "v", "source", "at", "days", "fence", "kind", "mint", "after"}:
+        required = {"v", "source", "at", "days", "fence", "kind", "mint", "after"}
+        if not isinstance(token, dict) or not required <= set(token) <= required | {"signature"}:
             raise ValueError
         if type(token["v"]) is not int or token["v"] != 1:
             raise ValueError
@@ -48,6 +48,8 @@ def _decode(cursor):
         if not isinstance(token["kind"], str) or token["kind"] not in KINDS:
             raise ValueError
         if token["mint"] is not None and safe_id(token["mint"], MINT) is None:
+            raise ValueError
+        if token.get("signature") is not None and safe_id(token["signature"]) is None:
             raise ValueError
         if not isinstance(token["source"], str) or len(token["source"]) != 64 or any(
                 c not in "0123456789abcdef" for c in token["source"]):
@@ -62,7 +64,7 @@ def _decode(cursor):
         raise ValueError("INVALID_ACTIVITY_CURSOR") from None
 
 
-def _where(at, days, fence, kind, mint):
+def _where(at, days, fence, kind, mint, signature):
     params = ["frank", fence]
     where = "s.person_id=? AND s.rowid<=?"
     if days == "all":
@@ -71,20 +73,27 @@ def _where(at, days, fence, kind, mint):
     else:
         where += " AND s.block_time BETWEEN ? AND ?"
         params.extend([at-days*86400, at])
+    if signature is not None:
+        where += " AND s.signature=?"
+        params.append(signature)
     body = "CASE WHEN json_valid(s.body) THEN s.body ELSE '{}' END"
     cls = "json_extract(" + body + ",'$.classification')"
     if kind in ("BUY", "SELL"):
         sides = ("BUY", "ADD", "REENTRY") if kind == "BUY" else ("SELL", "EXIT", "SELL_POSITION_UNRESOLVED")
         where += (" AND " + cls + "='ACTIVE_TRADE' AND EXISTS (SELECT 1 FROM trades t "
-                  "WHERE t.wallet=s.wallet AND t.signature=s.signature AND t.side IN (?,?,?))")
+                  "WHERE t.wallet=s.wallet AND t.signature=s.signature AND t.side IN (?,?,?)")
         params.extend(sides)
+        if mint is not None:
+            where += " AND t.mint=?"
+            params.append(mint)
+        where += ")"
     elif kind == "OTHER_OR_UNKNOWN":
         where += " AND (" + cls + " IS NULL OR " + cls + " NOT IN (?,?,?,?,?))"
         params.extend(sorted(CLASSES))
     elif kind != "ALL":
         where += " AND " + cls + "=?"
         params.append(kind)
-    if mint is not None:
+    if mint is not None and kind not in ("BUY", "SELL"):
         deltas = ("CASE WHEN json_type(" + body + ",'$.evidence.token_balance_deltas')='array' "
                   "THEN json_extract(" + body + ",'$.evidence.token_balance_deltas') ELSE '[]' END")
         item = "CASE WHEN json_valid(e.value) THEN e.value ELSE '{}' END"
@@ -97,7 +106,7 @@ def _where(at, days, fence, kind, mint):
     return where, params
 
 
-def activity_page(path, as_of, days=1, *, page_size=100, cursor=None, kind="ALL", mint=None):
+def activity_page(path, as_of, days=1, *, page_size=100, cursor=None, kind="ALL", mint=None, signature=None):
     if type(as_of) is not int or not 1_600_000_000 < as_of < 4_000_000_000:
         raise ValueError("INVALID_TIMESTAMP")
     if days != "all" and (type(days) is not int or days not in (1, 7, 30)):
@@ -108,6 +117,8 @@ def activity_page(path, as_of, days=1, *, page_size=100, cursor=None, kind="ALL"
         raise ValueError("INVALID_ACTIVITY_KIND")
     if mint is not None and safe_id(mint, MINT) is None:
         raise ValueError("INVALID_ACTIVITY_MINT")
+    if signature is not None and safe_id(signature) is None:
+        raise ValueError("INVALID_ACTIVITY_SIGNATURE")
     db = connect(path)
     try:
         db.execute("BEGIN")
@@ -118,7 +129,7 @@ def activity_page(path, as_of, days=1, *, page_size=100, cursor=None, kind="ALL"
         if token:
             if token["source"] != source:
                 raise ValueError("ACTIVITY_CURSOR_SOURCE_CHANGED")
-            if (token["days"], token["kind"], token["mint"]) != (days, kind, mint):
+            if (token["days"], token["kind"], token["mint"], token.get("signature")) != (days, kind, mint, signature):
                 raise ValueError("ACTIVITY_CURSOR_QUERY_CHANGED")
             if token["at"] > as_of:
                 raise ValueError("INVALID_ACTIVITY_CURSOR")
@@ -127,7 +138,7 @@ def activity_page(path, as_of, days=1, *, page_size=100, cursor=None, kind="ALL"
             at = as_of
             fence = db.execute("SELECT COALESCE(MAX(rowid),0) FROM signatures WHERE person_id=?",
                                ("frank",)).fetchone()[0]
-        where, params = _where(at, days, fence, kind, mint)
+        where, params = _where(at, days, fence, kind, mint, signature)
         total = db.execute("SELECT COUNT(*) FROM signatures s WHERE " + where, params).fetchone()[0]
         tail, tail_params = "", []
         if token:
@@ -148,11 +159,13 @@ def activity_page(path, as_of, days=1, *, page_size=100, cursor=None, kind="ALL"
             last = selected[-1]
             next_cursor = _encode({"v": 1, "source": source, "at": at, "days": days,
                                    "fence": fence, "kind": kind, "mint": mint,
+                                   **({"signature": signature} if signature is not None else {}),
                                    "after": [last["at"], last["n"]]})
         return {**result, "scope": "LOCAL_INDEX_ONLY_NOT_COMPLETE_CHAIN",
                 "total_signatures": total, "counts_scope": "THIS_PAGE",
                 "page_size": page_size, "has_more": more, "next_cursor": next_cursor,
                 "kind": kind, "mint": mint, "immutable_source_snapshot": False,
+                **({"signature": signature} if signature is not None else {}),
                 "index_read_semantics": "NEW_ROWS_FENCED; EXISTING_ROWS_MAY_BE_UPDATED",
                 "untimed_source_signatures": db.execute(
                     "SELECT COUNT(*) FROM signatures WHERE person_id=? AND rowid<=? AND block_time IS NULL",

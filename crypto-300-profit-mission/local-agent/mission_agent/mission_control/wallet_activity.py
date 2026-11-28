@@ -65,20 +65,26 @@ def activity(path, as_of, days=1, max_rows=None, *, _row_ids=None, _connection=N
         sigs = db.execute(query, params).fetchall()
         if max_rows is not None and len(sigs) > max_rows:
             raise ValueError("INDEX_WINDOW_TOO_LARGE_NOT_TRUNCATED")
+        have_trade_body = any(row[1] == "body" for row in db.execute("PRAGMA table_info(trades)"))
+        leg = "CASE WHEN json_valid(t.body) THEN json_extract(t.body,'$.leg_index') END" if have_trade_body else "NULL"
         trades = db.execute(
-            "SELECT t.wallet,t.signature,t.mint,t.side FROM trades t "
+            f"SELECT t.wallet,t.signature,t.mint,t.side,{leg} AS leg_index FROM trades t "
             "JOIN signatures s ON t.wallet=s.wallet AND t.signature=s.signature "
-            "WHERE " + where,
+            "WHERE " + where + " ORDER BY t.rowid",
             params[:-1] if max_rows is not None else params).fetchall()
         tmap, seen_trades = defaultdict(list), set()
         for t in trades:
-            key = (t["wallet"], t["signature"], t["mint"], t["side"])
+            ordinal = t["leg_index"]
+            ordinal = ordinal if type(ordinal) is int and ordinal >= 0 else None
+            key = (t["wallet"], t["signature"], t["mint"], t["side"], ordinal)
             if key in seen_trades:
                 continue
             seen_trades.add(key)
-            tmap[(t["wallet"], t["signature"])].append({
-                "side": t["side"] if t["side"] in SIDES else "OTHER_SIDE",
-                "mint": safe_id(t["mint"], MINT)})
+            trade = {"side": t["side"] if t["side"] in SIDES else "OTHER_SIDE",
+                     "mint": safe_id(t["mint"], MINT)}
+            if ordinal is not None:
+                trade["leg_index"] = ordinal
+            tmap[(t["wallet"], t["signature"])].append(trade)
         seen, rows = set(), []
         for s in sigs:
             key = (s["wallet"], s["signature"])

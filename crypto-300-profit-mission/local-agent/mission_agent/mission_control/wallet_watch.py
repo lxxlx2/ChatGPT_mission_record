@@ -388,12 +388,15 @@ def from_sqlite(path: Path, *, person_id: str = PERSON, as_of: int | None = None
         )
         seen = {}
         for rec in rows:
-            key = (rec["mint"], rec["signature"], rec["side"], rec["block_time"])
+            body = _json_obj(rec["body"])
+            leg_index = body.get("leg_index")
+            if type(leg_index) is not int or leg_index < 0:
+                leg_index = None
+            key = (rec["mint"], rec["signature"], rec["side"], rec["block_time"], leg_index)
             mint = rec["mint"]
             if key in seen:
                 if seen[key] != rec["body"]:
-                    # One signature may carry multiple distinct swap legs.
-                    # Count it once, but do not use an arbitrary leg as a fill.
+                    # Conflicting records at the same identity do not prove a fill.
                     g = agg[mint]
                     g["conflicts"].add(rec["signature"])
                     if g["last"] and g["last"]["signature"] == rec["signature"]:
@@ -406,11 +409,12 @@ def from_sqlite(path: Path, *, person_id: str = PERSON, as_of: int | None = None
                 group["buys"] += 1
             elif side in SELL:
                 group["sells"] += 1
-            asset, qty = _amount(_json_obj(rec["body"]))
+            asset, qty = _amount(body)
             group["last"] = {
                 "signature": rec["signature"], "side": side,
                 "block_time": rec["block_time"],
-                "quote_asset": asset, "quote_amount": qty,
+                "quote_asset": asset,
+                "quote_amount": None if rec["signature"] in group["conflicts"] else qty,
             }
         seed = []
         for mint in sorted(set(states) | set(agg)):

@@ -7,6 +7,7 @@ from .policy import POLICY_SHA256,USDC
 from .evaluator import evaluate,watch_eligible,establish_t0,watch_tick,known_usdc_event
 from .store import quantity
 from .buy_admission import admit_buy
+from .classifier import transaction_market_trades
 
 class Engine:
     def __init__(self,ledger,policy,*,dry_run=True,rebuild_assets=None,delivery_gate=None):
@@ -202,17 +203,18 @@ class Engine:
     def process(self,row):
         if self.db.execute('SELECT 1 FROM v1_seen WHERE wallet=? AND signature=?',(row['wallet'],row['signature'])).fetchone():return None
         e=json.loads(row['body']);at=row['block_time']
-        trade=e.get('trade')
-        if (self.rebuild_assets is not None and isinstance(trade,dict) and trade.get('direction')=='BUY'
-                and not self._rebuild_admits(row,e,trade.get('mint'))):
-            with transaction(self.db):
-                self.db.execute('INSERT OR IGNORE INTO v1_seen VALUES(?,?)',(row['wallet'],row['signature']))
-            return None
+        trades = transaction_market_trades(e) if e["classification"] == "ACTIVE_TRADE" else []
+        if trades and self.rebuild_assets is not None:
+            trades = [trade for trade in trades if trade["direction"] != "BUY"
+                      or self._rebuild_admits(row, e, trade["mint"])]
+            if not trades:
+                with transaction(self.db):
+                    self.db.execute('INSERT OR IGNORE INTO v1_seen VALUES(?,?)',(row['wallet'],row['signature']))
+                return None
         if at is not None:self.tick(at)
-        result=None
+        evaluations = []
         with transaction(self.db):
-            t=e.get('trade') if e['classification']=='ACTIVE_TRADE' else None
-            if t and at is not None:
+            for t in trades if at is not None else ():
                 evidence=e.get('evidence',{})
                 if not e['frank_is_signer'] or evidence.get('tx_err') is not None or not all(evidence.get('classification_evidence',{}).get(k) for k in ['dex_program_interaction','swap_instruction_evidence','opposing_economic_flows']):raise ValueError('VERIFIED_ACTIVE_TRADE_REQUIRED')
                 person,mint=row['person_id'],t['mint'];s=self._state(person,mint)
@@ -245,13 +247,27 @@ class Engine:
                     clock=self.db.execute("SELECT value FROM v1_meta WHERE key='last_time'").fetchone()
                     evaluated_at=max(at,int(clock[0]) if clock else at)
                     result=self._evaluate(s,evaluated_at,row['signature'],'ACTIVE_TRADE');self._save(s)
-                    ids=result['signal_ids'];body={**e,'signal_ids':sorted(set(e.get('signal_ids',[])+ids)),'v1_evaluation':result,'amount_predicate':event['amount_predicate']}
-                    self.db.execute('UPDATE signatures SET body=?,alert_state=?,alert_reason=? WHERE wallet=? AND signature=?',(json.dumps(body,sort_keys=True),'YES' if body['signal_ids'] else 'NO','DETERMINISTIC_STAGE_UPGRADE' if ids else 'V1_PREDICATES:'+json.dumps(result['predicates'],sort_keys=True),row['wallet'],row['signature']))
+                    evaluations.append((mint, result, event['amount_predicate']))
                 else:
                     self.db.execute("UPDATE signatures SET alert_reason='V1_SELL_POSITION_HISTORY_UNDETERMINED' WHERE wallet=? AND signature=?",(row['wallet'],row['signature']))
-            if t and at is None:self.db.execute("UPDATE signatures SET alert_reason='V1_BLOCK_TIME_UNDETERMINED' WHERE wallet=? AND signature=?",(row['wallet'],row['signature']))
+            if evaluations:
+                ids={sid for _, result, _ in evaluations for sid in result["signal_ids"]}
+                body={**e,'signal_ids':sorted(set(e.get('signal_ids',[])) | ids)}
+                if len(evaluations)==1 and not e.get("trade_legs"):
+                    _, result, predicate = evaluations[0]
+                    body.update(v1_evaluation=result, amount_predicate=predicate)
+                    fallback = 'V1_PREDICATES:'+json.dumps(result['predicates'],sort_keys=True)
+                else:
+                    body['v1_leg_evaluations'] = {mint: result for mint, result, _ in evaluations}
+                    fallback = 'V1_LEG_PREDICATES'
+                self.db.execute('UPDATE signatures SET body=?,alert_state=?,alert_reason=? WHERE wallet=? AND signature=?',
+                                (json.dumps(body,sort_keys=True),'YES' if body['signal_ids'] else 'NO',
+                                 'DETERMINISTIC_STAGE_UPGRADE' if ids else fallback,row['wallet'],row['signature']))
+            if trades and at is None:
+                self.db.execute("UPDATE signatures SET alert_reason='V1_BLOCK_TIME_UNDETERMINED' WHERE wallet=? AND signature=?",
+                                (row['wallet'],row['signature']))
             self.db.execute('INSERT INTO v1_seen VALUES(?,?)',(row['wallet'],row['signature']))
-        return result
+        return evaluations[-1][1] if evaluations else None
     def drain(self,*,until=None):
         rows=self.db.execute('SELECT s.* FROM signatures s LEFT JOIN v1_seen v USING(wallet,signature) WHERE v.signature IS NULL ORDER BY s.block_time,s.slot,s.signature').fetchall()
         for row in rows:self.process(row)
@@ -259,4 +275,4 @@ class Engine:
         return len(rows)
     def summary(self):
         counts=dict(self.db.execute('SELECT signal_type,count(*) FROM signals GROUP BY signal_type'))
-        return {'mode':'DRY_RUN_ONLY' if self.dry_run else 'LIVE','policy_id':self.policy['policy_id'],'policy_hash':POLICY_SHA256,'tokens_evaluated':self.db.execute("SELECT count(DISTINCT json_extract(body,'$.trade.mint')) FROM signatures WHERE json_extract(body,'$.classification')='ACTIVE_TRADE'").fetchone()[0],'episodes_evaluated':self.db.execute('SELECT count(*) FROM v1_episodes').fetchone()[0],'accumulation_trigger_count':counts.get('FRANK_ACCUMULATION_SIGNAL',0),'multiple_trigger_count':counts.get('FRANK_MULTIPLE_SIGNAL',0),'same_stage_duplicate_suppressed':int(self.db.execute("SELECT value FROM v1_meta WHERE key='duplicates_suppressed'").fetchone()[0]),'undetermined_predicate_evaluations':self.db.execute("SELECT count(*) FROM v1_evaluations WHERE body LIKE '%UNDETERMINED%'").fetchone()[0],'unknown_incomplete_blocked':self.db.execute("SELECT count(DISTINCT signature) FROM signatures WHERE json_extract(body,'$.classification')='UNKNOWN_NEEDS_REVIEW' OR alert_reason IN ('V1_SELL_POSITION_HISTORY_UNDETERMINED','V1_BLOCK_TIME_UNDETERMINED') OR signature IN (SELECT signature FROM v1_evaluations WHERE body LIKE '%UNDETERMINED%')").fetchone()[0]}
+        return {'mode':'DRY_RUN_ONLY' if self.dry_run else 'LIVE','policy_id':self.policy['policy_id'],'policy_hash':POLICY_SHA256,'tokens_evaluated':self.db.execute("SELECT count(DISTINCT mint) FROM (SELECT json_extract(body,'$.trade.mint') AS mint FROM signatures WHERE json_extract(body,'$.classification')='ACTIVE_TRADE' UNION ALL SELECT json_extract(leg.value,'$.mint') FROM signatures,json_each(body,'$.trade_legs') leg WHERE json_extract(body,'$.classification')='ACTIVE_TRADE')").fetchone()[0],'episodes_evaluated':self.db.execute('SELECT count(*) FROM v1_episodes').fetchone()[0],'accumulation_trigger_count':counts.get('FRANK_ACCUMULATION_SIGNAL',0),'multiple_trigger_count':counts.get('FRANK_MULTIPLE_SIGNAL',0),'same_stage_duplicate_suppressed':int(self.db.execute("SELECT value FROM v1_meta WHERE key='duplicates_suppressed'").fetchone()[0]),'undetermined_predicate_evaluations':self.db.execute("SELECT count(*) FROM v1_evaluations WHERE body LIKE '%UNDETERMINED%'").fetchone()[0],'unknown_incomplete_blocked':self.db.execute("SELECT count(DISTINCT signature) FROM signatures WHERE json_extract(body,'$.classification')='UNKNOWN_NEEDS_REVIEW' OR alert_reason IN ('V1_SELL_POSITION_HISTORY_UNDETERMINED','V1_BLOCK_TIME_UNDETERMINED') OR signature IN (SELECT signature FROM v1_evaluations WHERE body LIKE '%UNDETERMINED%')").fetchone()[0]}

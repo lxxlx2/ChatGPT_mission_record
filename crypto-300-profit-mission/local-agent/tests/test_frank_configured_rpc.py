@@ -351,13 +351,13 @@ def test_partial_poll_keeps_other_wallet_catchup_but_does_not_return_a_model_gat
         return {"new_signatures": 1}
     scanner = SimpleNamespace(
         rpcs={w: SimpleNamespace(finalized_clock=lambda w=w: clock(w)) for w in ("a", "b")},
-        cycle=cycle,
+        cycle=cycle, record_failure=lambda wallet, error: steps.append(("failure", wallet)),
     )
-    with pytest.raises(ValueError, match="BLOCKED_FIXTURE") as exc:
-        service.poll_wallet_round(scanner, {"a": "frank", "b": "frank"})
-    assert exc.value is failure
-    assert steps == [("clock", "a"), ("clock", "b")] + (
-        [] if broken_phase == "clock" else [("cycle", "a")]) + [("cycle", "b")]
+    _, cycles, failures = service.scan_wallet_batch(scanner, {"a": "frank", "b": "frank"})
+    assert failures == {"a": "ValueError"} and set(cycles) == {"b"}
+    assert steps == [("clock", "a")] + (
+        [("failure", "a"), ("clock", "b")] if broken_phase == "clock"
+        else [("clock", "b"), ("cycle", "a")]) + [("cycle", "b")]
 
 
 def test_complete_poll_uses_earliest_verified_clock_and_preserves_cycle_order():
@@ -373,9 +373,10 @@ def test_complete_poll_uses_earliest_verified_clock_and_preserves_cycle_order():
         "a": SimpleNamespace(finalized_clock=lambda: clock("a", 99)),
         "b": SimpleNamespace(finalized_clock=lambda: clock("b", 96)),
     }, cycle=cycle)
-    cutoff, cycles = service.poll_wallet_round(scanner, {"a": "frank", "b": "frank"})
-    assert cutoff == 96
-    assert cycles == [{"wallet": "a"}, {"wallet": "b"}]
+    clocks, cycles, failures = service.scan_wallet_batch(scanner, {"a": "frank", "b": "frank"})
+    assert min(clock["block_time"] for clock in clocks.values()) == 96
+    assert list(cycles.values()) == [{"wallet": "a"}, {"wallet": "b"}]
+    assert not failures
     assert steps == [("clock", "a"), ("clock", "b"), ("scan", "a"), ("scan", "b")]
 
 
@@ -409,9 +410,65 @@ def test_real_scanner_indexes_healthy_wallet_during_another_wallet_gap(tmp_path)
             return raw
 
     scanner = Scanner(ledger, wallets, tmp_path / "raw", {broken: Broken(), WALLET: Healthy()})
-    with pytest.raises(ValueError, match="CURSOR_GAP_UNRESOLVED"):
-        service.poll_wallet_round(scanner, wallets)
+    _, cycles, failures = service.scan_wallet_batch(scanner, wallets)
+    assert failures == {broken: "ValueError"} and set(cycles) == {WALLET}
     assert ledger.cursor(broken)["signature"] == "old-bad"
     assert ledger.cursor(WALLET)["signature"] == "new-good"
     assert (tmp_path / "raw/new-good.json.gz").is_file()
+    assert ledger.db.execute("SELECT count(*) FROM outbox").fetchone()[0] == 0
+
+
+def test_staged_wallet_batch_continues_raw_capture_after_a_different_wallet_fails(tmp_path):
+    import gzip
+    from mission_agent.meme.holder_ranks import _b58
+    from mission_agent.signals.scanner import Scanner
+    from mission_agent.signals.store import Ledger
+    from test_frank_fm import tx
+
+    failed, healthy = (_b58(bytes([i]) * 32) for i in (37, 38))
+    wallets = {failed: "candidate", healthy: "frank"}
+    ledger = Ledger(tmp_path / "forward.sqlite")
+    checkpoint = _b58(bytes(64))
+    signature = _b58((2).to_bytes(64, "big"))
+    for wallet in wallets:
+        ledger.checkpoint(wallet, checkpoint, 1)
+        ledger.db.execute("INSERT INTO health VALUES(?,?)", (wallet, json.dumps({
+            "status": "RUNNING", "last_successful_poll": 1790760001, "lag_seconds": 0,
+        })))
+    value = tx()
+    value["slot"] = 2
+    value["transaction"]["signatures"] = [signature]
+    value["transaction"]["message"]["accountKeys"][0]["pubkey"] = healthy
+    for balance in [*value["meta"]["preTokenBalances"], *value["meta"]["postTokenBalances"]]:
+        balance["owner"] = healthy
+
+    class BrokenRPC:
+        def finalized_clock(self):
+            raise TimeoutError("https://fixture.invalid/path-that-must-not-appear")
+
+        def signatures(self, **_kwargs):
+            pytest.fail("wallet with no finalized clock should stay undisturbed")
+
+    class HealthyRPC:
+        def finalized_clock(self):
+            return {"slot": 2, "block_time": value["blockTime"]}
+
+        def signatures(self, **_kwargs):
+            return [{"signature": signature, "slot": 2, "blockTime": value["blockTime"]},
+                    {"signature": checkpoint, "slot": 1}]
+
+        def transaction(self, sig):
+            assert sig == signature
+            return value
+
+    raw = tmp_path / "raw"
+    scanner = Scanner(ledger, wallets, raw, rpcs={failed: BrokenRPC(), healthy: HealthyRPC()})
+    clocks, cycles, failures = service.scan_wallet_batch(scanner, wallets)
+    assert set(clocks) == set(cycles) == {healthy}
+    assert failures == {failed: "TimeoutError"}
+    assert ledger.cursor(failed)["signature"] == checkpoint
+    assert ledger.cursor(healthy)["signature"] == signature
+    assert json.loads(gzip.decompress((raw / (signature + ".json.gz")).read_bytes()))["slot"] == 2
+    saved = ledger.db.execute("SELECT body FROM health WHERE wallet=?", (failed,)).fetchone()[0]
+    assert json.loads(saved)["status"] == "RETRY_PENDING" and "path-that-must-not-appear" not in saved
     assert ledger.db.execute("SELECT count(*) FROM outbox").fetchone()[0] == 0

@@ -1299,24 +1299,29 @@ class DashboardState:
 
     def frank_buys(self, **query):
         qualifications = qualification_path(default=self.control_root / "frank-buy-qualifications.json")
-        return read_buys(self.frank.database, qualifications, as_of=int(time.time()),
-                         archive_root=self.evidence_manifests.archive_root,
-                         legacy_archive_root=self.evidence_manifests.legacy_archive_root,
-                         usd_evidence_path=self.control_root / "frank-buy-usd-evidence.json",
-                         category_evidence_path=self.control_root / "frank-buy-category-evidence.json", **query)
+        now = time.time()
+        result = read_buys(self.frank.database, qualifications, as_of=int(now),
+                           archive_root=self.evidence_manifests.archive_root,
+                           legacy_archive_root=self.evidence_manifests.legacy_archive_root,
+                           usd_evidence_path=self.control_root / "frank-buy-usd-evidence.json",
+                           category_evidence_path=self.control_root / "frank-buy-category-evidence.json", **query)
+        if result["status"] == "LOCAL_EVIDENCE_ONLY" and not result["rows"]:
+            result["scanner_coverage"] = self.frank.buy_scan_coverage(now)
+        return result
 
-    def frank_signed_activity(self, days=1, *, page_size=None, cursor=None, kind="ALL", mint=None):
+    def frank_signed_activity(self, days=1, *, page_size=None, cursor=None, kind="ALL", mint=None, signature=None):
         """Complete local indexed ranges; optional pages never cap total history."""
         try:
             if page_size is None:
                 result = read_signed_activity(self.frank.database, int(time.time()), days=days)
             else:
                 result = activity_page(self.frank.database, int(time.time()), days=days,
-                                       page_size=page_size, cursor=cursor, kind=kind, mint=mint)
+                                       page_size=page_size, cursor=cursor, kind=kind, mint=mint, signature=signature)
             return {"status": "INDEXED_LOCAL_ONLY", **result}
         except (ValueError, OSError, sqlite3.DatabaseError) as exc:
             known = CURSOR_ERRORS | {"INDEX_WINDOW_TOO_LARGE_NOT_TRUNCATED", "INVALID_ACTIVITY_RANGE",
-                                     "INVALID_ACTIVITY_PAGE_SIZE", "INVALID_ACTIVITY_KIND", "INVALID_ACTIVITY_MINT"}
+                                     "INVALID_ACTIVITY_PAGE_SIZE", "INVALID_ACTIVITY_KIND", "INVALID_ACTIVITY_MINT",
+                                     "INVALID_ACTIVITY_SIGNATURE"}
             reason = str(exc) if isinstance(exc, ValueError) and str(exc) in known else "LOCAL_ACTIVITY_SOURCE_UNAVAILABLE"
             return {
                 "status": "UNAVAILABLE", "reason": reason,
@@ -1824,10 +1829,10 @@ class Handler(BaseHTTPRequestHandler):
             return self._json(result)
         if path == "/api/frank-signed-activity":
             try:
-                values = parse_qs(urlparse(self.path).query, keep_blank_values=True, max_num_fields=5)
+                values = parse_qs(urlparse(self.path).query, keep_blank_values=True, max_num_fields=6)
             except ValueError:
                 return self._json({"error": "INVALID_ACTIVITY_RANGE"}, 400)
-            if set(values) - {"days", "limit", "cursor", "kind", "mint"} or any(len(v) != 1 for v in values.values()):
+            if set(values) - {"days", "limit", "cursor", "kind", "mint", "signature"} or any(len(v) != 1 for v in values.values()):
                 return self._json({"error": "INVALID_ACTIVITY_RANGE"}, 400)
             days = values.get("days", ["1"])[0]
             if days not in ("1", "7", "30", "all"):
@@ -1839,12 +1844,16 @@ class Handler(BaseHTTPRequestHandler):
             kind = values.get("kind", ["ALL"])[0]
             mint = values.get("mint", [None])[0]
             cursor = values.get("cursor", [None])[0]
+            signature = values.get("signature", [None])[0]
             if (not limit.isascii() or not limit.isdecimal() or len(limit) > 4
                     or not 1 <= int(limit) <= 1000 or kind not in ACTIVITY_KINDS
                     or (mint is not None and not SOLANA_PUBKEY_RE.fullmatch(mint))
+                    or (signature is not None and not re.fullmatch(r"[1-9A-HJ-NP-Za-km-z]{64,100}", signature))
                     or (cursor is not None and not 1 <= len(cursor) <= 4096)):
                 return self._json({"error": "INVALID_ACTIVITY_QUERY"}, 400)
-            result = self.state.frank_signed_activity(days, page_size=int(limit), cursor=cursor, kind=kind, mint=mint)
+            signature_filter = {"signature": signature} if signature is not None else {}
+            result = self.state.frank_signed_activity(days, page_size=int(limit), cursor=cursor,
+                                                      kind=kind, mint=mint, **signature_filter)
             reason = result.get("reason")
             status = 409 if reason == "ACTIVITY_CURSOR_SOURCE_CHANGED" else 400 if reason in CURSOR_ERRORS else 200
             return self._json(result, status)

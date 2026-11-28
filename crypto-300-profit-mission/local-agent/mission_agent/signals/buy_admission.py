@@ -13,7 +13,8 @@ import stat
 import time
 
 from ..meme.holder_ranks import valid_pubkey
-from .classifier import QUOTE_MINTS, USDT
+from ..frank.parser import DEX_PROGRAMS
+from .classifier import QUOTE_MINTS, USDT, transaction_market_trades
 from .policy import BUY_DELIVERY_MAX_AGE_SECONDS, USDC
 from .reconciliation import _base58_size
 
@@ -89,11 +90,15 @@ def qualification_path(path=None, *, default=None):
     return Path(configured) if configured else None
 
 
-def effective_qualification(manual_path, category_path, as_of):
-    """Apply explicit local manual choices over validated staged category receipts."""
+def effective_qualification(manual_path, category_path, as_of, *, scanner_db=None, auto_mint=None):
+    """Apply explicit local manual choices over validated category receipts."""
     from .category_evidence import read_category_evidence
 
     receipts = read_category_evidence(category_path, as_of)
+    if scanner_db is not None:
+        from .category_evidence import merge_category_assets, read_scanner_category_evidence
+
+        receipts = merge_category_assets(receipts, read_scanner_category_evidence(scanner_db, as_of, mint=auto_mint))
     try:
         if manual_path is None:
             raise FileNotFoundError("MANUAL_QUALIFICATION_UNAVAILABLE")
@@ -135,7 +140,7 @@ class BuyDeliveryGate:
             return None, "TRIGGER_IS_NOT_PROVEN_BUY"
         as_of = int(self.clock())
         try:
-            assets = effective_qualification(self.path, self.category_evidence_path, as_of)
+            assets = effective_qualification(self.path, self.category_evidence_path, as_of, scanner_db=db, auto_mint=mint)
         except (OSError, ValueError, RecursionError):
             return None, "MEME_QUALIFICATION_UNAVAILABLE"
         asset = assets.get(mint)
@@ -193,14 +198,44 @@ def _units(raw, decimals):
     return raw[:-decimals] + ("." + fraction if fraction else "")
 
 
-def admit_buy(event, assets, *, wallet, signature, slot, block_time, raw_hash, mint, allow_unpriced=False):
+def _buy_trade(event, mint, leg_index):
+    legs = event.get("trade_legs")
+    if legs is None:
+        trade = event.get("trade")
+        return trade if leg_index is None and isinstance(trade, dict) else None
+    if event.get("trade") is not None or not isinstance(legs, list) or len(legs) < 2:
+        return None
+    indices = set()
+    for leg in legs:
+        if not isinstance(leg, dict) or leg.get("direction") != "BUY":
+            return None
+        index, proof = leg.get("leg_index"), leg.get("instruction_evidence")
+        if (type(index) is not int or index < 0 or index in indices or not isinstance(proof, dict)
+                or not isinstance(proof.get("program"), str) or proof["program"] not in DEX_PROGRAMS
+                or not exact_mint(leg.get("mint"))):
+            return None
+        refs = [proof.get(key) for key in ("target_transfer", "payment_transfer")]
+        if (any(not isinstance(ref, str) or not re.fullmatch(fr"{index}:[0-9]+", ref) for ref in refs)
+                or refs[0] == refs[1]):
+            return None
+        indices.add(index)
+    if leg_index is not None:
+        return next((leg for leg in legs if type(leg_index) is int and leg["leg_index"] == leg_index
+                     and leg["mint"] == mint), None)
+    try:
+        return next((trade for trade in transaction_market_trades(event) if trade["mint"] == mint), None)
+    except (KeyError, TypeError, ValueError):
+        return None
+
+
+def admit_buy(event, assets, *, wallet, signature, slot, block_time, raw_hash, mint, allow_unpriced=False, leg_index=None):
     """Return only facts bound to this classified, archived wallet event."""
     asset = assets.get(mint)
     if not asset or asset.status != "VERIFIED_MEME" or mint in EXCLUDED_MINTS or not exact_mint(mint):
         return None
     if not isinstance(event, dict) or event.get("classification") != "ACTIVE_TRADE":
         return None
-    evidence, trade = event.get("evidence"), event.get("trade")
+    evidence, trade = event.get("evidence"), _buy_trade(event, mint, leg_index)
     if not isinstance(evidence, dict) or not isinstance(trade, dict):
         return None
     if (not exact_mint(wallet) or not _base58_size(signature, 64)
@@ -243,8 +278,13 @@ def admit_buy(event, assets, *, wallet, signature, slot, block_time, raw_hash, m
                 or int(after) - int(before) != int(trade["token_amount_raw"])):
             return None
         paid, currency = None, None
-    return {"mint": mint, "name": asset.name, "signature": signature, "slot": slot, "at": block_time,
+    fact = {"mint": mint, "name": asset.name, "signature": signature, "slot": slot, "at": block_time,
             "quantity": tokens, "paid": paid, "currency": {USDC: "USDC", USDT: "USDT"}.get(currency, currency)}
+    if trade.get("leg_indices"):
+        fact["leg_indices"] = trade["leg_indices"]
+    elif type(trade.get("leg_index")) is int:
+        fact["leg_index"] = trade["leg_index"]
+    return fact
 
 
 def needs_archive_replay(event, identity):

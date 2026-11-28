@@ -178,10 +178,33 @@ def test_actual_handler_dispatches_page_and_keeps_legacy_full_contract():
     h.path = "/api/frank-signed-activity?days=all&limit=200&kind=BUY&mint="+MINT_A
     assert h.do_GET()[1] == 200
     assert calls[-1] == ("all", {"page_size": 200, "cursor": None, "kind": "BUY", "mint": MINT_A})
+    signature = "5" * 88
+    h.path = "/api/frank-signed-activity?days=all&limit=200&signature="+signature
+    assert h.do_GET()[1] == 200
+    assert calls[-1] == ("all", {"page_size": 200, "cursor": None, "kind": "ALL", "mint": None,
+                                 "signature": signature})
     h.path = "/api/frank-signed-activity?days=30"
     assert h.do_GET() == ({"days": 30}, 200)
     assert calls[-1] == (30, {})
-    for suffix in ["?limit=0", "?cursor=", "?kind=no", "?days=7&days=30", "?mint=bad", "?limit=1&limit=2"]:
+    for suffix in ["?limit=0", "?cursor=", "?kind=no", "?days=7&days=30", "?mint=bad", "?signature=bad", "?limit=1&limit=2"]:
         h.path = "/api/frank-signed-activity"+suffix
         assert h.do_GET()[1] == 400
 
+
+
+def test_signature_query_binds_cursor_and_leg_filters_do_not_match_another_mint(tmp_path):
+    path = tmp_path / "source.sqlite"
+    make_db(path)
+    first = activity_page(path, NOW, page_size=2)
+    signature = first["rows"][0]["sig"]
+    result = activity_page(path, NOW, signature=signature)
+    assert [row["sig"] for row in result["rows"]] == [signature]
+    with pytest.raises(ValueError, match="ACTIVITY_CURSOR_QUERY_CHANGED"):
+        activity_page(path, NOW, cursor=first["next_cursor"], signature=signature)
+    with sqlite3.connect(path) as db:
+        signature = db.execute(
+            "SELECT signature FROM trades WHERE mint=? AND side='BUY' LIMIT 1", (MINT_A,)
+        ).fetchone()[0]
+        db.execute("INSERT INTO trades VALUES (?,?,?,?)", (WALLET, signature, MINT_B, "SELL"))
+    assert activity_page(path, NOW, signature=signature, kind="BUY", mint=MINT_B)["rows"] == []
+    assert len(activity_page(path, NOW, signature=signature, kind="SELL", mint=MINT_B)["rows"]) == 1

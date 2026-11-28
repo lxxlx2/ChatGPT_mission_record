@@ -80,20 +80,52 @@ def read_category_evidence(path, as_of):
     if (not document or type(document.get("version")) is not int or document["version"] != 1
             or not isinstance(document.get("records"), list)):
         return {}
+    return _parse_records(document["records"], as_of)
+
+
+def _parse_records(records, as_of):
     assets = {}
-    for row in document["records"]:
+    for row in records:
         item = _parse(row, as_of)
-        if item is None:
-            continue
-        mint, asset = item
-        prior = assets.get(mint)
+        if item is not None:
+            merge_category_assets(assets, {item[0]: item[1]})
+    return assets
+
+
+def merge_category_assets(base, additions):
+    """Merge observations by exact Mint and keep contradictory evidence pending."""
+    for mint, asset in additions.items():
+        prior = base.get(mint)
         if prior is None:
-            assets[mint] = asset
+            base[mint] = asset
         elif (_CONFLICT in (prior.source, asset.source)
               or {prior.status, asset.status} == {"VERIFIED_MEME", "EXCLUDED"}):
-            assets[mint] = Asset("PENDING", _CONFLICT, max(prior.observed_at, asset.observed_at), None)
+            base[mint] = Asset("PENDING", _CONFLICT, max(prior.observed_at, asset.observed_at), None)
         elif (asset.status != "PENDING" and prior.status == "PENDING"
               or asset.status == prior.status and (asset.observed_at, asset.source) > (prior.observed_at, prior.source)):
             # Unclassified is absence, not conflicting negative evidence.
-            assets[mint] = asset
+            base[mint] = asset
+    return base
+
+
+def read_scanner_category_evidence(db, as_of, *, mint=None):
+    """Read only the existing Scanner ledger. Legacy copies need no migration to read."""
+    if db is None or db.execute(
+            "SELECT 1 FROM sqlite_master WHERE type='table' AND name='buy_category_auto'"
+    ).fetchone() is None:
+        return {}
+    query = "SELECT mint,receipt FROM buy_category_auto WHERE receipt IS NOT NULL"
+    parameters = ()
+    if mint is not None:
+        query += " AND mint=?"
+        parameters = (mint,)
+    assets = {}
+    for key, raw in db.execute(query, parameters):
+        if not isinstance(raw, str) or len(raw) > _MAX_RESPONSE_BYTES * 6 + 512:
+            continue
+        row = _object(raw)
+        if row is not None and row.get("mint") == key:
+            parsed = _parse(row, as_of)
+            if parsed is not None:
+                assets[key] = parsed[1]
     return assets

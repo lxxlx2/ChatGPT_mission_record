@@ -149,6 +149,50 @@ class FrankReader:
             status, reason = "LIVE", "OK"
         return {**health, "status": status, "runtime_reason": reason, "pid_alive": alive, "heartbeat_age_seconds": age, "production_db_readable": db_ok}
 
+    def buy_scan_coverage(self, now: float) -> str:
+        """Confirm the local Scanner's latest observed head without fetching chain data."""
+        try:
+            runtime = self.runtime(now)
+            live = runtime.get("status") == "LIVE"
+            if (live or runtime.get("runtime_reason") == "SERVICE_RETRY_PENDING") and any(
+                type(runtime.get(key)) is int and runtime[key] > 0
+                for key in ("lag_seconds", "raw_pending", "model_unprocessed", "wallet_scan_failures")
+            ):
+                return "CATCHING_UP"
+            if not live:
+                return "UNKNOWN"
+            db = open_production_ro(self.database)
+            try:
+                db.execute("BEGIN")
+                if db.execute("SELECT 1 FROM signature_detections WHERE state='RAW_PENDING' LIMIT 1").fetchone():
+                    return "CATCHING_UP"
+                cursors = db.execute(
+                    "SELECT c.signature,h.body FROM cursors c LEFT JOIN health h USING(wallet)"
+                ).fetchall()
+                if not cursors:
+                    return "UNKNOWN"
+                age_limit = int(runtime.get("poll_interval_seconds") or 30) * 3
+                for cursor in cursors:
+                    observation = json.loads(cursor["body"] or "{}")
+                    if not isinstance(observation, dict):
+                        return "UNKNOWN"
+                    observed_at = observation.get("last_successful_poll")
+                    if (observation.get("status") != "RUNNING" or type(observed_at) not in (int, float)
+                            or not 0 <= now - observed_at <= age_limit
+                            or not observation.get("last_local_signature")):
+                        return "UNKNOWN"
+                    if (observation.get("last_chain_signature") != cursor["signature"]
+                            or observation["last_local_signature"] != cursor["signature"]):
+                        return "CATCHING_UP"
+                    lag = observation.get("lag_seconds")
+                    if type(lag) is not int or lag != 0:
+                        return "UNKNOWN"
+                return "CAUGHT_UP"
+            finally:
+                db.close()
+        except (AttributeError, OSError, TypeError, ValueError, OverflowError, sqlite3.DatabaseError):
+            return "UNKNOWN"
+
     def candidates(self) -> list[dict]:
         db = open_production_ro(self.database)
         try:

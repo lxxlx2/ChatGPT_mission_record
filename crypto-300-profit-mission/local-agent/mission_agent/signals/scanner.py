@@ -43,6 +43,18 @@ class Scanner:
         if 'person_id' not in {r[1] for r in ledger.db.execute('PRAGMA table_info(signature_detections)')}:ledger.db.execute('ALTER TABLE signature_detections ADD COLUMN person_id TEXT')
         self.raw_root.mkdir(parents=True,exist_ok=True,mode=0o700)
         self.rpcs=rpcs or {w:WalletRPC(w) for w in wallets}
+    def record_failure(self, wallet, error):
+        db = self.ledger.db
+        old = db.execute("SELECT body FROM health WHERE wallet=?", (wallet,)).fetchone()
+        health = json.loads(old[0]) if old else {}
+        code = str(error)
+        if re.fullmatch(r"[A-Z][A-Z0-9_:-]{0,95}", code) is None:
+            code = "SOURCE_UNAVAILABLE"
+        health.update(consecutive_errors=health.get("consecutive_errors", 0) + 1,
+                      last_error=type(error).__name__ + ":" + code, status="RETRY_PENDING",
+                      lag_seconds=None)
+        db.execute("INSERT OR REPLACE INTO health VALUES(?,?)", (wallet, json.dumps(health)))
+
     def cycle(self,wallet):
         db=self.ledger.db;rpc=self.rpcs[wallet];cursor=self.ledger.cursor(wallet)
         if not cursor:raise ValueError('EXPLICIT_DURABLE_CHECKPOINT_REQUIRED')
@@ -89,8 +101,7 @@ class Scanner:
                 db.execute("UPDATE signature_detections SET state='CLASSIFIED_DURABLE' WHERE wallet=? AND signature=?",(wallet,sig))
             health={'last_successful_poll':time.time(),'last_chain_signature':head['signature'] if head else None,'last_local_signature':self.ledger.cursor(wallet)['signature'],'lag_seconds':0 if head and head['signature']==self.ledger.cursor(wallet)['signature'] else None,'consecutive_errors':0,'status':'RUNNING' if self.mode=='LIVE' else 'RUNNING_SHADOW_DELIVERY_DISABLED'}
         except Exception as exc:
-            old=db.execute('SELECT body FROM health WHERE wallet=?',(wallet,)).fetchone()
-            health=json.loads(old[0]) if old else {};health.update(consecutive_errors=health.get('consecutive_errors',0)+1,last_error=type(exc).__name__+':'+str(exc),status='RETRY_PENDING',lag_seconds=None)
-            db.execute('INSERT OR REPLACE INTO health VALUES(?,?)',(wallet,json.dumps(health)));raise
+            self.record_failure(wallet, exc)
+            raise
         db.execute('INSERT OR REPLACE INTO health VALUES(?,?)',(wallet,json.dumps(health)))
         return {'new_signatures':len(pending),**health}
