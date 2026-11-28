@@ -22,6 +22,7 @@ PYTHON_TESTS = (
     "tests/test_frank_rebuild_buys.py", "tests/test_frank_rebuild_delivery.py",
     "tests/test_frank_scanner_reconciliation.py", "tests/test_frank_wallet_reconciliation_v2.py",
     "tests/test_frank_buy_latency_percentiles.py", "tests/test_frank_acceptance_runner.py",
+    "tests/test_frank_multi_buy_proof.py", "tests/test_frank_configured_rpc.py",
     "tests/test_ca_job_checkpoint.py", "tests/test_frank_ca_job_rpc_budget.py",
     "tests/test_frank_ca_market_series.py", "tests/test_frank_ca_scoped_analyzer.py",
     "tests/test_frank_ca_launch_flow.py", "tests/test_meme_market_parity.py",

@@ -2,6 +2,7 @@
 from collections import defaultdict
 from ..frank.parser import normalize, IncompleteTransaction, WSOL, INFRA_PROGRAMS
 from .policy import USDC
+from .multi_buy_proof import prove_direct_buys
 
 USDT='Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB'
 QUOTE_MINTS = frozenset({WSOL, USDC, USDT})
@@ -48,7 +49,10 @@ def classify(signature, tx, wallet):
         g['delta'] += int(f['net_transfer_raw']); g['decimals'] = f['decimals']
     changed = {m:g for m,g in groups.items() if g['delta']}
     authority = e['wallet_is_signer']
-    if label == 'ACTIVE_SWAP_LIKE' and authority:
+    # The protocol discriminator and CPI/account proof do not depend on logs.
+    buys = (prove_direct_buys(signature, tx, wallet, e)
+            if authority and sum(m not in QUOTE_MINTS for m in changed)>1 else [])
+    if (label == 'ACTIVE_SWAP_LIKE' or buys) and authority:
         tokens = [(m,g) for m,g in changed.items() if m not in QUOTE_MINTS]
         quotes = [(m,g) for m,g in changed.items() if m in QUOTE_MINTS]
         details={
@@ -65,6 +69,11 @@ def classify(signature, tx, wallet):
         # other target without router/market-call level evidence. Keep such cases
         # fail-closed instead of collapsing them into a single ACTIVE_TRADE.
         if len(tokens)>1:
+            # This evidence is intentionally not a single trade. The writer,
+            # read model, and notifications retain their existing contract.
+            if buys:
+                details['independent_buy_legs'] = buys
+                details['independent_buy_legs_scope'] = 'RESEARCH_ONLY_NO_LEDGER_TRADE_OR_DELIVERY'
             flow_by_mint=defaultdict(lambda:{'in_raw':0,'out_raw':0,'first_in':None,'first_out':None,'last_out':None})
             token_mints={m for m,_ in tokens}
             for flow in e.get('wallet_token_transfer_flows') or []:
