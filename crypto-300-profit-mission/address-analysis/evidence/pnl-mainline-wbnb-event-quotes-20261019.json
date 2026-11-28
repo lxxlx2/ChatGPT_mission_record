@@ -1,0 +1,136 @@
+{
+  "schema": "mission-address-analysis-execution-hash-matched-wbnb-event-quote-v1",
+  "date": "2026-10-19",
+  "repository": "lxxlx2/ChatGPT_mission_record",
+  "pr": 97,
+  "baseline_pr_sha": "c97cae3065a58379b7cd3cf01c042c8b09ceb3a7",
+  "immutable_original_source_blob": "954f3aba66be21911dd627fa40dd3dd0a9fd1d26",
+  "network": "bnb-mainnet",
+  "wbnb_contract": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+  "router": "0x1de460f363af910f51726def188f9004276bf4bc",
+  "ethereum_log_topics": {
+    "wbnb_deposit": "0xe1fffcc4923d04b559f4d29a8bfc6cda04eb5b0d3c460751c2402c5c5cc9109c",
+    "wbnb_withdrawal": "0x7fcf532c15f0a6db0bd6d0e038bea71d30d808c7d98cb3bf7268a95bf5081b65"
+  },
+  "method": "RPC eth_getLogs exact WBNB contract + Deposit/Withdrawal topic + sale/buy block; match each log transactionHash to signed wallet Router swap; compare previous independently archived ERC20 token inventory and before/after native balance",
+  "cases": [
+    {
+      "source_row": 227,
+      "token": "BOARDSEAT",
+      "wallet": "0x664d6645a04be9e27a8b33088f85025f29d45dc1",
+      "ca": "0x1dfbfd0adec46b824a959cb7936625be0cb76711",
+      "buy": "0x83166b427a3b57463e1a3de9f8162ae8b1e9a68b9211ce339f72ab982e0e4e02",
+      "sell": "0x9349a04cf35c7846c77dfd1c28e0e64f761747b5686adec5d47318fbf30d96cc",
+      "buyBlock": "0x74d0aa5",
+      "sellBlock": "0x74d3437",
+      "valueWei": "333333333333333333",
+      "buyWbnbWei": "330000000000000000",
+      "sellWbnbWei": "483663976630184592",
+      "nativeBlockDeltaWei": "139871398530549414",
+      "approveGasWei": "230045000000000",
+      "quoteSourceEvents": [
+        "Deposit WBNB 330000000000000000 wei to Router in BUY tx",
+        "Withdrawal WBNB 483663976630184592 wei by Router in SELL tx"
+      ],
+      "receiptWarnings": [
+        "BUY WBNB logs provider response 8098 bytes truncated, target event parsed",
+        "SELL WBNB logs provider response 8098 bytes truncated, target event parsed"
+      ],
+      "wbnb_quote_event_spread_wei": "153663976630184592",
+      "wbnb_quote_event_spread_BNB": "0.153663976630184592",
+      "wallet_native_execution_block_delta_BNB": "0.139871398530549414",
+      "native_minus_event_quote_spread_wei": "-13792578099635178",
+      "router_quote_event_vs_wallet_cashflow_gap_BNB": "-0.013792578099635178",
+      "buy_native_over_wbnb_event_wei": "3333333333333333",
+      "quote_event_grade": "TRANSACTION_HASH_MATCHED_WBNB_DEPOSIT_WITHDRAWAL_EVENT",
+      "investment_realized_pnl_grade": "UNRESOLVED_EXACT_DELIVERED_NATIVE_GAS_AND_ROUTER_FEE_SETTLEMENT",
+      "reconciled_gross_and_wallet_delta_sign": true
+    },
+    {
+      "source_row": 227,
+      "token": "BTCLIFE",
+      "wallet": "0x664d6645a04be9e27a8b33088f85025f29d45dc1",
+      "ca": "0xe8034dcde23a869027893c90e483c5e065700d3c",
+      "buy": "0x9db45eb50fd726266111d3f6903dfe85d63799f973d746faf37289c697e65766",
+      "sell": "0xf8ad3230681af452306ee6219e92c724bd935d347b4d9740f68cafb8e1bdb394",
+      "buyBlock": "0x74d3cfa",
+      "sellBlock": "0x74d3d21",
+      "valueWei": "333333333333333333",
+      "buyWbnbWei": "330000000000000000",
+      "sellWbnbWei": "149944555963376124",
+      "nativeBlockDeltaWei": "-190058157929590970",
+      "approveGasWei": "230045000000000",
+      "quoteSourceEvents": [
+        "Deposit AND Withdrawal WBNB 330000000000000000 wei in BUY tx; same-transaction wrapping must not be double-counted",
+        "Deposit AND Withdrawal WBNB 149944555963376124 wei in SELL tx; same-transaction wrapping must not be double-counted"
+      ],
+      "receiptWarnings": [
+        "WBNB filtered events complete and decoded, historic sell receipt large/truncated"
+      ],
+      "wbnb_quote_event_spread_wei": "-180055444036623876",
+      "wbnb_quote_event_spread_BNB": "-0.180055444036623876",
+      "wallet_native_execution_block_delta_BNB": "-0.190058157929590970",
+      "native_minus_event_quote_spread_wei": "-10002713892967094",
+      "router_quote_event_vs_wallet_cashflow_gap_BNB": "-0.010002713892967094",
+      "buy_native_over_wbnb_event_wei": "3333333333333333",
+      "quote_event_grade": "TRANSACTION_HASH_MATCHED_WBNB_DEPOSIT_WITHDRAWAL_EVENT",
+      "investment_realized_pnl_grade": "UNRESOLVED_EXACT_DELIVERED_NATIVE_GAS_AND_ROUTER_FEE_SETTLEMENT",
+      "reconciled_gross_and_wallet_delta_sign": true
+    },
+    {
+      "source_row": 400,
+      "token": "BOARDSEAT",
+      "wallet": "0xbac453b9b7f53b35ac906b641925b2f5f2567a89",
+      "ca": "0x1dfbfd0adec46b824a959cb7936625be0cb76711",
+      "buy": "0x099de44e8175bdb1bd25ec08c223c5d10cccc4d53752b95d2a2e62e0beadf5db",
+      "sell": "0x4a6c126269c92cef7a2fd2397e70bbe72011d1a399229a3baa877b471f7d4d2e",
+      "buyBlock": "0x74d0b11",
+      "sellBlock": "0x74d301f",
+      "valueWei": "1000000000000000000",
+      "buyWbnbWei": "990000000000000000",
+      "sellWbnbWei": "668967157750727214",
+      "nativeBlockDeltaWei": "-337858120186780058",
+      "approveGasWei": "UNKNOWN_RECEIPT_NOT_RECONFIRMED_THIS_PASS",
+      "quoteSourceEvents": [
+        "Deposit WBNB 990000000000000000 wei Router in BUY tx; another zero-value Deposit log same transaction, do not double-count",
+        "Withdrawal WBNB 668967157750727214 wei Router in SELL tx"
+      ],
+      "receiptWarnings": [
+        "WBNB filtered event full result and target hash exact"
+      ],
+      "wbnb_quote_event_spread_wei": "-321032842249272786",
+      "wbnb_quote_event_spread_BNB": "-0.321032842249272786",
+      "wallet_native_execution_block_delta_BNB": "-0.337858120186780058",
+      "native_minus_event_quote_spread_wei": "-16825277937507272",
+      "router_quote_event_vs_wallet_cashflow_gap_BNB": "-0.016825277937507272",
+      "buy_native_over_wbnb_event_wei": "10000000000000000",
+      "quote_event_grade": "TRANSACTION_HASH_MATCHED_WBNB_DEPOSIT_WITHDRAWAL_EVENT",
+      "investment_realized_pnl_grade": "UNRESOLVED_EXACT_DELIVERED_NATIVE_GAS_AND_ROUTER_FEE_SETTLEMENT",
+      "reconciled_gross_and_wallet_delta_sign": true
+    }
+  ],
+  "summary": {
+    "source_wallets": 2,
+    "distinct_closed_token_roundtrips": 3,
+    "gross_WBNB_event_direction_positive": 1,
+    "gross_WBNB_event_direction_negative": 2,
+    "transaction_specific_wbnb_logs_match_all_3": true,
+    "three_wallet_native_block_delta_signs_match_WBNB_event_spread": true,
+    "full_delivered_native_swap_quote_and_gas_verified": 0,
+    "whole_wallet_30d_pnl_verified": 0,
+    "whole_wallet_lifetime_pnl_verified": 0
+  },
+  "interpretation": [
+    "WBNB Deposit in BUY and Withdrawal in SELL are transaction-hash-matched contract quote events, not a proven wallet receipt amount.",
+    "Some Router executions deposit and withdraw WBNB within the same transaction; do not sum both as distinct trades.",
+    "Difference between WBNB gross spread and wallet execution-block balance change includes Router tax/fees/gas and could include same-block other native activity; cannot assign fee breakdown without receipts/internal traces.",
+    "Do not claim realized net PnL or rank wallet from these figures, but gross quote direction plus exact-CA token close is stronger evidence than block balance alone."
+  ],
+  "gates": [
+    "DRAFT",
+    "READ_ONLY",
+    "NO_MERGE",
+    "NO_DEPLOY",
+    "NO_TRADE"
+  ]
+}

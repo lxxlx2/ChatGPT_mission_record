@@ -1,0 +1,73 @@
+{
+  "schema": "mission-address-analysis-base-l1-fee-and-aave-ledger-evidence-v1",
+  "as_of": "2026-10-18",
+  "research_only": true,
+  "source_blob_sha": "954f3aba66be21911dd627fa40dd3dd0a9fd1d26",
+  "methods": {
+    "receipt": "Authenticated Alchemy ethGetTransactionByHash + ethGetTransactionReceipt (full JSON for all 3 relevant Base transactions)",
+    "token_flows": "Per-wallet signed net ERC20 Transfer logs; mint/burn captured as ordinary in/out flow",
+    "l1_fee": "L1 data fee from Base receipt l1Fee; additive to gasUsed x effectiveGasPrice; no guessed rates"
+  },
+  "underlying": {
+    "USDC": "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913",
+    "aUSDC": "0x4e65fe4dba92790696d040ac24aa414708f5c0ab",
+    "aave_base_pool": "0xa238dd80c259a72e81d7e4664a9801593f98d1c5"
+  },
+  "source_row_51": {
+    "wallet": "0x624c6dbb5d1aae291c788ef116e69a59552b17c4",
+    "receipt_source_blob_sha": "ba9eff376f0dcc56e25386039d4e7aa3cf571e23",
+    "transactions": [
+      {
+        "kind": "AAVE_SUPPLY",
+        "hash": "0x990907b41f68a0020ce7856c7ce01c0f748b7362a47f0d86e1c5e3796c1234dc",
+        "method": "0x617ba037",
+        "status": "SUCCESS",
+        "token_net_raw": {
+          "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913": "-395415",
+          "0x4e65fe4dba92790696d040ac24aa414708f5c0ab": "395414"
+        },
+        "l2_execution_fee_wei": "1279402731925",
+        "l1_data_fee_wei": "907114858",
+        "total_native_fee_wei": "1280309846783",
+        "pnl_classification": "NOT_SWAP_UNRESOLVED_LENDING"
+      },
+      {
+        "kind": "AAVE_WITHDRAW",
+        "hash": "0x40a1109620e98ec4759a77475677c954518d64bcc5eabf79250990746462afc4",
+        "method": "0x69328dec",
+        "status": "SUCCESS",
+        "token_net_raw": {
+          "0x4e65fe4dba92790696d040ac24aa414708f5c0ab": "-395414",
+          "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913": "395414"
+        },
+        "l2_execution_fee_wei": "1169754000000",
+        "l1_data_fee_wei": "845365838",
+        "total_native_fee_wei": "1170599365838",
+        "pnl_classification": "NOT_SWAP_UNRESOLVED_LENDING"
+      }
+    ],
+    "USDC_two_transaction_net_raw": "-1",
+    "aUSDC_two_transaction_net_raw": "0",
+    "total_base_fee_wei": "2450909212621",
+    "economic_pnl": "UNRESOLVED",
+    "reasons": [
+      "Underlying net USDC -1 raw (1e-6 USDC) across 2 observed transactions is NOT a verified economic loss; pre-existing positions/rewards and all other wallet activities remain unreviewed",
+      "aUSDC minted and burned are lending share accounting, not token trades",
+      "ETH-denominated gas cannot be converted into USDC profitability without timestamp-verified FX and complete holdings"
+    ]
+  },
+  "source_row_45": {
+    "wallet": "0xf89f3858bc7bac05a83ec284e3e9acdb58bf892a",
+    "hash": "0x44965de6b382eeb673e9f3c42eb74b644d2f8cdb1c2dca223fd04e39a3309f6a",
+    "previous_l2_only_cost_wei": "382277850000",
+    "previous_omitted_l1_fee_wei": "3235250376",
+    "corrected_l2_plus_l1_cost_wei": "385513100376",
+    "previous_fixture_blob_sha": "a5c075dd9c77214f3823af564e88f09336742702",
+    "gas_status": "CORRECTED_ACTUAL_RECEIPT"
+  },
+  "reference_docs": [
+    "https://specs.optimism.io/protocol/exec-engine.html",
+    "https://aave.com/docs/aave-v3/smart-contracts/pool?language=en"
+  ],
+  "status": "SOURCE_FACTS_VALIDATED_NOT_WALLET_PNL"
+}

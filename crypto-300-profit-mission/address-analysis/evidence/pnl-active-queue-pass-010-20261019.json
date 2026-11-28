@@ -1,0 +1,434 @@
+{
+  "schema": "mission-address-analysis-active-queue-pass-010-v1",
+  "date": "2026-10-19",
+  "pr_number": 97,
+  "base_sha": "0278420eb801210468284d3e53541f7967d8f709",
+  "original_source_blob_sha": "954f3aba66be21911dd627fa40dd3dd0a9fd1d26",
+  "research_source": "Alchemy BNB/Ethereum read-only RPC; exact token CA and historic wallet balances; some receipt bodies truncated; original RPC bodies not independently archived",
+  "historical_window_utc": [
+    "2026-09-17T21:12:12Z",
+    "2026-10-17T21:12:13Z"
+  ],
+  "windows": {
+    "bnb-mainnet": [
+      "0x74cf256",
+      "0x7a4ca36"
+    ],
+    "eth-mainnet": [
+      "0x18cb9c8",
+      "0x19001e3"
+    ]
+  },
+  "queue_position_start": 181,
+  "queue_position_end": 200,
+  "activity_screened": 449,
+  "active_candidate_count": 237,
+  "first_page_discovery_cumulative": 200,
+  "first_page_query": "getAssetTransfers fromAddress, categories=erc20/external, order=asc, maxCount=5",
+  "candidates": [
+    {
+      "position": 181,
+      "source_row": 310,
+      "wallet": "0x085111103c78e708199e1779789eefe9529d5d3a",
+      "chain": "bnb-mainnet",
+      "first_page_event_count": 5,
+      "pagination_unfinished": true,
+      "first_event_hash": "0x16304baa84ccee3600b21fc06d9331afc2f4b6f91401e32c23e70f739119f49b",
+      "full_wallet_pnl": "UNRESOLVED"
+    },
+    {
+      "position": 182,
+      "source_row": 311,
+      "wallet": "0xb5932a6b7d50a966aec6c74c97385412fb497540",
+      "chain": "bnb-mainnet",
+      "first_page_event_count": 1,
+      "pagination_unfinished": false,
+      "first_event_hash": "0x260bd5c1b536dbec38cf6e847371ab3726e4cea185a19a927443c97773d333e2",
+      "full_wallet_pnl": "UNRESOLVED"
+    },
+    {
+      "position": 183,
+      "source_row": 312,
+      "wallet": "0x97da20dc2bd46174da79d71a385b7248527fbee6",
+      "chain": "bnb-mainnet",
+      "first_page_event_count": 2,
+      "pagination_unfinished": false,
+      "first_event_hash": "0x48e77e31476ef7fd01f76f9a68b3e8d82bb7a0e3a99c9592add6df98a6ee2a14",
+      "full_wallet_pnl": "UNRESOLVED"
+    },
+    {
+      "position": 184,
+      "source_row": 316,
+      "wallet": "0x742d35cc6634c0532925a3b844bc454e4438f44e",
+      "chain": "eth-mainnet",
+      "first_page_event_count": 5,
+      "pagination_unfinished": true,
+      "first_event_hash": "0xe61d83d14129ef9812e97583e9684ffa96ed02ac0ceca0685ccd992e69736b71",
+      "full_wallet_pnl": "UNRESOLVED"
+    },
+    {
+      "position": 185,
+      "source_row": 320,
+      "wallet": "0x92c371744e71dbe58c603661ba8784fd76472e1b",
+      "chain": "bnb-mainnet",
+      "first_page_event_count": 5,
+      "pagination_unfinished": true,
+      "first_event_hash": "0x5d97e721d4e837c84b1d703b0979e7d51b3554e1057a65824cc8580a830cbdcf",
+      "full_wallet_pnl": "UNRESOLVED"
+    },
+    {
+      "position": 186,
+      "source_row": 323,
+      "wallet": "0xdcfe5bdb95e6191fc03c2fed400d7c0ca7c2859d",
+      "chain": "bnb-mainnet",
+      "first_page_event_count": 5,
+      "pagination_unfinished": true,
+      "first_event_hash": "0x14528e9d38251d0843b34e9fe40eeaa26c1b64d27839712e3e726ead58e64105",
+      "full_wallet_pnl": "UNRESOLVED"
+    },
+    {
+      "position": 187,
+      "source_row": 324,
+      "wallet": "0xd41feaa24dede516a501862cf1f376defb811772",
+      "chain": "bnb-mainnet",
+      "first_page_event_count": 5,
+      "pagination_unfinished": true,
+      "first_event_hash": "0xe519c3fa453eb6a71b4df6eff3104ca84b0c3e34f3f4e550af2b4d0cc466c341",
+      "full_wallet_pnl": "UNRESOLVED"
+    },
+    {
+      "position": 188,
+      "source_row": 345,
+      "wallet": "0xd76a0f9bd4d8028196113c6e600cb083a6166188",
+      "chain": "bnb-mainnet",
+      "first_page_event_count": 3,
+      "pagination_unfinished": false,
+      "first_event_hash": "0x64c4198551a92bbb43417275984c2e0acee19ef63ce8e60d3f73c6ba2865853a",
+      "full_wallet_pnl": "UNRESOLVED"
+    },
+    {
+      "position": 189,
+      "source_row": 348,
+      "wallet": "0x9fecd44b015d3ceee17ad7770a79fb6edf512f5e",
+      "chain": "bnb-mainnet",
+      "first_page_event_count": 1,
+      "pagination_unfinished": false,
+      "first_event_hash": "0xccbc079a5a79511147294be7d1ce8cf3d16dfa82ee487ebe73021b7261f7f8d4",
+      "full_wallet_pnl": "UNRESOLVED"
+    },
+    {
+      "position": 190,
+      "source_row": 354,
+      "wallet": "0x5cadfcea6c01d5911a13c1d76ca72d655a0938e4",
+      "chain": "bnb-mainnet",
+      "first_page_event_count": 5,
+      "pagination_unfinished": true,
+      "first_event_hash": "0x96778e1ec563e643bc392907fb9d0d1997fbb21f341a9aec4811627b885130e2",
+      "full_wallet_pnl": "UNRESOLVED"
+    },
+    {
+      "position": 191,
+      "source_row": 356,
+      "wallet": "0x6ad359f8e83b95ed1474b25a7075c186a2005744",
+      "chain": "bnb-mainnet",
+      "first_page_event_count": 5,
+      "pagination_unfinished": true,
+      "first_event_hash": "0x3c6bd1888127220997bed75e5979f151a60bee253b293906f346b3e0047f8bee",
+      "full_wallet_pnl": "UNRESOLVED"
+    },
+    {
+      "position": 192,
+      "source_row": 360,
+      "wallet": "0x7fd7ba47d9500429cee8d9a10c32a6dc62779918",
+      "chain": "bnb-mainnet",
+      "first_page_event_count": 5,
+      "pagination_unfinished": true,
+      "first_event_hash": "0x3f27e27f6fbbfb3995fcbcdd5f0bbdba150245376b5729adaef24108ef85a7ae",
+      "full_wallet_pnl": "UNRESOLVED"
+    },
+    {
+      "position": 193,
+      "source_row": 362,
+      "wallet": "0xd59b6a5dc9126ea0ebacd2d8560584b3ce48f62f",
+      "chain": "bnb-mainnet",
+      "first_page_event_count": 5,
+      "pagination_unfinished": false,
+      "first_event_hash": "0xed679bcac89928a1cdccdb0bdb92a5ba86ffdc77150ce7db2565184f954e4690",
+      "full_wallet_pnl": "UNRESOLVED"
+    },
+    {
+      "position": 194,
+      "source_row": 363,
+      "wallet": "0x0a33bb5047489ee4fad6604f3fa5fc65e4df378c",
+      "chain": "bnb-mainnet",
+      "first_page_event_count": 5,
+      "pagination_unfinished": true,
+      "first_event_hash": "0x319f86a6a99863c4e8584c8489315062c5c5c3a2303f252c58b3c2ce409ce69a",
+      "full_wallet_pnl": "UNRESOLVED"
+    },
+    {
+      "position": 195,
+      "source_row": 365,
+      "wallet": "0xf54f69832ac99e66e29caf854aa972388b3c25bd",
+      "chain": "bnb-mainnet",
+      "first_page_event_count": 3,
+      "pagination_unfinished": false,
+      "first_event_hash": "0xc84646c1fd57a36de45519c452460738b90b306c519d313168df1e88da6a86da",
+      "full_wallet_pnl": "UNRESOLVED"
+    },
+    {
+      "position": 196,
+      "source_row": 366,
+      "wallet": "0x1bbd23f857be358643365e268556691f89c48e00",
+      "chain": "bnb-mainnet",
+      "first_page_event_count": 5,
+      "pagination_unfinished": true,
+      "first_event_hash": "0x334102058b178c2a258d482842682dc874ecfb254528f6303a40646b9c5fea84",
+      "full_wallet_pnl": "UNRESOLVED"
+    },
+    {
+      "position": 197,
+      "source_row": 367,
+      "wallet": "0x7d9471511a6c027e978adaf02014c3d2f40a0571",
+      "chain": "bnb-mainnet",
+      "first_page_event_count": 1,
+      "pagination_unfinished": false,
+      "first_event_hash": "0x192da557c2372a30002df6f8dc6c30c5b8d8dbac0dbfa0c2e8889f064d4f852b",
+      "full_wallet_pnl": "UNRESOLVED"
+    },
+    {
+      "position": 198,
+      "source_row": 368,
+      "wallet": "0x2e2446cba537aa0084f395340c08d767b9f85289",
+      "chain": "bnb-mainnet",
+      "first_page_event_count": 5,
+      "pagination_unfinished": false,
+      "first_event_hash": "0xf45c3625f28f9a5cdcd4ac24a35dfcd17a2528cb89748c15533e4dab77f7fd61",
+      "full_wallet_pnl": "UNRESOLVED"
+    },
+    {
+      "position": 199,
+      "source_row": 369,
+      "wallet": "0x020ca66c30bec2c4fe3861a94e4db4a498a35872",
+      "chain": "bnb-mainnet",
+      "first_page_event_count": 5,
+      "pagination_unfinished": false,
+      "first_event_hash": "0x4732118c5c7cd068900ab4de37d08155d72d43bb53e690a860e97efe21fe40b4",
+      "full_wallet_pnl": "UNRESOLVED"
+    },
+    {
+      "position": 200,
+      "source_row": 374,
+      "wallet": "0x571b6770ed63863d7cc7d461b1c4ec5504f17faa",
+      "chain": "bnb-mainnet",
+      "first_page_event_count": 1,
+      "pagination_unfinished": false,
+      "first_event_hash": "0x5b13711c10b1c40a4cdfa90ea8d02308eee9109cf5650b69cbcfbbe01a9d4350",
+      "full_wallet_pnl": "UNRESOLVED"
+    }
+  ],
+  "more_pages_in_this_group": 10,
+  "backlog_pages_cumulative_10_groups": 145,
+  "case_363": {
+    "source_row": 363,
+    "wallet": "0x0a33bb5047489ee4fad6604f3fa5fc65e4df378c",
+    "token_ca": "0x973f59f26ba0ee4fc4aa5d7eef17fc67a1693375",
+    "symbol_untrusted": "BS",
+    "decimals": 18,
+    "all_historical_erc20_in_events": 2,
+    "all_historical_erc20_out_events": 3,
+    "all_exact_ca_transfer_pages_exhausted": true,
+    "rounds": [
+      {
+        "number": 1,
+        "acquisition_raw": "16928626055043422544930495",
+        "out_raw_components": [
+          "7544028329724036541560239",
+          "9384597725319386003370256"
+        ],
+        "balance_start_raw": "0",
+        "balance_after_buy_raw": "16928626055043422544930495",
+        "balance_after_last_sell_raw": "0",
+        "execution_blocks": [
+          {
+            "stage": "buy1",
+            "block": "0x74df3ed",
+            "transaction_hash": "0x319f86a6a99863c4e8584c8489315062c5c5c3a2303f252c58b3c2ce409ce69a",
+            "approval_tx_hash": null,
+            "wallet_native_balance_pre_wei": "18256488870631076017",
+            "wallet_native_balance_post_wei": "17256390779304826017",
+            "native_block_delta_wei": "-1000098091326250000",
+            "wallet_signed_tx_in_block": 1,
+            "native_tx_value_hex": "0xde0b6b3a7640000",
+            "router": "0x1de460f363af910f51726def188f9004276bf4bc",
+            "swap_selector": "0x4d819a2a",
+            "approval_selector": null,
+            "receipt_status_evidence": "0x1"
+          },
+          {
+            "stage": "sell1",
+            "block": "0x74df55a",
+            "transaction_hash": "0x525962e0db989bb8d54ca1c6be03b26be17931b30615ab3135e91f8cba942c5d",
+            "approval_tx_hash": "0x6a8600c49250203cae81df5b47bed9a5d2027e54c3d4ef2bc979cbe6173ca5f5",
+            "wallet_native_balance_pre_wei": "17256390779304826017",
+            "wallet_native_balance_post_wei": "18216837956848377824",
+            "native_block_delta_wei": "960447177543551807",
+            "wallet_signed_tx_in_block": 2,
+            "native_tx_value_hex": "0x0",
+            "router": "0x1de460f363af910f51726def188f9004276bf4bc",
+            "swap_selector": "0x4d819a2a",
+            "approval_selector": "0x095ea7b3",
+            "receipt_status_evidence": "0x1"
+          },
+          {
+            "stage": "sell2",
+            "block": "0x74e6a32",
+            "transaction_hash": "0x7b58a01ff502367b78231ed6b0bd1580196dd9955c146fae0077646e4d447fef",
+            "approval_tx_hash": "0x598524e646ac93b34b079580365ea01417a329dfc1d8a08580e2baa638e19fa5",
+            "wallet_native_balance_pre_wei": "12716679260808377824",
+            "wallet_native_balance_post_wei": "13183143225294670555",
+            "native_block_delta_wei": "466463964486292731",
+            "wallet_signed_tx_in_block": 2,
+            "native_tx_value_hex": "0x0",
+            "router": "0x1de460f363af910f51726def188f9004276bf4bc",
+            "swap_selector": "0x4d819a2a",
+            "approval_selector": "0x095ea7b3",
+            "receipt_status_evidence": "RECEIPT_STATUS_TRUNCATED_TRANSFER_EVENT_PROVES_SUCCESS"
+          }
+        ],
+        "total_native_execution_block_balance_delta_wei": "426813050703594538",
+        "direction": "POSITIVE_PROVISIONAL"
+      },
+      {
+        "number": 2,
+        "acquisition_raw": "23439006606980405863649157",
+        "out_raw_components": [
+          "23439006606980405863649157"
+        ],
+        "balance_before_buy_raw": "0",
+        "balance_after_buy_raw": "23439006606980405863649157",
+        "balance_after_sell_raw": "0",
+        "execution_blocks": [
+          {
+            "stage": "buy2",
+            "block": "0x76f0ab0",
+            "transaction_hash": "0x9f7795fbbad9fa1b3575cb57239062e14ac108a9dc077f534cd77e43e40a7ad8",
+            "approval_tx_hash": null,
+            "wallet_native_balance_pre_wei": "48014617135528833339",
+            "wallet_native_balance_post_wei": "47014539416328833339",
+            "native_block_delta_wei": "-1000077719200000000",
+            "wallet_signed_tx_in_block": 1,
+            "native_tx_value_hex": "0xde0b6b3a7640000",
+            "router": "0x1de460f363af910f51726def188f9004276bf4bc",
+            "swap_selector": "0x4d819a2a",
+            "approval_selector": null,
+            "receipt_status_evidence": "0x1"
+          },
+          {
+            "stage": "sell3",
+            "block": "0x76f0ce6",
+            "transaction_hash": "0x274c807c79ad15be9ea992566ff474583b925d977da0839cb0ca8dcde278c844",
+            "approval_tx_hash": "0xfbba4854bffa2157a33183cb2643d193724401549ae3252996ffd4ccea8f32be",
+            "wallet_native_balance_pre_wei": "47014539416328833339",
+            "wallet_native_balance_post_wei": "47804937000431731903",
+            "native_block_delta_wei": "790397584102898564",
+            "wallet_signed_tx_in_block": 2,
+            "native_tx_value_hex": "0x0",
+            "router": "0x1de460f363af910f51726def188f9004276bf4bc",
+            "swap_selector": "0x4d819a2a",
+            "approval_selector": "0x095ea7b3",
+            "receipt_status_evidence": "RECEIPT_STATUS_TRUNCATED_TRANSFER_EVENT_PROVES_SUCCESS"
+          }
+        ],
+        "total_native_execution_block_balance_delta_wei": "-209680135097101436",
+        "direction": "NEGATIVE_PROVISIONAL"
+      }
+    ],
+    "frozen_balance_raw": "0",
+    "all_swap_wallet_signed": true,
+    "all_swap_to_router": true,
+    "three_approval_receipts_status": [
+      "0x1",
+      "0x1",
+      "0x1"
+    ],
+    "two_sell_receipt_status_not_independently_readable": "sell2, sell3 receipts truncated; successful exact CA transfer events and zero token inventory confirm execution",
+    "combined_native_execution_block_delta_wei": "217132915606493102",
+    "limitations": [
+      "BD balance before/after each execution block is independent of contract payout tracing; cannot attribute all native receipts to specific swaps without internal trace.",
+      "Native balance changes include gas for buy/sell/approve and may include other same-block internal transfers from others even when nonce 1/2.",
+      "These two limited token cycles do not show full-wallet 30d/lifetime profit, cross-chain costs, or intervening wallet transfers."
+    ]
+  },
+  "case_324": {
+    "source_row": 324,
+    "token_symbol_untrusted": "BITLIFE",
+    "exact_ca": "0xc40208f04ccca48b07caa0bbfa49225167c57777",
+    "token_in_raw": "57818237379361272603259341",
+    "token_out_raw": "57818237379361272603259341",
+    "incoming_tx": "0xb3946ae7d396c9205fa09dea5f946273f5df17de2811dbcfabd15aaa3c42c2be",
+    "acquisition_wallet_call_to": "0xe2ce6ab80874fa9fa2aae65d277dd6b8e65c9de0",
+    "acquisition_tx_selector": "0x8cb5772c",
+    "acquisition_tx_value": "0",
+    "out_swap_tx": "0x6a753235ee4f1b0f518acd7d195c0318168a3864d1afd6ef8a9fe8d31ea19f43",
+    "out_to_router": "0x1de460f363af910f51726def188f9004276bf4bc",
+    "out_to_router_selector": "0x4d819a2a",
+    "status": "COST_BASIS_UNVERIFIED_EXTERNAL_CONTRACT_RECEIPT_NOT_STANDARD_BNB_ROUTER_BUY",
+    "not_same_contract_as_source227_btclife": true
+  },
+  "case_356": {
+    "source_row": 356,
+    "token_symbol": "MYXXFLAP",
+    "ca": "0x24506cf61fb8d9fffa61da80b239b749802b7777",
+    "inbound_first_10_events_more_pages": true,
+    "outbound_first_10_events_more_pages": false,
+    "category": "HIGH_VOLUME_COMPLEX_MULTI_LOG_EVENTS_DEFERRED"
+  },
+  "other_wallet_warnings": [
+    {
+      "source_row": 323,
+      "warning": "BNBChain canonical USDT 0x55d398... alongside Unicode/contract impostors; amount duplication is not multiple real USDT movement"
+    },
+    {
+      "source_row": 316,
+      "warning": "Eth mainnet token and ETH transfers, first-page only; not signed DEX PnL"
+    },
+    {
+      "source_row": 311,
+      "warning": "One external BNB outflow is not a trading loss"
+    }
+  ],
+  "whole_wallet_pnl_30d_completed": 0,
+  "whole_wallet_pnl_lifetime_completed": 0,
+  "next_queue_source_rows": [
+    375,
+    376,
+    379,
+    380,
+    381,
+    382,
+    385,
+    388,
+    390,
+    391,
+    392,
+    395,
+    396,
+    400,
+    402,
+    406,
+    407,
+    409,
+    413,
+    414
+  ],
+  "gates": [
+    "PR_OPEN_DRAFT",
+    "RESEARCH_ONLY",
+    "NO_MERGE",
+    "NO_DEPLOY",
+    "NO_GMAIL",
+    "NO_TRADE",
+    "NO_NEW_AUTOMATION"
+  ]
+}

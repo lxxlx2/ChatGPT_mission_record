@@ -1,0 +1,81 @@
+{
+  "schema": "mission-address-analysis-audited-roundtrip-v1",
+  "source_row": 16,
+  "network": "bnb-mainnet",
+  "wallet": "0x29935ef1417e1c3b1fec68dd666ea9baac31d4ed",
+  "token": "0x5601a422986034521330bb4c799a8a3f29137777",
+  "token_symbol": "RTX5090",
+  "token_name": "RTX 5090",
+  "token_decimals": 18,
+  "window": "2026-10-17",
+  "evidence_label": "DIRECT_CHAIN_SWAP_CASHFLOW_AND_BINANCE_1M_USD_REFERENCE",
+  "source": "Alchemy BNB mainnet eth_getBalance at height-1 and height, successful receipt and ERC20 owner transfer logs, Binance BNBUSDT 1m Kline closes",
+  "opening_token_balance_before_buy_raw": "0",
+  "ending_token_balance_after_sells_raw": "0",
+  "txs": [
+    {
+      "kind": "buy",
+      "block": "0x7a3e41d",
+      "time_utc": "2026-10-17T13:50:19Z",
+      "hash": "0x38be951419849aaaaf6c6f15cf6cf6614d069095f548bcfbd1af36ebcf5d816a",
+      "token_in": 6541299.252621676,
+      "delta_bnb": -0.10648116447421963,
+      "price_bnbusdt_1m_close": 719.87
+    },
+    {
+      "kind": "sell",
+      "block": "0x7a3e4e1",
+      "time_utc": "2026-10-17T13:51:47Z",
+      "hash": "0x0ed58497cf8a7b3b9a2bf3b34eca387fa506ca98a9c188092fa6893d614fcb92",
+      "token_out_total": 1308259.8505243352,
+      "delta_bnb": 0.07035621544422277,
+      "price_bnbusdt_1m_close": 720
+    },
+    {
+      "kind": "sell",
+      "block": "0x7a3e558",
+      "time_utc": "2026-10-17T13:52:41Z",
+      "hash": "0xa6397e9648e9b1ee602bcf51444f15a732cfd0d14d7cf8631527d93d26ea92cb",
+      "token_out_total": 1046607.8804194682,
+      "delta_bnb": 0.06602485902829436,
+      "price_bnbusdt_1m_close": 720.27
+    },
+    {
+      "kind": "sell",
+      "block": "0x7a3e567",
+      "time_utc": "2026-10-17T13:52:48Z",
+      "hash": "0xc8f8649a3cc02f1e5cf940f594f548083f1216c615b5c43ad4915cb8ec3d29b4",
+      "token_out_total": 837286.3043355745,
+      "delta_bnb": 0.05882162098853527,
+      "price_bnbusdt_1m_close": 720.27
+    },
+    {
+      "kind": "sell",
+      "block": "0x7a3e67c",
+      "time_utc": "2026-10-17T13:54:52Z",
+      "hash": "0xca66407e72e2983babf5ac8ace5f00d90dc26cb369dc5955dafa6e81a26d9e5a",
+      "token_out_total": 1842029.8695382639,
+      "delta_bnb": 0.07057550950511526,
+      "price_bnbusdt_1m_close": 720.23
+    },
+    {
+      "kind": "sell",
+      "block": "0x7a3e68d",
+      "time_utc": "2026-10-17T13:55:00Z",
+      "hash": "0xb4b279e0cb7b8270ee5993ac2502a87ae69ac34e0795d6f2c1ba5825ee14c223",
+      "token_out_total": 1507115.3478040341,
+      "delta_bnb": 0.06680229262390114,
+      "price_bnbusdt_1m_close": 720.08
+    }
+  ],
+  "calculation": {
+    "token_bought": 6541299.252621676,
+    "token_sold_plus_any_transfer_tax": 6541299.252621676,
+    "buy_net_bnb": -0.10648116447421963,
+    "sell_net_bnb": 0.3325804975900688,
+    "net_bnb": 0.22609933311584918,
+    "indicative_net_usdt_using_1m_binance_prices": 162.86064749499369,
+    "roundtrip_roi_pct": 212.33739716528976
+  },
+  "caveat": "Cashflow includes all same-block wallet BNB balance movements, including approvals/gas. Each block's only native-initiated wallet actions were the trade and token approval or buy. USD numbers use Binance BNBUSDT one-minute closes, not exact execution microsecond price or realized settled USDT. This proves one roundtrip only, not wallet monthly or lifetime PnL."
+}

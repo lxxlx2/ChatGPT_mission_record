@@ -1,0 +1,403 @@
+{
+  "schema": "mission-address-analysis-batch001-three-pending-erc20-provenance-v1",
+  "captured_at": "2026-10-18",
+  "research_only": true,
+  "network": "bnb-mainnet",
+  "immutable_source_blob": "954f3aba66be21911dd627fa40dd3dd0a9fd1d26",
+  "bound": {
+    "fromBlock": "0x0",
+    "toBlock": "0x7a4ca36"
+  },
+  "acquisition_and_exit_source": "Alchemy authenticated getAssetTransfers category erc20 contract-filter in both directions with order asc maxCount 0x14; both directions returned no pageKey; key tx sender confirmed for HODL and FTR distribution; balances via eth_call historical balanceOf",
+  "complete_transfer_query_by_provider": true,
+  "token_flow_scope": "ONLY BSC ERC20 event transfer history through fixed upper height; other chains, rebases, smart-account executions not excluded",
+  "cases": [
+    {
+      "source_row": 2,
+      "wallet": "0x0d8d6c105629e472691f9a970a6f70899195b5e0",
+      "token_contract": "0xe895398d9814354ca30ef5b35b9b8e13e8416666",
+      "token_label_unverified": "FTR",
+      "network": "bnb-mainnet",
+      "transfer_inventory": {
+        "inbound_events": [
+          {
+            "block": "0x79f9015",
+            "hash": "0x84736b8d98b6900bbb6e47dd6353be8f511cd70e400043ee0779b214994d1def",
+            "from": "0x074ea28c29479be5a4a196a0cb99f6febade4d92",
+            "to": "0x0d8d6c105629e472691f9a970a6f70899195b5e0",
+            "raw_amount": "2425187415918007435418865",
+            "token_contract": "0xe895398d9814354ca30ef5b35b9b8e13e8416666"
+          },
+          {
+            "block": "0x79f901a",
+            "hash": "0x4d15cfe495b53ee90c69757420116ec943e9fd5b276ebedf382150344754f0d2",
+            "from": "0x000461a73d3985eef4923655782aa5d0de75c111",
+            "to": "0x0d8d6c105629e472691f9a970a6f70899195b5e0",
+            "raw_amount": "110324514856919393471056",
+            "token_contract": "0xe895398d9814354ca30ef5b35b9b8e13e8416666"
+          },
+          {
+            "block": "0x79f9027",
+            "hash": "0x9c6bdbea1085836565771b1a813bd842cc07395de673247c850f8c1e2ac46ea9",
+            "from": "0x074ea28c29479be5a4a196a0cb99f6febade4d92",
+            "to": "0x0d8d6c105629e472691f9a970a6f70899195b5e0",
+            "raw_amount": "2302165810224708695535860",
+            "token_contract": "0xe895398d9814354ca30ef5b35b9b8e13e8416666"
+          },
+          {
+            "block": "0x79f9029",
+            "hash": "0xcd5d21ef1fd6cce66c9422539f04a3cc087886a51feca98fd0654f9ca157ae54",
+            "from": "0x074ea28c29479be5a4a196a0cb99f6febade4d92",
+            "to": "0x0d8d6c105629e472691f9a970a6f70899195b5e0",
+            "raw_amount": "2595466022462409187335879",
+            "token_contract": "0xe895398d9814354ca30ef5b35b9b8e13e8416666"
+          },
+          {
+            "block": "0x79f9071",
+            "hash": "0x304ddc500957aa30a8eb1261018afa52eb87f739931060fd0a4c63a335ad6351",
+            "from": "0x000461a73d3985eef4923655782aa5d0de75c111",
+            "to": "0x0d8d6c105629e472691f9a970a6f70899195b5e0",
+            "raw_amount": "727881640859508514398376",
+            "token_contract": "0xe895398d9814354ca30ef5b35b9b8e13e8416666"
+          }
+        ],
+        "outbound_events": [
+          {
+            "block": "0x79f9031",
+            "hash": "0x9a2837268059128978825940cfe9e3bd23c20a8972755e53e52164801765016b",
+            "from": "0x0d8d6c105629e472691f9a970a6f70899195b5e0",
+            "to": "0x82149885911139855e574757314f2ae82abba52e",
+            "raw_amount": "958209298638756894428841",
+            "token_contract": "0xe895398d9814354ca30ef5b35b9b8e13e8416666",
+            "destination_original_source_row": null
+          },
+          {
+            "block": "0x79f9031",
+            "hash": "0x9a2837268059128978825940cfe9e3bd23c20a8972755e53e52164801765016b",
+            "from": "0x0d8d6c105629e472691f9a970a6f70899195b5e0",
+            "to": "0x0006d09df7b0e8dce98463b95439475fcec29111",
+            "raw_amount": "1078235064686799477628467",
+            "token_contract": "0xe895398d9814354ca30ef5b35b9b8e13e8416666",
+            "destination_original_source_row": 1
+          },
+          {
+            "block": "0x79f9031",
+            "hash": "0x9a2837268059128978825940cfe9e3bd23c20a8972755e53e52164801765016b",
+            "from": "0x0d8d6c105629e472691f9a970a6f70899195b5e0",
+            "to": "0x4e18036bb5e6e3cdc7acd0ba935974a191cafc72",
+            "raw_amount": "657858254926608550041086",
+            "token_contract": "0xe895398d9814354ca30ef5b35b9b8e13e8416666",
+            "destination_original_source_row": null
+          },
+          {
+            "block": "0x79f9031",
+            "hash": "0x9a2837268059128978825940cfe9e3bd23c20a8972755e53e52164801765016b",
+            "from": "0x0d8d6c105629e472691f9a970a6f70899195b5e0",
+            "to": "0x000ae1e2ba3624208300605d7919d6c4803c6111",
+            "raw_amount": "651182821161581907658567",
+            "token_contract": "0xe895398d9814354ca30ef5b35b9b8e13e8416666",
+            "destination_original_source_row": 6
+          },
+          {
+            "block": "0x79f9031",
+            "hash": "0x9a2837268059128978825940cfe9e3bd23c20a8972755e53e52164801765016b",
+            "from": "0x0d8d6c105629e472691f9a970a6f70899195b5e0",
+            "to": "0x000c1fa092591c77c86e3ebd39a4b82f52171111",
+            "raw_amount": "529352793363334069163174",
+            "token_contract": "0xe895398d9814354ca30ef5b35b9b8e13e8416666",
+            "destination_original_source_row": null
+          },
+          {
+            "block": "0x79f9031",
+            "hash": "0x9a2837268059128978825940cfe9e3bd23c20a8972755e53e52164801765016b",
+            "from": "0x0d8d6c105629e472691f9a970a6f70899195b5e0",
+            "to": "0x000a607b0c5ea26b3f24e8c78738c56c61235111",
+            "raw_amount": "143043574687883833771109",
+            "token_contract": "0xe895398d9814354ca30ef5b35b9b8e13e8416666",
+            "destination_original_source_row": null
+          }
+        ],
+        "opening_token_raw": "0",
+        "total_in_raw": "8161025404321553226160036",
+        "total_out_raw": "4017881807464964732691244",
+        "ending_token_raw": "4143143596856588493468792",
+        "outbound_transfer_count": 6,
+        "source_list_destinations": [
+          {
+            "source_row": 1,
+            "address": "0x0006d09df7b0e8dce98463b95439475fcec29111"
+          },
+          {
+            "source_row": 6,
+            "address": "0x000ae1e2ba3624208300605d7919d6c4803c6111"
+          }
+        ],
+        "alchemy_erc20_pagination_complete_inbound": true,
+        "alchemy_erc20_pagination_complete_outbound": true
+      },
+      "historical_balance_snapshots": [
+        {
+          "block": "0x79f9014",
+          "balance": "0"
+        },
+        {
+          "block": "0x79f9031",
+          "balance": "3415261955997079979070416"
+        },
+        {
+          "block": "0x7a4ca36",
+          "balance": "4143143596856588493468792"
+        }
+      ],
+      "native_block_deltas": [],
+      "accounting_classification": "MULTI_RECIPIENT_FTR_DISTRIBUTION_WITH_OPEN_INVENTORY",
+      "fee_and_realized_pnl": "PNL_UNRESOLVED",
+      "unresolved_requirements": [
+        "origin acquisition cost for 5 inbound transfers",
+        "destination transfers are not proof of disposal for value",
+        "residual inventory value/basis and other-chain transfers"
+      ]
+    },
+    {
+      "source_row": 7,
+      "wallet": "0x3f63c175ff9746cf0e0e6095d0568180f9d92fa5",
+      "token_contract": "0x2170ed0880ac9a755fd29b2688956bd959f933f8",
+      "token_label_unverified": "BSC-ETH token",
+      "network": "bnb-mainnet",
+      "transfer_inventory": {
+        "inbound_events": [
+          {
+            "block": "0x6f7fb64",
+            "hash": "0x278549bb06462c4a5c943381897be091cdce1d37eed631c9755961e1f23d35b9",
+            "from": "0x33b255b5db44a78c34381f89f1a454bc0ef49871",
+            "to": "0x3f63c175ff9746cf0e0e6095d0568180f9d92fa5",
+            "raw_amount": "495493976990295904",
+            "token_contract": "0x2170ed0880ac9a755fd29b2688956bd959f933f8"
+          },
+          {
+            "block": "0x6f7fecc",
+            "hash": "0x322cd678387759b48dd2140b4887c831814cf78d38c143ec59c0a5466c8556e7",
+            "from": "0x33b255b5db44a78c34381f89f1a454bc0ef49871",
+            "to": "0x3f63c175ff9746cf0e0e6095d0568180f9d92fa5",
+            "raw_amount": "495508745633965311",
+            "token_contract": "0x2170ed0880ac9a755fd29b2688956bd959f933f8"
+          }
+        ],
+        "outbound_events": [
+          {
+            "block": "0x76d46c6",
+            "hash": "0x08bfac6ed8f915f56411ee0045e4ed4876520494fb7edd4eb914ddeaa7769b69",
+            "from": "0x3f63c175ff9746cf0e0e6095d0568180f9d92fa5",
+            "to": "0xdc9a3a73bb728cd540a0e16accfa20c88e69c28b",
+            "raw_amount": "991002722624261215",
+            "token_contract": "0x2170ed0880ac9a755fd29b2688956bd959f933f8",
+            "destination_original_source_row": null
+          }
+        ],
+        "opening_token_raw": "0",
+        "total_in_raw": "991002722624261215",
+        "total_out_raw": "991002722624261215",
+        "ending_token_raw": "0",
+        "outbound_transfer_count": 1,
+        "source_list_destinations": [],
+        "alchemy_erc20_pagination_complete_inbound": true,
+        "alchemy_erc20_pagination_complete_outbound": true
+      },
+      "historical_balance_snapshots": [
+        {
+          "block": "0x6f7fb63",
+          "balance": "0",
+          "BNBWei": "0",
+          "nonce": 0
+        },
+        {
+          "block": "0x6f7fb64",
+          "balance": "495493976990295904",
+          "BNBWei": "0",
+          "nonce": 0
+        },
+        {
+          "block": "0x6f7fecb",
+          "balance": "495493976990295904",
+          "BNBWei": "0",
+          "nonce": 0
+        },
+        {
+          "block": "0x6f7fecc",
+          "balance": "991002722624261215",
+          "BNBWei": "0",
+          "nonce": 0
+        },
+        {
+          "block": "0x76d46c5",
+          "balance": "991002722624261215",
+          "BNBWei": "0",
+          "nonce": 0
+        },
+        {
+          "block": "0x76d46c6",
+          "balance": "0",
+          "BNBWei": "40938120000000",
+          "nonce": 2
+        },
+        {
+          "block": "0x7a4ca36",
+          "balance": "0"
+        }
+      ],
+      "native_block_deltas": [
+        {
+          "at_block": "0x6f7fb64",
+          "block_level_delta_wei": "0",
+          "signed_nonce_delta": 0,
+          "token_delta_raw": "495493976990295904"
+        },
+        {
+          "at_block": "0x6f7fecc",
+          "block_level_delta_wei": "0",
+          "signed_nonce_delta": 0,
+          "token_delta_raw": "495508745633965311"
+        },
+        {
+          "at_block": "0x76d46c6",
+          "block_level_delta_wei": "40938120000000",
+          "signed_nonce_delta": 2,
+          "token_delta_raw": "-991002722624261215"
+        }
+      ],
+      "accounting_classification": "EXTERNALLY_RECEIVED_TOKEN_FULLY_TRANSFERRED_COST_BASIS_UNKNOWN",
+      "fee_and_realized_pnl": "PNL_UNRESOLVED",
+      "unresolved_requirements": [
+        "external origin acquisition/counterparty basis not proved",
+        "exit BNB quote receipts not tied to tx via internal trace",
+        "block gas and other wallet activity not fully reconciled",
+        "other-chain basis and transfers not ruled out"
+      ]
+    },
+    {
+      "source_row": 15,
+      "wallet": "0xd68def46b1114f51b7e676e6dde89069a2f3fe1a",
+      "token_contract": "0xc242c264efe56109c495b308985f2694593477f8",
+      "token_label_unverified": "HODL",
+      "network": "bnb-mainnet",
+      "transfer_inventory": {
+        "inbound_events": [
+          {
+            "block": "0x784495f",
+            "hash": "0x14028fcf80385ac6ab864bd33079273e0dc9044b97c434988efffc12f07eb4d4",
+            "from": "0x1c2bffb85341275feb01986241e5067feac16e3f",
+            "to": "0xd68def46b1114f51b7e676e6dde89069a2f3fe1a",
+            "raw_amount": "3807941716484258253865819",
+            "token_contract": "0xc242c264efe56109c495b308985f2694593477f8"
+          }
+        ],
+        "outbound_events": [
+          {
+            "block": "0x7844b49",
+            "hash": "0xea6deca031dd39ac05a96cdddd33419136fd43b5fab90799638ccbdb2bd8b54a",
+            "from": "0xd68def46b1114f51b7e676e6dde89069a2f3fe1a",
+            "to": "0x238a358808379702088667322f80ac48bad5e6c4",
+            "raw_amount": "1942050275406971709471567",
+            "token_contract": "0xc242c264efe56109c495b308985f2694593477f8",
+            "destination_original_source_row": null
+          },
+          {
+            "block": "0x7861d11",
+            "hash": "0x841be7c455162247bac6eaa51f7495d8182635124e7a83e5df5e79dcbada1722",
+            "from": "0xd68def46b1114f51b7e676e6dde89069a2f3fe1a",
+            "to": "0x238a358808379702088667322f80ac48bad5e6c4",
+            "raw_amount": "1865891441077286544394252",
+            "token_contract": "0xc242c264efe56109c495b308985f2694593477f8",
+            "destination_original_source_row": null
+          }
+        ],
+        "opening_token_raw": "0",
+        "total_in_raw": "3807941716484258253865819",
+        "total_out_raw": "3807941716484258253865819",
+        "ending_token_raw": "0",
+        "outbound_transfer_count": 2,
+        "source_list_destinations": [],
+        "alchemy_erc20_pagination_complete_inbound": true,
+        "alchemy_erc20_pagination_complete_outbound": true
+      },
+      "historical_balance_snapshots": [
+        {
+          "block": "0x784495e",
+          "balance": "0",
+          "BNBWei": "1013713987304",
+          "nonce": 2
+        },
+        {
+          "block": "0x784495f",
+          "balance": "3807941716484258253865819",
+          "BNBWei": "1013713987304",
+          "nonce": 2
+        },
+        {
+          "block": "0x7844b48",
+          "balance": "3807941716484258253865819",
+          "BNBWei": "11081048232987304",
+          "nonce": 2
+        },
+        {
+          "block": "0x7844b49",
+          "balance": "1865891441077286544394252",
+          "BNBWei": "141249421741638698",
+          "nonce": 4
+        },
+        {
+          "block": "0x7861d10",
+          "balance": "1865891441077286544394252",
+          "BNBWei": "141249421741638698",
+          "nonce": 4
+        },
+        {
+          "block": "0x7861d11",
+          "balance": "0",
+          "BNBWei": "172368921999651786",
+          "nonce": 6
+        },
+        {
+          "block": "0x7a4ca36",
+          "balance": "0"
+        }
+      ],
+      "native_block_deltas": [
+        {
+          "at_block": "0x784495f",
+          "block_level_delta_wei": "0",
+          "signed_nonce_delta": 0,
+          "token_delta_raw": "3807941716484258253865819"
+        },
+        {
+          "at_block": "0x7844b49",
+          "block_level_delta_wei": "130168373508651394",
+          "signed_nonce_delta": 2,
+          "token_delta_raw": "-1942050275406971709471567"
+        },
+        {
+          "at_block": "0x7861d11",
+          "block_level_delta_wei": "31119500258013088",
+          "signed_nonce_delta": 2,
+          "token_delta_raw": "-1865891441077286544394252"
+        }
+      ],
+      "accounting_classification": "EXTERNALLY_RECEIVED_HODL_TWO_ROUTER_DISPOSITIONS_COST_BASIS_UNKNOWN",
+      "fee_and_realized_pnl": "PNL_UNRESOLVED",
+      "unresolved_requirements": [
+        "external origin acquisition/counterparty basis not proved",
+        "exit BNB quote receipts not tied to tx via internal trace",
+        "block gas and other wallet activity not fully reconciled",
+        "other-chain basis and transfers not ruled out"
+      ]
+    }
+  ],
+  "claims_not_supported": [
+    "No wallet profit or loss or zero-cost allocation",
+    "No shared control asserted by transfers between two source-list addresses",
+    "Native block balance differences are not internal transaction payout tracing",
+    "Not evidence of ERC20 approvals as purchases"
+  ],
+  "wallet_level_pnl_30d_complete": 0,
+  "wallet_level_pnl_lifetime_complete": 0
+}

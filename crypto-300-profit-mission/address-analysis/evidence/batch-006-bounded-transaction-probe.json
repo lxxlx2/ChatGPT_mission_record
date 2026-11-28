@@ -1,0 +1,81 @@
+{
+  "schema": "mission-address-analysis-batch-006-bounded-call-probes-v1",
+  "scope": "Limited outgoing transaction sample only, not full wallet PnL, nor receipt/token transfer complete audit",
+  "as_of_date": "2026-10-18",
+  "source_blob_sha": "954f3aba66be21911dd627fa40dd3dd0a9fd1d26",
+  "transaction_samples": [
+    {
+      "source_row": 103,
+      "network": "bnb-mainnet",
+      "hash": "0xd4ce45c8015c8030236bb6af25a0126d6ac07bec664f496b8fa4a972014a3e77",
+      "selector": "0x3ccfd60b",
+      "native_wei": "0x0",
+      "classification": "UNDECODED_CONTRACT_CALL",
+      "pnl_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 103,
+      "network": "bnb-mainnet",
+      "hash": "0x847037b99de32726aa880d742ed428234b5b63b8efafacc3e9a479fc8fcd5798",
+      "selector": "0xa9059cbb",
+      "native_wei": "0x0",
+      "classification": "ERC20_TRANSFER_NOT_TRADE_PROVEN",
+      "pnl_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 106,
+      "network": "bnb-mainnet",
+      "hash": "0x8c6c3d052750581a00f6e74daf2647a3edf25a13cbe37bdf0659cd0490c897ce",
+      "selector": "0x47ee97ff",
+      "native_wei": "0xde0b6b3a7640000",
+      "classification": "PAID_CONTRACT_CALL_1_BNB_UNDECODED",
+      "pnl_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 107,
+      "network": "bnb-mainnet",
+      "hash": "0x7ac0f71411554f9267f980e637f36bdbd0df337960d8690b9ecb284c2d2ce58c",
+      "selector": "0xa9059cbb",
+      "native_wei": "0x0",
+      "classification": "ERC20_TRANSFER_NOT_TRADE_PROVEN",
+      "pnl_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 111,
+      "network": "bnb-mainnet",
+      "hash": "0x7c769c42a538d1ad6de4ebda2089b756153295664743e7d3dcc47a72c9b74970",
+      "selector": "0xbabf8fea",
+      "native_wei": "0x2386f26fc10000",
+      "classification": "PAID_CONTRACT_CALL_0_01_BNB_UNDECODED",
+      "pnl_status": "UNRESOLVED"
+    }
+  ],
+  "open_items": [
+    {
+      "row": 106,
+      "reason": "1 BNB paid into contract, missing ERC20 output receipt, later exit and acquisition cost attribution",
+      "reentry": "decode receipt logs + historical inventory and subsequent trades"
+    },
+    {
+      "row": 111,
+      "reason": "0.01 BNB call, final token receipt and cost/proceeds absent",
+      "reentry": "decode contract receipt and reconcile holdings"
+    },
+    {
+      "row": 101,
+      "reason": "4512 BSC signed operations; exceeds this bounded call-classification probe",
+      "reentry": "read-only paginated classification with stored cursor and per-asset ledgers"
+    },
+    {
+      "row": 118,
+      "reason": "10247 BSC signed operations, 36 Ethereum, 90 Base; cannot claim whole-wallet profit",
+      "reentry": "bounded pagination per chain with matching historical acquisition costs"
+    }
+  ],
+  "verified_closed_losses": 0,
+  "verified_closed_gains": 0,
+  "limitations": [
+    "Native contract value is neither verified swap volume nor net profit",
+    "No signed transaction should be promoted to token trade without matched receipt/asset flows"
+  ]
+}

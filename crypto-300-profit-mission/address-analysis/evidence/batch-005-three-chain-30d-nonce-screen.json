@@ -1,0 +1,621 @@
+{
+  "schema": "mission-address-analysis-batch-005-three-chain-fixed-nonce-v1",
+  "research_only": true,
+  "observation_date": "2026-10-18",
+  "source_blob_sha": "954f3aba66be21911dd627fa40dd3dd0a9fd1d26",
+  "source_rows": [
+    81,
+    100
+  ],
+  "provider": "Alchemy authenticated RPC: eth_getTransactionCount, eth_getBlockByNumber; data captured 2026-10-18",
+  "frozen_boundaries": {
+    "bsc": {
+      "from": {
+        "height": "0x74cf256",
+        "hash": "0x77cbf3d8a37e5995f27cc48fffe9a1df3bfc48808e64a769e940caec3cecfc1d",
+        "utc": "2026-09-17T21:12:12Z"
+      },
+      "to": {
+        "height": "0x7a4ca36",
+        "hash": "0x17d7dd95285a23d69c726943ac985f8deff2d987ee559ce5ec97ea1f2f513311",
+        "utc": "2026-10-17T21:12:13Z"
+      }
+    },
+    "ethereum": {
+      "from": {
+        "height": "0x18cb9c8",
+        "hash": "0xc1c05110c8c372d5aae38462af53f2f6da78e078d5410f785ee3c5b6bbf7ac0b",
+        "utc": "2026-09-17T21:12:11Z"
+      },
+      "to": {
+        "height": "0x19001e3",
+        "hash": "0xa91aed9ba16471265db54a53db4b4946b48a4a171eb1bdd7e1c65c1b3f6c3e67",
+        "utc": "2026-10-17T21:12:11Z"
+      }
+    },
+    "base": {
+      "from": {
+        "height": "0x310fd64",
+        "hash": "0x87c67d4f90a11a75a68c685418de161b0231734a0098200aee0c103193c28abf",
+        "utc": "2026-09-17T21:12:11Z"
+      },
+      "to": {
+        "height": "0x324c3e5",
+        "hash": "0x9d641df1460ba9c2108e8c38f16c8f19222ccc63a93d54f7abb9b269769affe5",
+        "utc": "2026-10-17T21:12:13Z"
+      }
+    }
+  },
+  "confirmation": "Six boundary hashes independently matched the configured block heights in this turn",
+  "statistics": {
+    "bsc": {
+      "checked": 20,
+      "signed_active": 3,
+      "signed_transactions": 753
+    },
+    "ethereum": {
+      "checked": 20,
+      "signed_active": 5,
+      "signed_transactions": 349
+    },
+    "base": {
+      "checked": 20,
+      "signed_active": 3,
+      "signed_transactions": 168
+    },
+    "union_signed_wallets": 6,
+    "active_rows": [
+      81,
+      82,
+      83,
+      86,
+      91,
+      94
+    ],
+    "three_chain_signed_zero_rows": [
+      84,
+      85,
+      87,
+      88,
+      89,
+      90,
+      92,
+      93,
+      95,
+      96,
+      97,
+      98,
+      99,
+      100
+    ]
+  },
+  "rows": [
+    {
+      "source_row": 81,
+      "address": "0xce370ebcbc655f845df7dfb8c079e75b5ea17d93",
+      "source_label_unverified": "banker创始人",
+      "chains": {
+        "bsc": {
+          "start_nonce": 1,
+          "end_nonce": 1,
+          "signed_delta": 0,
+          "status": "OK"
+        },
+        "ethereum": {
+          "start_nonce": 116,
+          "end_nonce": 130,
+          "signed_delta": 14,
+          "status": "OK"
+        },
+        "base": {
+          "start_nonce": 5667,
+          "end_nonce": 5809,
+          "signed_delta": 142,
+          "status": "OK"
+        }
+      },
+      "signed_on_any_checked_chain": true
+    },
+    {
+      "source_row": 82,
+      "address": "0x2631736631a133a56af3f035fbb5ca25e210a325",
+      "source_label_unverified": "阴谋呢？",
+      "chains": {
+        "bsc": {
+          "start_nonce": 90,
+          "end_nonce": 111,
+          "signed_delta": 21,
+          "status": "OK"
+        },
+        "ethereum": {
+          "start_nonce": 58,
+          "end_nonce": 58,
+          "signed_delta": 0,
+          "status": "OK"
+        },
+        "base": {
+          "start_nonce": 15,
+          "end_nonce": 16,
+          "signed_delta": 1,
+          "status": "OK"
+        }
+      },
+      "signed_on_any_checked_chain": true
+    },
+    {
+      "source_row": 83,
+      "address": "0x756e1d965114fdb4759abc914521f9f4fb1db369",
+      "source_label_unverified": "",
+      "chains": {
+        "bsc": {
+          "start_nonce": 0,
+          "end_nonce": 0,
+          "signed_delta": 0,
+          "status": "OK"
+        },
+        "ethereum": {
+          "start_nonce": 41,
+          "end_nonce": 46,
+          "signed_delta": 5,
+          "status": "OK"
+        },
+        "base": {
+          "start_nonce": 2,
+          "end_nonce": 2,
+          "signed_delta": 0,
+          "status": "OK"
+        }
+      },
+      "signed_on_any_checked_chain": true
+    },
+    {
+      "source_row": 84,
+      "address": "0xd874259110c6e086f1d2fee474b73e69b8f5dab0",
+      "source_label_unverified": "Killua 小号？",
+      "chains": {
+        "bsc": {
+          "start_nonce": 1,
+          "end_nonce": 1,
+          "signed_delta": 0,
+          "status": "OK"
+        },
+        "ethereum": {
+          "start_nonce": 1,
+          "end_nonce": 1,
+          "signed_delta": 0,
+          "status": "OK"
+        },
+        "base": {
+          "start_nonce": 1,
+          "end_nonce": 1,
+          "signed_delta": 0,
+          "status": "OK"
+        }
+      },
+      "signed_on_any_checked_chain": false
+    },
+    {
+      "source_row": 85,
+      "address": "0xb4829baf3c6d92c943425feb493e40bf7f0100d8",
+      "source_label_unverified": "",
+      "chains": {
+        "bsc": {
+          "start_nonce": 698,
+          "end_nonce": 698,
+          "signed_delta": 0,
+          "status": "OK"
+        },
+        "ethereum": {
+          "start_nonce": 0,
+          "end_nonce": 0,
+          "signed_delta": 0,
+          "status": "OK"
+        },
+        "base": {
+          "start_nonce": 1,
+          "end_nonce": 1,
+          "signed_delta": 0,
+          "status": "OK"
+        }
+      },
+      "signed_on_any_checked_chain": false
+    },
+    {
+      "source_row": 86,
+      "address": "0xc222624e3da4e98dc6fdf5703b9e7d7253b24eda",
+      "source_label_unverified": "Superman （黑牛dev）",
+      "chains": {
+        "bsc": {
+          "start_nonce": 65,
+          "end_nonce": 336,
+          "signed_delta": 271,
+          "status": "OK"
+        },
+        "ethereum": {
+          "start_nonce": 21,
+          "end_nonce": 22,
+          "signed_delta": 1,
+          "status": "OK"
+        },
+        "base": {
+          "start_nonce": 0,
+          "end_nonce": 0,
+          "signed_delta": 0,
+          "status": "OK"
+        }
+      },
+      "signed_on_any_checked_chain": true
+    },
+    {
+      "source_row": 87,
+      "address": "0x0dc45ad16ae4e0d7fafcda804267603aa5eebe57",
+      "source_label_unverified": "heyi地址？",
+      "chains": {
+        "bsc": {
+          "start_nonce": 0,
+          "end_nonce": 0,
+          "signed_delta": 0,
+          "status": "OK"
+        },
+        "ethereum": {
+          "start_nonce": 0,
+          "end_nonce": 0,
+          "signed_delta": 0,
+          "status": "OK"
+        },
+        "base": {
+          "start_nonce": 0,
+          "end_nonce": 0,
+          "signed_delta": 0,
+          "status": "OK"
+        }
+      },
+      "signed_on_any_checked_chain": false
+    },
+    {
+      "source_row": 88,
+      "address": "0xbb06a2675b5403effc196a934cb5b4975a8d34f3",
+      "source_label_unverified": "",
+      "chains": {
+        "bsc": {
+          "start_nonce": 1014,
+          "end_nonce": 1014,
+          "signed_delta": 0,
+          "status": "OK"
+        },
+        "ethereum": {
+          "start_nonce": 9,
+          "end_nonce": 9,
+          "signed_delta": 0,
+          "status": "OK"
+        },
+        "base": {
+          "start_nonce": 0,
+          "end_nonce": 0,
+          "signed_delta": 0,
+          "status": "OK"
+        }
+      },
+      "signed_on_any_checked_chain": false
+    },
+    {
+      "source_row": 89,
+      "address": "0xb6b467de3eb377197a7cb63440a012a9b319cbd9",
+      "source_label_unverified": "noxa官方感谢的dev钱包",
+      "chains": {
+        "bsc": {
+          "start_nonce": 0,
+          "end_nonce": 0,
+          "signed_delta": 0,
+          "status": "OK"
+        },
+        "ethereum": {
+          "start_nonce": 0,
+          "end_nonce": 0,
+          "signed_delta": 0,
+          "status": "OK"
+        },
+        "base": {
+          "start_nonce": 1,
+          "end_nonce": 1,
+          "signed_delta": 0,
+          "status": "OK"
+        }
+      },
+      "signed_on_any_checked_chain": false
+    },
+    {
+      "source_row": 90,
+      "address": "0x542718c390ef1e4beb46ce2023ffaa627db8aa33",
+      "source_label_unverified": "创始人地址",
+      "chains": {
+        "bsc": {
+          "start_nonce": 11,
+          "end_nonce": 11,
+          "signed_delta": 0,
+          "status": "OK"
+        },
+        "ethereum": {
+          "start_nonce": 147,
+          "end_nonce": 147,
+          "signed_delta": 0,
+          "status": "OK"
+        },
+        "base": {
+          "start_nonce": 405,
+          "end_nonce": 405,
+          "signed_delta": 0,
+          "status": "OK"
+        }
+      },
+      "signed_on_any_checked_chain": false
+    },
+    {
+      "source_row": 91,
+      "address": "0x42607b2e4fde22e83822d4a86ddac58d847dc289",
+      "source_label_unverified": "vlad罗宾汉创始人地址",
+      "chains": {
+        "bsc": {
+          "start_nonce": 16460,
+          "end_nonce": 16921,
+          "signed_delta": 461,
+          "status": "OK"
+        },
+        "ethereum": {
+          "start_nonce": 2445,
+          "end_nonce": 2761,
+          "signed_delta": 316,
+          "status": "OK"
+        },
+        "base": {
+          "start_nonce": 372,
+          "end_nonce": 397,
+          "signed_delta": 25,
+          "status": "OK"
+        }
+      },
+      "signed_on_any_checked_chain": true
+    },
+    {
+      "source_row": 92,
+      "address": "0x63cb29fd3eb538c969f73aee6f3d78befd041c95",
+      "source_label_unverified": "wifl预售钱包？",
+      "chains": {
+        "bsc": {
+          "start_nonce": 1,
+          "end_nonce": 1,
+          "signed_delta": 0,
+          "status": "OK"
+        },
+        "ethereum": {
+          "start_nonce": 1,
+          "end_nonce": 1,
+          "signed_delta": 0,
+          "status": "OK"
+        },
+        "base": {
+          "start_nonce": 0,
+          "end_nonce": 0,
+          "signed_delta": 0,
+          "status": "OK"
+        }
+      },
+      "signed_on_any_checked_chain": false
+    },
+    {
+      "source_row": 93,
+      "address": "0x713d0c63492b156e5d7b59ab96a3895312a6939a",
+      "source_label_unverified": "不丹政府？",
+      "chains": {
+        "bsc": {
+          "start_nonce": 0,
+          "end_nonce": 0,
+          "signed_delta": 0,
+          "status": "OK"
+        },
+        "ethereum": {
+          "start_nonce": 1,
+          "end_nonce": 1,
+          "signed_delta": 0,
+          "status": "OK"
+        },
+        "base": {
+          "start_nonce": 0,
+          "end_nonce": 0,
+          "signed_delta": 0,
+          "status": "OK"
+        }
+      },
+      "signed_on_any_checked_chain": false
+    },
+    {
+      "source_row": 94,
+      "address": "0xd8da6bf26964af9d7eed9e03e53415d37aa96045",
+      "source_label_unverified": "",
+      "chains": {
+        "bsc": {
+          "start_nonce": 14,
+          "end_nonce": 14,
+          "signed_delta": 0,
+          "status": "OK"
+        },
+        "ethereum": {
+          "start_nonce": 5956,
+          "end_nonce": 5969,
+          "signed_delta": 13,
+          "status": "OK"
+        },
+        "base": {
+          "start_nonce": 70,
+          "end_nonce": 70,
+          "signed_delta": 0,
+          "status": "OK"
+        }
+      },
+      "signed_on_any_checked_chain": true
+    },
+    {
+      "source_row": 95,
+      "address": "0xa4f79033bcb17c50e4c6f073d54de23904bca07c",
+      "source_label_unverified": "momo地址",
+      "chains": {
+        "bsc": {
+          "start_nonce": 66,
+          "end_nonce": 66,
+          "signed_delta": 0,
+          "status": "OK"
+        },
+        "ethereum": {
+          "start_nonce": 0,
+          "end_nonce": 0,
+          "signed_delta": 0,
+          "status": "OK"
+        },
+        "base": {
+          "start_nonce": 0,
+          "end_nonce": 0,
+          "signed_delta": 0,
+          "status": "OK"
+        }
+      },
+      "signed_on_any_checked_chain": false
+    },
+    {
+      "source_row": 96,
+      "address": "0x1bff8f0ade179dfa1beddb54fa5d7d6dc814191a",
+      "source_label_unverified": "CZ dev",
+      "chains": {
+        "bsc": {
+          "start_nonce": 1377,
+          "end_nonce": 1377,
+          "signed_delta": 0,
+          "status": "OK"
+        },
+        "ethereum": {
+          "start_nonce": 0,
+          "end_nonce": 0,
+          "signed_delta": 0,
+          "status": "OK"
+        },
+        "base": {
+          "start_nonce": 0,
+          "end_nonce": 0,
+          "signed_delta": 0,
+          "status": "OK"
+        }
+      },
+      "signed_on_any_checked_chain": false
+    },
+    {
+      "source_row": 97,
+      "address": "0x42812c3ad1eb9fbf7d385cbfd997b608acbec4c7",
+      "source_label_unverified": "打币dev4",
+      "chains": {
+        "bsc": {
+          "start_nonce": 45,
+          "end_nonce": 45,
+          "signed_delta": 0,
+          "status": "OK"
+        },
+        "ethereum": {
+          "start_nonce": 0,
+          "end_nonce": 0,
+          "signed_delta": 0,
+          "status": "OK"
+        },
+        "base": {
+          "start_nonce": 0,
+          "end_nonce": 0,
+          "signed_delta": 0,
+          "status": "OK"
+        }
+      },
+      "signed_on_any_checked_chain": false
+    },
+    {
+      "source_row": 98,
+      "address": "0x376b3b20c129bd9e6fa35fa470aa0cbc33a523cc",
+      "source_label_unverified": "打币dev3",
+      "chains": {
+        "bsc": {
+          "start_nonce": 51,
+          "end_nonce": 51,
+          "signed_delta": 0,
+          "status": "OK"
+        },
+        "ethereum": {
+          "start_nonce": 0,
+          "end_nonce": 0,
+          "signed_delta": 0,
+          "status": "OK"
+        },
+        "base": {
+          "start_nonce": 0,
+          "end_nonce": 0,
+          "signed_delta": 0,
+          "status": "OK"
+        }
+      },
+      "signed_on_any_checked_chain": false
+    },
+    {
+      "source_row": 99,
+      "address": "0xdfd9e986852d3e0bf9cbbafbbe3093670dcd5565",
+      "source_label_unverified": "打币dev2",
+      "chains": {
+        "bsc": {
+          "start_nonce": 119,
+          "end_nonce": 119,
+          "signed_delta": 0,
+          "status": "OK"
+        },
+        "ethereum": {
+          "start_nonce": 0,
+          "end_nonce": 0,
+          "signed_delta": 0,
+          "status": "OK"
+        },
+        "base": {
+          "start_nonce": 0,
+          "end_nonce": 0,
+          "signed_delta": 0,
+          "status": "OK"
+        }
+      },
+      "signed_on_any_checked_chain": false
+    },
+    {
+      "source_row": 100,
+      "address": "0x7f91971cfb13b94109c50153c201b84e35de3936",
+      "source_label_unverified": "宝二爷",
+      "chains": {
+        "bsc": {
+          "start_nonce": 0,
+          "end_nonce": 0,
+          "signed_delta": 0,
+          "status": "OK"
+        },
+        "ethereum": {
+          "start_nonce": 0,
+          "end_nonce": 0,
+          "signed_delta": 0,
+          "status": "OK"
+        },
+        "base": {
+          "start_nonce": 0,
+          "end_nonce": 0,
+          "signed_delta": 0,
+          "status": "OK"
+        }
+      },
+      "signed_on_any_checked_chain": false
+    }
+  ],
+  "scope_limits": [
+    "A nonce delta represents EOA-origin transactions, not unique DEX swaps or profitable trades",
+    "All other EVM chains, EIP-4337 account operations and inbound passive tokens remain unchecked",
+    "The original annotations are unverified, including claims naming public figures",
+    "30d/lifetime per-wallet PnL unverified for all 20, no complete loss accounting",
+    "Manually invoked Alchemy tool; local CLI has not been shown to reproduce these live responses"
+  ]
+}

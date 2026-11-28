@@ -1,0 +1,149 @@
+{
+  "schema": "mission-bsc-hodl-funded-distributor-lineage-v1",
+  "as_of_utc": "2026-10-18",
+  "research_only": true,
+  "frozen_manifest_blob_sha": "954f3aba66be21911dd627fa40dd3dd0a9fd1d26",
+  "chain": "bnb-mainnet",
+  "token_contract": "0xc242c264efe56109c495b308985f2694593477f8",
+  "upstream": {
+    "wallet": "0x1c2bffb85341275feb01986241e5067feac16e3f",
+    "route_contract": "0x1de460f363af910f51726def188f9004276bf4bc",
+    "funding_buys": [
+      {
+        "hash": "0xd50a4664e76523ccd76c5dcfed7190d7d56c2ced3cf6150974a1f4ec871ff857",
+        "block": "0x7844577",
+        "native_input_wei": "226792542378128696",
+        "native_wallet_before_wei": "5043988649489443163",
+        "native_wallet_after_wei": "4816708586001314467",
+        "token_before_raw": "0",
+        "token_after_raw": "13546946872013679602415418",
+        "sender_nonce_before": 560,
+        "sender_nonce_after": 561
+      },
+      {
+        "hash": "0xff5d0231d2aa5d6546e95e53c0798a5c8e9de6c4a08024fafbcf2f7766d2c15a",
+        "block": "0x7844581",
+        "native_input_wei": "198253606161547406",
+        "native_wallet_before_wei": "4816708586001314467",
+        "native_wallet_after_wei": "4617811300249767061",
+        "token_before_raw": "13546946872013679602415418",
+        "token_after_raw": "24352551174882903706205602",
+        "sender_nonce_before": 561,
+        "sender_nonce_after": 562
+      }
+    ],
+    "buy_total_native_transaction_value_wei": "425046148539676102",
+    "buy_block_wallet_native_outflow_wei": "426177349239676102",
+    "bought_token_raw": "24352551174882903706205602",
+    "distribution_tx": "0x14028fcf80385ac6ab864bd33079273e0dc9044b97c434988efffc12f07eb4d4",
+    "distribution_block": "0x784495f",
+    "distribution_call_target": "0xd0afd22c2bddf7131595c9d9a125be60c76ebad4",
+    "recipients": [
+      {
+        "address": "0xd68def46b1114f51b7e676e6dde89069a2f3fe1a",
+        "source_row": 15,
+        "amount_raw": "3807941716484258253865819",
+        "source_transaction_hash": "0x14028fcf80385ac6ab864bd33079273e0dc9044b97c434988efffc12f07eb4d4",
+        "classification": "TRANSFER_FROM_GROUP_DISTRIBUTOR_NOT_VERIFIED_PURCHASE"
+      },
+      {
+        "address": "0x64e5903a79803726fe62bb45b9603f8436ddd1e4",
+        "source_row": null,
+        "amount_raw": "3585042282796115693609472",
+        "source_transaction_hash": "0x14028fcf80385ac6ab864bd33079273e0dc9044b97c434988efffc12f07eb4d4",
+        "classification": "TRANSFER_FROM_GROUP_DISTRIBUTOR_NOT_VERIFIED_PURCHASE"
+      },
+      {
+        "address": "0x88669768e431ad1e6861982309cc694ced330903",
+        "source_row": null,
+        "amount_raw": "3455180319427221107760713",
+        "source_transaction_hash": "0x14028fcf80385ac6ab864bd33079273e0dc9044b97c434988efffc12f07eb4d4",
+        "classification": "TRANSFER_FROM_GROUP_DISTRIBUTOR_NOT_VERIFIED_PURCHASE"
+      },
+      {
+        "address": "0x29935ef1417e1c3b1fec68dd666ea9baac31d4ed",
+        "source_row": 16,
+        "amount_raw": "3390453993350452655743972",
+        "source_transaction_hash": "0x14028fcf80385ac6ab864bd33079273e0dc9044b97c434988efffc12f07eb4d4",
+        "classification": "TRANSFER_FROM_GROUP_DISTRIBUTOR_NOT_VERIFIED_PURCHASE"
+      },
+      {
+        "address": "0x43e06d3f7c68dcaef4a936a6d4b10894213ded83",
+        "source_row": null,
+        "amount_raw": "3173276182721853146602943",
+        "source_transaction_hash": "0x14028fcf80385ac6ab864bd33079273e0dc9044b97c434988efffc12f07eb4d4",
+        "classification": "TRANSFER_FROM_GROUP_DISTRIBUTOR_NOT_VERIFIED_PURCHASE"
+      },
+      {
+        "address": "0xbeaba42106867743db849d9b26c049f654c54c5e",
+        "source_row": null,
+        "amount_raw": "3170468772755982779965472",
+        "source_transaction_hash": "0x14028fcf80385ac6ab864bd33079273e0dc9044b97c434988efffc12f07eb4d4",
+        "classification": "TRANSFER_FROM_GROUP_DISTRIBUTOR_NOT_VERIFIED_PURCHASE"
+      }
+    ],
+    "distributed_token_raw": "20582363267535883637548391",
+    "remaining_token_raw": "3770187907347020068657211",
+    "post_distribution_balance_raw": "3770187907347020068657211",
+    "cost_attribution": "GROUP_ORIGIN_ONLY_NOT_RECIPIENT_COST_BASIS",
+    "source": "Read-only Alchemy historical ethGetTransactionByHash, ethGetBalance, ethGetTransactionCount, ethCall balanceOf, getAssetTransfers exact HODL contract; source sender HODL inbound 2 and outbound 6, no pageKey"
+  },
+  "source_wallet_exits": {
+    "15": {
+      "wallet": "0xd68def46b1114f51b7e676e6dde89069a2f3fe1a",
+      "received": "3807941716484258253865819",
+      "transfers": [
+        {
+          "hash": "0xea6deca031dd39ac05a96cdddd33419136fd43b5fab90799638ccbdb2bd8b54a",
+          "block": "0x7844b49",
+          "amount_raw": "1942050275406971709471567",
+          "native_delta_block_wei": "130168373508651394",
+          "nonce_delta_on_block": 2
+        },
+        {
+          "hash": "0x841be7c455162247bac6eaa51f7495d8182635124e7a83e5df5e79dcbada1722",
+          "block": "0x7861d11",
+          "amount_raw": "1865891441077286544394252",
+          "native_delta_block_wei": "31119500258013088",
+          "nonce_delta_on_block": 2
+        }
+      ],
+      "closing_raw": "0",
+      "classification": "TOKEN_BALANCE_CLOSED_NATIVE_PROCEEDS_TX_UNATTRIBUTED",
+      "recipient_token_basis": "UNRESOLVED",
+      "wallet_profit": "UNRESOLVED"
+    },
+    "16": {
+      "wallet": "0x29935ef1417e1c3b1fec68dd666ea9baac31d4ed",
+      "received": "3390453993350452655743972",
+      "transfers": [
+        {
+          "hash": "0xe806d41fe1ed64b3b7a948e0c31216559f6df6227371610e34b4c01e2f2c7793",
+          "block": "0x7844a46",
+          "amount_raw": "2339413255411812332463340",
+          "native_delta_block_wei": "222568562449169881",
+          "nonce_delta_on_block": 4
+        },
+        {
+          "hash": "0xcd45bc6a13cd63f06d9d62edc49a284ee1e9df6e48960567414e8e6721db8566",
+          "block": "0x7861d18",
+          "amount_raw": "1051040737938640323280632",
+          "native_delta_block_wei": "17428549522245252",
+          "nonce_delta_on_block": 2
+        }
+      ],
+      "closing_raw": "0",
+      "classification": "TOKEN_BALANCE_CLOSED_NATIVE_PROCEEDS_TX_UNATTRIBUTED",
+      "recipient_token_basis": "UNRESOLVED",
+      "wallet_profit": "UNRESOLVED"
+    }
+  },
+  "accounting_constraints": [
+    "An upstream source wallet paid BNB to acquire tokens but six recipient addresses cannot be individually allocated those costs without verified beneficial ownership or economically justified allocation method",
+    "Group BNB buy block outflows are not per-recipient purchase costs; no pro-rata allocation nor shared-controller assumption",
+    "Both tracked recipient tokens fully left their wallets, but block-level native balance deltas may include unrelated signed operations and passive receipts",
+    "Source #016 HODL first exit block has +4 signed wallet transactions; block-level native delta cannot identify one routed sale payout",
+    "No completed net wallet PnL or verified negative token trade, do not reuse an unrelated #016 RTX5090 gain to cover unknown HODL outcome",
+    "Four recipients outside fixed source roster remain outside the current profit cohort"
+  ]
+}

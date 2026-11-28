@@ -1,0 +1,2014 @@
+{
+  "schema": "mission-address-analysis-activity-candidates-001-220-v1",
+  "as_of": "2026-10-18",
+  "source_blob_sha": "954f3aba66be21911dd627fa40dd3dd0a9fd1d26",
+  "fixed_window": "2026-09-17T21:12 UTC through 2026-10-17T21:12 UTC by fixed BSC/Ethereum/Base blocks",
+  "source_evidence": [
+    "evidence/coverage-001-120-normalized.json",
+    "evidence/batch-007-first-hit-bsc-eth-base-nonce.json",
+    "evidence/batch-008-first-hit-bsc-eth-base-nonce.json",
+    "evidence/batch-009-first-hit-bsc-eth-base-nonce.json",
+    "evidence/batch-010-first-hit-bsc-eth-base-nonce.json",
+    "evidence/batch-011-first-hit-bsc-eth-base-nonce.json"
+  ],
+  "stats": {
+    "screened": 220,
+    "universe": 449,
+    "active_wallets": 135,
+    "signed_zero_on_checked_chains": 85,
+    "profitability_audited_whole_wallets": 0,
+    "remaining_unscreened": 229
+  },
+  "active_source_rows": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    12,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    25,
+    27,
+    29,
+    30,
+    31,
+    32,
+    34,
+    37,
+    38,
+    39,
+    43,
+    44,
+    45,
+    50,
+    51,
+    60,
+    63,
+    64,
+    65,
+    66,
+    67,
+    68,
+    69,
+    70,
+    71,
+    72,
+    73,
+    74,
+    75,
+    76,
+    77,
+    78,
+    79,
+    80,
+    81,
+    82,
+    83,
+    86,
+    91,
+    94,
+    101,
+    102,
+    103,
+    106,
+    107,
+    108,
+    109,
+    110,
+    111,
+    112,
+    114,
+    116,
+    117,
+    118,
+    119,
+    120,
+    121,
+    125,
+    126,
+    127,
+    130,
+    132,
+    133,
+    137,
+    139,
+    142,
+    143,
+    144,
+    145,
+    146,
+    147,
+    148,
+    149,
+    151,
+    153,
+    156,
+    157,
+    158,
+    159,
+    161,
+    165,
+    166,
+    167,
+    168,
+    169,
+    170,
+    171,
+    173,
+    174,
+    175,
+    177,
+    178,
+    179,
+    180,
+    181,
+    183,
+    185,
+    186,
+    190,
+    191,
+    192,
+    193,
+    194,
+    196,
+    197,
+    198,
+    199,
+    200,
+    202,
+    205,
+    207,
+    208,
+    210,
+    211,
+    212,
+    213,
+    219
+  ],
+  "signed_zero_source_rows": [
+    8,
+    9,
+    10,
+    11,
+    13,
+    24,
+    26,
+    28,
+    33,
+    35,
+    36,
+    40,
+    41,
+    42,
+    46,
+    47,
+    48,
+    49,
+    52,
+    53,
+    54,
+    55,
+    56,
+    57,
+    58,
+    59,
+    61,
+    62,
+    84,
+    85,
+    87,
+    88,
+    89,
+    90,
+    92,
+    93,
+    95,
+    96,
+    97,
+    98,
+    99,
+    100,
+    104,
+    105,
+    113,
+    115,
+    122,
+    123,
+    124,
+    128,
+    129,
+    131,
+    134,
+    135,
+    136,
+    138,
+    140,
+    141,
+    150,
+    152,
+    154,
+    155,
+    160,
+    162,
+    163,
+    164,
+    172,
+    176,
+    182,
+    184,
+    187,
+    188,
+    189,
+    195,
+    201,
+    203,
+    204,
+    206,
+    209,
+    214,
+    215,
+    216,
+    217,
+    218,
+    220
+  ],
+  "records": [
+    {
+      "source_row": 1,
+      "address": "0x0006d09df7b0e8dce98463b95439475fcec29111",
+      "activity": "ACTIVE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 2,
+      "address": "0x0d8d6c105629e472691f9a970a6f70899195b5e0",
+      "activity": "ACTIVE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 3,
+      "address": "0x45004af18692aac16840c807d8980ad215d58dad",
+      "activity": "ACTIVE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 4,
+      "address": "0x00077705952c90b728c6d7dc450beb4429331111",
+      "activity": "ACTIVE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 5,
+      "address": "0x4d75b19b27db424effc711d046e62bb3a713299a",
+      "activity": "ACTIVE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": "ethereum",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 6,
+      "address": "0x000ae1e2ba3624208300605d7919d6c4803c6111",
+      "activity": "ACTIVE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 7,
+      "address": "0x3f63c175ff9746cf0e0e6095d0568180f9d92fa5",
+      "activity": "ACTIVE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 8,
+      "address": "0x13a4059646875645b2db4592aa224ea79fb74287",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 9,
+      "address": "0x049823701eef27e235d4c1271bc4410c7974e4f8",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 10,
+      "address": "0x716ed41f601012139490802f9aec155e736a2f02",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 11,
+      "address": "0x9fb8412d79ea66b8f2c747b9457b2b1d5d78ff9d",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 12,
+      "address": "0x2fc9478c3858733b6e9b87458d71044a2071a300",
+      "activity": "ACTIVE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": "ethereum",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 13,
+      "address": "0x9bd3a92c231893278c2fa654fc8d152ae6dc86b5",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 14,
+      "address": "0x40e56fa7759c1bdc67764fcd76c8ee7bc9486c08",
+      "activity": "ACTIVE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 15,
+      "address": "0xd68def46b1114f51b7e676e6dde89069a2f3fe1a",
+      "activity": "ACTIVE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 16,
+      "address": "0x29935ef1417e1c3b1fec68dd666ea9baac31d4ed",
+      "activity": "ACTIVE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 17,
+      "address": "0x89c030914b562628618e68bcda49f8ed617dae08",
+      "activity": "ACTIVE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 18,
+      "address": "0x4d9644d05fe2123b4eafa8d7fd31b0ea430726f3",
+      "activity": "ACTIVE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 19,
+      "address": "0xe7086669436e90d6a2a0a6aeb23c71188057e7e6",
+      "activity": "ACTIVE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 20,
+      "address": "0x0209aa08dd3f5a1057cd66771a6009854144eb94",
+      "activity": "ACTIVE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 21,
+      "address": "0x9d56610c9fdabd06a19486ced80cccca00a2866a",
+      "activity": "ACTIVE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 22,
+      "address": "0xead3f93ff737a1be0c8a11529f3c034b44549bb1",
+      "activity": "ACTIVE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 23,
+      "address": "0xf60633d02690e2a15a54ab919925f3d038df163e",
+      "activity": "ACTIVE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": "ethereum",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 24,
+      "address": "0x237c79c93c3eb8c61a2a2a7465a851b0381b8ba3",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 25,
+      "address": "0xcc475ea8d95bf43f25473640b1f901de2a7f2d8c",
+      "activity": "ACTIVE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 26,
+      "address": "0x699d731048f2f1b40af3a3736a33c11288237512",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 27,
+      "address": "0x45fd36c9cdd500c1b372d99ba3bd79da0d358504",
+      "activity": "ACTIVE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 28,
+      "address": "0xcb1cffdce993397b03c439c68f93c1ad6463cf8d",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 29,
+      "address": "0xb0b8a1ec009684a5739f94b7378aaeb55be09698",
+      "activity": "ACTIVE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 30,
+      "address": "0x29909b9c97845d5eb998b4aa41664a46c5dc35c6",
+      "activity": "ACTIVE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 31,
+      "address": "0x2a6a385cb65e85031ba62b12f5bef2b6a1130737",
+      "activity": "ACTIVE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 32,
+      "address": "0x8797a47a9200b52ee90b4c5b5fa5a0ded56dd5f5",
+      "activity": "ACTIVE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 33,
+      "address": "0x6b00720a39013bd19cc1f8ba32cde21c1ea727da",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 34,
+      "address": "0x54bca12bed24db253e47db098a91b787ac57a990",
+      "activity": "ACTIVE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 35,
+      "address": "0x977347bc6020db1e0bec0d52b8e7bbfed5bc6f5f",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 36,
+      "address": "0x6c03f1c2940c2949b370b6d5db65575f8329202a",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 37,
+      "address": "0xa6849a40f57c26b48069146105f7da9e024f62b6",
+      "activity": "ACTIVE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 38,
+      "address": "0x02b0c14d2c03852ccebd1b2e66ab3c075a57711d",
+      "activity": "ACTIVE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 39,
+      "address": "0x97060ace26a732a255d7fca4658837be047ccf07",
+      "activity": "ACTIVE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 40,
+      "address": "0x5a0d8fcbdba47c78772dcf27753e7614cfd35e52",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 41,
+      "address": "0x1d78fb87cc62febe02ca05befcc30e71ca04810c",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 42,
+      "address": "0x897cff3326b37a1e1ce858f77d68b46ec7d2769b",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 43,
+      "address": "0xc6792e3b1277d37cb2108e0de9c4603c211cc7e2",
+      "activity": "ACTIVE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 44,
+      "address": "0xde078309d8260fa4caf3baa6852b0561b645b710",
+      "activity": "ACTIVE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 45,
+      "address": "0xf89f3858bc7bac05a83ec284e3e9acdb58bf892a",
+      "activity": "ACTIVE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": "base",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 46,
+      "address": "0x6a30c5f11f564fe6f793f8b418e43ff6bfcd9617",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 47,
+      "address": "0xa7a9ae5b0aabb8c3f53d26bc88a5ccb319626104",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 48,
+      "address": "0x0d188418381587003b9dab5c98faf62ec85ef687",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 49,
+      "address": "0xf68b8bb8b2fa7e96f90b297d323439ef80dd5bda",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 50,
+      "address": "0x95ce1f0a243261821d7785715f19024ec149355b",
+      "activity": "ACTIVE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": "ethereum",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 51,
+      "address": "0x624c6dbb5d1aae291c788ef116e69a59552b17c4",
+      "activity": "ACTIVE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": "ethereum",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 52,
+      "address": "0xb999055cdd532632e8715f4f8f60e607db16a6fb",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 53,
+      "address": "0xcbb4e8f3e97f68047540b4247ff0ff1884d201a7",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 54,
+      "address": "0x40cb329cc0d1ddb75239a60593a87ae0572c3986",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 55,
+      "address": "0x6e23a5ae714451058553d85a932f7f18869f8956",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 56,
+      "address": "0xecc43e2c7a031870726b2a6a6563caef04540e10",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 57,
+      "address": "0x98c24faeb891ee206d05245ada45084339d87afa",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 58,
+      "address": "0x7e035fb048a31e0481b88074557415b1c187242b",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 59,
+      "address": "0x1f605cc439ff432b8a09db963c9cc08dbf83f3bb",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 60,
+      "address": "0xa02d58211389430bf47d273c8de4fe79e2173dcc",
+      "activity": "ACTIVE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 61,
+      "address": "0xcbdf630a858e7d87b5b08d92968ca14ca0f8f556",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 62,
+      "address": "0x4d9302846c057507d32405ba77055473d33beb26",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 63,
+      "address": "0xee8559530e585ddcc2f8a3c4656ebe747ff740f4",
+      "activity": "ACTIVE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 64,
+      "address": "0xacd7793d92cd870e56db2372b36e41c59ae4fb40",
+      "activity": "ACTIVE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 65,
+      "address": "0x4bd8598cdca1b218f2f964f3832ebbea354383b8",
+      "activity": "ACTIVE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 66,
+      "address": "0x417c19056b8ef9f6af6dd36928332b6337b4843f",
+      "activity": "ACTIVE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 67,
+      "address": "0xcf7607ff3164df3e1e285d2d798724a929bede0d",
+      "activity": "ACTIVE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 68,
+      "address": "0x5388668c4fa8da7f756ef8498ff24d7999999999",
+      "activity": "ACTIVE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 69,
+      "address": "0xe28601398a5448d1147e6e8b0e0c6d686f0d216d",
+      "activity": "ACTIVE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 70,
+      "address": "0xd5ff53f48f14e9409b581e41a4cddfe0e97dc724",
+      "activity": "ACTIVE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 71,
+      "address": "0x04b436555dc69ea4bf8ba50d8c591e60443b3ff9",
+      "activity": "ACTIVE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 72,
+      "address": "0x5fa57fcaf86e137cb8185c4cb2c01ea7b5b14cfb",
+      "activity": "ACTIVE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 73,
+      "address": "0x86b9ad8fc7bec77c85913b0f80f69c2cfa129c3e",
+      "activity": "ACTIVE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 74,
+      "address": "0xbd6b8d8fa94f7307840252548549b56a33c98054",
+      "activity": "ACTIVE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 75,
+      "address": "0xca1a2fb7f3179d887504966b25d1606978adcd42",
+      "activity": "ACTIVE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 76,
+      "address": "0x54d209d9d224a615e0e5f0476644886897b75e45",
+      "activity": "ACTIVE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 77,
+      "address": "0x1e8ae0385f8a8fcc96008fdbc25fa31049e52af0",
+      "activity": "ACTIVE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 78,
+      "address": "0x1e59145625236d3663fc63d000a31d42d3393cee",
+      "activity": "ACTIVE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 79,
+      "address": "0xf41e3186861afb9840ea3c87f00366440a648320",
+      "activity": "ACTIVE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 80,
+      "address": "0x000461a73d3985eef4923655782aa5d0de75c111",
+      "activity": "ACTIVE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 81,
+      "address": "0xce370ebcbc655f845df7dfb8c079e75b5ea17d93",
+      "activity": "ACTIVE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": "ethereum",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 82,
+      "address": "0x2631736631a133a56af3f035fbb5ca25e210a325",
+      "activity": "ACTIVE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 83,
+      "address": "0x756e1d965114fdb4759abc914521f9f4fb1db369",
+      "activity": "ACTIVE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": "ethereum",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 84,
+      "address": "0xd874259110c6e086f1d2fee474b73e69b8f5dab0",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 85,
+      "address": "0xb4829baf3c6d92c943425feb493e40bf7f0100d8",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 86,
+      "address": "0xc222624e3da4e98dc6fdf5703b9e7d7253b24eda",
+      "activity": "ACTIVE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 87,
+      "address": "0x0dc45ad16ae4e0d7fafcda804267603aa5eebe57",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 88,
+      "address": "0xbb06a2675b5403effc196a934cb5b4975a8d34f3",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 89,
+      "address": "0xb6b467de3eb377197a7cb63440a012a9b319cbd9",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 90,
+      "address": "0x542718c390ef1e4beb46ce2023ffaa627db8aa33",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 91,
+      "address": "0x42607b2e4fde22e83822d4a86ddac58d847dc289",
+      "activity": "ACTIVE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 92,
+      "address": "0x63cb29fd3eb538c969f73aee6f3d78befd041c95",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 93,
+      "address": "0x713d0c63492b156e5d7b59ab96a3895312a6939a",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 94,
+      "address": "0xd8da6bf26964af9d7eed9e03e53415d37aa96045",
+      "activity": "ACTIVE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": "ethereum",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 95,
+      "address": "0xa4f79033bcb17c50e4c6f073d54de23904bca07c",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 96,
+      "address": "0x1bff8f0ade179dfa1beddb54fa5d7d6dc814191a",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 97,
+      "address": "0x42812c3ad1eb9fbf7d385cbfd997b608acbec4c7",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 98,
+      "address": "0x376b3b20c129bd9e6fa35fa470aa0cbc33a523cc",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 99,
+      "address": "0xdfd9e986852d3e0bf9cbbafbbe3093670dcd5565",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 100,
+      "address": "0x7f91971cfb13b94109c50153c201b84e35de3936",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 101,
+      "address": "0xbad1772ffff47b87915d88124d20ba44364acd0f",
+      "activity": "ACTIVE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 102,
+      "address": "0x853db6381533d9cb63663e1587f925dd17a523cc",
+      "activity": "ACTIVE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 103,
+      "address": "0x55cbe8820af97f6eed122bb65260885b80dcf6e4",
+      "activity": "ACTIVE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 104,
+      "address": "0xa039c81b1955d9f2ab17922086573e6e9a3e30b6",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 105,
+      "address": "0x26895e4b0a674ff7aeba48a8aedf7a9bd32bcfbd",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 106,
+      "address": "0x8d08b81812c2d53a0144a578da3e2d01cc69a110",
+      "activity": "ACTIVE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 107,
+      "address": "0x54be3a794282c030b15e43ae2bb182e14c409c5e",
+      "activity": "ACTIVE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 108,
+      "address": "0xd171ebe9d3c1e55d918563107b0b7782948dd52c",
+      "activity": "ACTIVE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 109,
+      "address": "0x592ba6876b70f795ec14601c69a03e5ea2268f50",
+      "activity": "ACTIVE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 110,
+      "address": "0x44ff1f1aa8f9106883bd6ed56a05f8f7f808a7ac",
+      "activity": "ACTIVE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 111,
+      "address": "0x0d166212e125cc6b5c6184db7d35180e4dc4b708",
+      "activity": "ACTIVE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 112,
+      "address": "0xe63c05565565ac91aaa46b6536e167529509681c",
+      "activity": "ACTIVE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 113,
+      "address": "0x4358cc14888517451baa0b84469221a3feef85cc",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 114,
+      "address": "0x930af2576a5f5859e32ea67a77aae55c61befd39",
+      "activity": "ACTIVE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 115,
+      "address": "0x93aec59fb20ce12623ba6fed71adf180ce318422",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 116,
+      "address": "0xc900f8020ec0cd61b4a64945735aa843688e4b9d",
+      "activity": "ACTIVE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 117,
+      "address": "0xec9d6b52914dd1c4a3af8f8d46edfde7f60ea813",
+      "activity": "ACTIVE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 118,
+      "address": "0x85b605b47a5323912615cb8af834bb1c4716b794",
+      "activity": "ACTIVE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 119,
+      "address": "0xf7ff38f74c8a5b4750e5f65ae74c924a441b7b90",
+      "activity": "ACTIVE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 120,
+      "address": "0xbc0adb04aacc305ab7715b23e021185cb8cb5896",
+      "activity": "ACTIVE",
+      "screening_protocol": "FULL_THREE_CHAIN_NONCE_PAIRS",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 121,
+      "address": "0x94cf7ed19901eb7d487c779e6d1baa87157b2d01",
+      "activity": "ACTIVE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 122,
+      "address": "0x1a11871a4e988707a6584737d72c93cf9b6c66f4",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 123,
+      "address": "0xa0edbabcb48034e368de286b49f9603c7afa1b60",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 124,
+      "address": "0xcf4e448890225ef281d663ba27797e046ec11976",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 125,
+      "address": "0x2d9fb8b1ddcabd8f81fe9cf5a63456057193be57",
+      "activity": "ACTIVE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 126,
+      "address": "0x4ffaf9c9c1455c621cb9852f539064614c0c171b",
+      "activity": "ACTIVE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 127,
+      "address": "0xd007058e9b58e74c33c6bf6fbcd38baab813cbb6",
+      "activity": "ACTIVE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 128,
+      "address": "0x61c808d82a3ac53231750dadc13c777b59310bd9",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 129,
+      "address": "0x0f50934b6a817552a04dedaf508c8527e7e206a4",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 130,
+      "address": "0x79b55332d5b9b77f8a1266a59074d0b037afc93c",
+      "activity": "ACTIVE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 131,
+      "address": "0xc4a0cd61fdd5b689d7196dda2db082d876630644",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 132,
+      "address": "0xd0a5eff0d988997bbef7aa3f58f5c2d46513b8a6",
+      "activity": "ACTIVE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 133,
+      "address": "0xd7e004cbda24e079aa3a657ba7f8e2915192a966",
+      "activity": "ACTIVE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 134,
+      "address": "0x21df5569d53aaf0c5e7982b448ef5a2bcbb3b1e5",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 135,
+      "address": "0x060114dd2d88b02fe5bb11a57b531e67dae0cf54",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 136,
+      "address": "0xa96ed4656a466f9a7a3e7e6b16690c1baa466256",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 137,
+      "address": "0x9de06f2233cbde595ba3fede7bd070a3c6df0960",
+      "activity": "ACTIVE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 138,
+      "address": "0x446b5c398bb66dc10d212812b9ee01a64444ffff",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 139,
+      "address": "0x8b3658b1c8aff533c037836174972e503d2fb946",
+      "activity": "ACTIVE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 140,
+      "address": "0x8b3a350e2f3e6b9cc6fb10fd106ba08f08bec5d2",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 141,
+      "address": "0xe4f2bce3baa3e96483d106c29a05f00ec94e49a4",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 142,
+      "address": "0x9d703cdc89c9934d9e90a52c31d632775c9838c6",
+      "activity": "ACTIVE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": "ethereum",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 143,
+      "address": "0x53a9f47eeddbfbae527d259a742f1ecfd0592844",
+      "activity": "ACTIVE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 144,
+      "address": "0x102f56db39b388640a2c9f3e9bf4a43791c649bf",
+      "activity": "ACTIVE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 145,
+      "address": "0x7420416a0893575eac9ab7443e9ee5717fe804da",
+      "activity": "ACTIVE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 146,
+      "address": "0xe14f5204244593df7d07e615590411baf3816ec4",
+      "activity": "ACTIVE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 147,
+      "address": "0x17412b2b513584c382e4e8dc34fc776a41395636",
+      "activity": "ACTIVE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 148,
+      "address": "0x2f84ebb2f7f8edcf8e83a75a12f32bd8d99de3e0",
+      "activity": "ACTIVE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 149,
+      "address": "0x44a5630ed91fcb1832c7274d04d777aa73708847",
+      "activity": "ACTIVE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 150,
+      "address": "0x793700761316f7b3a075f00034cc0ef8820568b2",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 151,
+      "address": "0x9c82a038e4571654c5576099f45e5dfc3f64cdb0",
+      "activity": "ACTIVE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": "ethereum",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 152,
+      "address": "0xa6d59dcace15b28555892477283b5edb857e9f08",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 153,
+      "address": "0x363eaf696cff6cf1dd566a30eb321a8b30eb961c",
+      "activity": "ACTIVE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 154,
+      "address": "0xa53476642994ada66e59e7cc9f7754a3862a44c2",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 155,
+      "address": "0xde6c8441b203a6b34ec71a454a655393c4a8535e",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 156,
+      "address": "0x5619446496bc551554dfa0cd0f5ce9387589b9cf",
+      "activity": "ACTIVE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": "ethereum",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 157,
+      "address": "0xbc74a2332c3c5eb950d911e50176256170e5df23",
+      "activity": "ACTIVE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": "ethereum",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 158,
+      "address": "0x1c06c36a559bbe99adece16eb7a63c5e997b2ef3",
+      "activity": "ACTIVE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": "ethereum",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 159,
+      "address": "0xf91573e5e3450a1d245c19104d18107ddc6cbe6f",
+      "activity": "ACTIVE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 160,
+      "address": "0xbae759e79cd9e12f7aaef00bc2055cbed7a39139",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 161,
+      "address": "0x5dbce812228bd08bfd4f08a2b6a1dbb613046afe",
+      "activity": "ACTIVE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 162,
+      "address": "0xe50844aa2adf3d8b0d128e1d2db004c59731e2ad",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 163,
+      "address": "0xce43e23f91d7643df89c6a5ab6f4a59896e25b76",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 164,
+      "address": "0x1d4c85a26c2e05d61cf7595beff29bf17d1f76e7",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 165,
+      "address": "0x40074ed3469873dfa95edbb8c28ee72c572c6815",
+      "activity": "ACTIVE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 166,
+      "address": "0xd7f2f5c91a1a81ed9cd890413f31d6dd12975dba",
+      "activity": "ACTIVE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 167,
+      "address": "0xa83b73f5644cde337b61da79589f10ea15548811",
+      "activity": "ACTIVE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 168,
+      "address": "0x9cda1449aec0d3d70eba914ada4f82be5d685478",
+      "activity": "ACTIVE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": "ethereum",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 169,
+      "address": "0xb44fdf0e2e4e416433a7a1390dac992b92fcca04",
+      "activity": "ACTIVE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 170,
+      "address": "0xf3410d165b513125cf24627d32c7afedafba874a",
+      "activity": "ACTIVE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 171,
+      "address": "0x057f42cc308d376752663c72a34c1b7b8060ac4e",
+      "activity": "ACTIVE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 172,
+      "address": "0x261128936ba0d4b68dd81aa316d95750a20d875d",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 173,
+      "address": "0xd161943083e5c091d2753b00028f35ee69fac3f4",
+      "activity": "ACTIVE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 174,
+      "address": "0xef59cdd3c40ffc97da8c05c7e7ba66d0f9b31140",
+      "activity": "ACTIVE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 175,
+      "address": "0x61fd0d043d519f5a2bd05785000f30db96809429",
+      "activity": "ACTIVE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 176,
+      "address": "0x6fb81a8486d31cda6b61fa59849c57af21f6dd1a",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 177,
+      "address": "0x9006eb7785a69bbf05d071a3ab831056a919b151",
+      "activity": "ACTIVE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 178,
+      "address": "0x28264aaa9fa9c7d7f943651a102201ccafb6f29a",
+      "activity": "ACTIVE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 179,
+      "address": "0xf8cce1ac5b5d1409a31513a727057f4869f3c846",
+      "activity": "ACTIVE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 180,
+      "address": "0xbd0a401d7a41b15f25c95224bc87d9a85852b0a1",
+      "activity": "ACTIVE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 181,
+      "address": "0x1e64b98530b7ced47abd7f21792c96d5e233d244",
+      "activity": "ACTIVE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 182,
+      "address": "0x9584f0c5c2e4411920848e7eec70ffd58fe549da",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 183,
+      "address": "0x386712d1f9d3fa11ee4506e03697c36041ff0052",
+      "activity": "ACTIVE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 184,
+      "address": "0x9fbcd2c536b93f874398f333fc98d43d462b8d18",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 185,
+      "address": "0x15fc2ba42a358102044b2270e8207c296e8a3e3f",
+      "activity": "ACTIVE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 186,
+      "address": "0xb4607064cb897e54d915e07c76065dd2032ebd72",
+      "activity": "ACTIVE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 187,
+      "address": "0xcbb17cd0e467f36912a5e681d60266a4e282a849",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 188,
+      "address": "0x37033317a0b7d0bd3c7f7d1c78b5b814383698ed",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 189,
+      "address": "0x8ac1c2af453898bd31cde437c75b5e83337ba946",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 190,
+      "address": "0xc2c6acd377458010713e733e1b21dd6f670d091c",
+      "activity": "ACTIVE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 191,
+      "address": "0xce4cf6e004b584c27538e8c2ef38cdf6698f1128",
+      "activity": "ACTIVE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 192,
+      "address": "0xdadca49e762abb5c904223d73388eb9dcceba21c",
+      "activity": "ACTIVE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 193,
+      "address": "0xf9814f7c77194d123ebd68706f17bf308c5471f2",
+      "activity": "ACTIVE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 194,
+      "address": "0x1e5285425d2ddfe3f3a6e256784a7ef6be7560d7",
+      "activity": "ACTIVE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 195,
+      "address": "0xcaf181e2c72c2c9e64798b350a41ab0bf784f39d",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 196,
+      "address": "0x8d9db85b533fb68ce1f2021cf3eb12a7d5b20e9d",
+      "activity": "ACTIVE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 197,
+      "address": "0xa3a3260bb6dd48aa904b054cef2e1dde4733473e",
+      "activity": "ACTIVE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 198,
+      "address": "0x8a128c9a142f269e81f38876645c44411fbe6986",
+      "activity": "ACTIVE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 199,
+      "address": "0x34a517b2613aa140cb51ac40f8809e9fedc18774",
+      "activity": "ACTIVE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 200,
+      "address": "0xb990465dc0293082fabc4afb03c35539503b4eab",
+      "activity": "ACTIVE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 201,
+      "address": "0xaee3a7ca6fe6b53f6c32a3e8407ec5a9df8b7e39",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 202,
+      "address": "0x38d2999f3e2b0d4543a7c4ba41d52ed634423866",
+      "activity": "ACTIVE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 203,
+      "address": "0x01db37579e55ce13f4504019025e36047bdad845",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 204,
+      "address": "0x058737fc5ada745cf2c869cd8ba117bfff83c11a",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 205,
+      "address": "0xec54e4e7a040ddb9cc46924f702fe04769019264",
+      "activity": "ACTIVE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 206,
+      "address": "0x3646e63f920dd1504d4156d73823fa907d0638e0",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 207,
+      "address": "0xa10b3cd017eeb76d096f7b075d8d5455d073bd0e",
+      "activity": "ACTIVE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 208,
+      "address": "0xf95bc79cf31cda31cb8966e83917f67321691116",
+      "activity": "ACTIVE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 209,
+      "address": "0x4e62c69b0401fec41472ed996e8d78059d700ad0",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 210,
+      "address": "0x051a53d095d277e22e3d905b10d3bbe75f0ac508",
+      "activity": "ACTIVE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 211,
+      "address": "0x0644933bb8a1d38a56c3207981950ffd12de0fb2",
+      "activity": "ACTIVE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 212,
+      "address": "0x76a280376c5332abbbae1786a73c70116906e757",
+      "activity": "ACTIVE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 213,
+      "address": "0xba7b828b536973dc9913810a8a4dd36844444444",
+      "activity": "ACTIVE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 214,
+      "address": "0x4d246f362fd94ba04d2909b7fff3621244d8ab7b",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 215,
+      "address": "0x0f528d248771892897b7adf58ff44f139a51ca97",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 216,
+      "address": "0xfefc37add04a78f02c95b957c8a4f5ad4e655ed3",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 217,
+      "address": "0x05b3e8b3a518d6575b48dd5ef3c6cf28b29f934f",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 218,
+      "address": "0x5ea1a353c4db9e77e4a5035eb89ba4f8f1d99e7d",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 219,
+      "address": "0x95701259b045f972b06089e5ba498d463f627aa2",
+      "activity": "ACTIVE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": "bsc",
+      "profit_audit_status": "UNRESOLVED"
+    },
+    {
+      "source_row": 220,
+      "address": "0x4041f806e7ac7c62679c03f623cda13077e52418",
+      "activity": "NO_SIGNED_ON_BSC_ETH_BASE",
+      "screening_protocol": "BSC_FIRST_EARLY_EXIT",
+      "first_positive_chain": null,
+      "profit_audit_status": "UNRESOLVED"
+    }
+  ],
+  "limits": [
+    "Rows001–120 had three-chain paired nonces; rows121–220 use first-positive-chain early exit",
+    "No signed nonce on BSC/ETH/Base is not proof of inactivity on other EVM chains, nor passive receipts",
+    "Historical fixed-window screening, not live current activity",
+    "No whole-wallet PnL evidence added"
+  ]
+}

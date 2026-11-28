@@ -1,0 +1,844 @@
+{
+  "schema": "mission-address-analysis-canonical-50-true-three-chain-low-frequency-audit-queue-v1",
+  "created_at_date": "2026-10-19",
+  "repository": "lxxlx2/ChatGPT_mission_record",
+  "pr": 97,
+  "base_pr_sha": "0216b916d5aca361c2d762a2a2d22a768a90af27",
+  "source_blob": "954f3aba66be21911dd627fa40dd3dd0a9fd1d26",
+  "chain_window_utc": [
+    "2026-09-17T21:12:12Z",
+    "2026-10-17T21:12:13Z"
+  ],
+  "original_449_wallets": 449,
+  "original_active_237_wallets": 237,
+  "early_exit_low_candidates_initial": 56,
+  "total_low_nominees": 67,
+  "recheck_coverage": "56/56",
+  "three_chain_true_low_count": 50,
+  "excluded_not_true_three_chain_low_count": 17,
+  "group_counts": {
+    "ORIGINAL_11_FULL_3CHAIN": 11,
+    "RECHECK_FIRST_19": 19,
+    "RECHECK_NEXT_12": 12,
+    "RECHECK_LAST_25": 25
+  },
+  "priority_queue_true_low": [
+    {
+      "source_row": 45,
+      "by_chain": {
+        "bsc": 0,
+        "ethereum": 0,
+        "base": 1
+      },
+      "group": "ORIGINAL_11_FULL_3CHAIN",
+      "address": "0xf89f3858bc7bac05a83ec284e3e9acdb58bf892a",
+      "total": 1,
+      "low": true
+    },
+    {
+      "source_row": 50,
+      "by_chain": {
+        "bsc": 0,
+        "ethereum": 1,
+        "base": 0
+      },
+      "group": "ORIGINAL_11_FULL_3CHAIN",
+      "address": "0x95ce1f0a243261821d7785715f19024ec149355b",
+      "total": 1,
+      "low": true
+    },
+    {
+      "source_row": 72,
+      "by_chain": {
+        "bsc": 1,
+        "ethereum": 0,
+        "base": 0
+      },
+      "group": "ORIGINAL_11_FULL_3CHAIN",
+      "address": "0x5fa57fcaf86e137cb8185c4cb2c01ea7b5b14cfb",
+      "total": 1,
+      "low": true
+    },
+    {
+      "source_row": 106,
+      "by_chain": {
+        "bsc": 1,
+        "ethereum": 0,
+        "base": 0
+      },
+      "group": "ORIGINAL_11_FULL_3CHAIN",
+      "address": "0x8d08b81812c2d53a0144a578da3e2d01cc69a110",
+      "total": 1,
+      "low": true
+    },
+    {
+      "source_row": 149,
+      "by_chain": {
+        "bsc": 1,
+        "ethereum": 0,
+        "base": 0
+      },
+      "group": "RECHECK_FIRST_19",
+      "address": "0x44a5630ed91fcb1832c7274d04d777aa73708847",
+      "total": 1,
+      "low": true
+    },
+    {
+      "source_row": 177,
+      "by_chain": {
+        "bsc": 1,
+        "ethereum": 0,
+        "base": 0
+      },
+      "group": "RECHECK_FIRST_19",
+      "address": "0x9006eb7785a69bbf05d071a3ab831056a919b151",
+      "total": 1,
+      "low": true
+    },
+    {
+      "source_row": 181,
+      "by_chain": {
+        "bsc": 1,
+        "ethereum": 0,
+        "base": 0
+      },
+      "group": "RECHECK_FIRST_19",
+      "address": "0x1e64b98530b7ced47abd7f21792c96d5e233d244",
+      "total": 1,
+      "low": true
+    },
+    {
+      "source_row": 224,
+      "by_chain": {
+        "bsc": 1,
+        "ethereum": 0,
+        "base": 0
+      },
+      "group": "RECHECK_FIRST_19",
+      "address": "0x8366ef0f646edfbdc063bb5ae98a4a5b1f7544cb",
+      "total": 1,
+      "low": true
+    },
+    {
+      "source_row": 348,
+      "by_chain": {
+        "bsc": 1,
+        "ethereum": 0,
+        "base": 0
+      },
+      "group": "RECHECK_FIRST_19",
+      "address": "0x9fecd44b015d3ceee17ad7770a79fb6edf512f5e",
+      "total": 1,
+      "low": true
+    },
+    {
+      "source_row": 368,
+      "by_chain": {
+        "bsc": 1,
+        "ethereum": 0,
+        "base": 0
+      },
+      "group": "RECHECK_FIRST_19",
+      "address": "0x2e2446cba537aa0084f395340c08d767b9f85289",
+      "total": 1,
+      "low": true
+    },
+    {
+      "source_row": 385,
+      "by_chain": {
+        "bsc": 1,
+        "ethereum": 0,
+        "base": 0
+      },
+      "group": "RECHECK_FIRST_19",
+      "address": "0xf3e1ffd93b97b25cdd2829716a0febddd643f9d9",
+      "total": 1,
+      "low": true
+    },
+    {
+      "source_row": 395,
+      "by_chain": {
+        "bsc": 1,
+        "ethereum": 0,
+        "base": 0
+      },
+      "group": "RECHECK_FIRST_19",
+      "address": "0xb21439d9bc421735f74afb8b17f9a11971af6adf",
+      "total": 1,
+      "low": true
+    },
+    {
+      "source_row": 396,
+      "by_chain": {
+        "bsc": 1,
+        "ethereum": 0,
+        "base": 0
+      },
+      "group": "RECHECK_FIRST_19",
+      "address": "0xbebda77402cafdaba5e997e4506b9b9aae91bfe0",
+      "total": 1,
+      "low": true
+    },
+    {
+      "source_row": 418,
+      "by_chain": {
+        "bsc": 1,
+        "ethereum": 0,
+        "base": 0
+      },
+      "group": "RECHECK_FIRST_19",
+      "address": "0x8f6448ea8a6a0d223acf4f2746dab5d032c65b72",
+      "total": 1,
+      "low": true
+    },
+    {
+      "source_row": 44,
+      "by_chain": {
+        "bsc": 1,
+        "ethereum": 0,
+        "base": 1
+      },
+      "group": "ORIGINAL_11_FULL_3CHAIN",
+      "address": "0xde078309d8260fa4caf3baa6852b0561b645b710",
+      "total": 2,
+      "low": true
+    },
+    {
+      "source_row": 103,
+      "by_chain": {
+        "bsc": 2,
+        "ethereum": 0,
+        "base": 0
+      },
+      "group": "ORIGINAL_11_FULL_3CHAIN",
+      "address": "0x55cbe8820af97f6eed122bb65260885b80dcf6e4",
+      "total": 2,
+      "low": true
+    },
+    {
+      "source_row": 208,
+      "by_chain": {
+        "bsc": 2,
+        "ethereum": 0,
+        "base": 0
+      },
+      "group": "RECHECK_NEXT_12",
+      "address": "0xf95bc79cf31cda31cb8966e83917f67321691116",
+      "total": 2,
+      "low": true
+    },
+    {
+      "source_row": 237,
+      "by_chain": {
+        "bsc": 2,
+        "ethereum": 0,
+        "base": 0
+      },
+      "group": "RECHECK_NEXT_12",
+      "address": "0xb870f78d2e73dda3b73bab8eab9d31fb4ae1355a",
+      "total": 2,
+      "low": true
+    },
+    {
+      "source_row": 241,
+      "by_chain": {
+        "bsc": 1,
+        "ethereum": 1,
+        "base": 0
+      },
+      "group": "RECHECK_FIRST_19",
+      "address": "0x712b5069c457c92133c026520c9e7d91c6f8bceb",
+      "total": 2,
+      "low": true
+    },
+    {
+      "source_row": 248,
+      "by_chain": {
+        "bsc": 1,
+        "ethereum": 0,
+        "base": 1
+      },
+      "group": "RECHECK_FIRST_19",
+      "address": "0x5a9a50801020bdb91be1dd776d2db91d114ec40b",
+      "total": 2,
+      "low": true
+    },
+    {
+      "source_row": 311,
+      "by_chain": {
+        "bsc": 1,
+        "ethereum": 1,
+        "base": 0
+      },
+      "group": "RECHECK_FIRST_19",
+      "address": "0xb5932a6b7d50a966aec6c74c97385412fb497540",
+      "total": 2,
+      "low": true
+    },
+    {
+      "source_row": 374,
+      "by_chain": {
+        "bsc": 1,
+        "ethereum": 0,
+        "base": 1
+      },
+      "group": "RECHECK_FIRST_19",
+      "address": "0x571b6770ed63863d7cc7d461b1c4ec5504f17faa",
+      "total": 2,
+      "low": true
+    },
+    {
+      "source_row": 376,
+      "by_chain": {
+        "bsc": 2,
+        "ethereum": 0,
+        "base": 0
+      },
+      "group": "RECHECK_NEXT_12",
+      "address": "0xde1430d9116b17c09bc16281140eb60995858f6b",
+      "total": 2,
+      "low": true
+    },
+    {
+      "source_row": 7,
+      "by_chain": {
+        "bsc": 3,
+        "ethereum": 0,
+        "base": 0
+      },
+      "group": "ORIGINAL_11_FULL_3CHAIN",
+      "address": "0x3f63c175ff9746cf0e0e6095d0568180f9d92fa5",
+      "total": 3,
+      "low": true
+    },
+    {
+      "source_row": 12,
+      "by_chain": {
+        "bsc": 0,
+        "ethereum": 3,
+        "base": 0
+      },
+      "group": "ORIGINAL_11_FULL_3CHAIN",
+      "address": "0x2fc9478c3858733b6e9b87458d71044a2071a300",
+      "total": 3,
+      "low": true
+    },
+    {
+      "source_row": 240,
+      "by_chain": {
+        "bsc": 2,
+        "ethereum": 1,
+        "base": 0
+      },
+      "group": "RECHECK_NEXT_12",
+      "address": "0x1fa8bbd3f95f89958930450ee155355588888888",
+      "total": 3,
+      "low": true
+    },
+    {
+      "source_row": 275,
+      "by_chain": {
+        "bsc": 3,
+        "ethereum": 0,
+        "base": 0
+      },
+      "group": "RECHECK_NEXT_12",
+      "address": "0x387bccab770f3d4348bf6d4e19cd83ad4d1e5233",
+      "total": 3,
+      "low": true
+    },
+    {
+      "source_row": 293,
+      "by_chain": {
+        "bsc": 0,
+        "ethereum": 0,
+        "base": 3
+      },
+      "group": "RECHECK_LAST_25",
+      "address": "0x6240851ca5260897b89499b255981b9f49e88888",
+      "total": 3,
+      "low": true
+    },
+    {
+      "source_row": 308,
+      "by_chain": {
+        "bsc": 3,
+        "ethereum": 0,
+        "base": 0
+      },
+      "group": "RECHECK_LAST_25",
+      "address": "0xb81e5abdc5ce832e14e7cc10b89f57452d7047ef",
+      "total": 3,
+      "low": true
+    },
+    {
+      "source_row": 213,
+      "by_chain": {
+        "bsc": 4,
+        "ethereum": 0,
+        "base": 0
+      },
+      "group": "RECHECK_LAST_25",
+      "address": "0xba7b828b536973dc9913810a8a4dd36844444444",
+      "total": 4,
+      "low": true
+    },
+    {
+      "source_row": 223,
+      "by_chain": {
+        "bsc": 1,
+        "ethereum": 0,
+        "base": 3
+      },
+      "group": "RECHECK_FIRST_19",
+      "address": "0xfa71b875a401a676eceb718b48dad01fa753875a",
+      "total": 4,
+      "low": true
+    },
+    {
+      "source_row": 226,
+      "by_chain": {
+        "bsc": 4,
+        "ethereum": 0,
+        "base": 0
+      },
+      "group": "RECHECK_LAST_25",
+      "address": "0x5b9be199f7e88aee8ce370826b2e6073f234eac7",
+      "total": 4,
+      "low": true
+    },
+    {
+      "source_row": 365,
+      "by_chain": {
+        "bsc": 4,
+        "ethereum": 0,
+        "base": 0
+      },
+      "group": "RECHECK_LAST_25",
+      "address": "0xf54f69832ac99e66e29caf854aa972388b3c25bd",
+      "total": 4,
+      "low": true
+    },
+    {
+      "source_row": 369,
+      "by_chain": {
+        "bsc": 1,
+        "ethereum": 3,
+        "base": 0
+      },
+      "group": "RECHECK_FIRST_19",
+      "address": "0x020ca66c30bec2c4fe3861a94e4db4a498a35872",
+      "total": 4,
+      "low": true
+    },
+    {
+      "source_row": 413,
+      "by_chain": {
+        "bsc": 3,
+        "ethereum": 0,
+        "base": 1
+      },
+      "group": "RECHECK_LAST_25",
+      "address": "0x567469503dbe791e2676e838cd39c115feb34e60",
+      "total": 4,
+      "low": true
+    },
+    {
+      "source_row": 429,
+      "by_chain": {
+        "bsc": 4,
+        "ethereum": 0,
+        "base": 0
+      },
+      "group": "RECHECK_LAST_25",
+      "address": "0xc51b0f84cd767e18ae1364a302d6ca56a5fe9672",
+      "total": 4,
+      "low": true
+    },
+    {
+      "source_row": 60,
+      "by_chain": {
+        "bsc": 4,
+        "ethereum": 0,
+        "base": 1
+      },
+      "group": "ORIGINAL_11_FULL_3CHAIN",
+      "address": "0xa02d58211389430bf47d273c8de4fe79e2173dcc",
+      "total": 5,
+      "low": true
+    },
+    {
+      "source_row": 83,
+      "by_chain": {
+        "bsc": 0,
+        "ethereum": 5,
+        "base": 0
+      },
+      "group": "ORIGINAL_11_FULL_3CHAIN",
+      "address": "0x756e1d965114fdb4759abc914521f9f4fb1db369",
+      "total": 5,
+      "low": true
+    },
+    {
+      "source_row": 125,
+      "by_chain": {
+        "bsc": 4,
+        "ethereum": 0,
+        "base": 1
+      },
+      "group": "RECHECK_LAST_25",
+      "address": "0x2d9fb8b1ddcabd8f81fe9cf5a63456057193be57",
+      "total": 5,
+      "low": true
+    },
+    {
+      "source_row": 142,
+      "by_chain": {
+        "bsc": 0,
+        "ethereum": 5,
+        "base": 0
+      },
+      "group": "RECHECK_LAST_25",
+      "address": "0x9d703cdc89c9934d9e90a52c31d632775c9838c6",
+      "total": 5,
+      "low": true
+    },
+    {
+      "source_row": 166,
+      "by_chain": {
+        "bsc": 2,
+        "ethereum": 1,
+        "base": 2
+      },
+      "group": "RECHECK_NEXT_12",
+      "address": "0xd7f2f5c91a1a81ed9cd890413f31d6dd12975dba",
+      "total": 5,
+      "low": true
+    },
+    {
+      "source_row": 168,
+      "by_chain": {
+        "bsc": 0,
+        "ethereum": 5,
+        "base": 0
+      },
+      "group": "RECHECK_LAST_25",
+      "address": "0x9cda1449aec0d3d70eba914ada4f82be5d685478",
+      "total": 5,
+      "low": true
+    },
+    {
+      "source_row": 186,
+      "by_chain": {
+        "bsc": 5,
+        "ethereum": 0,
+        "base": 0
+      },
+      "group": "RECHECK_LAST_25",
+      "address": "0xb4607064cb897e54d915e07c76065dd2032ebd72",
+      "total": 5,
+      "low": true
+    },
+    {
+      "source_row": 193,
+      "by_chain": {
+        "bsc": 1,
+        "ethereum": 4,
+        "base": 0
+      },
+      "group": "RECHECK_FIRST_19",
+      "address": "0xf9814f7c77194d123ebd68706f17bf308c5471f2",
+      "total": 5,
+      "low": true
+    },
+    {
+      "source_row": 433,
+      "by_chain": {
+        "bsc": 1,
+        "ethereum": 2,
+        "base": 2
+      },
+      "group": "RECHECK_FIRST_19",
+      "address": "0x6df7f71f8c9786dcbb127bb957e3ec9695d7a66e",
+      "total": 5,
+      "low": true
+    },
+    {
+      "source_row": 112,
+      "by_chain": {
+        "bsc": 1,
+        "ethereum": 5,
+        "base": 0
+      },
+      "group": "ORIGINAL_11_FULL_3CHAIN",
+      "address": "0xe63c05565565ac91aaa46b6536e167529509681c",
+      "total": 6,
+      "low": true
+    },
+    {
+      "source_row": 196,
+      "by_chain": {
+        "bsc": 6,
+        "ethereum": 0,
+        "base": 0
+      },
+      "group": "RECHECK_LAST_25",
+      "address": "0x8d9db85b533fb68ce1f2021cf3eb12a7d5b20e9d",
+      "total": 6,
+      "low": true
+    },
+    {
+      "source_row": 280,
+      "by_chain": {
+        "bsc": 3,
+        "ethereum": 1,
+        "base": 2
+      },
+      "group": "RECHECK_NEXT_12",
+      "address": "0x9ba457f105bffac35d67138fecb32a86428c02a2",
+      "total": 6,
+      "low": true
+    },
+    {
+      "source_row": 345,
+      "by_chain": {
+        "bsc": 5,
+        "ethereum": 0,
+        "base": 1
+      },
+      "group": "RECHECK_LAST_25",
+      "address": "0xd76a0f9bd4d8028196113c6e600cb083a6166188",
+      "total": 6,
+      "low": true
+    },
+    {
+      "source_row": 426,
+      "by_chain": {
+        "bsc": 6,
+        "ethereum": 0,
+        "base": 0
+      },
+      "group": "RECHECK_LAST_25",
+      "address": "0xf165d95f8f5d1639994ab3c668ccb66cf65cda13",
+      "total": 6,
+      "low": true
+    }
+  ],
+  "excluded_from_true_low": [
+    {
+      "source_row": 211,
+      "by_chain": {
+        "bsc": 3,
+        "ethereum": 3,
+        "base": 31
+      },
+      "group": "RECHECK_NEXT_12",
+      "address": "0x0644933bb8a1d38a56c3207981950ffd12de0fb2",
+      "total": 37,
+      "low": false
+    },
+    {
+      "source_row": 312,
+      "by_chain": {
+        "bsc": 4,
+        "ethereum": 27,
+        "base": 0
+      },
+      "group": "RECHECK_LAST_25",
+      "address": "0x97da20dc2bd46174da79d71a385b7248527fbee6",
+      "total": 31,
+      "low": false
+    },
+    {
+      "source_row": 153,
+      "by_chain": {
+        "bsc": 2,
+        "ethereum": 4,
+        "base": 19
+      },
+      "group": "RECHECK_NEXT_12",
+      "address": "0x363eaf696cff6cf1dd566a30eb321a8b30eb961c",
+      "total": 25,
+      "low": false
+    },
+    {
+      "source_row": 274,
+      "by_chain": {
+        "bsc": 5,
+        "ethereum": 10,
+        "base": 0
+      },
+      "group": "RECHECK_LAST_25",
+      "address": "0x3533dfa5ad300db66464134816d1739a5fc25ee7",
+      "total": 15,
+      "low": false
+    },
+    {
+      "source_row": 279,
+      "by_chain": {
+        "bsc": 4,
+        "ethereum": 3,
+        "base": 4
+      },
+      "group": "RECHECK_LAST_25",
+      "address": "0xf200ca045110621d3ea98394ae8b7c0467ef7110",
+      "total": 11,
+      "low": false
+    },
+    {
+      "source_row": 380,
+      "by_chain": {
+        "bsc": 5,
+        "ethereum": 6,
+        "base": 0
+      },
+      "group": "RECHECK_LAST_25",
+      "address": "0x9d727911b54c455b0071a7b682fcf4bc444b5596",
+      "total": 11,
+      "low": false
+    },
+    {
+      "source_row": 127,
+      "by_chain": {
+        "bsc": 3,
+        "ethereum": 5,
+        "base": 2
+      },
+      "group": "RECHECK_NEXT_12",
+      "address": "0xd007058e9b58e74c33c6bf6fbcd38baab813cbb6",
+      "total": 10,
+      "low": false
+    },
+    {
+      "source_row": 130,
+      "by_chain": {
+        "bsc": 4,
+        "ethereum": 5,
+        "base": 1
+      },
+      "group": "RECHECK_LAST_25",
+      "address": "0x79b55332d5b9b77f8a1266a59074d0b037afc93c",
+      "total": 10,
+      "low": false
+    },
+    {
+      "source_row": 430,
+      "by_chain": {
+        "bsc": 5,
+        "ethereum": 3,
+        "base": 2
+      },
+      "group": "RECHECK_LAST_25",
+      "address": "0xa4de109e414acedf0a40c6937515740ef7761919",
+      "total": 10,
+      "low": false
+    },
+    {
+      "source_row": 367,
+      "by_chain": {
+        "bsc": 1,
+        "ethereum": 4,
+        "base": 4
+      },
+      "group": "RECHECK_FIRST_19",
+      "address": "0x7d9471511a6c027e978adaf02014c3d2f40a0571",
+      "total": 9,
+      "low": false
+    },
+    {
+      "source_row": 323,
+      "by_chain": {
+        "bsc": 6,
+        "ethereum": 3,
+        "base": 0
+      },
+      "group": "RECHECK_LAST_25",
+      "address": "0xdcfe5bdb95e6191fc03c2fed400d7c0ca7c2859d",
+      "total": 9,
+      "low": false
+    },
+    {
+      "source_row": 419,
+      "by_chain": {
+        "bsc": 6,
+        "ethereum": 3,
+        "base": 0
+      },
+      "group": "RECHECK_LAST_25",
+      "address": "0x4df495b783a9e849eebbe431d881d43a26f0f686",
+      "total": 9,
+      "low": false
+    },
+    {
+      "source_row": 414,
+      "by_chain": {
+        "bsc": 5,
+        "ethereum": 0,
+        "base": 3
+      },
+      "group": "RECHECK_LAST_25",
+      "address": "0x2e87ac5b1af0d5c418365df3f2cf91240964e514",
+      "total": 8,
+      "low": false
+    },
+    {
+      "source_row": 178,
+      "by_chain": {
+        "bsc": 2,
+        "ethereum": 5,
+        "base": 0
+      },
+      "group": "RECHECK_NEXT_12",
+      "address": "0x28264aaa9fa9c7d7f943651a102201ccafb6f29a",
+      "total": 7,
+      "low": false
+    },
+    {
+      "source_row": 205,
+      "by_chain": {
+        "bsc": 2,
+        "ethereum": 0,
+        "base": 5
+      },
+      "group": "RECHECK_NEXT_12",
+      "address": "0xec54e4e7a040ddb9cc46924f702fe04769019264",
+      "total": 7,
+      "low": false
+    },
+    {
+      "source_row": 392,
+      "by_chain": {
+        "bsc": 4,
+        "ethereum": 1,
+        "base": 2
+      },
+      "group": "RECHECK_LAST_25",
+      "address": "0x00567d0e8187ee3ae5ea55b531fd436266b15d9e",
+      "total": 7,
+      "low": false
+    },
+    {
+      "source_row": 425,
+      "by_chain": {
+        "bsc": 4,
+        "ethereum": 3,
+        "base": 0
+      },
+      "group": "RECHECK_LAST_25",
+      "address": "0xd948f17d2c2b0a97f7b434ecfeff116095ee0b89",
+      "total": 7,
+      "low": false
+    }
+  ],
+  "important": "Low activity means ≤6 EOA-signed transactions across BNB/Ethereum/Base only, NOT profitable wallet / crosschain all EVM / full 30d wallet PnL",
+  "signer_only": "Token Transfer.from from third-party transaction not counted as EOA-signed",
+  "wallet_full_pnl_30d_approved": 0,
+  "wallet_full_pnl_lifetime_approved": 0,
+  "mainline_next": "Audit concrete signed buys/sells, quote receipts and historical cost for real closed token trades, starting already-proved positive and negative cases; record no verifiable closed trade as unresolved not zero PnL.",
+  "gates": [
+    "READ_ONLY",
+    "NO_MERGE",
+    "NO_DEPLOY",
+    "NO_TRADE"
+  ]
+}
