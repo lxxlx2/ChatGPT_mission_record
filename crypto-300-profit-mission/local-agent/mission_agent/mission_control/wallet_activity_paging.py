@@ -64,7 +64,7 @@ def _decode(cursor):
         raise ValueError("INVALID_ACTIVITY_CURSOR") from None
 
 
-def _where(at, days, fence, kind, mint, signature):
+def _where(at, days, fence, kind, mint, signature=None):
     params = ["frank", fence]
     where = "s.person_id=? AND s.rowid<=?"
     if days == "all":

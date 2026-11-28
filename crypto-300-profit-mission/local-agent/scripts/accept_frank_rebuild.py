@@ -25,6 +25,7 @@ PYTHON_TESTS = (
     "tests/test_frank_rebuild_acceptance.py", "tests/test_frank_multiple_buys.py",
     "tests/test_frank_acceptance_runner.py", "tests/test_frank_multi_buy_proof.py",
     "tests/test_frank_activity_paging.py",
+    "tests/test_frank_evidence_manifests.py", "tests/test_frank_archived_wallet_facts.py",
     "tests/test_frank_scanner_reconciliation.py", "tests/test_frank_wallet_reconciliation_v2.py",
     "tests/test_ca_job_checkpoint.py", "tests/test_frank_ca_job_rpc_budget.py",
     "tests/test_ca_secondary_checkpoint.py", "tests/test_frank_parallel_ca_scopes.py",

@@ -448,7 +448,9 @@ class EvidenceManifests:
                     token = _decode(cursor) if cursor is not None else None
                 except ValueError:
                     raise ManifestError("INVALID_MANIFEST_CURSOR") from None
-                if token is not None and (token["source"],token["at"],token["days"],token["kind"],token["mint"],token["fence"]) != (source,at,days,kind,mint,fence):
+                if token is not None and (token.get("signature") is not None or
+                        (token["source"],token["at"],token["days"],token["kind"],token["mint"],token["fence"])
+                        != (source,at,days,kind,mint,fence)):
                     raise ManifestError("MANIFEST_CURSOR_QUERY_CHANGED", 409)
                 where,args = _where(at,days,fence,kind,mint)
                 total = db.execute("SELECT count(*) FROM signatures s WHERE "+where,args).fetchone()[0]
