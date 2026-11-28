@@ -332,3 +332,86 @@ def test_private_transport_timeout_resume_and_duplicate_pages(tmp_path):
     assert json.loads(ledger.db.execute("SELECT body FROM health").fetchone()[0])["consecutive_errors"] == 0
     assert all(url == endpoint and timeout == 20 for url, timeout, *_ in calls)
     ledger.db.close()
+
+
+@pytest.mark.parametrize("broken_phase", ["clock", "scan"])
+def test_partial_poll_keeps_other_wallet_catchup_but_does_not_return_a_model_gate(broken_phase):
+    from types import SimpleNamespace
+    steps = []
+    failure = ValueError("BLOCKED_FIXTURE")
+    def clock(wallet):
+        steps.append(("clock", wallet))
+        if broken_phase == "clock" and wallet == "a":
+            raise failure
+        return {"slot": 12, "block_time": 45}
+    def cycle(wallet):
+        steps.append(("cycle", wallet))
+        if broken_phase == "scan" and wallet == "a":
+            raise failure
+        return {"new_signatures": 1}
+    scanner = SimpleNamespace(
+        rpcs={w: SimpleNamespace(finalized_clock=lambda w=w: clock(w)) for w in ("a", "b")},
+        cycle=cycle,
+    )
+    with pytest.raises(ValueError, match="BLOCKED_FIXTURE") as exc:
+        service.poll_wallet_round(scanner, {"a": "frank", "b": "frank"})
+    assert exc.value is failure
+    assert steps == [("clock", "a"), ("clock", "b")] + (
+        [] if broken_phase == "clock" else [("cycle", "a")]) + [("cycle", "b")]
+
+
+def test_complete_poll_uses_earliest_verified_clock_and_preserves_cycle_order():
+    from types import SimpleNamespace
+    steps = []
+    def clock(wallet, time):
+        steps.append(("clock", wallet))
+        return {"slot": 88, "block_time": time}
+    def cycle(wallet):
+        steps.append(("scan", wallet))
+        return {"wallet": wallet}
+    scanner = SimpleNamespace(rpcs={
+        "a": SimpleNamespace(finalized_clock=lambda: clock("a", 99)),
+        "b": SimpleNamespace(finalized_clock=lambda: clock("b", 96)),
+    }, cycle=cycle)
+    cutoff, cycles = service.poll_wallet_round(scanner, {"a": "frank", "b": "frank"})
+    assert cutoff == 96
+    assert cycles == [{"wallet": "a"}, {"wallet": "b"}]
+    assert steps == [("clock", "a"), ("clock", "b"), ("scan", "a"), ("scan", "b")]
+
+
+def test_real_scanner_indexes_healthy_wallet_during_another_wallet_gap(tmp_path):
+    from mission_agent.frank.rpc import WALLET
+    from mission_agent.signals.scanner import Scanner
+    from mission_agent.signals.store import Ledger
+    from test_frank_fm import tx
+
+    broken = "fixture-broken-wallet"
+    wallets = {broken: "frank", WALLET: "frank"}
+    ledger = Ledger(tmp_path / "frozen.sqlite")
+    ledger.checkpoint(broken, "old-bad", 11)
+    ledger.checkpoint(WALLET, "old-good", 11)
+
+    class Broken:
+        def finalized_clock(self):
+            return {"slot": 13, "block_time": 92}
+        def signatures(self, **options):
+            return []   # The existing cursor must not be skipped.
+
+    class Healthy:
+        def finalized_clock(self):
+            return {"slot": 13, "block_time": 93}
+        def signatures(self, **options):
+            return [{"signature": "new-good", "slot": 12}, {"signature": "old-good", "slot": 11}]
+        def transaction(self, signature):
+            raw = tx()
+            raw["slot"] = 12
+            raw["transaction"]["signatures"] = [signature]
+            return raw
+
+    scanner = Scanner(ledger, wallets, tmp_path / "raw", {broken: Broken(), WALLET: Healthy()})
+    with pytest.raises(ValueError, match="CURSOR_GAP_UNRESOLVED"):
+        service.poll_wallet_round(scanner, wallets)
+    assert ledger.cursor(broken)["signature"] == "old-bad"
+    assert ledger.cursor(WALLET)["signature"] == "new-good"
+    assert (tmp_path / "raw/new-good.json.gz").is_file()
+    assert ledger.db.execute("SELECT count(*) FROM outbox").fetchone()[0] == 0

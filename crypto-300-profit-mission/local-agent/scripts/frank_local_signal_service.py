@@ -81,6 +81,29 @@ def check_snapshot(path, wallets):
     return {'status':'PREFLIGHT_PASS','policy_hash':POLICY_SHA256,'cursor':cursors,
             'pending_unprocessed_signatures':pending}
 
+def poll_wallet_round(scanner, wallets):
+    """Catch up independent wallets, but never approve a partial model round."""
+    clocks, failures, cycles = {}, [], []
+    for wallet in wallets:
+        try:
+            clocks[wallet] = scanner.rpcs[wallet].finalized_clock()
+        except Exception as error:
+            failures.append(error)
+    # Preserve the original before-scan clock barrier. A wallet without a
+    # verified clock cannot be scanned for this round, but other scanners can
+    # still archive and index. That alone does not authorize any delivery.
+    for wallet in wallets:
+        if wallet not in clocks:
+            continue
+        try:
+            cycles.append(scanner.cycle(wallet))
+        except Exception as error:
+            failures.append(error)
+    if failures:
+        raise failures[0]
+    return min(clock['block_time'] for clock in clocks.values()), cycles
+
+
 def main():
     p=argparse.ArgumentParser()
     p.add_argument('--root',type=Path,required=True)
@@ -127,12 +150,11 @@ def main():
     atomic_json(path,health)
     while not stopped:
         started=time.monotonic();health['last_poll_at']=utc();health['poll_count']+=1
-        cycles=[]
         try:
-            # Clock is read before the address scan. No time-stage processing can leap over an RPC gap.
-            clocks={w:scanner.rpcs[w].finalized_clock() for w in wallets}
-            for wallet in wallets:cycles.append(scanner.cycle(wallet))
-            engine.drain(until=min(c['block_time'] for c in clocks.values()))
+            # A partial round may index unaffected wallets, but it must not
+            # advance shared model clocks or dispatch any delivery.
+            cutoff,cycles=poll_wallet_round(scanner,wallets)
+            engine.drain(until=cutoff)
             deliveries=drain(ledger,notifier,delivery_gate=delivery_gate)
             current={w:ledger.cursor(w) for w in wallets}
             health.update(status='RUNNING',last_successful_poll=utc(),last_model_successful_eval=utc(),last_chain_signature=cycles[0]['last_chain_signature'],last_processed_signature=current[next(iter(wallets))]['signature'],last_processed_slot=current[next(iter(wallets))]['slot'],lag_seconds=cycles[0]['lag_seconds'],consecutive_errors=0,new_signatures=sum(c['new_signatures'] for c in cycles),model=engine.summary(),local_pending=sum(r['channel']=='local' and r['status'] not in ('COMMAND_ACCEPTED','DRY_RUN_AUDIT',MEME_SCOPE_BLOCKED,'SENT_UNVERIFIED') for r in deliveries),raw_pending=ledger.db.execute("SELECT count(*) FROM signature_detections WHERE state='RAW_PENDING'").fetchone()[0],model_unprocessed=ledger.db.execute('SELECT count(*) FROM signatures s LEFT JOIN v1_seen v USING(wallet,signature) WHERE v.signature IS NULL').fetchone()[0])
