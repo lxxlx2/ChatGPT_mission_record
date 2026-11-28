@@ -1,0 +1,1 @@
+Attempt 2026-11-28 14:57:53 ICT; nearest slot 15:00, inferred, shard 3. Scheduled_for not supplied. No success asserted.
