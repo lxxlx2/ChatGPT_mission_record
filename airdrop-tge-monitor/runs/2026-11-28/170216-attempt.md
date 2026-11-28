@@ -1,0 +1,1 @@
+2026-11-28 17:02:16 ICT; inferred nearest slot 17:00, Shard1; scheduled_for absent. Connector schemas discovered. Scan pending.
