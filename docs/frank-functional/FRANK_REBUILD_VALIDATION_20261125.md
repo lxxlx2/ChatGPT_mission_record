@@ -278,3 +278,12 @@ Python 定向 215 项、Node 269 项通过。Mac Chrome 158.0.8127.38 打开真�
 全量 Python 用 `uv run --isolated --offline --no-project --with pytest==8.3.5 --with numpy python -B -` 启动进程内外连护栏后执行 `pytest.main(["-q", "-p", "no:cacheprovider", "--tb=short", "tests"])`，3,069 通过，1 项 Chrome 用例从全量分开。用 `FRANK_TEST_CHROMIUM='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'` 和 `--with playwright` 运行 `tests/test_frank_rebuild_buys.py::test_browser_default_entry_filters_and_prefills_ca`，该用例通过。
 
 联合抽样源码及隔离验收为 `PASS`。实际双来源联合响应、独立持有人全集、完整 CA 查询的实源时延和候选实际收件仍为待验。整体 `PARTIAL`，本地 8766 切换与生产发布为 `NO_GO`。
+
+
+## 2026-11-28 Mac Chrome 路径复验与新样本预筛
+
+复验基于 `f68e4490daa2fba246746d2cbd3e2d2639eefb57`。Mac 独立暂存目录的 508 个源码、脚本、测试及项目配置文件逐个与 Git 对象核对，0 个不符。隔离入口使用随机回环端口和已有 `tests/fixtures/frank_parallel_ca_browser_server.py`；只接受合成 CA，分析及行情使用本地预置响应，外连被测试夹具禁止。没有访问或切换生产 Dashboard。
+
+在 Mac Chrome 158.0.8127.38 实际操作：合成 CA A 的摘要和行情来源先显示；把 A 的完整尽调保持在运行中，再提交合成 CA B。B 显示自己的代币身份和两处行情数据来源时，A 仍保留自己的身份且完整尽调继续运行。B 刷新后恢复同一份历史报告，K 线和成交都标记为本机缓存，保持原观测时间。解除夹具等待后，A 完成且没有被 B 的数据替换。此过程验证实际入口的并行、缓存和任务绑定，不是实源延迟测试。对同一暂存源码的定向 Python 139 项、非浏览器 Node 271 项通过。
+
+另用 exact Mint `63jDWWFwp25ChLvsofbVRMprRbhiXuWoWVxrwFfypump`、候选 PumpSwap 池 `6h2yPTQ4CaXcUjMYr6B6MkDmLqTzuLkZuh25aT4thrbZ` 做新样本预筛。只读检查 22 个相关归档目录中的 255 份完成标记和配套报告（21 个唯一任务），未发现该 Mint 或池，范围之外不作保证。公共索引匹配是候选线索而非 finalized 链上证据；本轮测试环境无法直取行情原始响应，未通过另一通道绕过。未运行真实新 CA 提交，也未报告真实冷／热耗时。池与全体持有人同槽、实际双来源联合、候选通知真实送达仍待核实；整体 `PARTIAL`，生产 `NO_GO`。
